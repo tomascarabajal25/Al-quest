@@ -16,7 +16,7 @@ Al-Quest combina exploración, resolución de problemas y progresión, ofreciend
 
 - [Diseño de clases (UML)](https://app.diagrams.net/#G1zBPD_cQ4sfSjtBrg1zO-S8pLTyf3T7GT#%7B%22pageId%22%3A%22O57Z9ENh1pq8_QvjA7h0%22%7D)
 - [Enunciado](https://github.com/7541-Algoritmos-y-programacion-2/10-Clases/blob/main/Clase%20semana%2005/02%20-%20Clases%20grabadas/2026/1C/TP%202%20-%20202602.pdf)
-- [Información a tener en cuenta](link)
+- [Información a tener en cuenta](https://github.com/tomascarabajal25/Al-quest/blob/main/info.md)
 
 ## Integrantes
 
