@@ -1,7 +1,9 @@
 package torresDeHanoi;
 
+import materialesUtiles.ValidacionesUtiles;
+
 /*
- * Clase pila, gestion de tipo FIFO
+ * Clase pila, gestion de tipo LIFO
  * metodos: push,pop y peek
  * atributos: contnodo y cabeza
  */
@@ -10,8 +12,11 @@ public class Pila {
 //ATRIBUTOS DE LA CLASE---------------------------------------------------------
 //ATRIBUTOS----------------------------------------------------------------------
 	private int contNodo;
-	private Nodo cabeza;					
+	private Nodo<String> cabeza;					
 //CONSTRUCTORES-----------------------------------------------------------------
+	/*
+	 * post: inicializa la pila vacia para su uso
+	 */
 	public Pila() {
 		this.setContNodo(0);
 		this.setCabeza(null);
@@ -20,12 +25,12 @@ public class Pila {
 //METODOS GENERALES------------------------------------------------------------
 
 //METODOS DE COMPORTAMIENTO------------------------------------------------------
-	/*
+	/*pre: nuevo nodo distinto de null
 	 * @param:nodo que se agregara a la pila
-	 * agrega un nodo a la pila 
+	 * post:agrega un nodo a la pila 
 	 */
-	public void push (Nodo nuevoNodo) {
-		contNodo++;
+	public void push (Nodo<String> nuevoNodo) {
+		ValidacionesUtiles.esDistintoDeNull(nuevoNodo, "no se puede insertar un nodo nulo");
 		if (cabeza==null) {
 			cabeza=nuevoNodo;
 		}else {
@@ -33,10 +38,10 @@ public class Pila {
 			cabeza.setArriba(nuevoNodo);
 			cabeza=nuevoNodo;
 		}
-	
+		this.setContNodo(++contNodo);
 	}
 	/*
-	 * elimina el nodo cabeza de la pila
+	 * post:elimina el nodo cabeza de la pila
 	 */
 	public void pop() {
 		if (contNodo>0) {
@@ -48,25 +53,36 @@ public class Pila {
         }
 	}
 	/*
-	 * @return: devuelve el nodo cabeza de la pila
+	 * @return: devuelve el dato del nodo cabeza de la pila
 	 */
 	public String peek() {
 		return cabeza.getDato();
 	}
 	
 //GETTER SIMPLES-----------------------------------------------------------------
+	/*
+	 *  @return: devuelve la cantidad de nodos
+	 */
 	public int getContNodo() {
 		return contNodo;
 	}
-	public Nodo getCabeza() {
+	/*
+	 *  @return: devuelve el nodo cabeza de la pila
+	 */
+	public Nodo<String> getCabeza() {
 		return cabeza;
 	}
 //SETTERS SIMPLES---------------------------------------------------------------
-	public void setContNodo(int contNodo) {
+	/*
+	 *post: cambia la cantidad de nodos
+	 */
+	private void setContNodo(int contNodo) {
 		this.contNodo = contNodo;
 	}
-	
-	public void setCabeza(Nodo cabeza) {
+	/*
+	 *post: cambia el nodo cabeza
+	 */
+	private void setCabeza(Nodo<String> cabeza) {
 		this.cabeza = cabeza;
 	}
 	

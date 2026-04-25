@@ -6,24 +6,12 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.ScrollPaneConstants;
-
+import javax.swing.table.DefaultTableModel;
 /**
  * Clase que representa la interfaz gráfica principal para el juego de las Torres de Hanoi.
  * hereda jframe para la interacción con las pilas y las tablas (JTable).
@@ -31,36 +19,8 @@ import javax.swing.ScrollPaneConstants;
  * @version 1.0
  */
 public class VentanaPrincipalHanoi extends JFrame {
-//CONSTANTES-------------------------------------------------------------------
-//ATRIBUTOS DE LA CLASE---------------------------------------------------------
-//ATRIBUTOS----------------------------------------------------------------------
-	/*
-	 * Pilas que representan las torres del juego
-	 */
-	Pila torreAPila;
-	Pila torreBPila;
-	Pila torreCPila;
-	
-	/*
-	 * contador de la cantidad de movimientos del usuario
-	 */
-	int contNumMov=0;
-	
-	DefaultTableModel modeloTablaTorreA, modeloTablaTorreB,modeloTablaTorreC ;
-	/*
-	 * cantidad de discos seleccionados
-	 */
-	int objetivo=0;
-	/*
-	 * numero de la cantidad movimientos necesarios
-	 */
-	double numMinDeMovimientos=0.0;
-	/*
-	 * stop para ir mostrando la resolucion por pasos
-	 */
-	boolean stop= false;
-	
 	private static final long serialVersionUID = 1L;
+	int objetivo=0;
 	private JPanel contentPane;
 	private JTable TorreA; //table q representa la torre A
 	private JTable TorreB;//table q representa la torre B
@@ -71,450 +31,19 @@ public class VentanaPrincipalHanoi extends JFrame {
 	private JButton BtnC_B;
 	private JLabel lblMinMovimientos;
 	private JLabel lblNumMovimientos;
-	private JComboBox comboBoxDiscos;
-						
-//CONSTRUCTORES-----------------------------------------------------------------
-//METODOS DE CLASES-------------------------------------------------------------
-//METODOS GENERALES------------------------------------------------------------
-//METODOS DE COMPORTAMIENTO------------------------------------------------------
+	private JComboBox<String> comboBoxDiscos;
+    private ControllerHanoi controller;
+    private boolean juegoIniciado=false;
+    DefaultTableModel modeloTablaTorreA, modeloTablaTorreB,modeloTablaTorreC ;
 
-	/*
-	 * resetea el numero de movimientos, el numero minimo de movimientos necesarios
-	 * y setea el box de discos q ve el usuario
-	 */
-	private void limpiar() {
-		numMinDeMovimientos=0;
-		contNumMov=0;
-		comboBoxDiscos.setSelectedItem(String.valueOf(objetivo));
-	}
-	
-	/*
-	 * aumenta la cantidad de movimientos realizados
-	 * setea el label numero de movimientos con el nuevo numero
-	 */
-	private void presentarCantidadMovimientos() {
-		contNumMov++;
-		lblNumMovimientos.setText(String.valueOf(contNumMov));
-		
-	}
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPrincipalHanoi frame = new VentanaPrincipalHanoi();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	/*
-	 * @param:pila de origen (de donde se quiere sacar un nodo)
-	 * @param1:pila de destino (donde se quiere meter un nodo)
-	 * mueve del origen al destino (first out, first in)
-	 * con joptionpane se construye un modal(dialog) q pregunte si el usuario quiere ver el siguiente paso
-	 */
-	private void moverPlataforma(Pila origen, Pila destino) {
-		if (stop==false) {
-			Nodo plataforma = new Nodo(origen.peek());
-			origen.pop();
-			destino.push(plataforma);
-			
-			presentarTorreA();
-			presentarTorreB();
-			presentarTorreC();
-			presentarCantidadMovimientos();
-			
-			JOptionPane pane = new JOptionPane(
-					"paso#" + lblNumMovimientos.getText()+ "\n\n desea continuar?",
-					JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.YES_NO_OPTION
-					);
-			JDialog dialog= pane.createDialog("numero de pasos");
-			dialog.setLocationRelativeTo(null);;
-			dialog.setVisible(true);
-			int opt= (int) pane.getValue();
-			if(opt == JOptionPane.NO_OPTION) {
-				stop=true;
-			}
-			
-			
-		}
-	}
-	
-	/*
-	 * @param:pila origen 
-	 * @param1:pila auxiliar 
-	 * @param2: pila destino
-	 * resuelve el de forma recursiva el algoritmo de hanoi
-	 */
-	private void resolverHanoi(int n, Pila ori, Pila aux, Pila des) {
-		if (stop) {
-			return;
-		}
-		try {
-			if(n==1) {
-			moverPlataforma(ori, des);
-			}
-		else {
-			resolverHanoi(n-1, ori, des, aux);
-			moverPlataforma(ori, des);
-			
-			resolverHanoi(n-1, aux, ori, des);
-			}
-		} 
-		catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		
-	}
-	/*
-	 * limpia(resetea los contadores) y vuelve a iniciar el juego
-	 */
-	private void reiniciar() {
-		try {
-			if(!lblMinMovimientos.getText().equals("")) {
-				limpiar();
-				inciar();
-			}
-		} 
-		catch (Exception e) {
-			System.out.println("Error"+e.getMessage());
-		}
-	}
-	/*
-	 * inicia el juego con el objetivo seleccionado
-	 */
-	private void inciar() {
-		try {
-			torreAPila= new Pila();
-			torreBPila= new Pila();
-			torreCPila= new Pila();
-			
-			//setea en objetivo los discos seleccionados por el usuarios
-			objetivo= Integer.parseInt(comboBoxDiscos.getSelectedItem().toString());
-			
-			//calcula el minimo de movimientos posibles
-			numMinDeMovimientos = Math.pow(2, objetivo)-1;
-			
-			// pone los contadores en 0 (los valores de las variables al comenzar)
-			lblNumMovimientos.setText(String.valueOf(contNumMov));
-			lblMinMovimientos.setText(String.valueOf(String.format(" %.0f", numMinDeMovimientos)));
-			
-			//crea los discos visuales 
-			 for (int i=objetivo; i>=1; i-- ) {
-				 String disco="";
-				 for (int x=i;x>0;x--) {
-					disco += "#";
-				}
-				 torreAPila.push(new Nodo(disco));
-			 }
-			 presentarTorreA();
-			 presentarTorreB();
-			 presentarTorreC();
-			 
-			
-		} catch (Exception e) {
-			System.out.println("Error"+e.getMessage());
-		}		
-	}
-	
-	/*
-	 * actualiza la torre c 
-	 */
-	private void presentarTorreC() {
-		//borra todas las filas de la tabla
-		((DefaultTableModel)TorreC.getModel()).setRowCount(0);
-		
-		//asigna todas las filas a la tabla
-		modeloTablaTorreC.setRowCount(10);
-		
-		Nodo k;
-		
-		// para empezar a dibujar los discos al fnal y no al principio
-		int rowDisco=(10-torreCPila.getContNodo());
-		
-		
-		if(torreCPila.getContNodo()>0) {
-			//itera los nodos de la pila
-			for(k = torreCPila.getCabeza();k.getAbajo() != null; k=k.getAbajo()) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreC.insertRow(rowDisco, normal);
-				rowDisco++;
-			}
-			//setea el ultimo nodo
-			if(k.getAbajo()==null) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreC.insertRow(rowDisco, normal);
-			}
-		}
-		//actualiza la intefaz grafica
-		TorreC.setModel(modeloTablaTorreC);
-		modeloTablaTorreC.setRowCount(10);
-		
-	}
-	
-	/*
-	 * actualiza la torre b 
-	 */
-	private void presentarTorreB() {
-		//borra todas las filas de la tabla
-		((DefaultTableModel)TorreB.getModel()).setRowCount(0);
-		
-		//asigna todas las filas a la tabla
-		modeloTablaTorreB.setRowCount(10);
-		
-		Nodo k;
-		
-		// para empezar a dibujar los discos al fnal y no al principio
-		int rowDisco=(10-torreBPila.getContNodo());
-		
-		//itera los nodos de la pila
-		if(torreBPila.getContNodo()>0) {
-			for(k = torreBPila.getCabeza();k.getAbajo() != null; k=k.getAbajo()) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreB.insertRow(rowDisco, normal);
-				rowDisco++;
-			}
-			//setea el ultimo nodo
-			if(k.getAbajo()==null) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreB.insertRow(rowDisco, normal);
-			}
-		}
-		//actualiza la intefaz grafica
-		TorreB.setModel(modeloTablaTorreB);
-		modeloTablaTorreB.setRowCount(10);
-		
-	}
-	
-	/*
-	 * actualiza la torre A
-	 */
-	private void presentarTorreA() {
-		//borra todas las filas de la tabla
-		((DefaultTableModel)TorreA.getModel()).setRowCount(0);
-		
-		//asigna todas las filas a la tabla
-		modeloTablaTorreA.setRowCount(10);
-		
-		Nodo k;
-		
-		// para empezar a dibujar los discos al fnal y no al principio
-		int rowDisco=(10-torreAPila.getContNodo());
-		
-		//itera los nodos de la pila
-		if(torreAPila.getContNodo()>0) {
-			for(k = torreAPila.getCabeza();k.getAbajo() != null; k=k.getAbajo()) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreA.insertRow(rowDisco, normal);
-				rowDisco++;
-			}
-			//setea el ultimo nodo
-			if(k.getAbajo()==null) {
-				String[] normal={k.getDato()};
-				modeloTablaTorreA.insertRow(rowDisco, normal);
-			}
-		}
-		//actualiza la intefaz grafica
-		TorreA.setModel(modeloTablaTorreA);
-		modeloTablaTorreA.setRowCount(10);
-		
-	}
-	/*
-	 * mueve el nodo superior de la torre A a la torre B 
-	 * solo si se cumple la condicion: nodo de b>nodo de A
-	 */
-	private void moverDeA_B() {
-		try {
-			// si esta vacia no hace nada
-			if(torreAPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreAPila.peek());
-				
-				if (torreBPila.getContNodo()>0) {
-					
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreBPila.peek())>0) {
-						return;
-					}
-				}
-				torreAPila.pop();
-				torreBPila.push(plataforma);
-				
-				presentarTorreA();
-				presentarTorreB();
-				presentarCantidadMovimientos();
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	/*
-	 * mueve el nodo superior de la torre A a la torre C 
-	 * solo si se cumple la condicion: nodo de C>nodo de A
-	 */
-	private void moverDeA_C() {
-		try {
-			if(torreAPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreAPila.peek());
-				
-				if (torreCPila.getContNodo()>0) {
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreCPila.peek())>0) {
-						return;
-					}
-				}
-				torreAPila.pop();
-				torreCPila.push(plataforma);
-				
-				presentarTorreA();
-				presentarTorreC();
-				presentarCantidadMovimientos();
-				
-				//Testea si el usuario ya gano
-				if(torreCPila.getContNodo()== objetivo && contNumMov == numMinDeMovimientos) {
-					JOptionPane.showMessageDialog(null, "felicidades haz alcanzado la cantidad minima de movimientos \n\n intenta con otro nivel de dificultad", "felicitaciones ", JOptionPane.WARNING_MESSAGE);
-					
-				}
-				else if (torreCPila.getContNodo()== objetivo && contNumMov != numMinDeMovimientos) {
-					JOptionPane.showMessageDialog(null, "felicidades haz ganado \n\n intenta superar el objetivo de movimientos minimos", "felicitaciones ", JOptionPane.WARNING_MESSAGE);
-				}
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	/*
-	 * mueve el nodo superior de la torre B a la torre A 
-	 * solo si se cumple la condicion: nodo de A>nodo de B
-	 */
-	private void moverDeB_A() {
-		try {
-			if(torreBPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreBPila.peek());
-				
-				if (torreAPila.getContNodo()>0) {
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreAPila.peek())>0) {
-						return;
-					}
-				}
-				torreBPila.pop();
-				torreAPila.push(plataforma);
-				
-				presentarTorreA();
-				presentarTorreB();
-				presentarCantidadMovimientos();
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	/*
-	 * mueve el nodo superior de la torre B a la torre C 
-	 * solo si se cumple la condicion: nodo de C>nodo de B
-	 */
-	private void moverDeB_C() {
-		try {
-			if(torreBPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreBPila.peek());
-				
-				if (torreCPila.getContNodo()>0) {
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreCPila.peek())>0) {
-						return;
-					}
-				}
-				torreBPila.pop();
-				torreCPila.push(plataforma);
-				
-				presentarTorreB();
-				presentarTorreC();
-				presentarCantidadMovimientos();
-				
-				//Testea si gano
-				if(torreCPila.getContNodo()== objetivo && contNumMov == numMinDeMovimientos) {
-					JOptionPane.showMessageDialog(null, "felicidades haz alcanzado la cantidad minima de movimientos \n\n intenta con otro nivel de dificultad", "felicitaciones ", JOptionPane.WARNING_MESSAGE);
-					
-				}
-				else if (torreCPila.getContNodo()== objetivo && contNumMov != numMinDeMovimientos) {
-					JOptionPane.showMessageDialog(null, "felicidades haz ganado \n\n intenta superar el objetivo de movimientos minimos", "felicitaciones ", JOptionPane.WARNING_MESSAGE);
-				}
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	/*
-	 * mueve el nodo superior de la torre C a la torre A
-	 * solo si se cumple la condicion: nodo de A>nodo de C
-	 */
-	private void moverDeC_A() {
-		try {
-			if(torreCPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreCPila.peek());
-				
-				if (torreAPila.getContNodo()>0) {
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreAPila.peek())>0) {
-						return;
-					}
-				}
-				torreCPila.pop();
-				torreAPila.push(plataforma);
-				
-				presentarTorreA();
-				presentarTorreC();
-				presentarCantidadMovimientos();
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	/*
-	 * mueve el nodo superior de la torre C a la torre B
-	 * solo si se cumple la condicion: nodo de B>nodo de C
-	 */
-	private void moverDeC_B() {
-		try {
-			if(torreCPila.getContNodo()>0) {
-				Nodo plataforma = new Nodo(torreCPila.peek());
-				
-				if (torreBPila.getContNodo()>0) {
-					//Compara los lenght si es mayor a 0 significa q es mas grande, entonces no se puede mover
-					if(plataforma.getDato().compareTo(torreBPila.peek())>0) {
-						return;
-					}
-				}
-				torreCPila.pop();
-				torreBPila.push(plataforma);
-				
-				presentarTorreB();
-				presentarTorreC();
-				presentarCantidadMovimientos();
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	/**
+    /**
      * Inicializa los componentes de la ventana, configura el diseño y 
      * prepara los modelos de las tablas.
      * todo realizado con windowbuilder
      */
-	public VentanaPrincipalHanoi() {
-		
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public VentanaPrincipalHanoi() {
+        setTitle("Hanoi");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 451, 445);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -611,7 +140,10 @@ public class VentanaPrincipalHanoi extends JFrame {
 		BtnA_B.setName("BtnA_B");
 		BtnA_B.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeA_B();
+				if (getJuegoIniciado()
+						) {
+					controller.moverA_B();
+				}
 			}
 		});
 		BtnA_B.setBounds(24, 181, 47, 23);
@@ -620,7 +152,9 @@ public class VentanaPrincipalHanoi extends JFrame {
 		JButton BtnA_C = new JButton("C");
 		BtnA_C.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeA_C();
+				if (getJuegoIniciado()) {
+					controller.moverA_C();
+				}
 			}
 		});
 		BtnA_C.setName("BtnA_C");
@@ -631,7 +165,9 @@ public class VentanaPrincipalHanoi extends JFrame {
 		BtnB_A.setName("BtnB_A");
 		BtnB_A.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeB_A();
+				if (getJuegoIniciado()) {
+					controller.moverB_A();
+				}
 			}
 		});
 		BtnB_A.setBounds(167, 181, 47, 23);
@@ -641,7 +177,9 @@ public class VentanaPrincipalHanoi extends JFrame {
 		BtnB_C.setName("BtnB_C");
 		BtnB_C.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeB_C();
+				if (getJuegoIniciado()) {
+					controller.moverB_C();
+				}
 			}
 		});
 		BtnB_C.setBounds(227, 181, 47, 23);
@@ -651,7 +189,9 @@ public class VentanaPrincipalHanoi extends JFrame {
 		BtnC_A.setName("BtnC_A");
 		BtnC_A.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeC_A();
+				if (getJuegoIniciado()) {
+					controller.moverC_A();
+				}
 			}
 		});
 		BtnC_A.setBounds(323, 181, 47, 23);
@@ -660,17 +200,19 @@ public class VentanaPrincipalHanoi extends JFrame {
 		BtnC_B = new JButton("B");
 		BtnC_B.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				moverDeC_B();
+				if (getJuegoIniciado()) {
+					controller.moverC_B();
+				}
 			}
 		});
 		BtnC_B.setName("BtnC_B");
 		BtnC_B.setBounds(375, 181, 47, 23);
 		contentPane.add(BtnC_B);
 		
-		comboBoxDiscos = new JComboBox();
+		comboBoxDiscos = new JComboBox<>();
 		comboBoxDiscos.setName("CbNumDiscos");
 		comboBoxDiscos.setBackground(new Color(192, 192, 192));
-		comboBoxDiscos.setModel(new DefaultComboBoxModel(new String[] {"3", "4", "5", "6", "7", "8", "9", "10"}));
+		comboBoxDiscos.setModel(new DefaultComboBoxModel<>(new String[] {"3", "4", "5", "6", "7", "8", "9", "10"}));
 		comboBoxDiscos.setBounds(230, 209, 116, 17);
 		contentPane.add(comboBoxDiscos);
 		
@@ -713,17 +255,18 @@ public class VentanaPrincipalHanoi extends JFrame {
 		JButton btnIniciar = new JButton("iniciar");
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				contNumMov=0;
-				inciar();
-					}
-		});
+				iniciar();
+				setJuegoIniciado(true);
+		}});
 		btnIniciar.setBounds(44, 315, 93, 39);
 		contentPane.add(btnIniciar);
 		
 		JButton btnReiniciar = new JButton("reiniciar");
 		btnReiniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				reiniciar();
+				if(getJuegoIniciado()) {
+					reiniciar();
+				}
 			}
 		});
 		btnReiniciar.setBounds(167, 315, 93, 39);
@@ -732,16 +275,13 @@ public class VentanaPrincipalHanoi extends JFrame {
 		JButton btnResolver = new JButton("resolver");
 		btnResolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if(!lblMinimoDeMovimientos.getText().equals("") && torreCPila.getContNodo()!=objetivo);
-				reiniciar();
-				stop=false;
-				resolverHanoi(objetivo, torreAPila, torreBPila, torreCPila);
+				if (getJuegoIniciado()) {
+					try {
+					controller.resolver();
 				} catch (Exception e2) {
 					System.out.println(e2.getMessage());
 				}
-				
-				
+				}
 			}
 		});
 		btnResolver.setBounds(292, 315, 93, 39);
@@ -773,10 +313,122 @@ public class VentanaPrincipalHanoi extends JFrame {
 		renderC.setHorizontalAlignment(SwingConstants.CENTER);
 		TorreC.getColumnModel().getColumn(0).setCellRenderer(renderC);
 		
-		
-		
 
 	}
-	
-}
+  //METODOS DE COMPORTAMIENTO------------------------------------------------------
+    /*
+	 * reinicia el contador de movimientos a 0 y vuelve todos los discos a la torre A
+	 */
+    private void reiniciar() {
+    	controller.reiniciar(objetivo);	
+	} 
+    
+    /*
+     * inicia el juego con la cantidad de discos establecidos
+     */
+    private void iniciar() {
+    	objetivo= Integer.parseInt(comboBoxDiscos.getSelectedItem().toString());
+		controller = new ControllerHanoi(objetivo,this);
+	}
+    
+    /*
+     * actualiza la vista de las torres y la cantidad de movimientos
+     */
+    public void actualizar(EstadoHanoi estado) {
+        presentarTorre(TorreA, estado.torreA);
+        presentarTorre(TorreB, estado.torreB);
+        presentarTorre(TorreC, estado.torreC);
 
+        lblNumMovimientos.setText(String.valueOf(estado.movimientos));
+        lblMinMovimientos.setText(String.valueOf(estado.minMovimientos));
+    }
+    
+    /**
+     * Metodo unificado para actualizar cualquier torre.
+     * 
+     * PRE:
+     * - tabla != null
+     * - discos != null
+     * 
+     * POST:
+     * - La tabla refleja el estado de la torre.
+     */
+    private void presentarTorre(JTable tabla, String[] discos) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+
+        modelo.setRowCount(0);
+        modelo.setRowCount(10);
+
+        int row = 10 - contar(discos);
+
+        for (String d : discos) {
+            if (d != null) {
+                modelo.setValueAt(d, row++, 0);
+            }
+        }
+    }
+    /*
+     * cuenta la cantidad de discos en el array
+     */
+    private int contar(String[] discos) {
+        int c = 0;
+        for (String d : discos) if (d != null) c++;
+        return c;
+    }
+	
+	//lanza la ventana que pregunta al usuario si quiere seguir con la resolucion recursiva
+	public boolean preguntarContinuar(int paso) {
+	    int opt = JOptionPane.showConfirmDialog(
+	        this,
+	        "Paso #" + paso + "\n¿Desea continuar?",
+	        "Resolucionas",
+	        JOptionPane.YES_NO_OPTION
+	    );
+	    return opt == JOptionPane.YES_OPTION;
+	}
+	/*
+	 * muestra la alerta de victoria
+	 */
+	public void mostrarVictoria() {
+		JOptionPane.showMessageDialog(null, "felicidades haz ganado \n\n intenta superar el objetivo de movimientos minimos"
+				, "felicitaciones "
+				, JOptionPane.WARNING_MESSAGE);
+	}
+	/*
+	 * muestra la alerta de victoria con el minimo de movimientos
+	 */
+	public void mostrarVictoriaPerfecta() {
+		JOptionPane.showMessageDialog(null, "felicidades haz alcanzado la cantidad minima de movimientos \n\n intenta con otro nivel de dificultad",
+				"felicitaciones ",
+				JOptionPane.WARNING_MESSAGE);
+	}
+	
+	//GETTER SIMPLES-----------------------------------------------------------------
+	//retorna si el juego fue iniciado o no
+	public boolean getJuegoIniciado() {
+		return this.juegoIniciado;
+	}
+	
+	//SETTERS SIMPLES---------------------------------------------------------------
+	// cambia el estado del juego iniciado
+	private void setJuegoIniciado(boolean estado) {
+		this.juegoIniciado=estado;
+	}
+	
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPrincipalHanoi frame = new VentanaPrincipalHanoi();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+}

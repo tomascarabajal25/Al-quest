@@ -1,3 +1,28 @@
 # IntelliJ
 .idea/
 *.iml
+/bin/
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+bin/
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.bak
+
+# Maven / Gradle (si algún día los usás)
+target/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java compilados (si usás carpetas propias)
+out/
+build/
