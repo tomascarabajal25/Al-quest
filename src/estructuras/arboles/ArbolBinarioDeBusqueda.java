@@ -1,7 +1,5 @@
 package material.estructuras.arboles;
 
-import material.estructuras.listas.ListaConCursor;
-
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 	
     private NodoDeArbol<T> raiz = null;
