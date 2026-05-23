@@ -1,4 +1,4 @@
-package material.estructuras.vector;
+package estructuras.vector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

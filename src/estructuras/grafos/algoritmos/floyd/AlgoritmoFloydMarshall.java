@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.floyd;
+package estructuras.grafos.algoritmos.floyd;
 
 public class AlgoritmoFloydMarshall {
     static final int INFINITO = 99999; // Representa infinito

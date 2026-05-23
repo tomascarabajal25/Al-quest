@@ -1,10 +1,10 @@
-package material.estructuras.listas;
+package estructuras.listas;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import material.estructuras.nodos.NodoSimplementeEnlazado;
+import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ListaCircularSimplementeEnlazada<T> extends ListaSimplementeEnlazada<T> {
 

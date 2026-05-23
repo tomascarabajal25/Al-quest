@@ -1,4 +1,4 @@
-package material.estructuras.nodos;
+package estructuras.nodos;
 
 public abstract class Nodo<T> {
 //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

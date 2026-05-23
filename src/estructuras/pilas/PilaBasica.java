@@ -1,8 +1,8 @@
-package material.estructuras.pilas;
+package estructuras.pilas;
 
 import java.util.List;
 
-import material.estructuras.nodos.NodoSimplementeEnlazado;
+import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class PilaBasica<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

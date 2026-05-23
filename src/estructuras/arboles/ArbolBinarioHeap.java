@@ -1,4 +1,4 @@
-package material.estructuras.arboles;
+package estructuras.arboles;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;

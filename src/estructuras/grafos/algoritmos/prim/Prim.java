@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.prim;
+package estructuras.grafos.algoritmos.prim;
 
 import java.util.Arrays;
 

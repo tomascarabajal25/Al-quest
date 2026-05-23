@@ -1,8 +1,8 @@
-package material.estructuras.cola;
+package estructuras.cola;
 
 import java.util.List;
 
-import material.estructuras.nodos.NodoSimplementeEnlazado;
+import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ColaBasica<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

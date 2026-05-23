@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.warshall;
+package estructuras.grafos.algoritmos.warshall;
 
 public class WarshallAlgorithm {
 	

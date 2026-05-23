@@ -1,4 +1,4 @@
-package material.estructuras.listas;
+package estructuras.listas;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
-import material.estructuras.nodos.NodoSimplementeEnlazado;
+import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ListaSimplementeEnlazada<T> implements List<T> {
 //INTERFACES ----------------------------------------------------------------------------------------------

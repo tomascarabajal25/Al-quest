@@ -1,4 +1,4 @@
-package material.estructuras.grafos;
+package estructuras.grafos;
 
 import java.util.LinkedList;
 import java.util.List;

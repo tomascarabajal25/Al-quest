@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.fordFulkerson;
+package estructuras.grafos.algoritmos.fordFulkerson;
 
 import java.util.Arrays;
 import java.util.List;
