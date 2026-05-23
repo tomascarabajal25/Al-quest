@@ -3,7 +3,7 @@ package material.estructuras.vector;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import material.utiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
 public class Vector<T> implements Iterable<T> {
 //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

@@ -69,7 +69,7 @@ public class Elemento {
      *
      * @return: Devuelve el valor del parametro nombre
      */
-    private String getNombre(){
+    public String getNombre(){
         return this.nombre;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------

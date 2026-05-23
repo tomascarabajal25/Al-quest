@@ -78,7 +78,7 @@ public class Jugador {
      * POST:
      * -Establece el valor del parametro nombre
      */
-    public void setNombre(String nombre) {
+    private void setNombre(String nombre) {
         ValidacionesUtiles.esDistintoDeNull(nombre, "nombre");
         this.nombre = nombre;
     }

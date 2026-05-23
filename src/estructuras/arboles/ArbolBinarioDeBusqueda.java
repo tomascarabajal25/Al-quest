@@ -1,4 +1,4 @@
-package material.estructuras.arboles;
+package estructuras.arboles;
 
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 	
