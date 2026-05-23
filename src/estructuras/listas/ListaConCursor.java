@@ -1,6 +1,6 @@
-package material.estructuras.listas;
+package estructuras.listas;
 
-import material.estructuras.nodos.NodoSimplementeEnlazado;
+import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ListaConCursor<T extends Object> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

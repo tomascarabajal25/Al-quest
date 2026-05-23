@@ -1,4 +1,4 @@
-package material.estructuras.conjuntos;
+package estructuras.conjuntos;
 
 import java.util.ArrayList;
 import java.util.Collection;

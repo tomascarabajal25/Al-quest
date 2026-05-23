@@ -1,9 +1,9 @@
-package material.estructuras.listas;
+package estructuras.listas;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import material.estructuras.nodos.NodoDoblementeEnlazado;
+import estructuras.nodos.NodoDoblementeEnlazado;
 
 public class ListaCircularDoblementeEnlazada<T> extends ListaDoblementeEnlazada<T> {
 

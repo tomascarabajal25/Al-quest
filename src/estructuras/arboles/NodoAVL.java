@@ -1,4 +1,4 @@
-package material.estructuras.arboles;
+package estructuras.arboles;
 
 class NodoAVL<T> extends NodoDeArbol<T> {
     private int altura;

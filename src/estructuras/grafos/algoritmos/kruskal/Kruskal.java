@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.kruskal;
+package estructuras.grafos.algoritmos.kruskal;
 
 import java.util.ArrayList;
 import java.util.Collections;

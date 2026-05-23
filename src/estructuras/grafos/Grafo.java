@@ -1,4 +1,4 @@
-package material.estructuras.grafos;
+package estructuras.grafos;
 
 import java.util.ArrayList;
 import java.util.Collection;

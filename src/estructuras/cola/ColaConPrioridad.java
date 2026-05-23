@@ -1,4 +1,4 @@
-package material.estructuras.cola;
+package estructuras.cola;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

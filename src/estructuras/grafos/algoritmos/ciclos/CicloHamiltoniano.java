@@ -1,4 +1,4 @@
-package material.estructuras.grafos.algoritmos.ciclos;
+package estructuras.grafos.algoritmos.ciclos;
 
 public class CicloHamiltoniano {
 

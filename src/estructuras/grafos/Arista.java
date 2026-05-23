@@ -1,4 +1,4 @@
-package material.estructuras.grafos;
+package estructuras.grafos;
 
 /*
 * Representa una Arista (borde) en el grafo.

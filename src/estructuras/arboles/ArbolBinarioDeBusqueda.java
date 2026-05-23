@@ -1,6 +1,6 @@
-package material.estructuras.arboles;
+package estructuras.arboles;
 
-import material.estructuras.listas.ListaConCursor;
+import estructuras.listas.ListaConCursor;
 
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 	

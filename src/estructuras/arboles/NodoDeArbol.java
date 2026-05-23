@@ -1,4 +1,4 @@
-package material.estructuras.arboles;
+package estructuras.arboles;
 
 class NodoDeArbol<T> {
     private T valor;

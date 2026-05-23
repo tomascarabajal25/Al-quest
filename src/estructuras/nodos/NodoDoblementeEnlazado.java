@@ -1,4 +1,4 @@
-package material.estructuras.nodos;
+package estructuras.nodos;
 
 public class NodoDoblementeEnlazado<T> extends NodoSimplementeEnlazado<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
