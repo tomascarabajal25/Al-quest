@@ -2,29 +2,43 @@ package ciudades.reinas;
 
 public class CiudadReinas {
     
-    SolverReinas solver = new SolverReinas();
-    Tablero tablero = new Tablero();
+    private SolverReinas solver = new SolverReinas();
+    private Tablero tablero = new Tablero();
+    private int[] solucion;     //la respuesta correcta, oculta al jugador
+    private int filajugador;
     
-    public void iniciarCiudad(int tamanio, int fila, int columna){
+    public boolean iniciarCiudad(int tamanio, int fila, int columna){
         
         tablero.setTamanio(tamanio);
         tablero.setReinas(fila, columna);
+        this.filajugador = fila;
 
-        //falta iniciar el bmp al iniciar la ciudad
+        solucion = solver.obtenerSolucion(tablero, fila);
+
+        return solucion != null;    //false = no hay solucion posible desde esa posicion
+
     }
 
-    public void ciudadIniciada(int filaJugador){
-        if (solver.resolver(tablero, 0, filaJugador)){ // el fila:0 es para que inicie la iteracion en resolver
-            //Solucion encontrada, mostrar BMP
-        } else{
-            System.out.println("No existe solucion"); //en producción esto debería disparar algo en la UI
+    public boolean intentarColocarReina (int fila, int columna){
+        if (solucion == null) return false;
+    
+        if (solucion [fila] == columna) {   //coincide con la solucion
+            tablero.setReinas(fila, columna);
+            return true;
         }
 
-
-        //falta mostrar el gráfico BMP con la ciudad ya iniciada
+        return false; //    movimiento incorrecto -> desde CiudadReinas se puede disparar "perdiste"
+    
     }
 
-    public void mostrarTablero(){
+    public boolean juegoGanado (){
+        for (int i = 0; i < tablero.getTamanio(); i++){
+            if (tablero.getReinas(i) == -1) return false;   //hay filas vacias
+        }
+        return true;
+    }
+
+    public void mostrarTablero(){   //metodo provisorio, se puede quitar mas adelante
         tablero.imprimirTablero();
     }
 

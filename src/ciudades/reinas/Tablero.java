@@ -46,6 +46,22 @@ public class Tablero {
         return true;
     }
 
+    
+    public Tablero copiar(){
+        Tablero copia = new Tablero();
+        copia.setTamanio(this.tamanio);
+        for (int i = 0; i < tamanio; i++){
+            if (reinas[i] != -1){
+                copia.setReinas(i, reinas[i]);
+            }
+        }
+        return copia;
+    }
+
+    public int[] getTodasLasReinas(){
+        return Arrays.copyOf (reinas,tamanio);
+    }
+
     public int getTamanio() {
         return tamanio;
     }

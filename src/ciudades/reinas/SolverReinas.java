@@ -22,4 +22,14 @@ public class SolverReinas {
         }
         return false;
     }
+
+    public int[] obtenerSolucion (Tablero tableroOriginal, int filajugador){
+        Tablero copia = tableroOriginal.copiar();
+        if (resolver (copia, 0, filajugador)){
+            return copia.getTodasLasReinas(); //devuelve el arreglo reinas[]
+        }
+
+        return null; //sin solucion
+    }
+
 }
