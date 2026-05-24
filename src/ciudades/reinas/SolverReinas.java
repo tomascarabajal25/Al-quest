@@ -1,4 +1,4 @@
-package ciudadReinas;
+package ciudades.reinas;
 
 public class SolverReinas {
 

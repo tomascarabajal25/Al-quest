@@ -1,4 +1,4 @@
-package ciudadReinas;
+package ciudades.reinas;
 
 public class CiudadReinas {
     
@@ -17,7 +17,7 @@ public class CiudadReinas {
         if (solver.resolver(tablero, 0, filaJugador)){ // el fila:0 es para que inicie la iteracion en resolver
             //Solucion encontrada, mostrar BMP
         } else{
-            System.out.println("No existe solucion");
+            System.out.println("No existe solucion"); //en producción esto debería disparar algo en la UI
         }
 
 

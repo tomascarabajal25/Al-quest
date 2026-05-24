@@ -1,15 +1,6 @@
-package ciudadReinas;
+package ciudades.reinas;
 
 import java.util.Arrays;
-
-/*
-    Ciudad 2 – Problema de las 4 Reinas
-
-    Se deberá implementar una solución al problema de las N reinas utilizando backtracking o fuerza bruta.
-    El jugador define la cantidad de reinas, una posición inicial y el sistema completa la solución,
-    informando si existe o no una solución. El juego debe ser explicativo mediante los gráficos BMP -
-    a medida que avance la solución.
-*/
 
 public class Tablero {
     private int tamanio; // tamaño del tablero (N x N)
@@ -85,20 +76,6 @@ public class Tablero {
             System.out.println();
         }
     }
-
-    /*  EJEMPLO USO EN MAIN
-
-            int tamanio = 8;    // tamaño del tablero (N x N)
-            int fila = 2;       // fila inicial para colocar la primera reina
-            int columna = 0;    // columna inicial para colocar la primera reina
-
-            CiudadReinas ciudad = new CiudadReinas();
-            ciudad.iniciarCiudad(tamanio, fila, columna);
-            
-            ciudad.ciudadIniciada(4);    // fila del jugador para que el solver la saltee
-            ciudad.mostrarTablero();     // imprimir el tablero con la solución encontrada
-    
-    */
 
 }
 
