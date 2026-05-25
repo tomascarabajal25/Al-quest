@@ -5,7 +5,6 @@ import ciudades.reinas.CiudadReinas;
 import ciudades.reinas.Paso;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.util.List;
 import javax.swing.*;
 
@@ -20,6 +19,8 @@ public class TableroPanel extends JPanel{
 
     private int[][] tableroJugador; //tableroJugador[fila][columna] = 1 si hay reina, 0 si no
     private int tamanio;
+    private final int filaJugadorInicial;
+    private final int columnaJugadorInicial;
 
     private boolean solucionRevelada = false;
     private boolean juegoTerminado = false;
@@ -37,19 +38,21 @@ public class TableroPanel extends JPanel{
         this.recursos = new RecursosGraficos ();
         this.tamanio = tamanio;
         this.tableroJugador = new int[tamanio][tamanio];
+        this.filaJugadorInicial = filaJugador;
+        this.columnaJugadorInicial = columnaJugador;
 
         //colocar la reina inicial del jugador
         tableroJugador[filaJugador][columnaJugador] = 1;
 
         configurarLayout();
         configurarBotones();
-        configurarMouse(filaJugador);
+        configurarMouse(filaJugador, columnaJugador);
 
     }
 
     private void configurarLayout(){
         setLayout (new BorderLayout());
-        int dimensionTablero = ESQUINA * 2 * CASILLA;
+        int dimensionTablero = ESQUINA * 2 + tamanio * CASILLA; //96 * 2 + 8 * 80 = 832 para tablero 8x8
         setPreferredSize(new Dimension (dimensionTablero, dimensionTablero + 50));    //espacio para botones
     }
 
@@ -72,7 +75,7 @@ public class TableroPanel extends JPanel{
         add(panelBotones, BorderLayout.SOUTH);
     }
 
-    private void configurarMouse (int filaJugador){
+    private void configurarMouse (int filaJugador, int columnaJugador){
         addMouseListener(new MouseAdapter(){
 
             @Override
@@ -83,9 +86,9 @@ public class TableroPanel extends JPanel{
                 int fila = (e.getY() - ESQUINA) / CASILLA;
 
                 if (fila < 0 || fila >= tamanio || col < 0 || col >= tamanio) return;
-                
-                if (fila == filaJugador) return;  //no puese mover la reina inicial
 
+                if (fila == filaJugador && col == columnaJugador) return;
+                
                 if (SwingUtilities.isLeftMouseButton(e)){
                     tableroJugador[fila][col] = 1;
 
@@ -156,9 +159,8 @@ public class TableroPanel extends JPanel{
     }
 
     private void reiniciar (){
-        //por ahora resetea el estado local
-        //despues esto va a notificar al juego principal
         tableroJugador = new int[tamanio][tamanio];
+        tableroJugador[filaJugadorInicial][columnaJugadorInicial] = 1;
         solucionRevelada = false;
         juegoTerminado = false;
         pasoActual = 0;
@@ -181,15 +183,15 @@ public class TableroPanel extends JPanel{
         Graphics2D g2 = (Graphics2D) g;
 
         //--- ESQUINAS ---
-        boolean clara = true;
         g.drawImage(recursos.getEsquinaClaraImg(), 0, 0, ESQUINA, ESQUINA, this);   //top-left
         g.drawImage(recursos.getEsquinaOscuraImg(), ESQUINA + tamanio * CASILLA, 0, ESQUINA, ESQUINA, this);    //top-right
         g.drawImage(recursos.getEsquinaOscuraImg(), 0, ESQUINA + tamanio * CASILLA, ESQUINA, ESQUINA, this);    //bottom-left
-        g.drawImage(recursos.getEsquinaClaraImg(), ESQUINA + tamanio * CASILLA, ESQUINA + tamanio, ESQUINA, ESQUINA, this); //bottom-right
+        g.drawImage(recursos.getEsquinaClaraImg(), ESQUINA + tamanio * CASILLA, ESQUINA + tamanio * CASILLA, ESQUINA, ESQUINA, this); //bottom-right
 
         // --- BORDES SUPERIOR E INFERIOR ---
         for (int col = 0; col < tamanio; col++){
             boolean esClara = col % 2 == 0;
+
             Image imgBorde = esClara ? recursos.getBordeClaroImg() : recursos.getBordeOscuroImg();
             int x = ESQUINA + col * CASILLA;
 
@@ -200,16 +202,12 @@ public class TableroPanel extends JPanel{
         // --- BORDES LATERALES (imagen rotada 90 grados) ---
         for (int fila = 0; fila < tamanio; fila ++){
             boolean esClara = fila % 2 == 0;
+
             Image imgBorde = esClara ? recursos.getBordeClaroImg() : recursos.getBordeOscuroImg();
             int y = ESQUINA + fila * CASILLA;
 
-            //rotar 90 grados para los laterales
-            AffineTransform rotacion = new AffineTransform();
-
-            //borde izquierdo
-            rotacion.setToTranslation(0, y);
-            rotacion.rotate(Math.PI / 2, ESQUINA / 2.0, CASILLA / 2.0);
-            g2.drawImage (imgBorde, rotacion, this);
+            g.drawImage(imgBorde, 0, y, ESQUINA, CASILLA, this);
+            g.drawImage(imgBorde, ESQUINA + tamanio * CASILLA, y, CASILLA, ESQUINA, this);
         }
 
         // ---CASILLAS ---
