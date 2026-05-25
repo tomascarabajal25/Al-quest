@@ -2,7 +2,7 @@ package ordenamientos;
 import java.util.List;
 import java.util.Objects;
 
-import materialesUtiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
 public abstract class Ordenador<T extends Comparable<T>> {
 	//ATRIBUTOS----------------------------------------------------------------------

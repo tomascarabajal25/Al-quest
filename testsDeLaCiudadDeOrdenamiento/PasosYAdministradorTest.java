@@ -1,9 +1,13 @@
-package ordenamientos;
+package testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import ordenamientos.AdministradorDePasos;
+import ordenamientos.Caja;
+import ordenamientos.PasoOrdenamiento;
 
 public class PasosYAdministradorTest {
 

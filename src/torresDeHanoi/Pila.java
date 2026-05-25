@@ -1,18 +1,18 @@
 package torresDeHanoi;
 
-import materialesUtiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
 /*
  * Clase pila, gestion de tipo LIFO
  * metodos: push,pop y peek
  * atributos: contnodo y cabeza
  */
-public class Pila {
+public class Pila<T> {
 //CONSTANTES-------------------------------------------------------------------
 //ATRIBUTOS DE LA CLASE---------------------------------------------------------
 //ATRIBUTOS----------------------------------------------------------------------
 	private int contNodo;
-	private Nodo<String> cabeza;					
+	private Nodo<T> cabeza;					
 //CONSTRUCTORES-----------------------------------------------------------------
 	/*
 	 * post: inicializa la pila vacia para su uso
@@ -29,7 +29,7 @@ public class Pila {
 	 * @param:nodo que se agregara a la pila
 	 * post:agrega un nodo a la pila 
 	 */
-	public void push (Nodo<String> nuevoNodo) {
+	public void push (Nodo<T> nuevoNodo) {
 		ValidacionesUtiles.esDistintoDeNull(nuevoNodo, "no se puede insertar un nodo nulo");
 		if (cabeza==null) {
 			cabeza=nuevoNodo;
@@ -55,7 +55,7 @@ public class Pila {
 	/*
 	 * @return: devuelve el dato del nodo cabeza de la pila
 	 */
-	public String peek() {
+	public T peek() {
 		return cabeza.getDato();
 	}
 	
@@ -69,7 +69,7 @@ public class Pila {
 	/*
 	 *  @return: devuelve el nodo cabeza de la pila
 	 */
-	public Nodo<String> getCabeza() {
+	public Nodo<T> getCabeza() {
 		return cabeza;
 	}
 //SETTERS SIMPLES---------------------------------------------------------------
@@ -82,7 +82,7 @@ public class Pila {
 	/*
 	 *post: cambia el nodo cabeza
 	 */
-	private void setCabeza(Nodo<String> cabeza) {
+	private void setCabeza(Nodo<T> cabeza) {
 		this.cabeza = cabeza;
 	}
 	

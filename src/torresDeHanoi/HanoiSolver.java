@@ -1,8 +1,8 @@
 package torresDeHanoi;
 
-import materialesUtiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
-public class HanoiSolver {
+public class HanoiSolver<T> {
 	private boolean stop=false;
 	private int paso=0;
 	private ObservadorHanoi observador;
@@ -15,11 +15,11 @@ public class HanoiSolver {
 	 * @param1:pila de destino (donde se quiere meter un nodo)
 	 * mueve del origen al destino 
 	 */
-	private void moverPlataforma(Pila origen, Pila destino) {
+	private void moverPlataforma(Pila<T> origen, Pila<T> destino) {
 		ValidacionesUtiles.esDistintoDeNull(destino, "el destino no puede ser null");
 		ValidacionesUtiles.esDistintoDeNull(origen, "el origen no puede ser null");
 		if (stop==false) {
-			Nodo<String> plataforma = new Nodo<>(origen.peek());
+			Nodo<T> plataforma = new Nodo<>(origen.peek());
 			origen.pop();
 			destino.push(plataforma);
 			this.paso++;
@@ -41,7 +41,7 @@ public class HanoiSolver {
 	 * @param2: pila destino
 	 * resuelve el de forma recursiva el algoritmo de hanoi
 	 */
-	protected void resolverHanoi(int n, Pila ori, Pila aux, Pila des) {
+	protected void resolverHanoi(int n, Pila<T> ori, Pila<T> aux, Pila<T> des) {
 		ValidacionesUtiles.esDistintoDeNull(ori, null);
 		ValidacionesUtiles.esDistintoDeNull(aux, null);
 		ValidacionesUtiles.esDistintoDeNull(des, null);

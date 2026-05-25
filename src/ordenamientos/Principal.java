@@ -1,6 +1,8 @@
 package ordenamientos;
 
 import java.util.List;
+
+import modelos.Jugador;
 /**
  * prueba del funcionamiento de partida ordenamientos
  */

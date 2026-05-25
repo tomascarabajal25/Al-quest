@@ -1,7 +1,9 @@
-package ordenamientos;
+package testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import ordenamientos.Caja;
 
 public class CajaTest {
 	    @Test

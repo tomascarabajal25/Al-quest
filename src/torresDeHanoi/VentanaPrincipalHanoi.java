@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import modelos.Jugador;
 /**
  * Clase que representa la interfaz gráfica principal para el juego de las Torres de Hanoi.
  * hereda jframe para la interacción con las pilas y las tablas (JTable).
@@ -328,19 +330,21 @@ public class VentanaPrincipalHanoi extends JFrame {
      */
     private void iniciar() {
     	objetivo= Integer.parseInt(comboBoxDiscos.getSelectedItem().toString());
-		controller = new ControllerHanoi(objetivo,this);
+    	// 💡 Creamos un jugador genérico para la interfaz por ahora
+        Jugador jugadorTemporal = new Jugador("Jugador Swing");
+		controller = new ControllerHanoi(objetivo,this, jugadorTemporal);
 	}
     
     /*
      * actualiza la vista de las torres y la cantidad de movimientos
      */
     public void actualizar(EstadoHanoi estado) {
-        presentarTorre(TorreA, estado.torreA);
-        presentarTorre(TorreB, estado.torreB);
-        presentarTorre(TorreC, estado.torreC);
+        presentarTorre(TorreA, estado.getTorreA());
+        presentarTorre(TorreB, estado.getTorreB());
+        presentarTorre(TorreC, estado.getTorreB());
 
-        lblNumMovimientos.setText(String.valueOf(estado.movimientos));
-        lblMinMovimientos.setText(String.valueOf(estado.minMovimientos));
+        lblNumMovimientos.setText(String.valueOf(estado.getMovimientos()));
+        lblMinMovimientos.setText(String.valueOf(estado.getMinMovimientos()));
     }
     
     /**

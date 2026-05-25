@@ -3,7 +3,8 @@ package torresDeHanoi;
 
 import java.util.Objects;
 
-import materialesUtiles.ValidacionesUtiles;
+import modelos.Jugador;
+import utils.ValidacionesUtiles;
 /**
  * Controlador del juego Torres de Hanoi.
  * 
@@ -16,8 +17,8 @@ import materialesUtiles.ValidacionesUtiles;
  */
 public class ControllerHanoi implements ObservadorHanoi {
 	//ATRIBUTOS----------------------------------------------------------------------
-    private JuegoHanoi juego;
-    private HanoiSolver solver;
+    private PartidaDeHanoi juego;
+    private HanoiSolver<String> solver;
     private VentanaPrincipalHanoi vista;
   
 	
@@ -34,11 +35,11 @@ public class ControllerHanoi implements ObservadorHanoi {
      * - Se crea un solver asociado al controlador.
      * - Se establece la vista.
      */
-    public ControllerHanoi(int discos, VentanaPrincipalHanoi vista) {
+    public ControllerHanoi(int discos, VentanaPrincipalHanoi vista, Jugador jugador) {
     	ValidacionesUtiles.validarRango(discos, 3, 10, "el objetivo debe estar entre 3 y 10");
     	ValidacionesUtiles.esDistintoDeNull(vista, null);
-        this.setJuego(new JuegoHanoi(discos));
-        this.setSolver(new HanoiSolver(this));
+        this.setJuego(new PartidaDeHanoi(discos, "torres de hanoi", jugador));
+        this.setSolver(new HanoiSolver<String>(this));
         this.setVista(vista);
         actualizarVista();
         
@@ -147,7 +148,7 @@ public class ControllerHanoi implements ObservadorHanoi {
      */
     public void resolver() {
     	ValidacionesUtiles.validarVerdadero(vista.getJuegoIniciado(), "no se puede resolver un juego no iniciado");
-    	solver = new HanoiSolver(this);
+    	solver = new HanoiSolver<String>(this);
     	solver.resolverHanoi(
                 juego.getTorreA().getContNodo(),
                 juego.getTorreA(),
@@ -208,7 +209,7 @@ public class ControllerHanoi implements ObservadorHanoi {
     /**
      * Devuelve el modelo del juego.
      */
-    public JuegoHanoi getJuego() {
+    public PartidaDeHanoi getJuego() {
         return juego;
     }
     
@@ -236,16 +237,14 @@ public class ControllerHanoi implements ObservadorHanoi {
      * retorna el estado del juego
      */
     public EstadoHanoi getEstado() {
-        EstadoHanoi e = new EstadoHanoi();
         
-        e.torreA = juego.getDiscosDeTorre(juego.getTorreA());
-        e.torreB = juego.getDiscosDeTorre(juego.getTorreB());
-        e.torreC = juego.getDiscosDeTorre(juego.getTorreC());
-
-        e.movimientos = juego.getMovimientos();
-        e.minMovimientos = juego.getMinMovimientos();
-
-        return e;
+        return new EstadoHanoi(
+            juego.getDiscosDeTorre(juego.getTorreA()),
+            juego.getDiscosDeTorre(juego.getTorreB()),
+            juego.getDiscosDeTorre(juego.getTorreC()),
+            juego.getMovimientos(),
+            juego.getMinMovimientos()
+        );
     }
      /**
       * Devuelve la vista asociada.
@@ -272,7 +271,7 @@ public class ControllerHanoi implements ObservadorHanoi {
      * PRE:
      * - juego != null
      */
-    private void setJuego(JuegoHanoi juego) {
+    private void setJuego(PartidaDeHanoi juego) {
     	ValidacionesUtiles.esDistintoDeNull(juego, null);
 		this.juego=juego;
 		
@@ -283,14 +282,11 @@ public class ControllerHanoi implements ObservadorHanoi {
      * PRE:
      * - solver != null
      */
-    private void setSolver(HanoiSolver solver) {
+    private void setSolver(HanoiSolver<String> solver) {
     	ValidacionesUtiles.esDistintoDeNull(solver, null);
 		this.solver=solver;
 		
 	}
-    
-
-	
-  
+ 
     	
 }

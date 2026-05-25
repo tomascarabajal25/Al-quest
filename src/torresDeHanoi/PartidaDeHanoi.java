@@ -1,8 +1,10 @@
 package torresDeHanoi;
 
 import java.util.Objects;
-
-import materialesUtiles.ValidacionesUtiles;
+import modelos.Jugador;
+import modelos.Partida;
+import ordenamientos.EstadoDePartida;
+import utils.ValidacionesUtiles;
 /**
  * TDA que representa el juego de las Torres de Hanoi.
  * 
@@ -15,13 +17,11 @@ import materialesUtiles.ValidacionesUtiles;
  * - Las torres solo contienen discos válidos (Strings con "#")
  * - En cada torre, los discos están ordenados de mayor a menor (de abajo hacia arriba)
  */
-public class JuegoHanoi {
+public class PartidaDeHanoi extends Partida{
 	//ATRIBUTOS----------------------------------------------------------------------
-	
-		
-    private Pila torreA;
-    private Pila torreB;
-    private Pila torreC;
+    private Pila<String> torreA;
+    private Pila<String> torreB;
+    private Pila<String> torreC;
     private int movimientos;
     private int objetivo;
     
@@ -37,10 +37,10 @@ public class JuegoHanoi {
      * - Todos los discos se ubican en la torre A.
      * - movimientos = 0
      */
-    public JuegoHanoi(int discos) {
-    	ValidacionesUtiles.validarRangoNumerico(discos, 3, 10, "No es una cantidad de discos valida");
-        this.objetivo = discos;
-        inicializar();
+    public PartidaDeHanoi(int discos, String nombre, Jugador jugador) {
+    	super(nombre, jugador);
+    	setObjetivo(discos);
+        iniciar();
     }
     
   //METODOS DE COMPORTAMIENTO------------------------------------------------------
@@ -52,15 +52,21 @@ public class JuegoHanoi {
      * - torreB y torreC están vacías.
      * - movimientos = 0
      */
-    private void inicializar() {
-        torreA = new Pila();
-        torreB = new Pila();
-        torreC = new Pila();
+    public void iniciar() {
+    	ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya esta iniciada");
+    	setEstado(EstadoDePartida.Iniciado);
+        torreA = new Pila<String>();
+        torreB = new Pila<String>();
+        torreC = new Pila<String>();
         movimientos = 0;
 
         for (int i = objetivo; i >= 1; i--) {
             torreA.push(new Nodo<String>("#".repeat(i)));
         }
+    }
+    public void finalizar() {
+    	ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no esta iniciada");
+    	setEstado(EstadoDePartida.Creado);
     }
     /**
      * Reinicia el juego con un nuevo objetivo.
@@ -73,7 +79,7 @@ public class JuegoHanoi {
      * - torreA vuelve a contener todos los discos.
      * - movimientos = 0
      */
-    protected void reiniciar(int nuevoObjetivo) {
+    public void reiniciar(int nuevoObjetivo) {
     	ValidacionesUtiles.esDistintoDeNull(nuevoObjetivo, "el objetivo no puede ser nulo");
     	ValidacionesUtiles.validarRangoNumerico(nuevoObjetivo, 3, 10, "No es un objetivo valido");
         this.setObjetivo(nuevoObjetivo); 
@@ -99,7 +105,7 @@ public class JuegoHanoi {
      * POST:
      * - p queda vacía
      */
-    private void vaciarPila(Pila p) {
+    private void vaciarPila(Pila<String> p) {
     	ValidacionesUtiles.esDistintoDeNull(p, "no se puede vaciar pila nula");
         while (p.getContNodo() > 0) {
             p.pop();
@@ -121,7 +127,7 @@ public class JuegoHanoi {
      *      - El estado no cambia
      *      - Retorna false
      */
-    public boolean mover(Pila origen, Pila destino) {
+    public boolean mover(Pila<String> origen, Pila<String> destino) {
     	ValidacionesUtiles.esDistintoDeNull(origen, "no se puede mover pila a una pila nula");
     	ValidacionesUtiles.esDistintoDeNull(destino, "no se puede mover una pila nula");
     	
@@ -171,7 +177,7 @@ public class JuegoHanoi {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JuegoHanoi other = (JuegoHanoi) obj;
+		PartidaDeHanoi other = (PartidaDeHanoi) obj;
 		return movimientos == other.movimientos && objetivo == other.objetivo;
 	}
   //GETTER SIMPLES-----------------------------------------------------------------
@@ -201,7 +207,7 @@ public class JuegoHanoi {
      * - Retorna un arreglo con los discos (de abajo hacia arriba)
      * - Las posiciones vacías contienen null
      */
-    public String[] getDiscosDeTorre(Pila torre) {
+    public String[] getDiscosDeTorre(Pila<String> torre) {
     	ValidacionesUtiles.esDistintoDeNull(torre, "no se puede obtener los discos de una pila nula");
         String[] discos = new String[10]; 
         int i = 0; // Empezamos desde la última fila (abajo)
@@ -216,13 +222,13 @@ public class JuegoHanoi {
         return discos;
     }
   
-    public Pila getTorreA() { 
+    public Pila<String> getTorreA() { 
     	return torreA; 
     	}
-    public Pila getTorreB() { 
+    public Pila<String> getTorreB() { 
     	return torreB; 
     	}
-    public Pila getTorreC() { 
+    public Pila<String> getTorreC() { 
     	return torreC; 
     	}
   //SETTERS SIMPLES---------------------------------------------------------------
@@ -238,6 +244,7 @@ public class JuegoHanoi {
      * - 3 <= objetivo <= 10
      */
     private void setObjetivo(int objetivoNuevo) {
+    	ValidacionesUtiles.validarRangoNumerico(objetivoNuevo, 3, 10, "No es una cantidad de discos valida");
        this.objetivo = objetivoNuevo;
     }
 }

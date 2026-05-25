@@ -1,8 +1,9 @@
-package ordenamientos;
+package modelos;
 
 import java.util.Objects;
 
-import materialesUtiles.ValidacionesUtiles;
+import ordenamientos.EstadoDePartida;
+import utils.ValidacionesUtiles;
 
 public abstract class Partida {
 	//ATRIBUTOS----------------------------------------------------------------------

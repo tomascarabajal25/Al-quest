@@ -89,12 +89,6 @@ public class ValidacionesUtiles {
 			throw new RuntimeException("El " + texto + " no puede ser nulo");
 		}		
 	}
-	
-	public static void esIgualDeNull(Object object, String texto) {
-		if (object != null) {
-			throw new RuntimeException("El " + texto + " no puede ser distinto nulo");
-		}		
-	}
 
 	public static void validarVerdadero(boolean valor, String texto) {
 		validarFalso(!valor, texto);

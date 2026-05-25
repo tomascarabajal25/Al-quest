@@ -1,6 +1,7 @@
 package ordenamientos;
 
-import materialesUtiles.ValidacionesUtiles;
+import modelos.Elemento;
+import utils.ValidacionesUtiles;
 
 /**
  * Clase caja, elemento q sera utilizado para comparar en la ciudad de ordenamiento

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import materialesUtiles.ValidacionesUtiles;
+import modelos.Jugador;
+import modelos.Partida;
+import utils.ValidacionesUtiles;
 
 public class PartidaOrdenamientos<T extends Comparable<T>> extends Partida {
 	//ATRIBUTOS----------------------------------------------------------------------

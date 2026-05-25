@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import materialesUtiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
 /**
  * administrador de pasos de elemeto T

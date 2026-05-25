@@ -3,7 +3,7 @@ package ordenamientos;
 import java.util.Collections;
 import java.util.List;
 
-import materialesUtiles.ValidacionesUtiles;
+import utils.ValidacionesUtiles;
 
 public class OrdenadorSelection<T extends Comparable<T>> extends Ordenador<T> {
 	//CONSTRUCTORES-----------------------------------------------------------------

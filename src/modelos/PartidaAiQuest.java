@@ -1,8 +1,16 @@
-package ordenamientos;
+package modelos;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ordenamientos.Caja;
+import ordenamientos.OrdenadorBubble;
+import ordenamientos.OrdenadorSelection;
+import ordenamientos.PartidaOrdenamientos;
+/**
+ * clase incompleta:
+ * va a representar la partida principal del juego aiquest, maneja el todas las ciudad (las demas partidas)
+ */
 public class PartidaAiQuest extends Partida {
     private List<Partida> ciudades;
     private int indiceCiudadActual;
