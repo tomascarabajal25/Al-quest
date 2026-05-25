@@ -19,7 +19,7 @@ public class RecursosGraficos {
     public RecursosGraficos() {
 
         try {
-            String ruta = "resources/imagenes/";
+            String ruta = "src/ciudades/reinas/resources/imagenes/";
             bordeClaroImg     = ImageIO.read(new File(ruta + "borde-claro.bmp"));
             bordeOscuroImg    = ImageIO.read(new File(ruta + "borde-oscuro.bmp"));
             esquinaClaraImg   = ImageIO.read(new File(ruta + "esquina-clara.bmp"));
