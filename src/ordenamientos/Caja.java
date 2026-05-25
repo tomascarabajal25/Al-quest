@@ -1,36 +1,34 @@
 package ordenamientos;
 
-import java.util.Objects;
+import materialesUtiles.ValidacionesUtiles;
 
-/*
- * Clase Caja, la cual va a ser ordenada para el juego de memoria
- * atributos:ancho, profundo y alto
+/**
+ * Clase caja, elemento q sera utilizado para comparar en la ciudad de ordenamiento
+ * se compara en base al tamaño
  */
-public class Caja {
-	private double ancho;
-	private double alto;
-	private double profundo;
+public class Caja extends Elemento implements Comparable<Caja>{
+	//ATRIBUTOS----------------------------------------------------------------------
+	private int tamaño;
 	//CONSTRUCTORES-----------------------------------------------------------------
-	public Caja(double ancho, double alto, double profundo) {
-		super();
-		this.setAncho(ancho); 
-		this.setAlto(alto); 
-		this.setProfundo(profundo); 
+	/**
+	 * pre:
+	 * @param nombre diferente de null, almenos len de 2
+	 * @param tamaño mayor a 0
+	 * post: crea la caja con el tamaño y nombre ingresados
+	 */
+	public Caja(String nombre, int tamaño) {
+		super(nombre);
+		this.setTamaño(tamaño);
 	}
+	
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
 	
 	//METODOS DE CLASES-------------------------------------------------------------
 	//METODOS GENERALES------------------------------------------------------------
 	@Override
-	public String toString() {
-		return "Caja [ancho=" + ancho + ", alto=" + alto + ", profundo=" + profundo + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(alto, ancho, profundo);
-	}
-
+    public int compareTo(Caja otra) {
+        return Integer.compare(this.tamaño, otra.getTamaño());
+    }
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -40,38 +38,28 @@ public class Caja {
 		if (getClass() != obj.getClass())
 			return false;
 		Caja other = (Caja) obj;
-		return Double.doubleToLongBits(alto) == Double.doubleToLongBits(other.alto)
-				&& Double.doubleToLongBits(ancho) == Double.doubleToLongBits(other.ancho)
-				&& Double.doubleToLongBits(profundo) == Double.doubleToLongBits(other.profundo);
+		return tamaño==other.getTamaño();
 	}
 
 	//GETTER SIMPLES-----------------------------------------------------------------
-	public double getVolumen(){
-		return this.getAncho()*this.getAlto()*this.getProfundo();
+	/**
+	 * devuelve el tamaño
+	 * @return
+	 */
+	public int getTamaño() {
+		return tamaño;
 	}
-
-	public double getAncho() {
-		return ancho;
-	}
-
-	public double getAlto() {
-		return alto;
-	}
-
-	public double getProfundo() {
-		return profundo;
-	}
+	
 	
 	//SETTERS SIMPLES---------------------------------------------------------------
-	private void setProfundo(double profundo) {
-		this.profundo = profundo;
+	/**
+	 * modifica el tamaño
+	 * @param tamaño, debe ser mayor a 0
+	 */
+	private void setTamaño(int tamaño) {
+		ValidacionesUtiles.validarMayorACero(tamaño, "El tamaño no puede ser menor a 0");
+		this.tamaño=tamaño;
 	}
 	
-	private void setAncho(double ancho) {
-		this.ancho = ancho;
-	}
 	
-	private void setAlto(double alto) {
-		this.alto = alto;
-	}
 }

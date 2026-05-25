@@ -1,21 +1,60 @@
 package ordenamientos;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Ordenador {
-    protected List<PasoOrdenamiento> historialDePasos = new ArrayList<>();
+import materialesUtiles.ValidacionesUtiles;
 
-    protected void guardarPaso(List<Caja> estado, int i1, int i2, String mensaje) {
-        historialDePasos.add(new PasoOrdenamiento(estado, i1, i2, mensaje));
+public abstract class Ordenador<T extends Comparable<T>> {
+	//ATRIBUTOS----------------------------------------------------------------------
+    private String nombre;
+    
+    //CONSTRUCTORES-----------------------------------------------------------------
+	public Ordenador(String nombre) {
+    	setNombre(nombre);
     }
+    
+    //METODOS DE CLASES-------------------------------------------------------------
+    //METODOS GENERALES------------------------------------------------------------
+    
+    @Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
 
-    public List<PasoOrdenamiento> getPasos() {
-        return historialDePasos;
-    }
 
-    // no hace nada, los metodos hijos deben reemplazarlo
-    protected void ordenar(List<Caja> cajas) {
-        // Vacío 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ordenador<?> other = (Ordenador<?>) obj;
+		return Objects.equals(nombre, other.nombre);
+	}
+
+	@Override
+	public String toString() {
+		return "Ordenador [nombre=" + nombre + "]";
+	}
+
+	
+    
+	//METODOS DE COMPORTAMIENTO------------------------------------------------------
+    protected abstract void ordenar(List<T> elementos);
+    
+    protected abstract void ordenar(List<T> elementos, AdministradorDePasos<T> historialDePasos);
+    
+    //GETTER SIMPLES-----------------------------------------------------------------
+    public String getNombre() {
+    	return nombre;
     }
+    
+    // SETTERS SIMPLES---------------------------------------------------------------------------------------
+     private void setNombre(String nombre) {
+    	ValidacionesUtiles.esDistintoDeNull(nombre, nombre);
+    	this.nombre=nombre;
+    }
+     
 }

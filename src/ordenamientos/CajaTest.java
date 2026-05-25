@@ -4,21 +4,30 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class CajaTest {
+	    @Test
+	    public void testCajaHeredaCorrectamenteYGuardaTamaño() {
+	        Caja caja = new Caja("Caja Mediana", 50);
+	        assertEquals("Caja Mediana", caja.getNombre());
+	        assertEquals(50, caja.getTamaño());
+	    }
 
-    @Test
-    public void testGetVolumen() {
-        Caja caja = new Caja(2.0, 3.0, 4.0);
-        // 2 * 3 * 4 = 24.0
-        assertEquals(24.0, caja.getVolumen(), "El volumen calculado es incorrecto");
-    }
+	    @Test
+	    public void testCajaEqualsPorTamaño() {
+	        Caja caja1 = new Caja("Caja A", 30);
+	        Caja caja2 = new Caja("Caja B", 30);
+	        Caja caja3 = new Caja("Caja C", 10);
 
-    @Test
-    public void testEquals() {
-        Caja caja1 = new Caja(2.0, 2.0, 2.0);
-        Caja caja2 = new Caja(2.0, 2.0, 2.0);
-        Caja cajaDiferente = new Caja(1.0, 1.0, 1.0);
+	        assertEquals(caja1, caja2, "Cajas con mismo tamaño deben ser iguales");
+	        assertNotEquals(caja1, caja3, "Cajas con distinto tamaño no deben ser iguales");
+	    }
 
-        assertTrue(caja1.equals(caja2), "Las cajas con las mismas dimensiones deberían ser iguales");
-        assertFalse(caja1.equals(cajaDiferente), "Las cajas con distintas dimensiones no deberían ser iguales");
-    }
-}
+	    @Test
+	    public void testCajaCompareTo() {
+	        Caja chica = new Caja("Chica", 10);
+	        Caja grande = new Caja("Grande", 100);
+
+	        assertTrue(chica.compareTo(grande) < 0, "Chica debe ser menor que Grande");
+	        assertTrue(grande.compareTo(chica) > 0, "Grande debe ser mayor que Chica");
+	        assertEquals(0, chica.compareTo(new Caja("Otra", 10)), "Mismo tamaño debe dar 0");
+	    }
+	}
