@@ -49,9 +49,5 @@ public class CiudadReinas {
         Tablero copia = tablero.copiar();
         return solver.grabarPasos(tablero.copiar(), filajugador);
     }
-    
-    public void mostrarTablero(){   //metodo provisorio, se puede quitar mas adelante
-        tablero.imprimirTablero();
-    }
 
 }

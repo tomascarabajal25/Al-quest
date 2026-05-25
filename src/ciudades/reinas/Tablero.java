@@ -84,15 +84,6 @@ public class Tablero {
         
     }
 
-    public void imprimirTablero() { //metodo solo para probar funcionalidad del tablero, se puede eliminar o modificar para mostrar el gráfico BMP
-        for (int fila = 0; fila < tamanio; fila++) {
-            for (int col = 0; col < tamanio; col++) {
-                System.out.print(reinas[fila] == col ? " C " : " . ");
-            }
-            System.out.println();
-        }
-    }
-
 }
 
 

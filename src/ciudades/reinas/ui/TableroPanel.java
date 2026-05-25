@@ -10,7 +10,7 @@ import javax.swing.*;
 
 public class TableroPanel extends JPanel{
     
-    public static final int CASILLA = 64;  //pixeles por casilla
+    public static final int CASILLA = 80;  //pixeles por casilla
     public static final int BORDE = 16;
     public static final int ESQUINA = 96; //CASILLA + BORDE
 
@@ -181,34 +181,6 @@ public class TableroPanel extends JPanel{
     protected void paintComponent (Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
-        //--- ESQUINAS ---
-        g.drawImage(recursos.getEsquinaClaraImg(), 0, 0, ESQUINA, ESQUINA, this);   //top-left
-        g.drawImage(recursos.getEsquinaOscuraImg(), ESQUINA + tamanio * CASILLA, 0, ESQUINA, ESQUINA, this);    //top-right
-        g.drawImage(recursos.getEsquinaOscuraImg(), 0, ESQUINA + tamanio * CASILLA, ESQUINA, ESQUINA, this);    //bottom-left
-        g.drawImage(recursos.getEsquinaClaraImg(), ESQUINA + tamanio * CASILLA, ESQUINA + tamanio * CASILLA, ESQUINA, ESQUINA, this); //bottom-right
-
-        // --- BORDES SUPERIOR E INFERIOR ---
-        for (int col = 0; col < tamanio; col++){
-            boolean esClara = col % 2 == 0;
-
-            Image imgBorde = esClara ? recursos.getBordeClaroImg() : recursos.getBordeOscuroImg();
-            int x = ESQUINA + col * CASILLA;
-
-            g.drawImage(imgBorde, x, 0, CASILLA, ESQUINA, this);    //superior
-            g.drawImage (imgBorde, x, ESQUINA + tamanio * CASILLA, CASILLA, ESQUINA, this); //inferior
-        }
-
-        // --- BORDES LATERALES (imagen rotada 90 grados) ---
-        for (int fila = 0; fila < tamanio; fila ++){
-            boolean esClara = fila % 2 == 0;
-
-            Image imgBorde = esClara ? recursos.getBordeClaroImg() : recursos.getBordeOscuroImg();
-            int y = ESQUINA + fila * CASILLA;
-
-            g.drawImage(imgBorde, 0, y, ESQUINA, CASILLA, this);
-            g.drawImage(imgBorde, ESQUINA + tamanio * CASILLA, y, CASILLA, ESQUINA, this);
-        }
 
         // ---CASILLAS ---
         for (int fila = 0; fila < tamanio; fila++){
