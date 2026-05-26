@@ -1,4 +1,4 @@
-package torresDeHanoi;
+package Juego.torresDeHanoi;
 
 /**
  * Representa un nodo genérico dentro de una estructura enlazada.

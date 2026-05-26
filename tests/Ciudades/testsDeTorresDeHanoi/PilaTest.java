@@ -1,11 +1,11 @@
-package testsDeTorresDeHanoi;
+package Ciudades.testsDeTorresDeHanoi;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import torresDeHanoi.Nodo;
-import torresDeHanoi.Pila;
+import Juego.torresDeHanoi.Nodo;
+import Juego.torresDeHanoi.Pila;
 
 public class PilaTest {
 

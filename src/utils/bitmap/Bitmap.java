@@ -1,4 +1,6 @@
-package utils;
+package utils.bitmap;
+
+import utils.ValidacionesUtiles;
 
 import java.awt.Color;
 import java.awt.Font;

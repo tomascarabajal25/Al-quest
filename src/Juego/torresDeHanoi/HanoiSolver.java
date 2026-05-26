@@ -1,4 +1,4 @@
-package torresDeHanoi;
+package Juego.torresDeHanoi;
 
 import utils.ValidacionesUtiles;
 

@@ -1,9 +1,9 @@
-package testsDeTorresDeHanoi;
+package Ciudades.testsDeTorresDeHanoi;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import torresDeHanoi.Nodo;
+import Juego.torresDeHanoi.Nodo;
 
 public class NodoTest {
 

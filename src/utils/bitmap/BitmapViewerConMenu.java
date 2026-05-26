@@ -1,5 +1,7 @@
-package utils;
+package utils.bitmap;
 
+
+import utils.ValidacionesUtiles;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

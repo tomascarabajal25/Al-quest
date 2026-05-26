@@ -1,8 +1,10 @@
-package modelos;
+package Juego;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import modelos.Jugador;
+import modelos.Partida;
 import ordenamientos.Caja;
 import ordenamientos.OrdenadorBubble;
 import ordenamientos.OrdenadorSelection;
