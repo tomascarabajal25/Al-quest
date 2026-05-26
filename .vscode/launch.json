@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "Al-quest_9a5222ed"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "ciudades.reinas.Main",
+            "projectName": "Al-quest",
+            "classPaths": [
+                "out"
+            ],
+            "sourcePaths": [
+                "src"
+            ]
+        }
+    ]
+}
