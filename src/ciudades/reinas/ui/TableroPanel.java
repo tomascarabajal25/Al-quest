@@ -3,12 +3,14 @@ package ciudades.reinas.ui;
 import ciudades.reinas.Accion;
 import ciudades.reinas.CiudadReinas;
 import ciudades.reinas.Paso;
+import ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 
 public class TableroPanel extends JPanel{
+    private VictoriaListener victoriaListener;
     
     public static final int CASILLA = 80;  //pixeles por casilla
     public static final int BORDE = 16;
@@ -19,50 +21,48 @@ public class TableroPanel extends JPanel{
 
     private int[][] tableroJugador; //tableroJugador[fila][columna] = 1 si hay reina, 0 si no
     private int tamanio;
-    private final int filaJugadorInicial;
-    private final int columnaJugadorInicial;
+    private int filaJugadorInicial;
+    private int columnaJugadorInicial;
 
     private boolean solucionRevelada = false;
     private boolean juegoTerminado = false;
 
     private List<Paso> pasos;
     private int pasoActual = 0;
+    private boolean esperandoPrimeraReina = true;
     private Timer timerAnimacion;
 
     private JButton btnListo;
     private JButton btnMostrarSolucion;
     private JButton btnReiniciar;
 
-    public TableroPanel (CiudadReinas ciudad, int tamanio, int filaJugador, int columnaJugador){
+    public TableroPanel(CiudadReinas ciudad, int tamanio, VictoriaListener victoriaListener) {
         this.ciudad = ciudad;
-        this.recursos = new RecursosGraficos ();
+        this.recursos = new RecursosGraficos();
         this.tamanio = tamanio;
         this.tableroJugador = new int[tamanio][tamanio];
-        this.filaJugadorInicial = filaJugador;
-        this.columnaJugadorInicial = columnaJugador;
-
-        //colocar la reina inicial del jugador
-        tableroJugador[filaJugador][columnaJugador] = 1;
+        this.victoriaListener = victoriaListener;
+        // no se coloca reina todavía
 
         configurarLayout();
         configurarBotones();
-        configurarMouse(filaJugador, columnaJugador);
-
+        configurarMouse();
     }
 
     private void configurarLayout(){
         setLayout (new BorderLayout());
         int dimensionTablero = ESQUINA * 2 + tamanio * CASILLA; //96 * 2 + 8 * 80 = 832 para tablero 8x8
-        setPreferredSize(new Dimension (dimensionTablero, dimensionTablero + 50));    //espacio para botones
+        setPreferredSize(new Dimension (dimensionTablero, dimensionTablero));    //espacio para botones
     }
 
     private void configurarBotones(){
         JPanel panelBotones = new JPanel();
 
         btnListo = new JButton("Listo");
-        btnMostrarSolucion = new JButton("Mostrar Solucion");
+        btnListo.setVisible(false);
+        btnMostrarSolucion = new JButton("Mostrar solucion");
+        btnMostrarSolucion.setVisible(false);
         btnReiniciar = new JButton("Reiniciar");
-        btnReiniciar.setVisible(false); //solo aparece al perder
 
         btnListo.addActionListener (e -> validarTablero());
         btnMostrarSolucion.addActionListener (e -> mostrarSolucion());
@@ -75,11 +75,10 @@ public class TableroPanel extends JPanel{
         add(panelBotones, BorderLayout.SOUTH);
     }
 
-    private void configurarMouse (int filaJugador, int columnaJugador){
-        addMouseListener(new MouseAdapter(){
-
+    private void configurarMouse() {
+        addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 if (juegoTerminado || solucionRevelada) return;
 
                 int col = (e.getX() - ESQUINA) / CASILLA;
@@ -87,19 +86,40 @@ public class TableroPanel extends JPanel{
 
                 if (fila < 0 || fila >= tamanio || col < 0 || col >= tamanio) return;
 
-                if (fila == filaJugador && col == columnaJugador) return;
-                
-                if (SwingUtilities.isLeftMouseButton(e)){
-                    tableroJugador[fila][col] = 1;
+                if (esperandoPrimeraReina) {
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        // colocar y bloquear primera reina
+                        filaJugadorInicial = fila;
+                        columnaJugadorInicial = col;
+                        tableroJugador[fila][col] = 1;
+                        ciudad.iniciarCiudad(tamanio, fila, col);
+                        esperandoPrimeraReina = false;
+                        btnListo.setVisible(true);
+                        btnMostrarSolucion.setVisible(true);
+                        repaint();
+                    }
+                    return; // ignorar click derecho hasta que haya primera reina
+                }
 
-                } else if (SwingUtilities.isRightMouseButton(e)){
+                // comportamiento normal
+                if (fila == filaJugadorInicial && col == columnaJugadorInicial) return;
+
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    int reinasActuales = 0;
+                    for (int f = 0; f < tamanio; f++)
+                        for (int c = 0; c < tamanio; c++)
+                            if (tableroJugador[f][c] == 1) reinasActuales++;
+
+                    if (reinasActuales < tamanio) {
+                        tableroJugador[fila][col] = 1;
+                    }
+                } else if (SwingUtilities.isRightMouseButton(e)) {
                     tableroJugador[fila][col] = 0;
                 }
 
                 repaint();
             }
         });
-
     }
 
     private void validarTablero(){
@@ -108,35 +128,62 @@ public class TableroPanel extends JPanel{
             return;
         }
 
-        if (ciudad.validarTableroJugador(tableroJugador)){
+        if (ciudad.validarTableroJugador(tableroJugador)) {
             juegoTerminado = true;
             btnListo.setEnabled(false);
             btnMostrarSolucion.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "Ganaste!!!", "Victoria", JOptionPane.WARNING_MESSAGE);
-            //aca se puede notificar al juego principal para desbloquear la siguiente ciudad
-        }else {
+            btnReiniciar.setVisible(false);
+            JOptionPane.showMessageDialog(this, "Ganaste!!!", "Victoria", JOptionPane.INFORMATION_MESSAGE);
+
+            if (victoriaListener != null) {
+                victoriaListener.onVictoria();
+            }
+
+        } else {
             juegoTerminado = true;
             btnListo.setEnabled(false);
             btnMostrarSolucion.setText("Ver solucion");
-            btnReiniciar.setVisible(true);
             JOptionPane.showMessageDialog(this, "Incorrecto. Puedes ver la solucion o reiniciar", "Game Over", JOptionPane.ERROR_MESSAGE);
 
         }
     }
 
     private void mostrarSolucion(){
+        if (timerAnimacion != null && timerAnimacion.isRunning()){
+            timerAnimacion.stop();
+        }
+    
+        ciudad.actualizarTableroJugador(tableroJugador, filaJugadorInicial, columnaJugadorInicial);
+        pasos = ciudad.obtenerPasos();
+
+        if (pasos == null){
+            JOptionPane.showMessageDialog(this, "Las reinas colocadas no permites completar el tablero.\n\n" +
+            "Reinicie e intente en otra posicion", "Sin solucion posible", JOptionPane.WARNING_MESSAGE
+            );
+
+            return; //no anima nada
+        }
+
+        int[] reinasAceptadas = ciudad.getReinasTablero();
+        tableroJugador = new int[tamanio][tamanio];
+        for (int i = 0; i < tamanio; i++){
+            if (reinasAceptadas[i] != -1){
+                tableroJugador[i][reinasAceptadas[i]] = 1;
+            }
+        }
+
+        pasos = ciudad.obtenerPasos();
+        pasoActual = 0;
+
         solucionRevelada = true;
         juegoTerminado = true;
         btnListo.setEnabled(false);
         btnReiniciar.setVisible(true);
 
-        pasos = ciudad.obtenerPasos();
-        pasoActual = 0;
+        timerAnimacion = new Timer (300, e -> {
+            btnListo.setEnabled(false);
+            btnMostrarSolucion.setEnabled(false);
 
-        //limpiar tablero del jugador para mostrar la animacion limpia
-        tableroJugador = new int [tamanio][tamanio];
-
-        timerAnimacion = new Timer (400, e -> {
             if (pasoActual >= pasos.size()) {
                 timerAnimacion.stop();
                 return;
@@ -158,21 +205,23 @@ public class TableroPanel extends JPanel{
         timerAnimacion.start();
     }
 
-    private void reiniciar (){
+    private void reiniciar() {
+        if (timerAnimacion != null) timerAnimacion.stop();
+
         tableroJugador = new int[tamanio][tamanio];
-        tableroJugador[filaJugadorInicial][columnaJugadorInicial] = 1;
+        esperandoPrimeraReina = true;   // ← volver a esperar
+        filaJugadorInicial = -1;
+        columnaJugadorInicial = -1;
         solucionRevelada = false;
         juegoTerminado = false;
         pasoActual = 0;
-        
-        if (timerAnimacion != null){
-            timerAnimacion.stop();
-        }
 
         btnListo.setEnabled(true);
+        btnMostrarSolucion.setEnabled(false);
+        btnMostrarSolucion.setEnabled(true);
+        btnMostrarSolucion.setEnabled(false);
         btnMostrarSolucion.setEnabled(true);
         btnMostrarSolucion.setText("Mostrar solucion");
-        btnReiniciar.setVisible(false);
 
         repaint();
     }
