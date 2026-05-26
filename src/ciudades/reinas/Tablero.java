@@ -34,8 +34,12 @@ public class Tablero {
         if (fila < 0 || fila > tamanio - 1 || columna < 0 || columna > tamanio - 1)
             throw new IllegalArgumentException("Posición fuera de los límites del tablero");
 
-        for (int fil = 0; fil < fila; fil++) {
+        for (int fil = 0; fil < tamanio; fil++) {  
+            if (fil == fila) continue;
+
             int col = reinas[fil];
+
+            if (col == -1) continue;    //saltear filas vacias
 
             if (col == columna) return false;     // misma columna
 
