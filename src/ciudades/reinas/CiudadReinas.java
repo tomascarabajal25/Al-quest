@@ -6,16 +6,13 @@ public class CiudadReinas {
     
     private SolverReinas solver = new SolverReinas();
     private Tablero tablero = new Tablero();
-    private int filajugador;
     private boolean tieneSolucion;
     
     public boolean iniciarCiudad(int tamanio, int fila, int columna){
         
         tablero.setTamanio(tamanio);
         tablero.setReinas(fila, columna);
-        this.filajugador = fila;
-
-        tieneSolucion = solver.obtenerSolucion(tablero.copiar(), fila) != null;
+        tieneSolucion = solver.obtenerSolucion(tablero.copiar()) != null;
         return tieneSolucion;
     }
 
@@ -45,9 +42,29 @@ public class CiudadReinas {
     return true;
 }
 
-    public List<Paso> obtenerPasos(){
-        Tablero copia = tablero.copiar();
-        return solver.grabarPasos(tablero.copiar(), filajugador);
+    public void actualizarTableroJugador(int[][] tableroJugador, int filaInicial, int colInicial) {
+        tablero.setTamanio(tablero.getTamanio());
+        tablero.setReinas(filaInicial, colInicial);
+
+        for (int fila = 0; fila < tablero.getTamanio(); fila++) {
+            if (fila == filaInicial) continue;      
+            for (int col = 0; col < tablero.getTamanio(); col++) {
+                if (tableroJugador[fila][col] == 1) {
+                    tablero.setReinas(fila, col);
+                }
+            }
+        }
+    }
+
+    public List<Paso> obtenerPasos() {
+        if (solver.obtenerSolucion(tablero.copiar()) == null) {
+            return null; // no hay solución posible desde este estado
+        }
+        return solver.grabarPasos(tablero.copiar());
+    }
+
+    public int[] getReinasTablero(){
+        return tablero.getTodasLasReinas();
     }
 
 }
