@@ -1,10 +1,9 @@
 package ciudades.reinas.ui;
 
-import ciudades.reinas.CiudadReinas;
-import ciudades.reinas.VictoriaListener;
-import ciudades.reinas.Paso;
 import ciudades.reinas.Accion;
-
+import ciudades.reinas.CiudadReinas;
+import ciudades.reinas.Paso;
+import ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -64,6 +63,7 @@ public class TableroPanel extends JPanel{
         btnMostrarSolucion = new JButton("Mostrar solucion");
         btnMostrarSolucion.setVisible(false);
         btnReiniciar = new JButton("Reiniciar");
+        btnReiniciar.setVisible(false);
 
         btnListo.addActionListener (e -> validarTablero());
         btnMostrarSolucion.addActionListener (e -> mostrarSolucion());
@@ -97,6 +97,7 @@ public class TableroPanel extends JPanel{
                         esperandoPrimeraReina = false;
                         btnListo.setVisible(true);
                         btnMostrarSolucion.setVisible(true);
+                        btnReiniciar.setVisible(true);
                         repaint();
                     }
                     return; // ignorar click derecho hasta que haya primera reina
@@ -173,12 +174,12 @@ public class TableroPanel extends JPanel{
             }
         }
 
-        pasos = ciudad.obtenerPasos();
         pasoActual = 0;
 
         solucionRevelada = true;
         juegoTerminado = true;
         btnListo.setEnabled(false);
+        btnMostrarSolucion.setVisible(false);
         btnReiniciar.setVisible(true);
 
         timerAnimacion = new Timer (300, e -> {
@@ -217,12 +218,12 @@ public class TableroPanel extends JPanel{
         juegoTerminado = false;
         pasoActual = 0;
 
-        btnListo.setEnabled(true);
-        btnMostrarSolucion.setEnabled(false);
-        btnMostrarSolucion.setEnabled(true);
-        btnMostrarSolucion.setEnabled(false);
+        btnListo.setVisible(false);
+        btnMostrarSolucion.setVisible(false);
         btnMostrarSolucion.setEnabled(true);
         btnMostrarSolucion.setText("Mostrar solucion");
+        btnReiniciar.setVisible(false);
+        btnReiniciar.setEnabled(true);
 
         repaint();
     }
