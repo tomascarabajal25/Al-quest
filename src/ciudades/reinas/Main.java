@@ -1,4 +1,8 @@
+package ciudades.reinas;
+
+import ciudades.reinas.ui.TableroPanel;
 import ciudades.reinas.ui.VentanaPrincipal;
+
 import javax.swing.*;
 
 public class Main {
