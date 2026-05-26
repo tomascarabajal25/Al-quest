@@ -3,7 +3,7 @@ package Juego.torresDeHanoi;
 import java.util.Objects;
 import modelos.Jugador;
 import modelos.Partida;
-import ordenamientos.EstadoDePartida;
+import Juego.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 /**
  * TDA que representa el juego de las Torres de Hanoi.

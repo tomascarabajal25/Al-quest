@@ -1,4 +1,4 @@
-package ordenamientos;
+package Juego.ordenamientos;
 
 import modelos.Elemento;
 import utils.ValidacionesUtiles;

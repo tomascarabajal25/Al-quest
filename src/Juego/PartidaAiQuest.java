@@ -5,10 +5,10 @@ import java.util.List;
 
 import modelos.Jugador;
 import modelos.Partida;
-import ordenamientos.Caja;
-import ordenamientos.OrdenadorBubble;
-import ordenamientos.OrdenadorSelection;
-import ordenamientos.PartidaOrdenamientos;
+import Juego.ordenamientos.Caja;
+import Juego.ordenamientos.OrdenadorBubble;
+import Juego.ordenamientos.OrdenadorSelection;
+import Juego.ordenamientos.PartidaOrdenamientos;
 /**
  * clase incompleta:
  * va a representar la partida principal del juego aiquest, maneja el todas las ciudad (las demas partidas)

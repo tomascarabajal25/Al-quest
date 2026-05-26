@@ -1,4 +1,4 @@
-package ordenamientos;
+package Juego.ordenamientos;
 import java.util.List;
 import java.util.Objects;
 

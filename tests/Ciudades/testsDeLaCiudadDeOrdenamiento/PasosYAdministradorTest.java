@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-import ordenamientos.AdministradorDePasos;
-import ordenamientos.Caja;
-import ordenamientos.PasoOrdenamiento;
+import Juego.ordenamientos.AdministradorDePasos;
+import Juego.ordenamientos.Caja;
+import Juego.ordenamientos.PasoOrdenamiento;
 
 public class PasosYAdministradorTest {
 

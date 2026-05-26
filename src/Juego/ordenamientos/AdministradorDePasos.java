@@ -1,4 +1,4 @@
-package ordenamientos;
+package Juego.ordenamientos;
 
 import java.util.ArrayList;
 import java.util.List;
