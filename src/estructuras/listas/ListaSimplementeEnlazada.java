@@ -30,6 +30,94 @@ public class ListaSimplementeEnlazada<T> implements List<T> {
     
 //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
 //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    /**
+     * Compara esta lista con otro objeto.
+     *
+     * POST:
+     * - Devuelve true si el objeto recibido es una lista del mismo tipo y contiene los mismos elementos en el mismo orden.
+     * - Devuelve false en caso contrario.
+     *
+     * @param o: objeto a comparar.
+     * @return: true si las listas son equivalentes, false si no lo son.
+     */
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListaSimplementeEnlazada<?> otra = (ListaSimplementeEnlazada<?>) o;
+
+        if (this.tamanio != otra.tamanio) return false;
+
+        Iterator<T> it1 = this.iterator();
+        Iterator<?> it2 = otra.iterator();
+
+        while (it1.hasNext() && it2.hasNext()) {
+
+            Object e1 = it1.next();
+            Object e2 = it2.next();
+
+            if (!Objects.equals(e1, e2)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Calcula el código hash de la lista.
+     *
+     * POST:
+     * - Devuelve un valor hash calculado en base a los elementos contenidos en la lista.
+     * - Dos listas iguales según equals() tendrán el mismo hashCode().
+     *
+     * @return: código hash de la lista.
+     */
+    @Override
+    public int hashCode() {
+
+        int hash = 1;
+
+        for (T elemento : this) {
+            hash = 31 * hash + Objects.hashCode(elemento);
+        }
+
+        return hash;
+    }
+
+    /**
+     * Genera una representación en forma de String de la lista.
+     *
+     * POST:
+     * - Devuelve un String con los elementos contenidos en la lista en orden.
+     *
+     * @return: representación textual de la lista.
+     */
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[");
+
+        Iterator<T> it = this.iterator();
+
+        while (it.hasNext()) {
+
+            sb.append(it.next());
+
+            if (it.hasNext()) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("]");
+
+        return sb.toString();
+    }
 //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
 //METODOS DE CLASE ----------------------------------------------------------------------------------------
 //METODOS GENERALES ---------------------------------------------------------------------------------------
