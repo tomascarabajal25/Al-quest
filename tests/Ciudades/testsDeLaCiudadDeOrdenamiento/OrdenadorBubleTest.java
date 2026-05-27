@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import Juego.ordenamientos.AdministradorDePasos;
-import Juego.ordenamientos.Caja;
-import Juego.ordenamientos.OrdenadorBubble;
-import Juego.ordenamientos.PasoOrdenamiento;
+import Juego.ciudades.ordenamientos.AdministradorDePasos;
+import Juego.ciudades.ordenamientos.Caja;
+import Juego.ciudades.ordenamientos.OrdenadorBubble;
+import Juego.ciudades.ordenamientos.PasoOrdenamiento;
 
 import java.util.ArrayList;
 import java.util.List;

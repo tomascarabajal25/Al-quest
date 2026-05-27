@@ -1,9 +1,9 @@
-package Juego.ordenamientos;
+package Juego.ciudades.ordenamientos;
 
 
 import java.util.List;
 
-import Juego.ordenamientos.ui.RenderOrdenamiento;
+import Juego.ciudades.ordenamientos.ui.RenderOrdenamiento;
 import modelos.Jugador;
 
 /**

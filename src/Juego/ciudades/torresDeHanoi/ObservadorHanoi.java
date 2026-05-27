@@ -1,4 +1,4 @@
-package Juego.torresDeHanoi;
+package Juego.ciudades.torresDeHanoi;
 
 public interface ObservadorHanoi {
     boolean onMovimiento(int paso);

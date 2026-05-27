@@ -1,4 +1,4 @@
-package Juego.ordenamientos.ui;
+package Juego.ciudades.ordenamientos.ui;
 
 import utils.bitmap.Bitmap;
 import utils.bitmap.BitmapViewerConMenu;
@@ -11,9 +11,9 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ordenamientos.Caja;
-import Juego.ordenamientos.PartidaOrdenamientos;
-import Juego.ordenamientos.PasoOrdenamiento;
+import Juego.ciudades.ordenamientos.Caja;
+import Juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import Juego.ciudades.ordenamientos.PasoOrdenamiento;
 
 
 public class RenderOrdenamiento {

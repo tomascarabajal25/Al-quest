@@ -1,4 +1,4 @@
-package Juego.ordenamientos.ui;
+package Juego.ciudades.ordenamientos.ui;
 
 import utils.bitmap.Bitmap;
 import java.io.IOException;

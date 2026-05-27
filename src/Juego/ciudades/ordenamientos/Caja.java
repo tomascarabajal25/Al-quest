@@ -1,4 +1,4 @@
-package Juego.ordenamientos;
+package Juego.ciudades.ordenamientos;
 
 import modelos.Elemento;
 import utils.ValidacionesUtiles;

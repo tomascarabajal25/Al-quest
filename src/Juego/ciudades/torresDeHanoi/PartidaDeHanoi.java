@@ -1,11 +1,10 @@
-package Juego.torresDeHanoi;
+package Juego.ciudades.torresDeHanoi;
 
 import java.util.Objects;
 
-
+import Juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
-import Juego.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 /**
  * Conecta el sistema general de partidas del juego con el puzzle específico de Hanoi.
