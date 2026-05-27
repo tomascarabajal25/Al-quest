@@ -1,5 +1,6 @@
 package modelos;
 
+import estructuras.vector.Vector;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,10 +17,11 @@ class MapaTest {
 
     @Test
     void constructorInicializaCeldasEnNull() {
+
         Mapa mapa = new Mapa(2, 2);
 
-        for (int i = 0; i < mapa.getAncho(); i++) {
-            for (int j = 0; j < mapa.getAlto(); j++) {
+        for (int i = 1; i <= mapa.getAncho(); i++) {
+            for (int j = 1; j <= mapa.getAlto(); j++) {
                 assertNotNull(mapa.getCeldaConPosicion(i, j));
                 assertNull(mapa.getCeldaConPosicion(i, j).getContenido());
             }
@@ -124,22 +126,24 @@ class MapaTest {
 
     @Test
     void equalsMapasIguales() {
+
         Mapa mapa1 = new Mapa(2, 2);
         Mapa mapa2 = new Mapa(2, 2);
 
-        mapa1.ocuparCelda("A", 0, 0);
-        mapa2.ocuparCelda("A", 0, 0);
+        mapa1.ocuparCelda("A", 1, 1);
+        mapa2.ocuparCelda("A", 1, 1);
 
         assertEquals(mapa1, mapa2);
     }
 
     @Test
     void equalsMapasDistintos() {
+
         Mapa mapa1 = new Mapa(2, 2);
         Mapa mapa2 = new Mapa(2, 2);
 
-        mapa1.ocuparCelda("A", 0, 0);
-        mapa2.ocuparCelda("B", 0, 0);
+        mapa1.ocuparCelda("A", 1, 1);
+        mapa2.ocuparCelda("B", 1, 1);
 
         assertNotEquals(mapa1, mapa2);
     }
@@ -158,31 +162,40 @@ class MapaTest {
 
     @Test
     void hashCodeMapasIguales() {
+
         Mapa mapa1 = new Mapa(2, 2);
         Mapa mapa2 = new Mapa(2, 2);
 
-        mapa1.ocuparCelda("A", 0, 0);
-        mapa2.ocuparCelda("A", 0, 0);
+        mapa1.ocuparCelda("A", 1, 1);
+        mapa2.ocuparCelda("A", 1, 1);
 
-        assertEquals(mapa1.hashCode(), mapa2.hashCode());
+        assertEquals(mapa1.hashCode(), mapa2.hashCode()
+        );
     }
 
     @Test
     void getVecinosCentro() {
-        Mapa mapa = new Mapa(5, 5);
-        Celda<?>[][] vecinos = mapa.getCeldasVecinasRespectoPosicion(2, 2, 1);
 
-        assertEquals(3, vecinos.length);
-        assertEquals(3, vecinos[0].length);
+        Mapa mapa = new Mapa(5, 5);
+
+        Vector<Vector<Celda<?>>> vecinos = mapa.getCeldasVecinasRespectoPosicion(3, 3, 1);
+
+        assertEquals(3, vecinos.getLongitud());
+
+        assertEquals(3, vecinos.obtener(1).getLongitud()
+        );
     }
 
     @Test
     void getVecinosBorde() {
-        Mapa mapa = new Mapa(5, 5);
-        Celda<?>[][] vecinos = mapa.getCeldasVecinasRespectoPosicion(0, 0, 1);
 
-        assertEquals(3, vecinos.length);
-        assertEquals(3, vecinos[0].length);
+        Mapa mapa = new Mapa(5, 5);
+
+        Vector<Vector<Celda<?>>> vecinos = mapa.getCeldasVecinasRespectoPosicion(1, 1, 1);
+
+        assertEquals(3, vecinos.getLongitud());
+
+        assertEquals(3, vecinos.obtener(1).getLongitud());
     }
 
     @Test

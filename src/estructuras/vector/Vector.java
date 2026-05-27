@@ -2,6 +2,7 @@ package estructuras.vector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import utils.ValidacionesUtiles;
 
@@ -33,6 +34,65 @@ public class Vector<T> implements Iterable<T> {
 	}
 	
 //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Vector<?> vector = (Vector<?>) o;
+
+        if (this.getLongitud() != vector.getLongitud()) {
+            return false;
+        }
+
+        for (int i = 0; i < this.getLongitud(); i++) {
+
+            if (!Objects.equals(this.datos[i], vector.datos[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int resultado = 1;
+
+        for (T dato : this.datos) {
+            resultado = 31 * resultado + Objects.hashCode(dato);
+        }
+
+        return resultado;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[");
+
+        for (int i = 0; i < this.getLongitud(); i++) {
+
+            sb.append(this.datos[i]);
+
+            if (i < this.getLongitud() - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("]");
+
+        return sb.toString();
+    }
 //METODOS GENERALES ---------------------------------------------------------------------------------------
 //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
@@ -82,7 +142,7 @@ public class Vector<T> implements Iterable<T> {
 	
 	/**
 	 * Remueve un dato del vector 
-	 * @param posicion
+	 * @param dato
 	 * @throws Exception
 	 */
 	public void remove(T dato) {
