@@ -1,4 +1,4 @@
-import ciudades.reinas.ui.VentanaPrincipal;
+import Juego.ciudades.reinas.ui.VentanaPrincipal;
 import javax.swing.*;
 
 public class Main {

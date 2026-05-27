@@ -1,9 +1,9 @@
-package ciudades.reinas.ui;
+package Juego.ciudades.reinas.ui;
 
-import ciudades.reinas.Accion;
-import ciudades.reinas.CiudadReinas;
-import ciudades.reinas.Paso;
-import ciudades.reinas.VictoriaListener;
+import Juego.ciudades.reinas.Accion;
+import Juego.ciudades.reinas.CiudadReinas;
+import Juego.ciudades.reinas.Paso;
+import Juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;

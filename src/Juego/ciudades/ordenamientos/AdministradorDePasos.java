@@ -1,4 +1,4 @@
-package Juego.ordenamientos;
+package Juego.ciudades.ordenamientos;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ciudades.reinas;
+package Juego.ciudades.reinas;
 
 public class Paso {
     private final int fila;

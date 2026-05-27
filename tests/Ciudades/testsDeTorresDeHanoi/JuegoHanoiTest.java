@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
-import Juego.torresDeHanoi.PartidaDeHanoi;
+import Juego.ciudades.torresDeHanoi.PartidaDeHanoi;
 
 public class JuegoHanoiTest {
 

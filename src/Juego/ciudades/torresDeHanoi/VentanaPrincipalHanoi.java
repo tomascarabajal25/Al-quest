@@ -1,4 +1,4 @@
-package Juego.torresDeHanoi;
+package Juego.ciudades.torresDeHanoi;
 
 import java.awt.Color;
 import java.awt.EventQueue;

@@ -2,7 +2,7 @@ package modelos;
 
 import java.util.Objects;
 
-import Juego.ordenamientos.EstadoDePartida;
+import Juego.ciudades.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 
 public abstract class Partida {
@@ -11,6 +11,7 @@ public abstract class Partida {
 	private Jugador jugador;
 	private int puntajeActual;
 	private EstadoDePartida estado;
+
 	
 	//CONSTRUCTORES-----------------------------------------------------------------
 	public Partida(String nombre, Jugador jugador) {
@@ -20,7 +21,7 @@ public abstract class Partida {
 		setEstado(EstadoDePartida.Creado);
 	}
 	//METODOS DE CLASES-------------------------------------------------------------
-	//METODOS GENERALES------------------------------------------------------------
+	//METODOS GENERALES-------------------------------------------------------------
 	
 	@Override
 	public int hashCode() {

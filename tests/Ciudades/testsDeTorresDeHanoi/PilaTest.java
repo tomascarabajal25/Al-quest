@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Juego.torresDeHanoi.Nodo;
-import Juego.torresDeHanoi.Pila;
+import Juego.ciudades.torresDeHanoi.Nodo;
+import Juego.ciudades.torresDeHanoi.Pila;
 
 public class PilaTest {
 

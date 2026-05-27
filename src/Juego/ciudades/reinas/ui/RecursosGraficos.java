@@ -1,4 +1,4 @@
-package ciudades.reinas.ui;
+package Juego.ciudades.reinas.ui;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

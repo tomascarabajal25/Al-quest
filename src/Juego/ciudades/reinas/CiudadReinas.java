@@ -1,4 +1,4 @@
-package ciudades.reinas;
+package Juego.ciudades.reinas;
 
 import java.util.List;
 

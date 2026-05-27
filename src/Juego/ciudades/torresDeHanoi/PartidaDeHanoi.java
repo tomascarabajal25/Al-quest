@@ -1,9 +1,9 @@
-package Juego.torresDeHanoi;
+package Juego.ciudades.torresDeHanoi;
 
 import java.util.Objects;
 import modelos.Jugador;
 import modelos.Partida;
-import Juego.ordenamientos.EstadoDePartida;
+import Juego.ciudades.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 /**
  * TDA que representa el juego de las Torres de Hanoi.
