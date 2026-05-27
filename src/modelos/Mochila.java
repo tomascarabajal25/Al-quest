@@ -3,14 +3,15 @@ package modelos;
 import utils.ValidacionesUtiles;
 
 import java.util.Objects;
-import java.util.Vector;
+import estructuras.listas.ListaSimplementeEnlazada;
 
 public class Mochila {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
-    private Vector<Elemento> elementos;
+    private ListaSimplementeEnlazada<Elemento> elementos;
+    private int cantidadMaxima;
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -26,7 +27,8 @@ public class Mochila {
      */
     public Mochila(int maximo){
         ValidacionesUtiles.validarMayorACero(maximo, "maximo");
-        elementos = new Vector<Elemento>(maximo);
+        setCantidadMaxima(maximo);
+        elementos = new ListaSimplementeEnlazada<>();
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -40,12 +42,12 @@ public class Mochila {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mochila mochila = (Mochila) o;
-        return Objects.deepEquals(elementos, mochila.elementos);
+        return Objects.equals(elementos, mochila.elementos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(elementos);
+        return Objects.hash(elementos);
     }
 
     @Override
@@ -106,7 +108,7 @@ public class Mochila {
      */
     public void vaciarMochila(){
         for(Elemento elemento : this.elementos){
-            this.elementos.remove(elemento);
+            this.elementos.clear();
         }
     }
 
@@ -116,7 +118,7 @@ public class Mochila {
      * @return: true si no esta llena, false si lo esta
      */
     private boolean validarEstaLlena(){
-        if (this.getElementos().size() == 3){
+        if (this.elementos.size() == this.cantidadMaxima){
             return false;
         }
         return true;
@@ -127,12 +129,20 @@ public class Mochila {
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
-     * Getter del atributo Elementos
+     * Getter de la cantidad de elementos en la mochila
      *
-     * @return: Devuelve el vector elementos
+     * @return: cantidad de elementos
      */
-    public Vector<Elemento> getElementos() {
-        return this.elementos;
+    public int getCantidadElementos() {
+        return this.elementos.size();
+    }
+
+    /**
+     * Getter del atributo cantidadMaxima
+     * @return: cantidadMaxima
+     */
+    public int getCantidadMaxima() {
+        return cantidadMaxima;
     }
 
     /**
@@ -143,9 +153,9 @@ public class Mochila {
      *
      * @return: Devuelve un elemento
      */
-    public Elemento getElementoPorNombre(Elemento elemento){
-        for(Elemento elmt : this.elementos){
-            if(elmt.getNombre().equals(elemento.getNombre())){
+    public Elemento getElementoPorNombre(String nombre){
+        for (Elemento elmt : this.elementos) {
+            if (Objects.equals(elmt.getNombre(), nombre)) {
                 return elmt;
             }
         }
@@ -153,4 +163,13 @@ public class Mochila {
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Setter del atributo cantidadMaximo
+     * @param Maximo: cantidad maxima de elementos0
+     */
+    private void setCantidadMaxima(int Maximo) {
+        ValidacionesUtiles.validarMayorACero(Maximo, "Maximo");
+        this.cantidadMaxima = Maximo;
+    }
 }
