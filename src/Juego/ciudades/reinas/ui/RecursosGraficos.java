@@ -15,7 +15,7 @@ public class RecursosGraficos {
     public RecursosGraficos() {
 
         try {
-            String ruta = "src/ciudades/reinas/resources/imagenes/";
+            String ruta = "src/Juego/ciudades/reinas/resources/imagenes/";
             casillaClaraImg   = ImageIO.read(new File(ruta + "casilla-clara.bmp"));
             casillaOscuraImg  = ImageIO.read(new File(ruta + "casilla-oscura.bmp"));
             reinaFondoClaroImg = ImageIO.read(new File(ruta + "reina-fondoClaro.bmp"));
