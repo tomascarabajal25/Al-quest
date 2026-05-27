@@ -332,7 +332,8 @@ public class VentanaPrincipalHanoi extends JFrame {
     	objetivo= Integer.parseInt(comboBoxDiscos.getSelectedItem().toString());
     	// 💡 Creamos un jugador genérico para la interfaz por ahora
         Jugador jugadorTemporal = new Jugador("Jugador Swing");
-		controller = new ControllerHanoi(objetivo,this, jugadorTemporal);
+        PartidaDeHanoi temporal = new PartidaDeHanoi(objetivo, "nombre", jugadorTemporal);
+		controller = new ControllerHanoi(temporal,objetivo,this);
 	}
     
     /*
@@ -341,7 +342,7 @@ public class VentanaPrincipalHanoi extends JFrame {
     public void actualizar(EstadoHanoi estado) {
         presentarTorre(TorreA, estado.getTorreA());
         presentarTorre(TorreB, estado.getTorreB());
-        presentarTorre(TorreC, estado.getTorreB());
+        presentarTorre(TorreC, estado.getTorreC());
 
         lblNumMovimientos.setText(String.valueOf(estado.getMovimientos()));
         lblMinMovimientos.setText(String.valueOf(estado.getMinMovimientos()));

@@ -3,7 +3,6 @@ package Juego.torresDeHanoi;
 
 import java.util.Objects;
 
-import modelos.Jugador;
 import utils.ValidacionesUtiles;
 /**
  * Controlador del juego Torres de Hanoi.
@@ -17,7 +16,7 @@ import utils.ValidacionesUtiles;
  */
 public class ControllerHanoi implements ObservadorHanoi {
 	//ATRIBUTOS----------------------------------------------------------------------
-    private PartidaDeHanoi juego;
+	private PartidaDeHanoi partida;
     private HanoiSolver<String> solver;
     private VentanaPrincipalHanoi vista;
   
@@ -35,21 +34,44 @@ public class ControllerHanoi implements ObservadorHanoi {
      * - Se crea un solver asociado al controlador.
      * - Se establece la vista.
      */
-    public ControllerHanoi(int discos, VentanaPrincipalHanoi vista, Jugador jugador) {
+    public ControllerHanoi(PartidaDeHanoi partidaSeleccionada,int discos, VentanaPrincipalHanoi vista) {
     	ValidacionesUtiles.validarRango(discos, 3, 10, "el objetivo debe estar entre 3 y 10");
     	ValidacionesUtiles.esDistintoDeNull(vista, null);
-        this.setJuego(new PartidaDeHanoi(discos, "torres de hanoi", jugador));
+    	setPartida(partidaSeleccionada) ;
+        
+        if (!this.partida.estaIniciada()) {
+            this.partida.iniciar(); 
+        }
         this.setSolver(new HanoiSolver<String>(this));
         this.setVista(vista);
         actualizarVista();
         
     }
  
+    public void registrarFinDelJuego() {
+        if (partida.getJuego().haGanado()) {        
+            vista.mostrarVictoria();
+        }
+        this.partida.actualizarPuntaje(calcularPuntaje());
+        this.partida.finalizar();
+    }
+    
+    
+    private int calcularPuntaje() {
+    	CiudadHanoi juego= partida.getJuego();
+        int multiplicador=juego.getObjetivo();
+        int puntos= juego.esPerfecto()?150:0;
+        if(puntos == 0) {
+        	puntos=juego.haGanado()?100:0;
+        }
+        return puntos*multiplicador;
+    }
+
   //METODOS DE CLASES-------------------------------------------------------------
   //METODOS GENERALES------------------------------------------------------------
     @Override
 	public int hashCode() {
-		return Objects.hash(juego, vista);
+		return Objects.hash(partida.getJuego(), vista);
 	}
 
 	@Override
@@ -61,12 +83,12 @@ public class ControllerHanoi implements ObservadorHanoi {
 		if (getClass() != obj.getClass())
 			return false;
 		ControllerHanoi other = (ControllerHanoi) obj;
-		return Objects.equals(juego, other.juego) && Objects.equals(vista, other.vista);
+		return Objects.equals(partida.getJuego(), other.partida.getJuego()) && Objects.equals(vista, other.vista);
 	}
 	
 	@Override
 	public String toString() {
-		return "ControllerHanoi [juego=" + juego + ", vista=" + vista + "]";
+		return "ControllerHanoi [juego=" + partida.getJuego() + ", vista=" + vista + "]";
 	}
 
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
@@ -81,35 +103,35 @@ public class ControllerHanoi implements ObservadorHanoi {
      * - Se modifica el estado interno del juego.
      */
     public void moverA_B() {
-        juego.mover(juego.getTorreA(), juego.getTorreB());
+        partida.getJuego().mover(partida.getJuego().getTorreA(), partida.getJuego().getTorreB());
         actualizarVista();
     }
 
 	public void moverA_C() {
-        juego.mover(juego.getTorreA(), juego.getTorreC());
+        partida.getJuego().mover(partida.getJuego().getTorreA(), partida.getJuego().getTorreC());
         actualizarVista();
         preguntarSiGano();
     }
 
     public void moverB_A() {
-        juego.mover(juego.getTorreB(), juego.getTorreA());
+        partida.getJuego().mover(partida.getJuego().getTorreB(), partida.getJuego().getTorreA());
         actualizarVista();
     }
 
     public void moverB_C() {
-        juego.mover(juego.getTorreB(), juego.getTorreC());
+        partida.getJuego().mover(partida.getJuego().getTorreB(), partida.getJuego().getTorreC());
         actualizarVista();
+        preguntarSiGano();
     }
 
     public void moverC_A() {
-        juego.mover(juego.getTorreC(), juego.getTorreA());
+        partida.getJuego().mover(partida.getJuego().getTorreC(), partida.getJuego().getTorreA());
         actualizarVista();
     }
 
     public void moverC_B() {
-        juego.mover(juego.getTorreC(), juego.getTorreB());
+        partida.getJuego().mover(partida.getJuego().getTorreC(), partida.getJuego().getTorreB());
         actualizarVista();
-        preguntarSiGano();
     }
     
     /*
@@ -128,13 +150,13 @@ public class ControllerHanoi implements ObservadorHanoi {
      * pregunta si el juego ha sido ganado con la cantidad min de movimientos
      */
     private boolean testearGanadorPerfecto() {
-    	return juego.esPerfecto();
+    	return partida.getJuego().esPerfecto();
     	}
     /*
      * pregunta si el juego ha sido ganado
      */
     private boolean testearGanador() {
-    	return juego.haGanado();
+    	return partida.getJuego().haGanado();
     	}
     /**
      * Resuelve automáticamente el problema de Torres de Hanoi.
@@ -150,10 +172,10 @@ public class ControllerHanoi implements ObservadorHanoi {
     	ValidacionesUtiles.validarVerdadero(vista.getJuegoIniciado(), "no se puede resolver un juego no iniciado");
     	solver = new HanoiSolver<String>(this);
     	solver.resolverHanoi(
-                juego.getTorreA().getContNodo(),
-                juego.getTorreA(),
-                juego.getTorreB(),
-                juego.getTorreC()
+                partida.getJuego().getTorreA().getContNodo(),
+                partida.getJuego().getTorreA(),
+                partida.getJuego().getTorreB(),
+                partida.getJuego().getTorreC()
             );
     }
     
@@ -181,7 +203,7 @@ public class ControllerHanoi implements ObservadorHanoi {
      */
     protected void reiniciar(int discos) {
     	ValidacionesUtiles.validarRango(discos, 3, 10, null);
-    	this.juego.reiniciar(discos);
+    	this.partida.getJuego().reiniciar(discos);
     	actualizarVista();
     }
     
@@ -209,8 +231,8 @@ public class ControllerHanoi implements ObservadorHanoi {
     /**
      * Devuelve el modelo del juego.
      */
-    public PartidaDeHanoi getJuego() {
-        return juego;
+    public CiudadHanoi getJuego() {
+        return partida.getJuego();
     }
     
     /**
@@ -223,15 +245,15 @@ public class ControllerHanoi implements ObservadorHanoi {
      * - Retorna un arreglo con los discos de la torre.
      */
     public String[] getTorreA() {
-        return juego.getDiscosDeTorre(juego.getTorreA());
+        return partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreA());
     }
 
     public String[] getTorreB() {
-        return juego.getDiscosDeTorre(juego.getTorreB());
+        return partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreB());
     }
 
     public String[] getTorreC() {
-        return juego.getDiscosDeTorre(juego.getTorreC());
+        return partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreC());
     }
     /*
      * retorna el estado del juego
@@ -239,11 +261,11 @@ public class ControllerHanoi implements ObservadorHanoi {
     public EstadoHanoi getEstado() {
         
         return new EstadoHanoi(
-            juego.getDiscosDeTorre(juego.getTorreA()),
-            juego.getDiscosDeTorre(juego.getTorreB()),
-            juego.getDiscosDeTorre(juego.getTorreC()),
-            juego.getMovimientos(),
-            juego.getMinMovimientos()
+            partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreA()),
+            partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreB()),
+            partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreC()),
+            partida.getJuego().getMovimientos(),
+            partida.getJuego().getMinMovimientos()
         );
     }
      /**
@@ -266,14 +288,14 @@ public class ControllerHanoi implements ObservadorHanoi {
 		
 	}
     /**
-     * Establece el juego.
+     * Establece la partida.
      * 
      * PRE:
-     * - juego != null
+     * - partida != null
      */
-    private void setJuego(PartidaDeHanoi juego) {
-    	ValidacionesUtiles.esDistintoDeNull(juego, null);
-		this.juego=juego;
+    private void setPartida(PartidaDeHanoi partidaSeleccionada) {
+    	ValidacionesUtiles.esDistintoDeNull(partidaSeleccionada, null);
+		this.partida=partidaSeleccionada;
 		
 	}
     /**

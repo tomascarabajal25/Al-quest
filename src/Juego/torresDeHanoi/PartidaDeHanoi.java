@@ -1,30 +1,18 @@
 package Juego.torresDeHanoi;
 
 import java.util.Objects;
+
+
 import modelos.Jugador;
 import modelos.Partida;
 import Juego.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 /**
- * TDA que representa el juego de las Torres de Hanoi.
- * 
- * Modela el estado del juego mediante tres pilas (torres),
- * la cantidad de movimientos realizados y el objetivo (número de discos).
- * 
- * INVARIANTES:
- * - 3 <= objetivo <= 10
- * - movimientos >= 0
- * - Las torres solo contienen discos válidos (Strings con "#")
- * - En cada torre, los discos están ordenados de mayor a menor (de abajo hacia arriba)
+ * Conecta el sistema general de partidas del juego con el puzzle específico de Hanoi.
  */
-public class PartidaDeHanoi extends Partida{
-	//ATRIBUTOS----------------------------------------------------------------------
-    private Pila<String> torreA;
-    private Pila<String> torreB;
-    private Pila<String> torreC;
-    private int movimientos;
-    private int objetivo;
-    
+public class PartidaDeHanoi extends Partida {
+    private CiudadHanoi juego; // El motor lógico del puzzle
+    private int cantidadDiscos;        // Guardamos la configuración del nivel
   //CONSTRUCTORES-----------------------------------------------------------------
     /**
      * Crea un nuevo juego con una cantidad inicial de discos.
@@ -39,7 +27,7 @@ public class PartidaDeHanoi extends Partida{
      */
     public PartidaDeHanoi(int discos, String nombre, Jugador jugador) {
     	super(nombre, jugador);
-    	setObjetivo(discos);
+    	setCantidadDeDiscos(discos);
         iniciar();
     }
     
@@ -55,118 +43,36 @@ public class PartidaDeHanoi extends Partida{
     public void iniciar() {
     	ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya esta iniciada");
     	setEstado(EstadoDePartida.Iniciado);
-        torreA = new Pila<String>();
-        torreB = new Pila<String>();
-        torreC = new Pila<String>();
-        movimientos = 0;
-
-        for (int i = objetivo; i >= 1; i--) {
-            torreA.push(new Nodo<String>("#".repeat(i)));
-        }
-    }
+    	this.juego = new CiudadHanoi(this.cantidadDiscos);
+    	}
     public void finalizar() {
     	ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no esta iniciada");
     	setEstado(EstadoDePartida.Creado);
+		
+        this.setPuntaje(getPuntajeActual());
     }
     /**
-     * Reinicia el juego con un nuevo objetivo.
-     * 
-     * PRE:
-     * - 3 <= nuevoObjetivo <= 10
-     * 
-     * POST:
-     * - Se vacían todas las torres.
-     * - torreA vuelve a contener todos los discos.
-     * - movimientos = 0
+     * Método puente público para que clases externas (como el controlador) 
+     * puedan registrar el puntaje de esta partida específica.
      */
-    public void reiniciar(int nuevoObjetivo) {
-    	ValidacionesUtiles.esDistintoDeNull(nuevoObjetivo, "el objetivo no puede ser nulo");
-    	ValidacionesUtiles.validarRangoNumerico(nuevoObjetivo, 3, 10, "No es un objetivo valido");
-        this.setObjetivo(nuevoObjetivo); 
-        this.setMovimientos(0); 
-        
-        // vaciar todas las pilas para limpiar cualquier estado previo
-        vaciarPila(torreA);
-        vaciarPila(torreB);
-        vaciarPila(torreC);
-        
-        // volver a llenar la torre A
-        for (int i = objetivo; i >= 1; i--) {
-            torreA.push(new Nodo<String>("#".repeat(i)));
-        }
-    }
-
-    /**
-     * Vacía completamente una pila.
-     * 
-     * PRE:
-     * - p != null
-     * 
-     * POST:
-     * - p queda vacía
-     */
-    private void vaciarPila(Pila<String> p) {
-    	ValidacionesUtiles.esDistintoDeNull(p, "no se puede vaciar pila nula");
-        while (p.getContNodo() > 0) {
-            p.pop();
-        }
-    }
-    /**
-     * Realiza un movimiento entre torres.
-     * 
-     * PRE:
-     * - origen != null
-     * - destino != null
-     * 
-     * POST:
-     * - Si el movimiento es válido:
-     *      - Se mueve un disco de origen a destino
-     *      - movimientos se incrementa en 1
-     *      - Retorna true
-     * - Si el movimiento no es válido:
-     *      - El estado no cambia
-     *      - Retorna false
-     */
-    public boolean mover(Pila<String> origen, Pila<String> destino) {
-    	ValidacionesUtiles.esDistintoDeNull(origen, "no se puede mover pila a una pila nula");
-    	ValidacionesUtiles.esDistintoDeNull(destino, "no se puede mover una pila nula");
-    	
-        if (origen.getContNodo() == 0) return false;
-
-        Nodo<String> plataforma = new Nodo<String> (origen.peek());
-
-        if (destino.getContNodo() > 0 &&
-            plataforma.getDato().compareTo(destino.peek()) > 0) {
-            return false;
-        }
-
-        origen.pop();
-        destino.push(plataforma);
-        setMovimientos(++movimientos);;
-        return true;
+    protected void actualizarPuntaje(int puntos) {
+        this.setPuntaje(puntos); 
     }
     
-    /*
-     * retorna si el juego ha sido ganado
-     */
-    public boolean haGanado() {
-        return torreC.getContNodo() == objetivo;
-    }
-    /*
-     * retorna si el juego ha sido ganado con el minimo de movimientos
-     */
-    public boolean esPerfecto() {
-        return haGanado() && movimientos == getMinMovimientos();
-    }
   //METODOS DE CLASES-------------------------------------------------------------
   //METODOS GENERALES------------------------------------------------------------
+    
     @Override
 	public String toString() {
-		return "JuegoHanoi [movimientos=" + movimientos + ", objetivo=" + objetivo + "]";
+		return "PartidaDeHanoi [juegoMecanico=" + juego + ", cantidadDiscos=" + cantidadDiscos + "]";
 	}
-    @Override
+
+	@Override
 	public int hashCode() {
-		return Objects.hash(movimientos, objetivo);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(cantidadDiscos, juego);
+		return result;
 	}
 
 	@Override
@@ -175,76 +81,36 @@ public class PartidaDeHanoi extends Partida{
 			return true;
 		if (obj == null)
 			return false;
+		if (!super.equals(obj))
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		PartidaDeHanoi other = (PartidaDeHanoi) obj;
-		return movimientos == other.movimientos && objetivo == other.objetivo;
+		return cantidadDiscos == other.cantidadDiscos && Objects.equals(juego, other.juego);
 	}
+    
+    
   //GETTER SIMPLES-----------------------------------------------------------------
-	/**
-     * Calcula el mínimo número de movimientos necesarios.
-     * 
-     * POST:
-     * - Retorna 2^objetivo - 1
-     */
-	public double getMinMovimientos() {
-        return Math.pow(2, objetivo) - 1;
+	// Getter para que el controlador pueda acceder al motor del puzzle
+    public CiudadHanoi getJuego() {
+        return this.juego;
     }
+    
 
-	/**
-     * Devuelve la cantidad de movimientos realizados.
-     */
-	public int getMovimientos() {
-        return movimientos;
-    }
-	/**
-     * Devuelve los discos de una torre en forma de arreglo.
-     * 
-     * PRE:
-     * - torre != null
-     * 
-     * POST:
-     * - Retorna un arreglo con los discos (de abajo hacia arriba)
-     * - Las posiciones vacías contienen null
-     */
-    public String[] getDiscosDeTorre(Pila<String> torre) {
-    	ValidacionesUtiles.esDistintoDeNull(torre, "no se puede obtener los discos de una pila nula");
-        String[] discos = new String[10]; 
-        int i = 0; // Empezamos desde la última fila (abajo)
-        
-        Nodo<String> actual = torre.getCabeza();
-        
-        while (actual != null && i < discos.length) {
-            discos[i] = actual.getDato();
-            actual = actual.getAbajo();
-            i++;
-        }
-        return discos;
+	// Devuelve la cantidad de discos
+    public int getCantidadDeDiscos() {
+    	return cantidadDiscos;
     }
   
-    public Pila<String> getTorreA() { 
-    	return torreA; 
-    	}
-    public Pila<String> getTorreB() { 
-    	return torreB; 
-    	}
-    public Pila<String> getTorreC() { 
-    	return torreC; 
-    	}
+    
   //SETTERS SIMPLES---------------------------------------------------------------
-    /**
-     * PRE:
-     * - movimientos >= 0
-     */
-    private void setMovimientos(int objetivoNuevo) {
-        this.movimientos = objetivoNuevo;
-     }
+   
     /**
      * PRE:
      * - 3 <= objetivo <= 10
      */
-    private void setObjetivo(int objetivoNuevo) {
-    	ValidacionesUtiles.validarRangoNumerico(objetivoNuevo, 3, 10, "No es una cantidad de discos valida");
-       this.objetivo = objetivoNuevo;
+    private void setCantidadDeDiscos(int cantidad) {
+    	ValidacionesUtiles.validarRangoNumerico(cantidad, 3, 10, "No es una cantidad de discos valida");
+       this.cantidadDiscos = cantidad;
     }
 }

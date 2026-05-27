@@ -79,7 +79,7 @@ public abstract class Partida {
 	}
 
 
-	private void setPuntaje(int puntaje) {
+	protected void setPuntaje(int puntaje) {
 		ValidacionesUtiles.validarMayorOIgualACero(puntaje, "El puntaje no puede ser menor a 0");
 		this.puntajeActual=puntaje;
 	}
