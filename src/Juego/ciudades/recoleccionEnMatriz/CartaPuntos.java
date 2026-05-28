@@ -1,38 +1,27 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
-import modelos.Mochila;
-import modelos.Jugador;
-import modelos.Partida;
-import utils.ValidacionesUtiles;
+import modelos.Elemento;
 
-public class PartidaDeRecoleccion extends Partida {
-    //INTERFACES ----------------------------------------------------------------------------------------------
+public class CartaPuntos extends Elemento {
+//INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private CiudadRecoleccion juego = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
-
     /**
-     * Constructor del TDA partidaDeRecoleccion
+     * Constructor del TDA Elemento
      *
-     * @param nombre: Nombre de la ciudad
-     * @param jugador: Jugador de la ciudad
-     * @param filas: Filas del mapa
-     * @param columnas: Columnas del mapa
-     * @param niveles: Niveles del mapa
-     * @param maximoMochila: Cantidad maxima de elementos de la mochila
+     * PRE:
+     * -El nombre no debe ser null
+     * POST:
+     * -Se crea una instancia de Elemento con nombre
+     *
+     * @param nombre : nombre del elemento
      */
-    public PartidaDeRecoleccion(String nombre, Jugador jugador, int filas, int columnas, int niveles, int maximoMochila) {
-        super(nombre, jugador);
-        ValidacionesUtiles.validarMayorACero(filas, "filas");
-        ValidacionesUtiles.validarMayorACero(columnas, "columnas");
-        ValidacionesUtiles.validarMayorACero(niveles, "niveles");
-        ValidacionesUtiles.validarMayorACero(maximoMochila, "maximoMochila");
-
-        CiudadRecoleccion juego = new CiudadRecoleccion(filas, columnas, niveles, maximoMochila, jugador);
+    public CartaPuntos(String nombre) {
+        super(nombre);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -41,16 +30,8 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
-    public void iniciar() {
-        juego.iniciar();
-    }
-
-    @Override
-    public void finalizar() {
-        int puntos = juego.finalizar();
-        int puntajeActual = this.getPuntajeActual();
-        this.setPuntaje(puntajeActual + puntos);
-
+    public void aplicarEfecto(CiudadRecoleccion juego){
+        juego.aumentarPuntos(2);
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------

@@ -1,9 +1,12 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
 import modelos.Elemento;
+import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Mochila;
 import utils.ValidacionesUtiles;
+
+import estructuras.vector.Vector;
 
 public class CiudadRecoleccion {
     //INTERFACES ----------------------------------------------------------------------------------------------
@@ -11,16 +14,31 @@ public class CiudadRecoleccion {
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private int vision;
-    private Mochila mochila;
-    private Elemento[] elementos;
+    private Mapa3D mapa = null;
+    private Mochila mochila = null;
+    private Vector<Elemento> elementos;
+    private Jugador jugador = null;
+
+    private int desplazamiento;
+    private int visibilidad;
+    private int puntos;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
-    public CiudadRecoleccion(int filas, int columnas, int niveles) {
+    public CiudadRecoleccion(int filas, int columnas, int niveles, int maximoMochila, Jugador jugador) {
         ValidacionesUtiles.validarMayorACero(filas, "filas");
         ValidacionesUtiles.validarMayorACero(columnas, "columnas");
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
-        setElementos();
+        ValidacionesUtiles.validarMayorACero(maximoMochila, "maximoMochila");
+
+        setMochila(maximoMochila);
+        setElementos(maximoMochila);
+        setMapa(filas, columnas, niveles);
+        setJugador(jugador);
+
+        setDesplazamiento(1);
+        setVisibilidad(1);
+        setPuntos(0);
+        iniciar();
 
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
@@ -29,6 +47,56 @@ public class CiudadRecoleccion {
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+    /**
+     * Establece los recursos en su estado inicial para comenzar el juego
+     */
+    public void iniciar() {
+        ubicarElementosEnMapa();
+        ubicarJugadorEnMapa();
+    }
+
+    public int finalizar() {
+        return this.puntos;
+    }
+
+    /**
+     * Ubica los elementos carta dentro del mapa
+     */
+    public void ubicarElementosEnMapa() {
+        this.mapa.ocuparCelda(this.elementos.obtener(1), 5, 3, 1);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 2, 9, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(3), 1, 5, 3);
+    }
+
+    /**
+     * Ubica al jugador en la posicion inicial
+     */
+    public void ubicarJugadorEnMapa() {
+        this.mapa.ocuparCelda(this.jugador, 1, 1, 1);
+    }
+
+    /**
+     * Aumentar la vision del jugador
+     */
+    public void aumentarVision() {
+        this.visibilidad++;
+    }
+
+    /**
+     * Aumentar el desplazamiento del jugador
+     */
+    public void aumentardesplazamiento() {
+        this.desplazamiento++;
+    }
+
+    /**
+     * Multiplicar puntos
+     */
+    public void aumentarPuntos(int multiplicador) {
+        ValidacionesUtiles.validarMayorACero(multiplicador, "multiplicador");
+        setPuntos(this.puntos * multiplicador);
+
+    }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
@@ -36,4 +104,93 @@ public class CiudadRecoleccion {
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Setter del atributo mochila
+     *
+     * PRE
+     * -El parametro maximoMochila debe ser mayor a cero
+     *
+     * @param maximoMochila: Cantidad de elementos que guardara la mochila
+     */
+    private void setMochila(int maximoMochila){
+        ValidacionesUtiles.validarMayorACero(maximoMochila, "maximoMochila");
+        mochila = new Mochila(maximoMochila);
+    }
+
+    /**
+     * Setter de los elementos
+     *
+     * PRE:
+     * -El parametro maximoMochila debe ser mayor a cero
+     * -Los elementos que se guarden no deben ser null
+     */
+    private void setElementos(int maximo){
+        CartaVision cartaVision = new CartaVision("Carta Vision");
+        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento");
+        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos");
+
+        this.elementos = new Vector<>(maximo, cartaVision);
+        this.elementos.agregar(cartaDesplazamiento);
+        this.elementos.agregar(cartaPuntos);
+
+    }
+
+    /**
+     * Setter del atributo mapa
+     *
+     * PRE:
+     * -Los atributos filas, columnas y niveles deben ser mayores a cero
+     */
+    private void setMapa(int filas, int columnas, int niveles){
+        ValidacionesUtiles.validarMayorACero(filas, "filas");
+        ValidacionesUtiles.validarMayorACero(columnas, "columnas");
+        ValidacionesUtiles.validarMayorACero(niveles, "niveles");
+        mapa = new Mapa3D(filas, columnas, niveles);
+    }
+
+    /**
+     * Setter del atributo jugador
+     *
+     * PRE:
+     * -El jugador no puede ser null
+     */
+    private void setJugador(Jugador jugador){
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        this.jugador = jugador;
+    }
+
+    /**
+     * Setter del atributo desplazamiento
+     *
+     * PRE:
+     * -El desplazamiento debe ser mayor a cero
+     */
+    private void setDesplazamiento(int desplazamiento){
+        ValidacionesUtiles.validarMayorACero(desplazamiento, "desplazamiento");
+        this.desplazamiento = desplazamiento;
+    }
+
+    /**
+     * Setter del atributo visibilidad
+     *
+     * PRE:
+     * -La visibilidad debe ser mayor a cero
+     */
+    private void setVisibilidad(int visibilidad){
+        ValidacionesUtiles.validarMayorACero(visibilidad, "visibilidad");
+        this.visibilidad = visibilidad;
+    }
+
+    /**
+     * Setter del atributo puntos
+     *
+     * PRE:
+     * -Puntos debe ser mayor o igual a cero
+     */
+    private void setPuntos(int puntos){
+        ValidacionesUtiles.validarMayorOIgualACero(puntos, "puntos");
+        this.puntos = puntos;
+    }
+
 }

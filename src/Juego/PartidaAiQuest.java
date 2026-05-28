@@ -60,7 +60,7 @@ public class PartidaAiQuest extends Partida {
         Partida ciudadTerminada = getPartidaCiudadActual();
         
         // Sumamos los puntos que hizo en esa ciudad al puntaje acumulado de la PartidaGeneral
-        // Nota: Asegurate de tener un método público o protegido en Partida para añadir puntos,
+        // Nota: Asegurate de tener un metodo público o protegido en Partida para añadir puntos,
         // o usar lo que maneje tu atributo puntajeActual.
         
         this.indiceCiudadActual++;
