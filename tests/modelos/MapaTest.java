@@ -1,6 +1,10 @@
-package modelos;
+package tests.modelos;
 
 import org.junit.jupiter.api.Test;
+
+import modelos.Celda;
+import modelos.Mapa;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapaTest {
