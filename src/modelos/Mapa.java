@@ -79,7 +79,7 @@ public class Mapa {
      *
      * PRE:
      * -El parametro contenido no debe ser null
-     * -Los parametros ancho y alto deben ser mayor o igual a cero y estar en el rango del mapa
+     * -Los parametros ancho y alto deben ser mayores a cero y estar en el rango del mapa
      * POST:
      * -La celda pasa a almacenar el contenido dado
      *
