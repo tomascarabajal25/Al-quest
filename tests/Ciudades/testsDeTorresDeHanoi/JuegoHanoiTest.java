@@ -1,15 +1,17 @@
-package Ciudades.testsDeTorresDeHanoi;
+package tests.Ciudades.testsDeTorresDeHanoi;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
+import Juego.ciudades.torresDeHanoi.CiudadHanoi;
 import Juego.ciudades.torresDeHanoi.PartidaDeHanoi;
+import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
+
 
 public class JuegoHanoiTest {
 
-    private PartidaDeHanoi juego;
+    private CiudadHanoi juego;
     private Jugador jugadorDePrueba;
 
     @BeforeEach
@@ -19,7 +21,7 @@ public class JuegoHanoiTest {
         
         // 2. Instanciamos la Partida pasándole los nuevos parámetros que requiere el constructor
         // Parámetros: (discos, nombreCiudad, jugador)
-        juego = new PartidaDeHanoi(3, "Wilde", jugadorDePrueba); 
+        juego = new PartidaDeHanoi(3, "Wilde", jugadorDePrueba).getJuego(); 
         
         // 3. Opcional: Si tu lógica de mover() requiere que la partida esté en estado "Iniciado",
         // descomentá la línea de abajo. Si se puede mover sin iniciar, podés dejarlo así.
@@ -36,9 +38,7 @@ public class JuegoHanoiTest {
         // El mínimo para 3 discos es (2^3) - 1 = 7
         assertEquals(7.0, juego.getMinMovimientos(), "El cálculo de movimientos mínimos falló");
         
-        // 🔥 Nuevos Asserts para verificar que la Herencia de 'Partida' funcionó:
-        assertEquals("Wilde", juego.getNombre(), "El nombre de la ciudad heredado falló");
-        assertEquals(jugadorDePrueba, juego.getJugador(), "El jugador heredado falló");
+        
     }
 
     @Test

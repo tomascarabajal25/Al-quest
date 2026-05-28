@@ -3,12 +3,13 @@ package Juego;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelos.Jugador;
-import modelos.Partida;
 import Juego.ciudades.ordenamientos.Caja;
 import Juego.ciudades.ordenamientos.OrdenadorBubble;
 import Juego.ciudades.ordenamientos.OrdenadorSelection;
 import Juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import modelos.Jugador;
+import modelos.Partida;
+
 /**
  * clase incompleta:
  * va a representar la partida principal del juego aiquest, maneja el todas las ciudad (las demas partidas)
