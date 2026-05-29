@@ -111,7 +111,7 @@ public class Mapa {
     public void validarFueraDeRango(int ancho, int alto) {
         ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
         ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
-        if (ancho > this.celdas.length || alto > this.celdas[0].length) {
+        if (ancho >= this.celdas.length || alto >= this.celdas[0].length) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }
@@ -153,7 +153,7 @@ public class Mapa {
      * @param alto: Posicion en ancho de la celda
      * @return: Devuelve la celda de la posicion
      */
-    public Celda getCeldaConPosicion(int ancho, int alto) {
+    public Celda<?> getCeldaConPosicion(int ancho, int alto) {
         ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
         ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
@@ -202,7 +202,7 @@ public class Mapa {
      * @param contenido: Contenido que almacena la celda
      * @return: Devuelve la celda encontrada
      */
-    public Celda getCeldaConContenido(Object contenido) {
+    public Celda<?> getCeldaConContenido(Object contenido) {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
         for (int i = 0; i < this.celdas.length; i++) {
             for (int j = 0; j < this.celdas[i].length; j++) {
