@@ -1,6 +1,5 @@
 package modelos;
 
-import utils.ValidacionesUtiles;
 
 import java.util.Objects;
 

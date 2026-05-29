@@ -2,7 +2,6 @@ package modelos;
 
 import utils.ValidacionesUtiles;
 
-import estructuras.vector.Vector;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ public class Mapa {
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private final Vector<Vector<Celda<?>>> celdas;
+    private Celda<?>[][] celdas;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
@@ -20,7 +19,7 @@ public class Mapa {
      * Constructor del TDA Mapa
      *
      * PRE:
-     * -Los parametro ancho y alto deben ser mayor a cero
+     * -Los parametro ancho y alto deben ser mayor o igual a cero
      * POST:
      * -Se crea una nueva instancia de Mapa con las dimensiones dadas y todas sus celdas inicializadas en null
      *
@@ -28,11 +27,10 @@ public class Mapa {
      * @param alto: ancho del tablero
      */
     public Mapa(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto,  "alto");
-
-        celdas = new Vector<>(ancho, null);
-        setCeldas(ancho, alto);
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto,  "alto");
+        celdas = new Celda[ancho][alto];
+        setCeldas(null);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -44,29 +42,20 @@ public class Mapa {
      */
     @Override
     public boolean equals(Object o) {
-
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (o == null || getClass() != o.getClass()) return false;
         Mapa mapa = (Mapa) o;
-
-        return Objects.equals(celdas, mapa.celdas);
+        return Objects.deepEquals(celdas, mapa.celdas);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(celdas);
+        return Arrays.deepHashCode(celdas);
     }
 
     @Override
     public String toString() {
         return "Mapa{" +
-                "celdas=" + celdas +
+                "celdas=" + Arrays.toString(celdas) +
                 '}';
     }
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
@@ -89,11 +78,10 @@ public class Mapa {
      */
     public void ocuparCelda(Object contenido, int ancho, int alto) {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
-        Celda<?> nuevaCelda = new Celda<>(contenido);
-        this.celdas.obtener(ancho).agregar(alto, nuevaCelda);
+        this.celdas[ancho][alto] = new Celda<>(contenido);
     }
 
     /**
@@ -108,11 +96,10 @@ public class Mapa {
      * @param alto: Posicion en ancho de la celda
      */
     public void vaciarCelda(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
-        Celda<?> nuevaCelda = new Celda<>(null);
-        this.celdas.obtener(ancho).agregar(alto, nuevaCelda);
+        this.celdas[ancho][alto] = new Celda<>(null);
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     /**
@@ -122,9 +109,9 @@ public class Mapa {
      * @param alto: Posicion en alto
      */
     public void validarFueraDeRango(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
-        if (ancho > this.celdas.getLongitud() || alto > this.celdas.obtener(1).getLongitud()) {
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
+        if (ancho >= this.celdas.length || alto >= this.celdas[0].length) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }
@@ -137,7 +124,7 @@ public class Mapa {
      * @return: Devuelve el ancho del mapa
      */
     public int getAncho() {
-        return this.celdas.getLongitud();
+        return this.celdas.length;
     }
 
     /**
@@ -145,7 +132,7 @@ public class Mapa {
      * @return: Devuelve el alto del mapa
      */
     public int getAlto() {
-        return this.celdas.obtener(1).getLongitud();
+        return this.celdas[0].length;
     }
 
     /**
@@ -153,7 +140,7 @@ public class Mapa {
      * @return: Devuelve la cantidad de celdas del mapa
      */
     public int getCantidadCeldas() {
-        return this.celdas.getLongitud()*this.celdas.obtener(1).getLongitud();
+        return this.celdas.length*this.celdas[0].length;
     }
 
     /**
@@ -167,10 +154,10 @@ public class Mapa {
      * @return: Devuelve la celda de la posicion
      */
     public Celda<?> getCeldaConPosicion(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
-        return this.celdas.obtener(ancho).obtener(alto);
+        return this.celdas[ancho][alto];
     }
 
     /**
@@ -185,43 +172,22 @@ public class Mapa {
      * @param cant: Cantidad de vecinos en x e y direccion
      * @return: Devuelve una matriz con la posicion en el centro y los vecinos de la posicion dada, si la posicion no existe el valor es null
      */
-    public Vector<Vector<Celda<?>>> getCeldasVecinasRespectoPosicion(int ancho, int alto, int cant) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+    public Celda<?>[][] getCeldasVecinasRespectoPosicion(int ancho, int alto, int cant) {
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         ValidacionesUtiles.validarMayorACero(cant, "cant");
         validarFueraDeRango(ancho, alto);
 
-        int tamanio = 2 * cant + 1;
+        Celda<?>[][] celdasAux = new Celda[2*cant+1][2*cant+1];
 
-        Vector<Vector<Celda<?>>> celdasAux = new Vector<>(tamanio, null);
+        for (int i = 0; i < 2*cant+1; i++) {
+            for (int j = 0; j < 2*cant+1; j++) {
 
-        for (int i = 1; i <= tamanio; i++) {
+                int anchoMapa = ancho - cant;
+                int altoMapa = alto - cant;
 
-            Vector<Celda<?>> fila =
-                    new Vector<>(tamanio, null);
-
-            for (int j = 1; j <= tamanio; j++) {
-
-                int anchoMapa = ancho - cant + (j - 1);
-                int altoMapa = alto - cant + (i - 1);
-
-                Celda<?> celda = null;
-
-                if (anchoMapa >= 1 &&
-                        anchoMapa <= getAncho() &&
-                        altoMapa >= 1 &&
-                        altoMapa <= getAlto()) {
-
-                    celda = getCeldaConPosicion(
-                            anchoMapa,
-                            altoMapa
-                    );
-                }
-
-                fila.agregar(j, celda);
+                celdasAux[i][j] = getCeldaConPosicion(anchoMapa, altoMapa);
             }
-
-            celdasAux.agregar(i, fila);
         }
 
         return celdasAux;
@@ -238,10 +204,10 @@ public class Mapa {
      */
     public Celda<?> getCeldaConContenido(Object contenido) {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
-        for (int i = 1; i < this.celdas.getLongitud(); i++) {
-            for (int j = 1; j < this.celdas.obtener(i).getLongitud(); j++) {
-                if (contenido.equals(this.celdas.obtener(i).obtener(j).getContenido())){
-                    return this.celdas.obtener(i).obtener(j);
+        for (int i = 0; i < this.celdas.length; i++) {
+            for (int j = 0; j < this.celdas[i].length; j++) {
+                if (contenido.equals(this.celdas[i][j])) {
+                    return this.celdas[i][j];
                 }
             }
         }
@@ -253,24 +219,16 @@ public class Mapa {
     /**
      * Setter de las celdas con valor null
      *
-     * PRE:
-     * -Los parametros alto y ancho deben ser mayores a cero
      * POST:
      * -Todas las celdas se inicializan con null
      *
-     * @param ancho: ancho de la matriz
-     * @param alto: alto de la matriz
+     * @param t: Contenido de la Celda
      */
-    public void setCeldas(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
-        for (int i = 1; i <= ancho; i++) {
-            Vector<Celda<?>> columna = new Vector<>(alto, null);
-            for (int j = 1; j <= alto; j++) {
-                Celda<?> celda = new Celda<>(null);
-                columna.agregar(j, celda);
+    public void setCeldas(Object t) {
+        for (int i=0; i<this.celdas.length; i++) {
+            for (int j=0; j<this.celdas[0].length; j++) {
+                this.celdas[i][j] = new Celda<>(t);
             }
-            this.celdas.agregar(i, columna);
         }
     }
 }

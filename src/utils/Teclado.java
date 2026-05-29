@@ -14,6 +14,10 @@ public class Teclado {
 		teclado.close();
 	}
 	
+	public static String leerTexto() {
+		return teclado.nextLine();
+			
+	}
 	public static int leerEntero() {
 		return teclado.nextInt();
 	}
