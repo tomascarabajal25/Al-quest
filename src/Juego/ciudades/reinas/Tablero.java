@@ -8,10 +8,6 @@ public class Tablero {
                             // usa -1 para indicar casilla vacía
                             // puede cambiarse a Integer[] para usar null en lugar de -1 (más legible)
 
-    public Tablero() {
-        // vacío por ahora, setTamanio hace el trabajo
-    }
-
     public void colocarReina(int fila, int columna) {
         setReinas(fila, columna);
     }

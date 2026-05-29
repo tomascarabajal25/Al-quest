@@ -145,6 +145,8 @@ public class TableroPanel extends JPanel{
             juegoTerminado = true;
             btnListo.setEnabled(false);
             btnMostrarSolucion.setText("Ver solucion");
+            btnMostrarSolucion.setVisible(true);
+            btnReiniciar.setVisible(true);
             JOptionPane.showMessageDialog(this, "Incorrecto. Puedes ver la solucion o reiniciar", "Game Over", JOptionPane.ERROR_MESSAGE);
 
         }
@@ -218,11 +220,11 @@ public class TableroPanel extends JPanel{
         juegoTerminado = false;
         pasoActual = 0;
 
+        btnListo.setEnabled(true);
         btnListo.setVisible(false);
-        btnMostrarSolucion.setVisible(false);
         btnMostrarSolucion.setEnabled(true);
+        btnMostrarSolucion.setVisible(false);
         btnMostrarSolucion.setText("Mostrar solucion");
-        btnReiniciar.setVisible(false);
         btnReiniciar.setEnabled(true);
 
         repaint();

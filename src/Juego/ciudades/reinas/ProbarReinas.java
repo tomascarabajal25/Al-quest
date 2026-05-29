@@ -1,7 +1,8 @@
+package Juego.ciudades.reinas;
 import Juego.ciudades.reinas.ui.VentanaPrincipal;
 import javax.swing.*;
 
-public class Main {
+public class ProbarReinas {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new VentanaPrincipal(() -> {

@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Principal",
+            "request": "launch",
+            "mainClass": "Juego.ciudades.reinas.Principal",
+            "projectName": "Al-quest_9a5222ed"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
