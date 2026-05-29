@@ -20,9 +20,10 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
             return new NodoDeArbol<T>(valor);
         }
 
-        if (valor.compareTo(nodo.getValor()) == -1) {
+        
+        if (valor.compareTo(nodo.getValor()) < 0) {
             nodo.setIzquierdo( insertarRecursivo(nodo.getIzquierdo(), valor) );
-        } else if (valor.compareTo(nodo.getValor()) == 1) {
+        } else if (valor.compareTo(nodo.getValor()) > 0) {
             nodo.setDerecho( insertarRecursivo(nodo.getDerecho(), valor));
         }
 
@@ -47,6 +48,27 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         return valor.compareTo(nodo.getValor()) == -1
                 ? buscarRecursivo(nodo.getIzquierdo(), valor)
                 : buscarRecursivo(nodo.getDerecho(), valor);
+    }
+    //devuelve la referencia real
+    public T obtener(T valor) {
+        return obtenerRecursivo(raiz, valor);
+    }
+    
+    private T obtenerRecursivo(NodoDeArbol<T> nodo, T valor) {
+        if (nodo == null) {
+            return null;
+        }
+        
+        int comparacion = valor.compareTo(nodo.getValor());
+        
+        if (comparacion == 0) {
+            return nodo.getValor(); // Encontrado
+        }
+        
+        // CORRECCIÓN: Usar < 0 en lugar de == -1
+        return comparacion < 0
+                ? obtenerRecursivo(nodo.getIzquierdo(), valor)
+                : obtenerRecursivo(nodo.getDerecho(), valor);
     }
 
     public boolean estaVacio() {

@@ -122,9 +122,9 @@ public class Mapa {
      * @param alto: Posicion en alto
      */
     public void validarFueraDeRango(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
-        if (ancho > this.celdas.getLongitud() || alto > this.celdas.obtener(1).getLongitud()) {
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
+        if (ancho >= this.celdas.length || alto >= this.celdas[0].length) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }
@@ -167,8 +167,8 @@ public class Mapa {
      * @return: Devuelve la celda de la posicion
      */
     public Celda<?> getCeldaConPosicion(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
         return this.celdas.obtener(ancho).obtener(alto);
     }
