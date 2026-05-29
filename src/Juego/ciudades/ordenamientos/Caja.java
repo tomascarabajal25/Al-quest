@@ -1,5 +1,6 @@
 package Juego.ciudades.ordenamientos;
 
+import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
 import utils.ValidacionesUtiles;
 
@@ -42,7 +43,10 @@ public class Caja extends Elemento implements Comparable<Caja>{
 		return tamaño==other.getTamaño();
 	}
 
-	//GETTER SIMPLES-----------------------------------------------------------------
+    @Override
+    public void aplicarEfecto(CiudadRecoleccion juego) {}
+
+    //GETTER SIMPLES-----------------------------------------------------------------
 	/**
 	 * devuelve el tamaño
 	 * @return

@@ -1,17 +1,17 @@
-package modelos;
+package Juego.ciudades.recoleccionEnMatriz;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import modelos.Elemento;
 import utils.ValidacionesUtiles;
 
 import java.util.Objects;
 
-public abstract class Elemento {
+public class CartaDesplazamiento extends Elemento {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private String nombre;
+    private int puntos;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
     /**
@@ -22,77 +22,71 @@ public abstract class Elemento {
      * POST:
      * -Se crea una instancia de Elemento con nombre
      *
-     * @param nombre: nombre del elemento
+     * @param nombre : nombre del elemento
      */
-    public Elemento(String nombre) {
-        ValidacionesUtiles.esDistintoDeNull(nombre, "nombre");
-        setNombre(nombre);
+    public CartaDesplazamiento(String nombre, int puntos) {
+        super(nombre);
+        setPuntos(puntos);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
 
-    /**
-     * Valida si las instancias son iguales en base al nombre
-     * @param o   the reference object with which to compare.
-     * @return: True si son iguales, False si no lo son
-     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Elemento elemento = (Elemento) o;
-        return Objects.equals(nombre, elemento.nombre);
+        if (!super.equals(o)) return false;
+        CartaDesplazamiento that = (CartaDesplazamiento) o;
+        return puntos == that.puntos;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(nombre);
+        return Objects.hash(super.hashCode(), puntos);
     }
 
     @Override
     public String toString() {
-        return "Elemento{" +
-                "nombre='" + nombre + '\'' +
+        return "CartaDesplazamiento{" +
+                "puntos=" + puntos +
                 '}';
     }
 
-    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
-    //METODOS DE CLASE ----------------------------------------------------------------------------------------
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
-
-    /**
-     * Metodo abstracto para el efecto correspondiente a cada elemento
-     *
-     * PRE:
-     * -Juego no debe ser nulo
-     *
-     * @param juego: Juego correspondiente a cada ciudad
-     */
-    public abstract void aplicarEfecto(CiudadRecoleccion juego);
+    @Override
+    public void aplicarEfecto(CiudadRecoleccion juego){
+        juego.aumentardesplazamiento();
+    }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
-
     /**
-     * Getter del parametro nombre
+     * Getter del atributo puntos
      *
-     * @return: Devuelve el valor del parametro nombre
+     * @return: Devuelte los puntos de la carta
      */
-    public String getNombre(){
-        return this.nombre;
+    public int getPuntos(){
+        return this.puntos;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
-     * Setter del parametro nombre
+     * Setter del atributo puntos
      *
-     * POST:
-     * -Establece el valor del parametro nombre
+     * PRE:
+     * -El atributo puntos debe ser mayor a cero
+     *
+     * @param puntos: Puntos de la carta
      */
-    private void setNombre(String nombre) {
-        ValidacionesUtiles.esDistintoDeNull(nombre, "nombre");
-        this.nombre = nombre;
+    private void setPuntos(int puntos){
+        ValidacionesUtiles.validarMayorACero(puntos, "Puntos");
+        this.puntos = puntos;
     }
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
 }

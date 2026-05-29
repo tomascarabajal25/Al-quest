@@ -51,7 +51,7 @@ public class PartidaDeHanoi extends Partida {
         this.setPuntaje(getPuntajeActual());
     }
     /**
-     * Método puente público para que clases externas (como el controlador) 
+     * Metodo puente público para que clases externas (como el controlador)
      * puedan registrar el puntaje de esta partida específica.
      */
     protected void actualizarPuntaje(int puntos) {

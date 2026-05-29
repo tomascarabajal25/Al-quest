@@ -1,12 +1,29 @@
 package tests.modelos;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-
+import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
 import modelos.Mochila;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MochilaTest {
+
+    /**
+     * Implementación mínima de Elemento
+     * para testing.
+     */
+    private static class ElementoMock extends Elemento {
+
+        public ElementoMock(String nombre) {
+            super(nombre);
+        }
+
+        @Override
+        public void aplicarEfecto(CiudadRecoleccion juego) {
+            // Vacío para testing
+        }
+    }
 
     @Test
     public void testConstructorValido() {
@@ -34,12 +51,18 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         mochila.agregarElemento(espada);
 
-        assertEquals(1, mochila.getCantidadElementos());
-        assertEquals(espada, mochila.getElementoPorNombre("Espada"));
+        assertEquals(1,
+                mochila.getCantidadElementos());
+
+        assertEquals(
+                espada,
+                mochila.getElementoPorNombre("Espada")
+        );
     }
 
     @Test
@@ -57,11 +80,16 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(2);
 
-        mochila.agregarElemento(new Elemento("Espada"));
-        mochila.agregarElemento(new Elemento("Arco"));
+        mochila.agregarElemento(
+                new ElementoMock("Espada"));
+
+        mochila.agregarElemento(
+                new ElementoMock("Arco"));
 
         assertThrows(RuntimeException.class, () -> {
-            mochila.agregarElemento(new Elemento("Pocion"));
+
+            mochila.agregarElemento(
+                    new ElementoMock("Pocion"));
         });
     }
 
@@ -70,14 +98,21 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         mochila.agregarElemento(espada);
 
         mochila.eliminarElemento(espada);
 
-        assertEquals(0, mochila.getCantidadElementos());
-        assertNull(mochila.getElementoPorNombre("Espada"));
+        assertEquals(
+                0,
+                mochila.getCantidadElementos()
+        );
+
+        assertNull(
+                mochila.getElementoPorNombre("Espada")
+        );
     }
 
     @Test
@@ -95,7 +130,8 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         assertThrows(RuntimeException.class, () -> {
             mochila.eliminarElemento(espada);
@@ -107,13 +143,21 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(5);
 
-        mochila.agregarElemento(new Elemento("Espada"));
-        mochila.agregarElemento(new Elemento("Arco"));
-        mochila.agregarElemento(new Elemento("Pocion"));
+        mochila.agregarElemento(
+                new ElementoMock("Espada"));
+
+        mochila.agregarElemento(
+                new ElementoMock("Arco"));
+
+        mochila.agregarElemento(
+                new ElementoMock("Pocion"));
 
         mochila.vaciarMochila();
 
-        assertEquals(0, mochila.getCantidadElementos());
+        assertEquals(
+                0,
+                mochila.getCantidadElementos()
+        );
     }
 
     @Test
@@ -121,11 +165,13 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         mochila.agregarElemento(espada);
 
-        Elemento encontrado = mochila.getElementoPorNombre("Espada");
+        Elemento encontrado =
+                mochila.getElementoPorNombre("Espada");
 
         assertEquals(espada, encontrado);
     }
@@ -135,9 +181,12 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        mochila.agregarElemento(new Elemento("Espada"));
+        mochila.agregarElemento(
+                new ElementoMock("Espada"));
 
-        assertNull(mochila.getElementoPorNombre("Arco"));
+        assertNull(
+                mochila.getElementoPorNombre("Arco")
+        );
     }
 
     @Test
@@ -146,7 +195,8 @@ public class MochilaTest {
         Mochila mochila1 = new Mochila(3);
         Mochila mochila2 = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         mochila1.agregarElemento(espada);
         mochila2.agregarElemento(espada);
@@ -160,12 +210,16 @@ public class MochilaTest {
         Mochila mochila1 = new Mochila(3);
         Mochila mochila2 = new Mochila(3);
 
-        Elemento espada = new Elemento("Espada");
+        Elemento espada =
+                new ElementoMock("Espada");
 
         mochila1.agregarElemento(espada);
         mochila2.agregarElemento(espada);
 
-        assertEquals(mochila1.hashCode(), mochila2.hashCode());
+        assertEquals(
+                mochila1.hashCode(),
+                mochila2.hashCode()
+        );
     }
 
     @Test
@@ -173,9 +227,13 @@ public class MochilaTest {
 
         Mochila mochila = new Mochila(3);
 
-        mochila.agregarElemento(new Elemento("Espada"));
+        mochila.agregarElemento(
+                new ElementoMock("Espada"));
 
         assertNotNull(mochila.toString());
-        assertTrue(mochila.toString().contains("Mochila"));
+
+        assertTrue(
+                mochila.toString().contains("Mochila")
+        );
     }
 }

@@ -78,7 +78,7 @@ public class Mapa {
      *
      * PRE:
      * -El parametro contenido no debe ser null
-     * -Los parametros ancho y alto deben ser mayor o igual a cero y estar en el rango del mapa
+     * -Los parametros ancho y alto deben ser mayores a cero y estar en el rango del mapa
      * POST:
      * -La celda pasa a almacenar el contenido dado
      *
@@ -121,9 +121,9 @@ public class Mapa {
      * @param alto: Posicion en alto
      */
     public void validarFueraDeRango(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
-        if (ancho > this.celdas.getLongitud() || alto > this.celdas.obtener(1).getLongitud()) {
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
+        if (ancho >= this.celdas.getLongitud() || alto >= this.celdas.obtener(1).getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }
@@ -166,8 +166,8 @@ public class Mapa {
      * @return: Devuelve la celda de la posicion
      */
     public Celda<?> getCeldaConPosicion(int ancho, int alto) {
-        ValidacionesUtiles.validarMayorACero(ancho, "ancho");
-        ValidacionesUtiles.validarMayorACero(alto, "alto");
+        ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
+        ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
         validarFueraDeRango(ancho, alto);
         return this.celdas.obtener(ancho).obtener(alto);
     }
@@ -195,34 +195,20 @@ public class Mapa {
         Vector<Vector<Celda<?>>> celdasAux = new Vector<>(tamanio, null);
 
         for (int i = 1; i <= tamanio; i++) {
-
-            Vector<Celda<?>> fila =
-                    new Vector<>(tamanio, null);
+            Vector<Celda<?>> fila = new Vector<>(tamanio, null);
 
             for (int j = 1; j <= tamanio; j++) {
-
                 int anchoMapa = ancho - cant + (j - 1);
                 int altoMapa = alto - cant + (i - 1);
-
                 Celda<?> celda = null;
 
-                if (anchoMapa >= 1 &&
-                        anchoMapa <= getAncho() &&
-                        altoMapa >= 1 &&
-                        altoMapa <= getAlto()) {
-
-                    celda = getCeldaConPosicion(
-                            anchoMapa,
-                            altoMapa
-                    );
+                if (anchoMapa >= 1 && anchoMapa <= getAncho() && altoMapa >= 1 && altoMapa <= getAlto()) {
+                    celda = getCeldaConPosicion(anchoMapa, altoMapa);
                 }
-
                 fila.agregar(j, celda);
             }
-
             celdasAux.agregar(i, fila);
         }
-
         return celdasAux;
     }
 
@@ -237,10 +223,35 @@ public class Mapa {
      */
     public Celda<?> getCeldaConContenido(Object contenido) {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
-        for (int i = 1; i < this.celdas.getLongitud(); i++) {
-            for (int j = 1; j < this.celdas.obtener(i).getLongitud(); j++) {
+        for (int i = 1; i <= this.celdas.getLongitud(); i++) {
+            for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
                 if (contenido.equals(this.celdas.obtener(i).obtener(j).getContenido())){
                     return this.celdas.obtener(i).obtener(j);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve la posicion de la celda que almacene el contenido dado
+     *
+     * PRE:
+     * -Contenido no debe ser null
+     *
+     * @return: Devuelve la posicion de la celda
+     */
+    public int[] getPosicionCeldaConContenido(Object contenido) {
+        ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
+
+        int[] posicion = new int[2];
+        for (int i = 1; i <= this.celdas.getLongitud(); i++) {
+            for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
+                if(this.celdas.obtener(i).obtener(j).equals(contenido)){
+                    posicion[0] = i;
+                    posicion[1] = j;
+
+                    return posicion;
                 }
             }
         }
