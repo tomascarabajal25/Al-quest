@@ -161,6 +161,19 @@ public class Mochila {
         }
         return null;
     }
+
+    /**
+     * Getter para obtener elemento por posicion
+     *
+     * PRE:
+     * -Opcion debe ser mayor a cero
+     *
+     * @return: Devuelve un elemento
+     */
+    public Elemento getElementoPorPosicion(int opcion){
+        ValidacionesUtiles.validarMayorACero(opcion, "opcion");
+        return this.elementos.get(opcion);
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 
