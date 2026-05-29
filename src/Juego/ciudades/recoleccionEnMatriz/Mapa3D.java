@@ -111,7 +111,7 @@ public class Mapa3D {
      * Getter de la cantidad de celdas
      * @return: Devuelve la cantidad de celdas del mapa
      */
-    public int getCantidadCeldas() {
+    public int getPosicionCeldaConContenido(int fila, int columna, int nivel) {
         Mapa mapAux = this.mapa.obtener(1);
         int auxNiveles = this.niveles;
         return mapAux.getCantidadCeldas() * auxNiveles;
@@ -131,6 +131,23 @@ public class Mapa3D {
     public Celda<?> getCeldaConPosicion(int fila, int columna, int nivel) {
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
         return this.mapa.obtener(nivel).getCeldaConPosicion(fila, columna);
+    }
+
+    public int[] getPosicionCeldaConContenido(Object contenido){
+        ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
+
+        int[] posicion = new int[3];
+        int[] posicionAux = new int[2];
+        for(int i = 0; i < this.niveles; i++) {
+            if (this.mapa.obtener(i+1).getPosicionCeldaConContenido(contenido) != null){
+                posicionAux = this.mapa.obtener(i+1).getPosicionCeldaConContenido(contenido);
+                posicion[0] = posicionAux[0];
+                posicion[1] = posicionAux[1];
+                posicion[2] = i+1;
+                return posicion;
+            }
+        }
+        return null;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------

@@ -247,6 +247,31 @@ public class Mapa {
         }
         return null;
     }
+
+    /**
+     * Devuelve la posicion de la celda que almacene el contenido dado
+     *
+     * PRE:
+     * -Contenido no debe ser null
+     *
+     * @return: Devuelve la posicion de la celda
+     */
+    public int[] getPosicionCeldaConContenido(Object contenido) {
+        ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
+
+        int[] posicion = new int[2];
+        for (int i = 1; i < this.celdas.getLongitud(); i++) {
+            for (int j = 1; j < this.celdas.obtener(i).getLongitud(); j++) {
+                if(this.celdas.obtener(i).obtener(j).equals(contenido)){
+                    posicion[0] = i;
+                    posicion[1] = j;
+
+                    return posicion;
+                }
+            }
+        }
+        return null;
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 

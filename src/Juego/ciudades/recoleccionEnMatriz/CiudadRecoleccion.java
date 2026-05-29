@@ -1,9 +1,6 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
-import modelos.Elemento;
-import modelos.Jugador;
-import modelos.Mapa;
-import modelos.Mochila;
+import modelos.*;
 import utils.ValidacionesUtiles;
 
 import estructuras.vector.Vector;
@@ -52,8 +49,17 @@ public class CiudadRecoleccion {
      */
     public void iniciar() {
         ubicarElementosEnMapa();
-        ubicarJugadorEnMapa();
+        ubicarJugadorEnMapa(1);
+        comenzarJuego();
     }
+
+    /**
+     *Comienza el juego
+     */
+    public void comenzarJuego() {
+
+    }
+
 
     public int finalizar() {
         return this.puntos;
@@ -71,22 +77,25 @@ public class CiudadRecoleccion {
     /**
      * Ubica al jugador en la posicion inicial
      */
-    public void ubicarJugadorEnMapa() {
-        this.mapa.ocuparCelda(this.jugador, 1, 1, 1);
+    public void ubicarJugadorEnMapa(int nivel) {
+        ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+        this.mapa.ocuparCelda(this.jugador, nivel, 1, 1);
     }
 
     /**
      * Aumentar la vision del jugador
      */
-    public void aumentarVision() {
+    public void aumentarVision(int puntos) {
         this.visibilidad++;
+        setPuntos(this.puntos + puntos);
     }
 
     /**
      * Aumentar el desplazamiento del jugador
      */
-    public void aumentardesplazamiento() {
+    public void aumentardesplazamiento(int puntos) {
         this.desplazamiento++;
+        setPuntos(this.puntos + puntos);
     }
 
     /**
@@ -96,6 +105,38 @@ public class CiudadRecoleccion {
         ValidacionesUtiles.validarMayorACero(multiplicador, "multiplicador");
         setPuntos(this.puntos * multiplicador);
 
+    }
+
+    /**
+     *
+     */
+    public boolean hayCarta(Jugador jugador) {
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(jugador);
+        Vector<Vector<Celda<?>>> vecinos = this.mapa.getNivel(posicionJugador[2]).getCeldasVecinasRespectoPosicion(posicionJugador[0],  posicionJugador[1], 1);
+
+        for (int i = 0; i < vecinos.getLongitud(); i++ ){
+            for (int j = 0; j < vecinos.obtener(i).getLongitud(); j++){
+                if (vecinos.obtener(i).obtener(j).getContenido() instanceof Elemento) {
+                    Elemento carta = ((Elemento) vecinos.obtener(i).obtener(j).getContenido());
+                    ubicarJugadorEnMapa(i+2);
+                    carta.aplicarEfecto(this);
+                    this.mochila.agregarElemento(carta);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     */
+    public void validarMochila(){
+        if (this.mochila.getCantidadElementos() == 3){
+
+        }
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
@@ -126,8 +167,8 @@ public class CiudadRecoleccion {
      * -Los elementos que se guarden no deben ser null
      */
     private void setElementos(int maximo){
-        CartaVision cartaVision = new CartaVision("Carta Vision");
-        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento");
+        CartaVision cartaVision = new CartaVision("Carta Vision", 5000);
+        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", 2000);
         CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos");
 
         this.elementos = new Vector<>(maximo, cartaVision);
@@ -146,7 +187,7 @@ public class CiudadRecoleccion {
         ValidacionesUtiles.validarMayorACero(filas, "filas");
         ValidacionesUtiles.validarMayorACero(columnas, "columnas");
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
-        mapa = new Mapa3D(filas, columnas, niveles);
+        this.mapa = new Mapa3D(filas, columnas, niveles);
     }
 
     /**

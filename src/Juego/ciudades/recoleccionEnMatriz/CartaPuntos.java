@@ -27,8 +27,19 @@ public class CartaPuntos extends Elemento {
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return "CartaPuntos{}";
+    }
+
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param juego: Juego correspondiente a cada ciudad
+     */
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
         juego.aumentarPuntos(2);

@@ -42,7 +42,7 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void iniciar() {
-        juego.iniciar();
+        this.juego.iniciar();
     }
 
     @Override
