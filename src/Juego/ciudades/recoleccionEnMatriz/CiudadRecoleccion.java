@@ -16,6 +16,7 @@ public class CiudadRecoleccion {
     private Vector<Elemento> elementos;
     private Jugador jugador = null;
 
+    private EstadoDeJuego estado = null;
     private int desplazamiento;
     private int visibilidad;
     private int puntos;
@@ -49,7 +50,8 @@ public class CiudadRecoleccion {
      */
     public void iniciar() {
         ubicarElementosEnMapa();
-        ubicarJugadorEnMapa(1);
+        ubicarJugadorEnMapa(1, 1, 1);
+        setEstado(EstadoDeJuego.COMENZADO);
         comenzarJuego();
     }
 
@@ -57,13 +59,84 @@ public class CiudadRecoleccion {
      *Comienza el juego
      */
     public void comenzarJuego() {
-
+        while (this.estado == EstadoDeJuego.COMENZADO) {
+            Direccion direccion = nuevaDireccion();
+            try{
+                moverJugador(direccion);
+            }
+            catch(RuntimeException e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
-
+    /**
+     * Finaliza el juego de la ciudad
+     *
+     * @return: Devuelve los puntos acumulados
+     */
     public int finalizar() {
         return this.puntos;
     }
+
+    /**
+     * Mueve al jugador
+     *
+     * PRE:
+     * -Jugador y la direccion no deben ser null
+     *
+     * @param direccion: Direccion en la que el jugador se mueve
+     */
+    public void moverJugador(Direccion direccion) {
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.esDistintoDeNull(direccion, "direccion");
+
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
+        int nuevaFilaJugador = posicionJugador[0];
+        int nuevaColumnaJugador = posicionJugador[1];
+
+        switch (direccion){
+
+            case ARRIBA:
+                nuevaFilaJugador -= desplazamiento;
+                break;
+
+            case ABAJO:
+                nuevaFilaJugador += desplazamiento;
+                break;
+
+            case IZQUIERDA:
+                nuevaColumnaJugador -= desplazamiento;
+                break;
+
+            case DERECHA:
+                nuevaColumnaJugador += desplazamiento;
+                break;
+        }
+        this.mapa.validarFueraDeRango(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
+        moverJugadorEnMapa(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
+        verificarCartasVecinas();
+        validarMochila();
+    }
+
+    /**
+     * Mueve al jugador dentro del mapa
+     *
+     * PRE:
+     * -Fila, columna y nivel deben ser mayores a cero
+     *
+     * @param fila: Nueva fila del jugador
+     * @param columna: Nueva columna del jugador
+     * @param nivel: Nuevo nivel del jugador
+     */
+    public void moverJugadorEnMapa(int fila, int columna, int nivel) {
+        ValidacionesUtiles.validarMayorACero(fila, "fila");
+        ValidacionesUtiles.validarMayorACero(columna, "columna");
+        ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+
+        ubicarJugadorEnMapa(fila, columna, nivel);
+    }
+
 
     /**
      * Ubica los elementos carta dentro del mapa
@@ -75,11 +148,14 @@ public class CiudadRecoleccion {
     }
 
     /**
-     * Ubica al jugador en la posicion inicial
+     * Ubica al jugador en la posicion dada
+     *
+     * PRE:
+     * -Fila, columna y nivel deben ser mayores a 0
      */
-    public void ubicarJugadorEnMapa(int nivel) {
+    public void ubicarJugadorEnMapa(int fila, int columna, int nivel) {
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
-        this.mapa.ocuparCelda(this.jugador, nivel, 1, 1);
+        this.mapa.ocuparCelda(this.jugador, fila, columna, nivel);
     }
 
     /**
@@ -110,18 +186,16 @@ public class CiudadRecoleccion {
     /**
      *
      */
-    public boolean hayCarta(Jugador jugador) {
-        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+    public boolean verificarCartasVecinas() {
 
-        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(jugador);
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
         Vector<Vector<Celda<?>>> vecinos = this.mapa.getNivel(posicionJugador[2]).getCeldasVecinasRespectoPosicion(posicionJugador[0],  posicionJugador[1], 1);
 
         for (int i = 0; i < vecinos.getLongitud(); i++ ){
             for (int j = 0; j < vecinos.obtener(i).getLongitud(); j++){
                 if (vecinos.obtener(i).obtener(j).getContenido() instanceof Elemento) {
                     Elemento carta = ((Elemento) vecinos.obtener(i).obtener(j).getContenido());
-                    ubicarJugadorEnMapa(i+2);
-                    carta.aplicarEfecto(this);
+                    ubicarJugadorEnMapa(posicionJugador[0], posicionJugador[1], posicionJugador[2]+1);
                     this.mochila.agregarElemento(carta);
                 }
             }
@@ -131,14 +205,29 @@ public class CiudadRecoleccion {
     }
 
     /**
+     * Aplica el efecto de la carta dada
      *
+     * PRE:
+     * -Carta no debe ser nulo
+     *
+     * @param carta: Carta de la que se quiere aplicar el efecto
+     */
+    public void aplicarEfectoCarta(Elemento carta) {
+        ValidacionesUtiles.esDistintoDeNull(carta, "carta");
+        carta.aplicarEfecto(this);
+
+    }
+
+
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    /**
+     *Valida si mochila guarda tres elementos
      */
     public void validarMochila(){
         if (this.mochila.getCantidadElementos() == 3){
-
+            setEstado(EstadoDeJuego.FINALIZADO);
         }
     }
-    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
@@ -199,6 +288,17 @@ public class CiudadRecoleccion {
     private void setJugador(Jugador jugador){
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
         this.jugador = jugador;
+    }
+
+    /**
+     * Setter del atributo estado
+     *
+     * PRE:
+     * -Estado no debe ser null
+     */
+    private void setEstado(EstadoDeJuego estado){
+        ValidacionesUtiles.esDistintoDeNull(estado, "estado");
+        this.estado = estado;
     }
 
     /**

@@ -196,34 +196,20 @@ public class Mapa {
         Vector<Vector<Celda<?>>> celdasAux = new Vector<>(tamanio, null);
 
         for (int i = 1; i <= tamanio; i++) {
-
-            Vector<Celda<?>> fila =
-                    new Vector<>(tamanio, null);
+            Vector<Celda<?>> fila = new Vector<>(tamanio, null);
 
             for (int j = 1; j <= tamanio; j++) {
-
                 int anchoMapa = ancho - cant + (j - 1);
                 int altoMapa = alto - cant + (i - 1);
-
                 Celda<?> celda = null;
 
-                if (anchoMapa >= 1 &&
-                        anchoMapa <= getAncho() &&
-                        altoMapa >= 1 &&
-                        altoMapa <= getAlto()) {
-
-                    celda = getCeldaConPosicion(
-                            anchoMapa,
-                            altoMapa
-                    );
+                if (anchoMapa >= 1 && anchoMapa <= getAncho() && altoMapa >= 1 && altoMapa <= getAlto()) {
+                    celda = getCeldaConPosicion(anchoMapa, altoMapa);
                 }
-
                 fila.agregar(j, celda);
             }
-
             celdasAux.agregar(i, fila);
         }
-
         return celdasAux;
     }
 
@@ -238,8 +224,8 @@ public class Mapa {
      */
     public Celda<?> getCeldaConContenido(Object contenido) {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
-        for (int i = 1; i < this.celdas.getLongitud(); i++) {
-            for (int j = 1; j < this.celdas.obtener(i).getLongitud(); j++) {
+        for (int i = 1; i <= this.celdas.getLongitud(); i++) {
+            for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
                 if (contenido.equals(this.celdas.obtener(i).obtener(j).getContenido())){
                     return this.celdas.obtener(i).obtener(j);
                 }
@@ -260,8 +246,8 @@ public class Mapa {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
 
         int[] posicion = new int[2];
-        for (int i = 1; i < this.celdas.getLongitud(); i++) {
-            for (int j = 1; j < this.celdas.obtener(i).getLongitud(); j++) {
+        for (int i = 1; i <= this.celdas.getLongitud(); i++) {
+            for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
                 if(this.celdas.obtener(i).obtener(j).equals(contenido)){
                     posicion[0] = i;
                     posicion[1] = j;

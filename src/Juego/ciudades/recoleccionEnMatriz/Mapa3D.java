@@ -46,7 +46,7 @@ public class Mapa3D {
      */
     public void ocuparCelda(Object contenido, int fila, int columna, int nivel){
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
-        validarFueraDeRango(nivel);
+        validarFueraDeRango(fila, columna, nivel);
         this.mapa.obtener(nivel).ocuparCelda(contenido, fila, columna);
 
     }
@@ -65,18 +65,24 @@ public class Mapa3D {
      */
     public void VaciarCelda(int fila, int columna, int nivel){
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
-        validarFueraDeRango(nivel);
+        validarFueraDeRango(fila, columna, nivel);
         this.mapa.obtener(nivel).vaciarCelda(fila, columna);
     }
 
     /**
      * Validacion de posicion fuera de rango
      *
+     * @param fila: Fila del mapa a validar
+     * @param columna: Columna del mapa a validar
      * @param nivel: Nivel del mapa a validar
      */
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
-    public void validarFueraDeRango(int nivel) {
+    public void validarFueraDeRango(int fila, int columna, int nivel) {
+        ValidacionesUtiles.validarMayorACero(fila, "fila");
+        ValidacionesUtiles.validarMayorACero(columna, "columna");
         ValidacionesUtiles.validarMayorACero(niveles, "nivel");
+
+        this.mapa.obtener(0).validarFueraDeRango(fila, columna);
         if (niveles > this.mapa.getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
