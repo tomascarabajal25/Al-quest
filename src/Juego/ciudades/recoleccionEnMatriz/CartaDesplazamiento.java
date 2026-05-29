@@ -57,7 +57,7 @@ public class CartaDesplazamiento extends Elemento {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
-        juego.aumentardesplazamiento(this.puntos);
+        juego.aumentardesplazamiento();
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------

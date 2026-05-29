@@ -57,7 +57,7 @@ public class CartaVision extends Elemento {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
-        juego.aumentarVision(this.puntos);
+        juego.aumentarVision();
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------

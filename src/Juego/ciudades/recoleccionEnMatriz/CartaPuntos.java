@@ -42,7 +42,7 @@ public class CartaPuntos extends Elemento {
      */
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
-        juego.aumentarPuntos(2);
+        juego.aumentarPuntos(3);
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
