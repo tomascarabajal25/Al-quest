@@ -2,7 +2,6 @@ package Juego.ciudades.reinas.ui;
 
 import Juego.ciudades.reinas.CiudadReinas;
 import Juego.ciudades.reinas.VictoriaListener;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,6 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
+/**
+ * Ventana principal del juego N-Reinas.
+ * Muestra primero el selector de tamaño y luego el tablero con el panel de reglas.
+ *
+ * @param victoriaListener callback que se ejecuta cuando el jugador completa la ciudad
+ */
 public class VentanaPrincipal extends JFrame{
 
 
@@ -42,6 +47,12 @@ public class VentanaPrincipal extends JFrame{
 
     }
     
+    /**
+     * Inicializa el tablero con el tamaño elegido.
+     * Reemplaza el contenido actual de la ventana (selector o partida anterior).
+     *
+     * @param tamanio dimensión del nuevo tablero (N x N)
+     */
     private void iniciarConTamanio(int tamanio) {
         CiudadReinas ciudad = new CiudadReinas();
         // no llama a iniciarCiudad — lo hará el primer click del jugador
@@ -58,6 +69,10 @@ public class VentanaPrincipal extends JFrame{
         repaint();
     }
 
+    /**
+     * Muestra el selector inicial de tamaño antes de crear el tablero.
+     * Es la primera pantalla que ve el jugador al abrir la ventana.
+     */
     private void mostrarSelectorInicial() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -95,6 +110,13 @@ public class VentanaPrincipal extends JFrame{
         contenedor.add(panel, BorderLayout.CENTER);
     }
 
+    /**
+     * Construye el panel derecho con las reglas del juego y el selector de tamaño.
+     * Incluye un aviso de que cambiar el tamaño reinicia el progreso.
+     *
+     * @param tamanioActual tamaño del tablero en juego, usado para mostrar las reglas correctas
+     * @return panel configurado listo para agregar a la ventana
+     */
     private JPanel crearPanelDerecho(int tamanioActual) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

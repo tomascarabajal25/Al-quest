@@ -36,6 +36,14 @@ public class TableroPanel extends JPanel{
     private JButton btnMostrarSolucion;
     private JButton btnReiniciar;
 
+    /**
+     * Panel visual del tablero de N-Reinas.
+     * Maneja la interacción del jugador, la animación de la solución y la validación.
+     *
+     * @param ciudad referencia a la lógica del juego
+     * @param tamanio dimensión del tablero (N x N)
+     * @param victoriaListener callback que se ejecuta cuando el jugador gana
+     */
     public TableroPanel(CiudadReinas ciudad, int tamanio, VictoriaListener victoriaListener) {
         this.ciudad = ciudad;
         this.recursos = new RecursosGraficos();
@@ -49,12 +57,19 @@ public class TableroPanel extends JPanel{
         configurarMouse();
     }
 
+    /**
+     * Configura el tamaño preferido del panel según la dimensión del tablero.
+     */
     private void configurarLayout(){
         setLayout (new BorderLayout());
         int dimensionTablero = ESQUINA * 2 + tamanio * CASILLA; //96 * 2 + 8 * 80 = 832 para tablero 8x8
         setPreferredSize(new Dimension (dimensionTablero, dimensionTablero));    //espacio para botones
     }
 
+    /**
+     * Crea y agrega los botones Listo, Mostrar Solución y Reiniciar.
+     * Los botones arrancan ocultos hasta que se coloque la primera reina.
+     */
     private void configurarBotones(){
         JPanel panelBotones = new JPanel();
 
@@ -76,6 +91,12 @@ public class TableroPanel extends JPanel{
         add(panelBotones, BorderLayout.SOUTH);
     }
 
+    /**
+     * Registra el listener de mouse para colocar y quitar reinas.
+     * El primer click izquierdo coloca la reina inicial y la bloquea.
+     * Los clicks siguientes colocan (izquierdo) o quitan (derecho) reinas,
+     * respetando el límite de N reinas en total.
+     */
     private void configurarMouse() {
         addMouseListener(new MouseAdapter() {
             @Override
@@ -124,6 +145,11 @@ public class TableroPanel extends JPanel{
         });
     }
 
+
+    /**
+     * Verifica si el tablero actual es una solución válida.
+     * Si es correcto notifica la victoria. Si no, habilita ver la solución.
+     */
     private void validarTablero(){
         if (solucionRevelada){
             JOptionPane.showMessageDialog(this, "Revelaste la solucion. Reinicia para poder ganar", "No valido", JOptionPane.WARNING_MESSAGE);
@@ -152,6 +178,11 @@ public class TableroPanel extends JPanel{
         }
     }
 
+    /**
+     * Anima el proceso de resolución del backtracking sobre el tablero actual.
+     * Respeta las reinas ya colocadas por el jugador.
+     * Si el estado actual no tiene solución posible, muestra un aviso.
+     */
     private void mostrarSolucion(){
         if (timerAnimacion != null && timerAnimacion.isRunning()){
             timerAnimacion.stop();
@@ -209,6 +240,10 @@ public class TableroPanel extends JPanel{
         timerAnimacion.start();
     }
 
+    /**
+     * Reinicia el tablero al estado inicial: vacío, esperando la primera reina.
+     * Detiene la animación si estaba en curso.
+     */
     private void reiniciar() {
         if (timerAnimacion != null) timerAnimacion.stop();
 
@@ -230,6 +265,12 @@ public class TableroPanel extends JPanel{
         repaint();
     }
 
+    /**
+     * Dibuja el tablero con sus casillas e imágenes de reinas.
+     * Alterna casillas claras y oscuras según la paridad de fila+columna.
+     *
+     * @param g contexto gráfico provisto por Swing
+     */
     @Override
     protected void paintComponent (Graphics g){
         super.paintComponent(g);
