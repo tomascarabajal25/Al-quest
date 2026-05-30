@@ -79,6 +79,10 @@ public class VistaCiudadRecoleccion {
         Teclado.inicializar();
         return Teclado.leerCaracter();
     }
+
+    public static void cartaEncontrada(String nombre, String descripcion){
+
+    }
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------

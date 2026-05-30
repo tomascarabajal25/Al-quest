@@ -290,6 +290,7 @@ public class CiudadRecoleccion {
             for (int j = 0; j < vecinos.obtener(i).getLongitud(); j++){
                 if (vecinos.obtener(i).obtener(j).getContenido() instanceof Elemento) {
                     Elemento carta = ((Elemento) vecinos.obtener(i).obtener(j).getContenido());
+                    procesarCarta(carta);
                     this.mochila.agregarElemento(carta);
                     sumarPuntosCarta(posicionJugador);
                     validarMochila();
@@ -298,6 +299,31 @@ public class CiudadRecoleccion {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Procesa la carta y verifica a que TDA carta pertenece
+     *
+     * PRE:
+     * -La carta no debe ser null
+     *
+     * @param carta: Carta a procesar
+     */
+    public void procesarCarta(Elemento carta) {
+        ValidacionesUtiles.esDistintoDeNull(carta, "carta");
+
+        if (carta instanceof CartaVision cartaV) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaV.getNombre(), cartaV.getDescripcion());
+        }
+
+        else if (carta instanceof CartaDesplazamiento cartaD) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaD.getNombre(), cartaD.getDescripcion());
+        }
+
+        else if (carta instanceof CartaPuntos cartaP) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaP.getNombre(), cartaP.getDescripcion());
+
         }
     }
 
@@ -316,11 +342,16 @@ public class CiudadRecoleccion {
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
     /**
      * Setter del atributo mapa
      *
      * PRE:
      * -Los atributos filas, columnas y niveles deben ser mayores a cero
+     *
+     * @param filas: Filas del mapa
+     * @param columnas: Columnas del mapa
+     * @param niveles: Niveles del mapa
      */
     private void setMapa(int filas, int columnas, int niveles){
         ValidacionesUtiles.validarMayorACero(filas, "filas");
@@ -347,6 +378,8 @@ public class CiudadRecoleccion {
      *
      * PRE:
      * -El jugador no puede ser null
+     *
+     * @param jugador: Jugador de la ciudad
      */
     private void setJugador(Jugador jugador){
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
@@ -359,11 +392,15 @@ public class CiudadRecoleccion {
      * PRE:
      * -El parametro maximoMochila debe ser mayor a cero
      * -Los elementos que se guarden no deben ser null
+     *
+     * @param maximo: Cantidad de elementos que guardara la mochila
      */
     private void setElementos(int maximo){
-        CartaVision cartaVision = new CartaVision("Carta Vision", 5000);
-        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", 2000);
-        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos");
+        ValidacionesUtiles.validarMayorACero(maximo, "maximo");
+
+        CartaVision cartaVision = new CartaVision("Carta Vision", "Esta carta tiene el efecto de aumentar la visibilidad en una celda", 5000);
+        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", "Esta carta tiene el efecto de aumentar el desplazamiento en una celda",2000);
+        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos", "Esta carta tiene el efecto de aumentar exponencialmente los puntos");
 
         this.elementos = new Vector<>(maximo, cartaVision);
         this.elementos.agregar(cartaDesplazamiento);

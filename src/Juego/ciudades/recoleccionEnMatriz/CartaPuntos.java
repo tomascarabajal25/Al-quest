@@ -1,6 +1,7 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
 import modelos.Elemento;
+import utils.ValidacionesUtiles;
 
 public class CartaPuntos extends Elemento {
 //INTERFACES ----------------------------------------------------------------------------------------------
@@ -8,6 +9,7 @@ public class CartaPuntos extends Elemento {
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private String descripcion = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
     /**
@@ -20,8 +22,10 @@ public class CartaPuntos extends Elemento {
      *
      * @param nombre : nombre del elemento
      */
-    public CartaPuntos(String nombre) {
+    public CartaPuntos(String nombre, String descripcion) {
         super(nombre);
+        ValidacionesUtiles.esDistintoDeNull(descripcion, "Descripcion");
+        setDescripcion(descripcion);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -53,7 +57,24 @@ public class CartaPuntos extends Elemento {
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Getter del atributo descripcion
+     *
+     * @return: Devuelve la descripcion de la carta
+     */
+    public String getDescripcion(){
+        return this.descripcion;
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
-
+    /**
+     * Setter del atributo descripcion
+     *
+     * PRE:
+     * -Descripcion no debe ser nulo
+     */
+    private void setDescripcion(String descripcion){
+        ValidacionesUtiles.esDistintoDeNull(descripcion, "Descripcion");
+        this.descripcion = descripcion;
+    }
 }
