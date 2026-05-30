@@ -12,6 +12,7 @@ public class CartaVision extends Elemento {
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private int puntos;
+    private String descripcion = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
     /**
@@ -24,9 +25,12 @@ public class CartaVision extends Elemento {
      *
      * @param nombre : nombre del elemento
      */
-    public CartaVision(String nombre, int puntos) {
+    public CartaVision(String nombre, String descripcion, int puntos) {
         super(nombre);
+        ValidacionesUtiles.esDistintoDeNull(descripcion, "descripcion");
+        ValidacionesUtiles.validarMayorOIgualACero(puntos, "puntos");
         setPuntos(puntos);
+        setDescripcion(descripcion);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -55,6 +59,15 @@ public class CartaVision extends Elemento {
 
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Efecto de la carta
+     *
+     * PRE:
+     * -Juego no debe ser null
+     *
+     * @param juego: Juego correspondiente a cada ciudad
+     */
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
         juego.aumentarVision();
@@ -72,6 +85,15 @@ public class CartaVision extends Elemento {
     public int getPuntos(){
         return this.puntos;
     }
+
+    /**
+     * Getter del atributo descripcion
+     *
+     * @return: Devuelve la descripcion de la carta
+     */
+    public String getDescripcion(){
+        return this.descripcion;
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
@@ -85,5 +107,16 @@ public class CartaVision extends Elemento {
     private void setPuntos(int puntos){
         ValidacionesUtiles.validarMayorACero(puntos, "Puntos");
         this.puntos = puntos;
+    }
+
+    /**
+     * Setter del atributo descripcion
+     *
+     * PRE:
+     * -Descripcion no debe ser nulo
+     */
+    private void setDescripcion(String descripcion){
+        ValidacionesUtiles.esDistintoDeNull(descripcion, "Descripcion");
+        this.descripcion = descripcion;
     }
 }

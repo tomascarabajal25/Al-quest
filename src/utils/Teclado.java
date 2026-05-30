@@ -16,8 +16,11 @@ public class Teclado {
 	
 	public static String leerTexto() {
 		return teclado.nextLine();
-			
 	}
+
+    public static char leerCaracter() {
+        return teclado.next().charAt(0);
+    }
 	public static int leerEntero() {
 		return teclado.nextInt();
 	}

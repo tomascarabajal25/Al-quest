@@ -129,6 +129,15 @@ public class Mochila {
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
+     * Getter de los elementos guardados
+     *
+     * @return: Lista de elementos
+     */
+    public ListaSimplementeEnlazada<Elemento> getElementos(){
+        return this.elementos;
+    }
+
+    /**
      * Getter de la cantidad de elementos en la mochila
      *
      * @return: cantidad de elementos

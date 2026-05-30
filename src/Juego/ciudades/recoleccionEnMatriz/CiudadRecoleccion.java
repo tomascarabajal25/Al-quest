@@ -2,6 +2,7 @@ package Juego.ciudades.recoleccionEnMatriz;
 
 import modelos.*;
 import utils.ValidacionesUtiles;
+import Juego.Constantes;
 
 import estructuras.vector.Vector;
 
@@ -48,9 +49,9 @@ public class CiudadRecoleccion {
         setJugador(jugador);
         setElementos(maximoMochila);
 
-        setDesplazamiento(1);
-        setVisibilidad(1);
-        setPuntos(0);
+        setDesplazamiento(Constantes.DESPLAZAMIENTO_INICIAL);
+        setVisibilidad(Constantes.VISIBILIDAD_INICIAL);
+        setPuntos(Constantes.PUNTOS_INICIALES_PARTIDA);
         iniciar();
 
     }
@@ -75,9 +76,10 @@ public class CiudadRecoleccion {
      */
     public void comenzarJuego() {
         while (this.estado == EstadoDeJuego.COMENZADO) {
-            Direccion direccion = nuevaDireccion();
+            VistaCiudadRecoleccion.imprimirInterfaz(this.mapa, this.mochila, this.elementos, this.jugador, this.puntos, this.visibilidad);
+            char opcion = VistaCiudadRecoleccion.ingresarCaracter();
             try{
-                moverJugador(direccion);
+                llamarRutina(opcion);
             }
             catch(RuntimeException e){
                 System.out.println(e.getMessage());
@@ -115,38 +117,69 @@ public class CiudadRecoleccion {
     }
 
     /**
+     * Llama a la rutina correspondiente a la tecla ingresada
+     *
+     * PRE:
+     * -Opcion debe ser distinto de null
+     *
+     * @param opcion: opcion ingreswada por el usuario
+     */
+    public void llamarRutina(char opcion) {
+        char teclaMayuscula = Character.toUpperCase(opcion);
+
+        switch (opcion) {
+            case 'W', 'S', 'A', 'D':
+                moverJugador(opcion);
+                break;
+            case 'P':
+                VistaCiudadRecoleccion.imprimirMochila(this.mochila, this.elementos);
+                if (Character.isDigit(opcion)) {
+                    int nuevaOpcion = opcion - '0';
+                    usarCartaMochila(nuevaOpcion);
+                } else if (opcion == 'Q' || opcion == 'q') {
+                    return;
+                }
+        }
+    }
+
+    /**
      * Mueve al jugador
      *
      * PRE:
      * -Direccion no debe ser null
      *
-     * @param direccion: Direccion en la que el jugador se mueve
+     * @param opcion: Direccion en la que el jugador se mueve
      */
-    public void moverJugador(Direccion direccion) {
-        ValidacionesUtiles.esDistintoDeNull(direccion, "direccion");
+    public void moverJugador(char opcion) {
+        ValidacionesUtiles.esDistintoDeNull(opcion, "opcion");
 
         int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
         int nuevaFilaJugador = posicionJugador[0];
         int nuevaColumnaJugador = posicionJugador[1];
 
-        switch (direccion){
-            case ARRIBA:
+        switch (opcion){
+            case 'W':
                 nuevaFilaJugador -= desplazamiento;
                 break;
 
-            case ABAJO:
+            case 'S':
                 nuevaFilaJugador += desplazamiento;
                 break;
 
-            case IZQUIERDA:
+            case 'A':
                 nuevaColumnaJugador -= desplazamiento;
                 break;
 
-            case DERECHA:
+            case 'D':
                 nuevaColumnaJugador += desplazamiento;
                 break;
         }
-        //this.mapa.validarFueraDeRango(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
+
+        //Verifica que, cuando el desplazamiento es mayor a 1, el jugador no quede en una posicion fuera de rango con un movimiento
+        Mapa nivelActual = this.mapa.getNivel(posicionJugador[2]);
+        nuevaFilaJugador = Math.max(1, Math.min(nuevaFilaJugador, nivelActual.getAncho()));
+        nuevaColumnaJugador = Math.max(1, Math.min(nuevaColumnaJugador, nivelActual.getAlto()));
+
         moverJugadorEnMapa(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
         verificarCartasVecinas();
     }
@@ -191,10 +224,10 @@ public class CiudadRecoleccion {
 
     private void sumarPuntosCarta(int[] posicionJugador){
         if (posicionJugador[2] == 1){
-            sumarPuntosVision(5000);
+            sumarPuntosVision(Constantes.PUNTAJE_VISIBILIDAD);
         }
         if (posicionJugador[2] == 2){
-            sumarPuntosDesplazamiento(3000);
+            sumarPuntosDesplazamiento(Constantes.PUNTAJE_DESPLAZAMIENTO);
         }
     }
 
@@ -202,7 +235,7 @@ public class CiudadRecoleccion {
      * Aumentar la vision del jugador
      */
     public void aumentarVision() {
-        this.visibilidad++;
+        this.visibilidad += Constantes.CANTIDAD_AUMENTO_VISIBILIDAD;
     }
     /**
      * Suma los puntos de la carta visibilidad al encontrarla
@@ -221,7 +254,7 @@ public class CiudadRecoleccion {
      * Aumentar el desplazamiento del jugador
      */
     public void aumentardesplazamiento() {
-        this.desplazamiento++;
+        this.desplazamiento += Constantes.CANTIDAD_AUMENTO_DESPLAZAMIENTO;
     }
     /**
      * Suma los puntos de la carta desplazamiento al encontrarla
@@ -239,9 +272,8 @@ public class CiudadRecoleccion {
     /**
      * Multiplicar puntos
      */
-    public void aumentarPuntos(int multiplicador) {
-        ValidacionesUtiles.validarMayorACero(multiplicador, "multiplicador");
-        setPuntos(this.puntos * multiplicador);
+    public void aumentarPuntos() {
+        setPuntos(this.puntos * Constantes.CANTIDAD_AUMENTO_PUNTOS);
 
     }
 
@@ -258,6 +290,7 @@ public class CiudadRecoleccion {
             for (int j = 0; j < vecinos.obtener(i).getLongitud(); j++){
                 if (vecinos.obtener(i).obtener(j).getContenido() instanceof Elemento) {
                     Elemento carta = ((Elemento) vecinos.obtener(i).obtener(j).getContenido());
+                    procesarCarta(carta);
                     this.mochila.agregarElemento(carta);
                     sumarPuntosCarta(posicionJugador);
                     validarMochila();
@@ -266,6 +299,31 @@ public class CiudadRecoleccion {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Procesa la carta y verifica a que TDA carta pertenece
+     *
+     * PRE:
+     * -La carta no debe ser null
+     *
+     * @param carta: Carta a procesar
+     */
+    public void procesarCarta(Elemento carta) {
+        ValidacionesUtiles.esDistintoDeNull(carta, "carta");
+
+        if (carta instanceof CartaVision cartaV) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaV.getNombre(), cartaV.getDescripcion());
+        }
+
+        else if (carta instanceof CartaDesplazamiento cartaD) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaD.getNombre(), cartaD.getDescripcion());
+        }
+
+        else if (carta instanceof CartaPuntos cartaP) {
+            VistaCiudadRecoleccion.cartaEncontrada(cartaP.getNombre(), cartaP.getDescripcion());
+
         }
     }
 
@@ -284,11 +342,16 @@ public class CiudadRecoleccion {
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
     /**
      * Setter del atributo mapa
      *
      * PRE:
      * -Los atributos filas, columnas y niveles deben ser mayores a cero
+     *
+     * @param filas: Filas del mapa
+     * @param columnas: Columnas del mapa
+     * @param niveles: Niveles del mapa
      */
     private void setMapa(int filas, int columnas, int niveles){
         ValidacionesUtiles.validarMayorACero(filas, "filas");
@@ -315,6 +378,8 @@ public class CiudadRecoleccion {
      *
      * PRE:
      * -El jugador no puede ser null
+     *
+     * @param jugador: Jugador de la ciudad
      */
     private void setJugador(Jugador jugador){
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
@@ -327,11 +392,15 @@ public class CiudadRecoleccion {
      * PRE:
      * -El parametro maximoMochila debe ser mayor a cero
      * -Los elementos que se guarden no deben ser null
+     *
+     * @param maximo: Cantidad de elementos que guardara la mochila
      */
     private void setElementos(int maximo){
-        CartaVision cartaVision = new CartaVision("Carta Vision", 5000);
-        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", 2000);
-        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos");
+        ValidacionesUtiles.validarMayorACero(maximo, "maximo");
+
+        CartaVision cartaVision = new CartaVision("Carta Vision", "Esta carta tiene el efecto de aumentar la visibilidad en una celda", 5000);
+        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", "Esta carta tiene el efecto de aumentar el desplazamiento en una celda",2000);
+        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos", "Esta carta tiene el efecto de aumentar exponencialmente los puntos");
 
         this.elementos = new Vector<>(maximo, cartaVision);
         this.elementos.agregar(cartaDesplazamiento);
