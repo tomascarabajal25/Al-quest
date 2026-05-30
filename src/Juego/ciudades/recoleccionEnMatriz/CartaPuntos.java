@@ -37,12 +37,16 @@ public class CartaPuntos extends Elemento {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
     /**
+     * Efecto de la carta
+     *
+     * PRE:
+     * -Juego no debe ser null
      *
      * @param juego: Juego correspondiente a cada ciudad
      */
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
-        juego.aumentarPuntos(3);
+        juego.aumentarPuntos();
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------

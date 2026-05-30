@@ -55,6 +55,15 @@ public class CartaDesplazamiento extends Elemento {
 
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Efecto de la carta
+     *
+     * PRE:
+     * -Juego no debe ser null
+     *
+     * @param juego: Juego correspondiente a cada ciudad
+     */
     @Override
     public void aplicarEfecto(CiudadRecoleccion juego){
         juego.aumentardesplazamiento();
