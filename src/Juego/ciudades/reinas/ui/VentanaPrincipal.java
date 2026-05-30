@@ -1,6 +1,6 @@
 package Juego.ciudades.reinas.ui;
 
-import Juego.ciudades.reinas.CiudadReinas;
+import Juego.ciudades.reinas.PartidaReinas;
 import Juego.ciudades.reinas.VictoriaListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+import modelos.Jugador;
 
 /**
  * Ventana principal del juego N-Reinas.
@@ -54,12 +55,13 @@ public class VentanaPrincipal extends JFrame{
      * @param tamanio dimensión del nuevo tablero (N x N)
      */
     private void iniciarConTamanio(int tamanio) {
-        CiudadReinas ciudad = new CiudadReinas();
-        // no llama a iniciarCiudad — lo hará el primer click del jugador
+        Jugador jugador = new Jugador("Jugador 1"); // por ahora hardcodeado
+        PartidaReinas partida = new PartidaReinas(jugador, tamanio);
+        partida.iniciar();
 
-        contenedor.removeAll(); // limpiar todo, incluyendo el selector inicial
+        contenedor.removeAll();
 
-        tableroPanel = new TableroPanel(ciudad, tamanio, victoriaListener);
+        tableroPanel = new TableroPanel(partida.getCiudad(), tamanio, victoriaListener);
         contenedor.add(tableroPanel, BorderLayout.CENTER);
         contenedor.add(crearPanelDerecho(tamanio), BorderLayout.EAST);
 
