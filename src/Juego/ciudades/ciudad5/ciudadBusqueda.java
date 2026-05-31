@@ -126,7 +126,19 @@ public class ciudadBusqueda {
 	}
 
 
-
+	// Agregar este método en ciudadBusqueda.java
+	 
+	/**
+	 * post: devuelve la lista de strings indexados (sin posiciones)
+	 *       para que PartidaBusqueda pueda elegir palabras al azar
+	 */
+	public List<String> getPalabras() {
+	    List<String> resultado = new ArrayList<>();
+	    for (PalabraConPosiciones p : this.listaDePalabras) {
+	        resultado.add(p.getPalabra());
+	    }
+	    return resultado;
+	}
 	public void iniciar() {
 		
 	}
