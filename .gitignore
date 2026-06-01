@@ -2,6 +2,7 @@
 .idea/
 *.iml
 /bin/
+
 # Eclipse
 .project
 .classpath
@@ -26,3 +27,5 @@ Thumbs.db
 # Java compilados (si usás carpetas propias)
 out/
 build/
+
+overview.md
