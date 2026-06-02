@@ -12,6 +12,11 @@ public class RecursosGraficos {
     private BufferedImage reinaFondoClaroImg;
     private BufferedImage reinaFondoOscuroImg;
 
+    /**
+     * Carga las imágenes BMP usadas para dibujar el tablero y las reinas.
+     * Si alguna imagen no se encuentra, imprime el error por consola.
+     */
+
     public RecursosGraficos() {
 
         try {
@@ -26,9 +31,16 @@ public class RecursosGraficos {
         }
     }
 
+    /** @return imagen de casilla clara (sin reina) */
     public BufferedImage getCasillaClaraImg()    { return casillaClaraImg; }
+
+    /** @return imagen de casilla oscura (sin reina) */
     public BufferedImage getCasillaOscuraImg()   { return casillaOscuraImg; }
+
+    /** @return imagen de reina sobre fondo claro */
     public BufferedImage getReinaFondoClaroImg() { return reinaFondoClaroImg; }
+
+    /** @return imagen de reina sobre fondo oscuro */
     public BufferedImage getReinaFondoOscuroImg(){ return reinaFondoOscuroImg; }
     
 }

@@ -26,3 +26,6 @@ Thumbs.db
 # Java compilados (si usás carpetas propias)
 out/
 build/
+
+# Dependencias locales
+lib/
