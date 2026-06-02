@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ProbarComplejidad",
+            "request": "launch",
+            "mainClass": "Juego.ciudades.complejidad.ProbarComplejidad",
+            "projectName": "Al-quest_9a5222ed"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
