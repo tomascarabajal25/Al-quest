@@ -1,4 +1,4 @@
-package utils;
+package com.aiquest.utils;
 
 public class SistemaUtiles {
 

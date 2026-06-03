@@ -1,9 +1,9 @@
-package modelos;
+package com.aiquest.modelos;
 
 import java.util.Objects;
 
-import Juego.ciudades.ordenamientos.EstadoDePartida;
-import utils.ValidacionesUtiles;
+import com.aiquest.juego.ciudades.ordenamientos.EstadoDePartida;
+import com.aiquest.utils.ValidacionesUtiles;
 
 public abstract class Partida {
 	//ATRIBUTOS----------------------------------------------------------------------

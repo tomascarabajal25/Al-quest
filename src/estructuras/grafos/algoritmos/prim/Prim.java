@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.prim;
+package com.aiquest.estructuras.grafos.algoritmos.prim;
 
 import java.util.Arrays;
 

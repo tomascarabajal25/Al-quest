@@ -1,4 +1,4 @@
-package estructuras.arboles;
+package com.aiquest.estructuras.arboles;
 
 class NodoDeArbol<T> {
     private T valor;

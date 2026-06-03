@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.ciclos;
+package com.aiquest.estructuras.grafos.algoritmos.ciclos;
 
 public class CicloHamiltoniano {
 

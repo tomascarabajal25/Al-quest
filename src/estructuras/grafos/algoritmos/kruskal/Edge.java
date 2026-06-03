@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.kruskal;
+package com.aiquest.estructuras.grafos.algoritmos.kruskal;
 
 class Edge implements Comparable<Edge> {
     int src, dest, weight;

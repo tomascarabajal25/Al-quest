@@ -1,4 +1,4 @@
-package estructuras.grafos;
+package com.aiquest.estructuras.grafos;
 
 /*
 * Representa una Arista (borde) en el grafo.

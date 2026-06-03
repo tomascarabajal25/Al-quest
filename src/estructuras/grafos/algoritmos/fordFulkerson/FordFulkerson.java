@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.fordFulkerson;
+package com.aiquest.estructuras.grafos.algoritmos.fordFulkerson;
 
 import java.util.Arrays;
 import java.util.List;

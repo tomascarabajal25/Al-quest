@@ -1,6 +1,6 @@
-package estructuras.arboles;
+package com.aiquest.estructuras.arboles;
 
-import estructuras.listas.ListaConCursor;
+import com.aiquest.estructuras.listas.ListaConCursor;
 
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 	

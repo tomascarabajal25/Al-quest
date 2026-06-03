@@ -1,8 +1,8 @@
-package estructuras.cola;
+package com.aiquest.estructuras.cola;
 
 import java.util.List;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ColaBasica<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

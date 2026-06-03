@@ -1,11 +1,11 @@
-package estructuras.cola;
+package com.aiquest.estructuras.cola;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Queue;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class Cola<T> implements Queue<T> {
 

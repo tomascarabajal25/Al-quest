@@ -3,7 +3,7 @@ package tests.modelos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import modelos.Elemento;
+import com.aiquest.modelos.Elemento;
 
 import static org.junit.jupiter.api.Assertions.*;
 

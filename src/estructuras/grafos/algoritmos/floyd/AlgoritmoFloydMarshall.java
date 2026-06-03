@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.floyd;
+package com.aiquest.estructuras.grafos.algoritmos.floyd;
 
 public class AlgoritmoFloydMarshall {
     static final int INFINITO = 99999; // Representa infinito

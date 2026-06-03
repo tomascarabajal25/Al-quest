@@ -1,9 +1,9 @@
-package modelos;
+package com.aiquest.modelos;
 
-import utils.ValidacionesUtiles;
+import com.aiquest.utils.ValidacionesUtiles;
 
 import java.util.Objects;
-import estructuras.listas.ListaSimplementeEnlazada;
+import com.aiquest.estructuras.listas.ListaSimplementeEnlazada;
 
 public class Mochila {
     //INTERFACES ----------------------------------------------------------------------------------------------

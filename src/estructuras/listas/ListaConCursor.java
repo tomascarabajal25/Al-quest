@@ -1,6 +1,6 @@
-package estructuras.listas;
+package com.aiquest.estructuras.listas;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ListaConCursor<T extends Object> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

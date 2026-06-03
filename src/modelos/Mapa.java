@@ -1,6 +1,6 @@
-package modelos;
+package com.aiquest.modelos;
 
-import utils.ValidacionesUtiles;
+import com.aiquest.utils.ValidacionesUtiles;
 
 import java.util.Arrays;
 import java.util.Objects;

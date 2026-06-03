@@ -1,4 +1,4 @@
-package modelos;
+package com.aiquest.modelos;
 
 
 import java.util.Objects;

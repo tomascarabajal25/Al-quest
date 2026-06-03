@@ -3,7 +3,7 @@ package tests.Ciudades.testsDeTorresDeHanoi;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.torresDeHanoi.Nodo;
+import com.aiquest.juego.ciudades.torresDeHanoi.Nodo;
 
 public class NodoTest {
 

@@ -1,9 +1,9 @@
-package estructuras.vector;
+package com.aiquest.estructuras.vector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import utils.ValidacionesUtiles;
+import com.aiquest.utils.ValidacionesUtiles;
 
 public class Vector<T> implements Iterable<T> {
 //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

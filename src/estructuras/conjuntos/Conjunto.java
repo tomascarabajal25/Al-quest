@@ -1,4 +1,4 @@
-package estructuras.conjuntos;
+package com.aiquest.estructuras.conjuntos;
 
 import java.util.ArrayList;
 import java.util.Collection;

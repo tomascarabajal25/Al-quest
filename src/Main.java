@@ -1,5 +1,7 @@
-import Juego.ciudades.reinas.ui.VentanaPrincipal;
-import javax.swing.*;
+package com.aiquest;
+
+import com.aiquest.juego.ciudades.reinas.ui.VentanaPrincipal;
+import java.swing.*;
 
 public class Main {
     public static void main(String[] args) {

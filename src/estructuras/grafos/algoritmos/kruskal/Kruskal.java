@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.kruskal;
+package com.aiquest.estructuras.grafos.algoritmos.kruskal;
 
 import java.util.ArrayList;
 import java.util.Collections;

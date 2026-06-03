@@ -1,4 +1,4 @@
-package estructuras.nodos;
+package com.aiquest.estructuras.nodos;
 
 public class NodoDoblementeEnlazado<T> extends NodoSimplementeEnlazado<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

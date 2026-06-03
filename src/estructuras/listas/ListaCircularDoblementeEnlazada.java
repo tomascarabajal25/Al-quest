@@ -1,9 +1,9 @@
-package estructuras.listas;
+package com.aiquest.estructuras.listas;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import estructuras.nodos.NodoDoblementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoDoblementeEnlazado;
 
 public class ListaCircularDoblementeEnlazada<T> extends ListaDoblementeEnlazada<T> {
 

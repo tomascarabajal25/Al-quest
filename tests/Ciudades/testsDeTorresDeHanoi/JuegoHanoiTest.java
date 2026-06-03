@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.torresDeHanoi.CiudadHanoi;
-import Juego.ciudades.torresDeHanoi.PartidaDeHanoi;
-import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
+import com.aiquest.juego.ciudades.torresDeHanoi.CiudadHanoi;
+import com.aiquest.juego.ciudades.torresDeHanoi.PartidaDeHanoi;
+import com.aiquest.modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
 
 
 public class JuegoHanoiTest {

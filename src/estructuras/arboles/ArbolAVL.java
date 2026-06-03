@@ -1,4 +1,4 @@
-package estructuras.arboles;
+package com.aiquest.estructuras.arboles;
 
 public class ArbolAVL<T extends Comparable<T>> extends ArbolBinarioDeBusqueda<T> {
 

@@ -1,6 +1,6 @@
-package utils.bitmap;
+package com.aiquest.utils.bitmap;
 
-import utils.ValidacionesUtiles;
+import com.aiquest.utils.ValidacionesUtiles;
 
 import java.awt.Color;
 import java.awt.Font;

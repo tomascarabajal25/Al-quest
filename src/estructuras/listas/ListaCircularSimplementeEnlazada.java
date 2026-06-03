@@ -1,10 +1,10 @@
-package estructuras.listas;
+package com.aiquest.estructuras.listas;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class ListaCircularSimplementeEnlazada<T> extends ListaSimplementeEnlazada<T> {
 

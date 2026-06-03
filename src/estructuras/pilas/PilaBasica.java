@@ -1,8 +1,8 @@
-package estructuras.pilas;
+package com.aiquest.estructuras.pilas;
 
 import java.util.List;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class PilaBasica<T> {
 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

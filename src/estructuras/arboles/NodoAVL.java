@@ -1,4 +1,4 @@
-package estructuras.arboles;
+package com.aiquest.estructuras.arboles;
 
 class NodoAVL<T> extends NodoDeArbol<T> {
     private int altura;

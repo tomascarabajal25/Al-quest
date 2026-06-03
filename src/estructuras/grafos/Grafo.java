@@ -1,4 +1,4 @@
-package estructuras.grafos;
+package com.aiquest.estructuras.grafos;
 
 import java.util.ArrayList;
 import java.util.Collection;

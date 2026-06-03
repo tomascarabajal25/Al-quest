@@ -3,8 +3,8 @@ package tests.modelos;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import modelos.Elemento;
-import modelos.Mochila;
+import com.aiquest.modelos.Elemento;
+import com.aiquest.modelos.Mochila;
 
 public class MochilaTest {
 

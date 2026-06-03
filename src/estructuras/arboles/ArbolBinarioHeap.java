@@ -1,4 +1,4 @@
-package estructuras.arboles;
+package com.aiquest.estructuras.arboles;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;

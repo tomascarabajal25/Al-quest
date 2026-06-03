@@ -1,4 +1,4 @@
-package estructuras.hashing;
+package com.aiquest.estructuras.hashing;
 
 public class HashTable {
     // El array (vector) donde almacenaremos los datos.

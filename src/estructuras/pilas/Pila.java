@@ -1,4 +1,4 @@
-package estructuras.pilas;
+package com.aiquest.estructuras.pilas;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import estructuras.nodos.NodoSimplementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoSimplementeEnlazado;
 
 public class Pila<T> implements Deque<T> {
 	private NodoSimplementeEnlazado<T> tope;

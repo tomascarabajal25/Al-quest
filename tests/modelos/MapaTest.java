@@ -2,8 +2,8 @@ package tests.modelos;
 
 import org.junit.jupiter.api.Test;
 
-import modelos.Celda;
-import modelos.Mapa;
+import com.aiquest.modelos.Celda;
+import com.aiquest.modelos.Mapa;
 
 import static org.junit.jupiter.api.Assertions.*;
 

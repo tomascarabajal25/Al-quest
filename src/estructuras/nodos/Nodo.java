@@ -1,4 +1,4 @@
-package estructuras.nodos;
+package com.aiquest.estructuras.nodos;
 
 public abstract class Nodo<T> {
 //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------

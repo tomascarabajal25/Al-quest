@@ -1,4 +1,4 @@
-package estructuras.grafos.algoritmos.warshall;
+package com.aiquest.estructuras.grafos.algoritmos.warshall;
 
 public class WarshallAlgorithm {
 	

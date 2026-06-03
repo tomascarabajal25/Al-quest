@@ -1,4 +1,4 @@
-package estructuras.cola;
+package com.aiquest.estructuras.cola;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

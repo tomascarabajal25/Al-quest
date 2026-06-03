@@ -1,4 +1,4 @@
-package estructuras.listas;
+package com.aiquest.estructuras.listas;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -7,7 +7,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import estructuras.nodos.NodoDoblementeEnlazado;
+import com.aiquest.estructuras.nodos.NodoDoblementeEnlazado;
 
 public class ListaDoblementeEnlazada<T> implements List<T> {
     private NodoDoblementeEnlazado<T> primero = null;
