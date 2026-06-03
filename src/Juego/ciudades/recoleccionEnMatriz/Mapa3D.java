@@ -82,7 +82,7 @@ public class Mapa3D {
         ValidacionesUtiles.validarMayorACero(columna, "columna");
         ValidacionesUtiles.validarMayorACero(niveles, "nivel");
 
-        this.mapa.obtener(0).validarFueraDeRango(fila, columna);
+        this.mapa.obtener(1).validarFueraDeRango(fila, columna);
         if (niveles > this.mapa.getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
@@ -168,9 +168,12 @@ public class Mapa3D {
         ValidacionesUtiles.validarMayorACero(columnas, "columnas");
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
 
-        for (int i = 0; i < niveles; i++) {
+        Mapa mapaInicial = new Mapa(filas, columnas);
+        this.mapa = new Vector<>(niveles, mapaInicial);
+
+        for (int i = 1; i <= niveles; i++) {
             Mapa mapaAux = new Mapa(filas, columnas);
-            this.mapa.agregar(mapaAux);
+            this.mapa.agregar(i, mapaAux);
         }
     }
 

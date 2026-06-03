@@ -7,6 +7,7 @@ import Juego.ciudades.ordenamientos.Caja;
 import Juego.ciudades.ordenamientos.OrdenadorBubble;
 import Juego.ciudades.ordenamientos.OrdenadorSelection;
 import Juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import Juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import modelos.Jugador;
 import modelos.Partida;
 
@@ -28,20 +29,14 @@ public class PartidaAiQuest extends Partida {
     }
 
     private void inicializarCiudades() {
-        // Ciudad 1: Wilde
-        ciudades.add(new PartidaOrdenamientos<>(
-            "Wilde", 
-            getJugador(), // Heredado de Partida
-            List.of(new Caja("Caja A", 20), new Caja("Caja B", 50)), 
-            new OrdenadorBubble<>("Burbuja")
-        ));
-
-        // Ciudad 2: Tokio
-        ciudades.add(new PartidaOrdenamientos<>(
-            "Tokio", 
-            getJugador(), 
-            List.of(new Caja("Caja 1", 90), new Caja("Caja 2", 10), new Caja("Caja 3", 40)), 
-            new OrdenadorSelection<>("Selección")
+        // Ciudad 1: Recoleccion
+        ciudades.add(new PartidaDeRecoleccion(
+                "Recolección",
+                getJugador(),
+                Constantes.FILAS_MAPA,
+                Constantes.COLUMNAS_MAPA,
+                Constantes.NIVELES_MAPA,
+                Constantes.CAPACIDAD_MAXIMA_MOCHILA
         ));
     }
 
@@ -68,7 +63,9 @@ public class PartidaAiQuest extends Partida {
 
     @Override
     public void iniciar() {
-        // Inicia el juego global
+        for (Partida ciudad : ciudades) {
+            ciudad.iniciar();
+        }
     }
 
     @Override

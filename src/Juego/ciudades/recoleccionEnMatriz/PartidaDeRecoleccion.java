@@ -1,9 +1,13 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
+import Juego.Constantes;
+import Juego.ciudades.recoleccionEnMatriz.interfaz.GameWindow;
 import modelos.Mochila;
 import modelos.Jugador;
 import modelos.Partida;
 import utils.ValidacionesUtiles;
+
+import javax.swing.*;
 
 public class PartidaDeRecoleccion extends Partida {
     //INTERFACES ----------------------------------------------------------------------------------------------
@@ -42,7 +46,15 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void iniciar() {
-        this.juego.iniciar();
+        SwingUtilities.invokeLater(() -> {
+            new GameWindow(
+                    getJugador(),
+                    Constantes.FILAS_MAPA,
+                    Constantes.COLUMNAS_MAPA,
+                    Constantes.NIVELES_MAPA,
+                    Constantes.CAPACIDAD_MAXIMA_MOCHILA
+            );
+        });
     }
 
     @Override
