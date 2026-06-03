@@ -1,21 +1,27 @@
 package com.aiquest.juego.ciudades.batalla.controller;
 
 import com.aiquest.utils.Utils;
-import com.aiquest.modelos.Jugador;
+import com.aiquest.estructuras.pilas.Pila;
+import com.aiquest.juego.ciudades.batalla.model.Accion;
 import com.aiquest.juego.ciudades.batalla.model.Enemigo;
+import com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
+import com.aiquest.juego.ciudades.batalla.model.acciones.Defender;
+import com.aiquest.juego.ciudades.batalla.view.UiManager;
+import com.aiquest.juego.ciudades.batalla.model.Combatiente;
 
 import java.util.Scanner;
 
 public class Batalla {
 	private final Scanner scanner;
-	private final Jugador jugador;
+	private final Combatiente combatiente;
 	private final Enemigo enemigo;
+	private final Pila<Accion> pilaAcciones;
 
-
-	public Batalla(Scanner scanner, Jugador jugador, Enemigo enemigo) {
+	public Batalla(Scanner scanner, Combatiente combatiente, Enemigo enemigo, Pila<Accion> pila) {
 		this.scanner = scanner;
-		this.jugador = jugador;
+		this.combatiente = combatiente;
 		this.enemigo = enemigo;
+		this.pilaAcciones = pila;
 	}
 
 	// Start combat (For each turn)
@@ -24,21 +30,40 @@ public class Batalla {
 
 		Utils.sleep(1000);
 
-		while (this.enemigo.estaVivo() && this.jugador.estaVivo()) {
+		while (this.enemigo.estaVivo() && this.combatiente.estaVivo()) {
 
-			imprimirEstado(jugador, enemigo);
+			UiManager.imprimirEstado(combatiente, enemigo);
 			Utils.sleep(1000);
-			imprimirAcciones();
+			UiManager.imprimirAcciones();
 			int accion = scanner.nextInt();
+
 			scanner.nextLine();
-			try {
-				ejecutarAccion(accion, this.jugador, this.enemigo);
-			} catch (InvalidChoiceException e) {
-				System.out.println("\u274C Error: " + e.getMessage());
+			switch (accion) {
+				case 1:
+					pilaAcciones.push(new Atacar(combatiente, enemigo));
+					break;
+				case 2:
+					pilaAcciones.push(new Defender(combatiente, enemigo));
+					break;
+				default:
+					System.out.println("Opcion invalida");
+					continue;
 			}
 
-			Utils.sleep(3000);
+			System.out.println("----------------------------");
+			ManagerBatalla.ejecutarAcciones(this.pilaAcciones);
+
+			if (enemigo.estaVivo() && combatiente.estaVivo()) {
+				System.out.println("\nTurno del enemigo...");
+				Utils.sleep(1000);
+				pilaAcciones.push(new Atacar(enemigo, combatiente));
+				ManagerBatalla.ejecutarAcciones(this.pilaAcciones);
+				Utils.sleep(1000);
+				System.out.println("----------------------------\n");
+			}
+
+			Utils.sleep(1000);
 		}
-		return this.jugador.estaVivo();
+		return this.combatiente.estaVivo();
 	}
 }

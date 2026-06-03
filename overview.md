@@ -55,7 +55,7 @@ Shared domain objects used across all cities.
 | Field | Type | Visibility |
 |---|---|---|
 | `nombre` | `String` | private |
-| `jugador` | `Jugador` | private |
+| `combatiente` | `Jugador` | private |
 | `puntajeActual` | `int` | private |
 | `estado` | `EstadoDePartida` | private |
 
@@ -109,8 +109,8 @@ Empty stub — placeholder for future city entity logic.
 Extends `Partida`. Holds `List<Partida> ciudades` and `int indiceCiudadActual`.
 
 ```java
-public PartidaAiQuest(Jugador jugador) {
-    super("Campaña Global AIQUEST", jugador);
+public PartidaAiQuest(Jugador combatiente) {
+    super("Campaña Global AIQUEST", combatiente);
     ciudades.add(new PartidaOrdenamientos<>("Wilde", getJugador(), ..., new OrdenadorBubble<>("Burbuja")));
     ciudades.add(new PartidaOrdenamientos<>("Tokio", getJugador(), ..., new OrdenadorSelection<>("Selección")));
 }
@@ -626,8 +626,8 @@ import Juego.ciudades.ordenamientos.EstadoDePartida;
 public class PartidaTuCiudad extends Partida {
     private TuLogica logica;
 
-    public PartidaTuCiudad(String nombre, Jugador jugador, /* params */) {
-        super(nombre, jugador);
+    public PartidaTuCiudad(String nombre, Jugador combatiente, /* params */) {
+        super(nombre, combatiente);
         // init fields
     }
 

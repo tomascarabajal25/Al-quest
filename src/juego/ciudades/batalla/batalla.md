@@ -2,11 +2,11 @@
 
 ## 9.1. Descripción General
 
-En esta ciudad, el jugador participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
+En esta ciudad, el combatiente participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
 
 ## 9.2. Objetivo
 
-El jugador deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de estructuras de datos.
+El combatiente deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de estructuras de datos.
 
 ## 9.3. Estructuras Obligatorias
 
@@ -28,11 +28,11 @@ Reglas:
 
 - El orden de atención será FIFO
 - Todo personaje que finaliza su turno debe reinsertarse al final de la cola
-- La cola debe incluir tanto al jugador como a los enemigos
+- La cola debe incluir tanto al combatiente como a los enemigos
 
 ### 9.3.3 Pila
 
-Se deberá utilizar una pila para gestionar las acciones del jugador.
+Se deberá utilizar una pila para gestionar las acciones del combatiente.
 
 Reglas:
 
@@ -48,14 +48,14 @@ Reglas:
   - Ataque
   - Defensa
   - Uso de habilidad
-- Las acciones del jugador deberán ser procesadas mediante una pila.
+- Las acciones del combatiente deberán ser procesadas mediante una pila.
 
 ## 9.5. Condiciones de Finalización
 
 El combate finaliza cuando:
 
-- El jugador derrota a todos los enemigos (victoria)
-- El jugador pierde todos sus puntos de vida (derrota)
+- El combatiente derrota a todos los enemigos (victoria)
+- El combatiente pierde todos sus puntos de vida (derrota)
 
 ## 9.6. Validaciones
 
