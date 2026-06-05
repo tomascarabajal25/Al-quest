@@ -1,5 +1,7 @@
 package Juego;
 
+import java.awt.*;
+
 public class Constantes {
     // PARTIDA
     /** Puntos iniciales de la partida */
@@ -39,7 +41,6 @@ public class Constantes {
     public static final int COLUMNAS_MAPA = 35;
     /** Niveles del mapa */
     public static final int NIVELES_MAPA = 3;
-
     // --- JUGADOR
     /** Visibilidad inicial del jugador */
     public static final int VISIBILIDAD_INICIAL = 1;
@@ -59,4 +60,38 @@ public class Constantes {
     public static final int CANTIDAD_AUMENTO_DESPLAZAMIENTO = 1;
     /** Aumento de puntos por CartaPuntos */
     public static final int CANTIDAD_AUMENTO_PUNTOS = 3;
+    // --- UI ---
+    public static final int ANCHO  = 220;
+    public static final int ALTO   = 720;
+    public static final Color COLOR_FONDO      = new Color(10, 14, 28);
+    public static final Color COLOR_TITULO     = new Color(100, 160, 255);
+    public static final Color COLOR_LABEL      = new Color(160, 180, 220);
+    public static final Color COLOR_VALOR      = new Color(230, 240, 255);
+    public static final Color COLOR_SEPARADOR  = new Color(40, 55, 85);
+    public static final Color COLOR_VISION     = new Color(100, 180, 255);
+    public static final Color COLOR_DESPLAZ    = new Color(255, 200, 60);
+    public static final Color COLOR_PUNTOS_C   = new Color(255, 100, 100);
+    public static final Color COLOR_JUGADOR    = new Color(80, 200, 120);
+
+    public static final int TILE_SIZE    = 32;   // px por celda
+    public static final int PADDING      = 12;   // margen interior del panel
+    // Paleta de colores del juego
+    public static final Color COLOR_FONDO_2         = new Color(15, 20, 35);
+    public static final Color COLOR_CELDA          = new Color(28, 38, 60);
+    public static final Color COLOR_CELDA_BORDE    = new Color(45, 60, 90);
+    public static final Color COLOR_JUGADOR_2       = new Color(80, 200, 120);
+    public static final Color COLOR_CARTA_VISION   = new Color(100, 180, 255);
+    public static final Color COLOR_CARTA_DESPLAZ  = new Color(255, 200, 60);
+    public static final Color COLOR_CARTA_PUNTOS   = new Color(255, 100, 100);
+    public static final Color COLOR_VACIO          = new Color(28, 38, 60);
+    public static final Color COLOR_MENSAJE        = new Color(255, 230, 100);
+    public static final Color COLOR_MOCHILA_FONDO  = new Color(10, 14, 28, 220);
+
+    // Tipos de tile para el cache
+    public static final String TILE_VACIO      = "vacio";
+    public static final String TILE_JUGADOR    = "jugador";
+    public static final String TILE_VISION     = "vision";
+    public static final String TILE_DESPLAZ    = "desplaz";
+    public static final String TILE_PUNTOS     = "puntos";
+
 }

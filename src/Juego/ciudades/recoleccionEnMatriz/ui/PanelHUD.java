@@ -1,58 +1,63 @@
 package Juego.ciudades.recoleccionEnMatriz.ui;
 
 import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import Juego.Constantes;
+import utils.ValidacionesUtiles;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
-/**
- * Panel lateral derecho (HUD) que muestra:
- *  - Puntos actuales
- *  - Visibilidad y desplazamiento
- *  - Nivel actual
- *  - Leyenda de iconos
- *
- * Se actualiza llamando a repaint() desde GameWindow cada vez que cambia el estado.
- */
 public class PanelHUD extends JPanel {
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private CiudadRecoleccion juego;
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
-    // -------------------------------------------------------------------------
-    // CONSTANTES
-    // -------------------------------------------------------------------------
-    private static final int ANCHO  = 220;
-    private static final int ALTO   = 720;
-
-    // Colores
-    private static final Color COLOR_FONDO      = new Color(10, 14, 28);
-    private static final Color COLOR_TITULO     = new Color(100, 160, 255);
-    private static final Color COLOR_LABEL      = new Color(160, 180, 220);
-    private static final Color COLOR_VALOR      = new Color(230, 240, 255);
-    private static final Color COLOR_SEPARADOR  = new Color(40, 55, 85);
-    private static final Color COLOR_VISION     = new Color(100, 180, 255);
-    private static final Color COLOR_DESPLAZ    = new Color(255, 200, 60);
-    private static final Color COLOR_PUNTOS_C   = new Color(255, 100, 100);
-    private static final Color COLOR_JUGADOR    = new Color(80, 200, 120);
-
-    // -------------------------------------------------------------------------
-    // ATRIBUTOS
-    // -------------------------------------------------------------------------
-    private final CiudadRecoleccion juego;
-
-    // -------------------------------------------------------------------------
-    // CONSTRUCTOR
-    // -------------------------------------------------------------------------
-
+    /**
+     *
+     * @param juego
+     */
     public PanelHUD(CiudadRecoleccion juego) {
-        this.juego = juego;
+        setJuego(juego);
         setOpaque(true);  // ← agregá esto
-        setPreferredSize(new Dimension(ANCHO, ALTO));
-        setBackground(COLOR_FONDO);
+        setPreferredSize(new Dimension(Constantes.ANCHO, Constantes.ALTO));
+        setBackground(Constantes.COLOR_FONDO);
+    }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PanelHUD panelHUD = (PanelHUD) o;
+        return Objects.equals(juego, panelHUD.juego);
     }
 
-    // -------------------------------------------------------------------------
-    // PINTADO
-    // -------------------------------------------------------------------------
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(juego);
+    }
 
+    @Override
+    public String toString() {
+        return "PanelHUD{" +
+                "juego=" + juego +
+                '}';
+    }
+
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param g0 the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g0) {
         super.paintComponent(g0);
@@ -62,11 +67,11 @@ public class PanelHUD extends JPanel {
         int y = 0;
 
         // Fondo
-        g.setColor(COLOR_FONDO);
-        g.fillRect(0, 0, ANCHO, getHeight());
+        g.setColor(Constantes.COLOR_FONDO);
+        g.fillRect(0, 0, Constantes.ANCHO, getHeight());
 
         // Línea separadora izquierda
-        g.setColor(COLOR_SEPARADOR);
+        g.setColor(Constantes.COLOR_SEPARADOR);
         g.fillRect(0, 0, 2, getHeight());
 
         y += 30;
@@ -80,13 +85,13 @@ public class PanelHUD extends JPanel {
         y += 15;
 
         // Stats del jugador
-        y = dibujarStat(g, y, "PUNTOS",         String.valueOf(juego.getPuntos()),      COLOR_PUNTOS_C);
+        y = dibujarStat(g, y, "PUNTOS", String.valueOf(juego.getPuntos()), Constantes.COLOR_PUNTOS_C);
         y += 8;
-        y = dibujarStat(g, y, "VISIBILIDAD",    String.valueOf(juego.getVisibilidad()), COLOR_VISION);
+        y = dibujarStat(g, y, "VISIBILIDAD", String.valueOf(juego.getVisibilidad()), Constantes.COLOR_VISION);
         y += 8;
-        y = dibujarStat(g, y, "DESPLAZAMIENTO", String.valueOf(juego.getDesplazamiento()), COLOR_DESPLAZ);
+        y = dibujarStat(g, y, "DESPLAZAMIENTO", String.valueOf(juego.getDesplazamiento()), Constantes.COLOR_DESPLAZ);
         y += 8;
-        y = dibujarStat(g, y, "NIVEL",          nivelTexto(),                           COLOR_VALOR);
+        y = dibujarStat(g, y, "NIVEL", nivelTexto(), Constantes.COLOR_VALOR);
         y += 15;
 
         // Separador
@@ -113,29 +118,46 @@ public class PanelHUD extends JPanel {
         dibujarControles(g, y);
     }
 
-    // -------------------------------------------------------------------------
-    // SECCIONES DEL HUD
-    // -------------------------------------------------------------------------
-
+    /**
+     *
+     * @param g
+     * @param y
+     * @return
+     */
     private int dibujarTitulo(Graphics2D g, int y) {
         g.setFont(new Font("Monospaced", Font.BOLD, 15));
-        g.setColor(COLOR_TITULO);
+        g.setColor(Constantes.COLOR_TITULO);
         g.drawString("AL-QUEST", 20, y);
         g.setFont(new Font("Monospaced", Font.PLAIN, 11));
-        g.setColor(COLOR_LABEL);
+        g.setColor(Constantes.COLOR_LABEL);
         g.drawString("Recolección en Matriz", 20, y + 16);
         return y + 30;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     * @return
+     */
     private int dibujarSeparador(Graphics2D g, int y) {
-        g.setColor(COLOR_SEPARADOR);
-        g.fillRect(12, y, ANCHO - 24, 1);
+        g.setColor(Constantes.COLOR_SEPARADOR);
+        g.fillRect(12, y, Constantes.ANCHO - 24, 1);
         return y + 1;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     * @param label
+     * @param valor
+     * @param colorValor
+     * @return
+     */
     private int dibujarStat(Graphics2D g, int y, String label, String valor, Color colorValor) {
         g.setFont(new Font("Monospaced", Font.PLAIN, 10));
-        g.setColor(COLOR_LABEL);
+        g.setColor(Constantes.COLOR_LABEL);
         g.drawString(label, 20, y);
 
         g.setFont(new Font("Monospaced", Font.BOLD, 16));
@@ -144,9 +166,15 @@ public class PanelHUD extends JPanel {
         return y + 32;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     * @return
+     */
     private int dibujarSeccionMochila(Graphics2D g, int y) {
         g.setFont(new Font("Monospaced", Font.BOLD, 11));
-        g.setColor(COLOR_TITULO);
+        g.setColor(Constantes.COLOR_TITULO);
         g.drawString("MOCHILA", 20, y);
         y += 18;
 
@@ -154,7 +182,7 @@ public class PanelHUD extends JPanel {
         int i = 1;
         for (var el : items) {
             g.setFont(new Font("Monospaced", Font.PLAIN, 11));
-            g.setColor(COLOR_VALOR);
+            g.setColor(Constantes.COLOR_VALOR);
             g.drawString("[" + i + "] " + el.getNombre(), 20, y);
             y += 16;
             i++;
@@ -168,37 +196,56 @@ public class PanelHUD extends JPanel {
         }
 
         g.setFont(new Font("Monospaced", Font.PLAIN, 10));
-        g.setColor(COLOR_LABEL);
+        g.setColor(Constantes.COLOR_LABEL);
         g.drawString("Capacidad: " + (i-1) + " / 3", 20, y);
         return y + 14;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     * @return
+     */
     private int dibujarLeyenda(Graphics2D g, int y) {
         g.setFont(new Font("Monospaced", Font.BOLD, 11));
-        g.setColor(COLOR_TITULO);
+        g.setColor(Constantes.COLOR_TITULO);
         g.drawString("LEYENDA", 20, y);
         y += 16;
 
-        y = dibujarItemLeyenda(g, y, COLOR_JUGADOR,  "Jugador");
-        y = dibujarItemLeyenda(g, y, COLOR_VISION,   "Carta Visión");
-        y = dibujarItemLeyenda(g, y, COLOR_DESPLAZ,  "Carta Desplaz.");
-        y = dibujarItemLeyenda(g, y, COLOR_PUNTOS_C, "Carta Puntos");
+        y = dibujarItemLeyenda(g, y, Constantes.COLOR_JUGADOR,  "Jugador");
+        y = dibujarItemLeyenda(g, y, Constantes.COLOR_VISION,   "Carta Visión");
+        y = dibujarItemLeyenda(g, y, Constantes.COLOR_DESPLAZ,  "Carta Desplaz.");
+        y = dibujarItemLeyenda(g, y, Constantes.COLOR_PUNTOS_C, "Carta Puntos");
         return y;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     * @param color
+     * @param texto
+     * @return
+     */
     private int dibujarItemLeyenda(Graphics2D g, int y, Color color, String texto) {
         // Cuadradito de color
         g.setColor(color);
         g.fillRoundRect(20, y - 10, 14, 14, 4, 4);
         g.setFont(new Font("Monospaced", Font.PLAIN, 11));
-        g.setColor(COLOR_LABEL);
+        g.setColor(Constantes.COLOR_LABEL);
         g.drawString(texto, 42, y);
         return y + 18;
     }
 
+    /**
+     *
+     * @param g
+     * @param y
+     */
     private void dibujarControles(Graphics2D g, int y) {
         g.setFont(new Font("Monospaced", Font.BOLD, 11));
-        g.setColor(COLOR_TITULO);
+        g.setColor(Constantes.COLOR_TITULO);
         g.drawString("CONTROLES", 20, y);
         y += 16;
 
@@ -211,20 +258,48 @@ public class PanelHUD extends JPanel {
         };
 
         g.setFont(new Font("Monospaced", Font.PLAIN, 10));
-        g.setColor(COLOR_LABEL);
+        g.setColor(Constantes.COLOR_LABEL);
         for (String ctrl : controles) {
             g.drawString(ctrl, 20, y);
             y += 14;
         }
     }
 
-    // -------------------------------------------------------------------------
-    // UTIL
-    // -------------------------------------------------------------------------
-
+    /**
+     *
+     * @return
+     */
     private String nivelTexto() {
         int[] pos = juego.getPosicionJugador();
         if (pos == null) return "?";
         return pos[2] + " / " + juego.getNiveles();
+    }
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Getter del atributo juego
+     *
+     * @return: Devuelve el atributo juego
+     */
+    public CiudadRecoleccion getJuego() {
+        return juego;
+    }
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Setter del atributo juego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     *
+     * @param juego: juego de la ciudad
+     */
+    private void setJuego(CiudadRecoleccion juego) {
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        this.juego = juego;
     }
 }

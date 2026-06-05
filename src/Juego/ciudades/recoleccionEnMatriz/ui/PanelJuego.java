@@ -16,57 +16,15 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Panel principal del juego. Renderiza la grilla del mapa usando bitmaps
- * generados programáticamente con Graphics2D.
- *
- * Cada celda es un BufferedImage (bitmap) de TILE_SIZE x TILE_SIZE píxeles.
- * Los bitmaps se generan una sola vez y se cachean en un Map.
- */
 public class PanelJuego extends JPanel {
 
-    // -------------------------------------------------------------------------
-    // CONSTANTES DE RENDERIZADO
-    // -------------------------------------------------------------------------
-    private static final int TILE_SIZE    = 32;   // px por celda
-    private static final int PADDING      = 12;   // margen interior del panel
-
-    // Paleta de colores del juego
-    private static final Color COLOR_FONDO         = new Color(15, 20, 35);
-    private static final Color COLOR_CELDA          = new Color(28, 38, 60);
-    private static final Color COLOR_CELDA_BORDE    = new Color(45, 60, 90);
-    private static final Color COLOR_JUGADOR        = new Color(80, 200, 120);
-    private static final Color COLOR_CARTA_VISION   = new Color(100, 180, 255);
-    private static final Color COLOR_CARTA_DESPLAZ  = new Color(255, 200, 60);
-    private static final Color COLOR_CARTA_PUNTOS   = new Color(255, 100, 100);
-    private static final Color COLOR_VACIO          = new Color(28, 38, 60);
-    private static final Color COLOR_MENSAJE        = new Color(255, 230, 100);
-    private static final Color COLOR_MOCHILA_FONDO  = new Color(10, 14, 28, 220);
-
-    // Tipos de tile para el cache
-    private static final String TILE_VACIO      = "vacio";
-    private static final String TILE_JUGADOR    = "jugador";
-    private static final String TILE_VISION     = "vision";
-    private static final String TILE_DESPLAZ    = "desplaz";
-    private static final String TILE_PUNTOS     = "puntos";
-
-    // -------------------------------------------------------------------------
-    // ATRIBUTOS
-    // -------------------------------------------------------------------------
     private final CiudadRecoleccion juego;
     private final int filas;
     private final int columnas;
-
-    // Cache de bitmaps: tipo -> imagen
     private final Map<String, BufferedImage> tileCache = new HashMap<>();
-
     private PanelHUD hud;
     private boolean mostrarMochila = false;
     private String mensajeTemp = null;
-
-    // -------------------------------------------------------------------------
-    // CONSTRUCTOR
-    // -------------------------------------------------------------------------
 
     public PanelJuego(CiudadRecoleccion juego, int filas, int columnas) {
         this.juego   = juego;
@@ -74,39 +32,35 @@ public class PanelJuego extends JPanel {
         this.columnas = columnas;
 
         setOpaque(true);  // ← agregá esto
-        setBackground(COLOR_FONDO);
+        setBackground(Constantes.COLOR_FONDO);
 
-        int ancho = columnas * TILE_SIZE + PADDING * 2;
-        int alto  = filas   * TILE_SIZE + PADDING * 2 + 40;
+        int ancho = columnas * Constantes.TILE_SIZE + Constantes.PADDING * 2;
+        int alto  = filas   * Constantes.TILE_SIZE + Constantes.PADDING * 2 + 40;
         setPreferredSize(new Dimension(ancho, alto));
 
         generarBitmaps();
     }
-
-    // -------------------------------------------------------------------------
-    // GENERACION DE BITMAPS
-    // -------------------------------------------------------------------------
 
     /**
      * Genera y cachea todos los bitmaps del juego.
      * Se llama una sola vez en el constructor.
      */
     private void generarBitmaps() {
-        tileCache.put(TILE_VACIO,   crearTileVacio());
-        tileCache.put(TILE_JUGADOR, crearTileJugador());
-        tileCache.put(TILE_VISION,  crearTileVision());
-        tileCache.put(TILE_DESPLAZ, crearTileDesplazamiento());
-        tileCache.put(TILE_PUNTOS,  crearTilePuntos());
+        tileCache.put(Constantes.TILE_VACIO,   crearTileVacio());
+        tileCache.put(Constantes.TILE_JUGADOR, crearTileJugador());
+        tileCache.put(Constantes.TILE_VISION,  crearTileVision());
+        tileCache.put(Constantes.TILE_DESPLAZ, crearTileDesplazamiento());
+        tileCache.put(Constantes.TILE_PUNTOS,  crearTilePuntos());
     }
 
     /** Celda vacía: fondo oscuro con borde sutil */
     private BufferedImage crearTileVacio() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
-        g.setColor(COLOR_VACIO);
-        g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-        g.setColor(COLOR_CELDA_BORDE);
-        g.drawRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1);
+        g.setColor(Constantes.COLOR_VACIO);
+        g.fillRect(0, 0, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
+        g.setColor(Constantes.COLOR_CELDA_BORDE);
+        g.drawRect(0, 0, Constantes.TILE_SIZE - 1, Constantes.TILE_SIZE - 1);
         g.dispose();
         return img;
     }
@@ -117,26 +71,26 @@ public class PanelJuego extends JPanel {
         Graphics2D g = setup(img);
 
         // Fondo de celda
-        g.setColor(COLOR_CELDA);
-        g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-        g.setColor(COLOR_CELDA_BORDE);
-        g.drawRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1);
+        g.setColor(Constantes.COLOR_CELDA);
+        g.fillRect(0, 0, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
+        g.setColor(Constantes.COLOR_CELDA_BORDE);
+        g.drawRect(0, 0, Constantes.TILE_SIZE - 1, Constantes.TILE_SIZE - 1);
 
         // Sombra del círculo
         g.setColor(new Color(0, 0, 0, 80));
-        g.fillOval(5, 7, TILE_SIZE - 8, TILE_SIZE - 8);
+        g.fillOval(5, 7, Constantes.TILE_SIZE - 8, Constantes.TILE_SIZE - 8);
 
         // Cuerpo del jugador
         GradientPaint gp = new GradientPaint(
-                6, 6, COLOR_JUGADOR.brighter(),
-                TILE_SIZE - 6, TILE_SIZE - 6, COLOR_JUGADOR.darker()
+                6, 6, Constantes.COLOR_JUGADOR.brighter(),
+                Constantes.TILE_SIZE - 6, Constantes.TILE_SIZE - 6, Constantes.COLOR_JUGADOR.darker()
         );
         g.setPaint(gp);
-        g.fillOval(4, 4, TILE_SIZE - 8, TILE_SIZE - 8);
+        g.fillOval(4, 4, Constantes.TILE_SIZE - 8, Constantes.TILE_SIZE - 8);
 
         // Punto central
         g.setColor(Color.WHITE);
-        g.fillOval(TILE_SIZE / 2 - 3, TILE_SIZE / 2 - 3, 6, 6);
+        g.fillOval(Constantes.TILE_SIZE / 2 - 3, Constantes.TILE_SIZE / 2 - 3, 6, 6);
 
         g.dispose();
         return img;
@@ -147,18 +101,18 @@ public class PanelJuego extends JPanel {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
 
-        g.setColor(COLOR_CELDA);
-        g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-        g.setColor(COLOR_CELDA_BORDE);
-        g.drawRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1);
+        g.setColor(Constantes.COLOR_CELDA);
+        g.fillRect(0, 0, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
+        g.setColor(Constantes.COLOR_CELDA_BORDE);
+        g.drawRect(0, 0, Constantes.TILE_SIZE - 1, Constantes.TILE_SIZE - 1);
 
         // Rombo / forma de ojo
-        int cx = TILE_SIZE / 2, cy = TILE_SIZE / 2;
+        int cx = Constantes.TILE_SIZE / 2, cy = Constantes.TILE_SIZE / 2;
         int[] xp = {cx, cx + 10, cx, cx - 10};
         int[] yp = {cy - 7, cy, cy + 7, cy};
-        g.setColor(COLOR_CARTA_VISION.darker());
+        g.setColor(Constantes.COLOR_CARTA_VISION.darker());
         g.fillPolygon(xp, yp, 4);
-        g.setColor(COLOR_CARTA_VISION);
+        g.setColor(Constantes.COLOR_CARTA_VISION);
         g.drawPolygon(xp, yp, 4);
 
         // Pupila
@@ -176,17 +130,17 @@ public class PanelJuego extends JPanel {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
 
-        g.setColor(COLOR_CELDA);
-        g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-        g.setColor(COLOR_CELDA_BORDE);
-        g.drawRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1);
+        g.setColor(Constantes.COLOR_CELDA);
+        g.fillRect(0, 0, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
+        g.setColor(Constantes.COLOR_CELDA_BORDE);
+        g.drawRect(0, 0, Constantes.TILE_SIZE - 1, Constantes.TILE_SIZE - 1);
 
         // Rayo (zigzag)
         int[] xp = {18, 13, 16, 11, 18, 14, 20};
         int[] yp = { 4, 14, 14, 28, 17, 17,  4};
-        g.setColor(COLOR_CARTA_DESPLAZ.darker());
+        g.setColor(Constantes.COLOR_CARTA_DESPLAZ.darker());
         g.fillPolygon(xp, yp, 7);
-        g.setColor(COLOR_CARTA_DESPLAZ);
+        g.setColor(Constantes.COLOR_CARTA_DESPLAZ);
         g.setStroke(new BasicStroke(1.2f));
         g.drawPolygon(xp, yp, 7);
 
@@ -199,17 +153,17 @@ public class PanelJuego extends JPanel {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
 
-        g.setColor(COLOR_CELDA);
-        g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-        g.setColor(COLOR_CELDA_BORDE);
-        g.drawRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1);
+        g.setColor(Constantes.COLOR_CELDA);
+        g.fillRect(0, 0, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
+        g.setColor(Constantes.COLOR_CELDA_BORDE);
+        g.drawRect(0, 0, Constantes.TILE_SIZE - 1, Constantes.TILE_SIZE - 1);
 
         // Estrella de 5 puntas
-        int cx = TILE_SIZE / 2, cy = TILE_SIZE / 2;
+        int cx = Constantes.TILE_SIZE / 2, cy = Constantes.TILE_SIZE / 2;
         Polygon star = crearEstrella(cx, cy, 12, 5, 5);
-        g.setColor(COLOR_CARTA_PUNTOS.darker());
+        g.setColor(Constantes.COLOR_CARTA_PUNTOS.darker());
         g.fillPolygon(star);
-        g.setColor(COLOR_CARTA_PUNTOS);
+        g.setColor(Constantes.COLOR_CARTA_PUNTOS);
         g.setStroke(new BasicStroke(1f));
         g.drawPolygon(star);
 
@@ -228,7 +182,7 @@ public class PanelJuego extends JPanel {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Fondo general
-        g.setColor(COLOR_FONDO);
+        g.setColor(Constantes.COLOR_FONDO);
         g.fillRect(0, 0, getWidth(), getHeight());
 
         // Obtener nivel actual del jugador
@@ -265,26 +219,26 @@ public class PanelJuego extends JPanel {
 
     private void dibujarBarraNivel(Graphics2D g, int nivel) {
         g.setColor(new Color(40, 55, 85));
-        g.fillRoundRect(PADDING, 8, columnas * TILE_SIZE, 26, 8, 8);
+        g.fillRoundRect(Constantes.PADDING, 8, columnas * Constantes.TILE_SIZE, 26, 8, 8);
 
         g.setFont(new Font("Monospaced", Font.BOLD, 13));
         g.setColor(new Color(160, 200, 255));
         String txt = "  NIVEL " + nivel + " / " + Constantes.NIVELES_MAPA
                 + "      [WASD] mover    [P] mochila";
-        g.drawString(txt, PADDING + 8, 26);
+        g.drawString(txt, Constantes.PADDING + 8, 26);
     }
 
     private void dibujarMapa(Graphics2D g, int nivelActual, int[] posJugador) {
         Mapa mapa = juego.getMapaNivel(nivelActual);
         if (mapa == null) return;
 
-        int offsetY = PADDING + 40;
+        int offsetY = Constantes.PADDING + 40;
         int visibilidad = juego.getVisibilidad();
 
         for (int fila = 1; fila <= filas; fila++) {
             for (int col = 1; col <= columnas; col++) {
-                int px = PADDING + (col - 1) * TILE_SIZE;
-                int py = offsetY + (fila - 1) * TILE_SIZE;
+                int px = Constantes.PADDING + (col - 1) * Constantes.TILE_SIZE;
+                int py = offsetY + (fila - 1) * Constantes.TILE_SIZE;
 
                 // Verificar si la celda está dentro del rango de visibilidad
                 boolean esVisible = Math.abs(fila - posJugador[0]) <= visibilidad
@@ -294,15 +248,15 @@ public class PanelJuego extends JPanel {
                     Celda<?> celda = mapa.getCeldaConPosicion(fila, col);
                     if (esVisible) {
                         BufferedImage tile = resolverTile(celda, posJugador);
-                        g.drawImage(tile, px, py, TILE_SIZE, TILE_SIZE, this);
+                        g.drawImage(tile, px, py, Constantes.TILE_SIZE, Constantes.TILE_SIZE, this);
                     } else {
                         // Celda fuera de visibilidad: dibujar oscura
-                        g.drawImage(tileCache.get(TILE_VACIO), px, py, TILE_SIZE, TILE_SIZE, this);
+                        g.drawImage(tileCache.get(Constantes.TILE_VACIO), px, py, Constantes.TILE_SIZE, Constantes.TILE_SIZE, this);
                         g.setColor(new Color(0, 0, 0, 180)); // overlay oscuro
-                        g.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                        g.fillRect(px, py, Constantes.TILE_SIZE, Constantes.TILE_SIZE);
                     }
                 } catch (RuntimeException e) {
-                    g.drawImage(tileCache.get(TILE_VACIO), px, py, TILE_SIZE, TILE_SIZE, this);
+                    g.drawImage(tileCache.get(Constantes.TILE_VACIO), px, py, Constantes.TILE_SIZE, Constantes.TILE_SIZE, this);
                 }
             }
         }
@@ -310,7 +264,7 @@ public class PanelJuego extends JPanel {
             g.setFont(new Font("Monospaced", Font.BOLD, 13));
             g.setColor(new Color(255, 230, 100));
             g.drawString("[E] Recoger: " + juego.getCartaDisponible().getNombre(),
-                    PADDING + 10, offsetY + filas * TILE_SIZE + 20);
+                    Constantes.PADDING + 10, offsetY + filas * Constantes.TILE_SIZE + 20);
         }
     }
 
@@ -318,59 +272,59 @@ public class PanelJuego extends JPanel {
      * Determina qué bitmap corresponde a cada celda.
      */
     private BufferedImage resolverTile(Celda<?> celda, int[] posJugador) {
-        if (celda == null) return tileCache.get(TILE_VACIO);
+        if (celda == null) return tileCache.get(Constantes.TILE_VACIO);
 
         Object contenido = celda.getContenido();
 
-        if (contenido instanceof Jugador)             return tileCache.get(TILE_JUGADOR);
-        if (contenido instanceof CartaVision)         return tileCache.get(TILE_VISION);
-        if (contenido instanceof CartaDesplazamiento) return tileCache.get(TILE_DESPLAZ);
-        if (contenido instanceof CartaPuntos)         return tileCache.get(TILE_PUNTOS);
+        if (contenido instanceof Jugador)             return tileCache.get(Constantes.TILE_JUGADOR);
+        if (contenido instanceof CartaVision)         return tileCache.get(Constantes.TILE_VISION);
+        if (contenido instanceof CartaDesplazamiento) return tileCache.get(Constantes.TILE_DESPLAZ);
+        if (contenido instanceof CartaPuntos)         return tileCache.get(Constantes.TILE_PUNTOS);
 
-        return tileCache.get(TILE_VACIO);
+        return tileCache.get(Constantes.TILE_VACIO);
     }
 
     private void dibujarPanelMochila(Graphics2D g) {
         // Fondo semi-transparente
-        g.setColor(COLOR_MOCHILA_FONDO);
-        g.fillRoundRect(PADDING + 20, PADDING + 50, columnas * TILE_SIZE - 40, 160, 12, 12);
+        g.setColor(Constantes.COLOR_MOCHILA_FONDO);
+        g.fillRoundRect(Constantes.PADDING + 20, Constantes.PADDING + 50, columnas * Constantes.TILE_SIZE - 40, 160, 12, 12);
 
         g.setColor(new Color(100, 160, 255));
         g.setFont(new Font("Monospaced", Font.BOLD, 14));
-        g.drawString("── MOCHILA ──", PADDING + 40, PADDING + 80);
+        g.drawString("── MOCHILA ──", Constantes.PADDING + 40, Constantes.PADDING + 80);
 
         var items = juego.getItemsMochila();
         g.setFont(new Font("Monospaced", Font.PLAIN, 13));
         int i = 1;
         for (Elemento el : items) {
             g.setColor(new Color(200, 220, 255));
-            g.drawString("[" + i + "] " + el.getNombre(), PADDING + 40, PADDING + 80 + i * 22);
+            g.drawString("[" + i + "] " + el.getNombre(), Constantes.PADDING + 40, Constantes.PADDING + 80 + i * 22);
             i++;
         }
 
         if (i == 1) {
             g.setColor(new Color(120, 120, 160));
-            g.drawString("(vacía)", PADDING + 40, PADDING + 102);
+            g.drawString("(vacía)", Constantes.PADDING + 40, Constantes.PADDING + 102);
         }
 
         g.setColor(new Color(160, 160, 200));
         g.setFont(new Font("Monospaced", Font.ITALIC, 11));
-        g.drawString("[1-3] usar carta    [Q] cerrar", PADDING + 40, PADDING + 200);
+        g.drawString("[1-3] usar carta    [Q] cerrar", Constantes.PADDING + 40, Constantes.PADDING + 200);
     }
 
     private void dibujarMensaje(Graphics2D g, String msg) {
         g.setFont(new Font("Monospaced", Font.BOLD, 13));
         g.setColor(new Color(0, 0, 0, 150));
-        g.fillRoundRect(PADDING + 10, getHeight() - 50, columnas * TILE_SIZE - 20, 30, 8, 8);
-        g.setColor(COLOR_MENSAJE);
-        g.drawString(msg, PADDING + 20, getHeight() - 30);
+        g.fillRoundRect(Constantes.PADDING + 10, getHeight() - 50, columnas * Constantes.TILE_SIZE - 20, 30, 8, 8);
+        g.setColor(Constantes.COLOR_MENSAJE);
+        g.drawString(msg, Constantes.PADDING + 20, getHeight() - 30);
     }
 
     private void dibujarPantallaFin(Graphics2D g) {
         g.setColor(new Color(0, 0, 0, 160));
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setFont(new Font("Monospaced", Font.BOLD, 22));
-        g.setColor(COLOR_CARTA_PUNTOS);
+        g.setColor(Constantes.COLOR_CARTA_PUNTOS);
         String txt = "¡NIVEL COMPLETADO!";
         FontMetrics fm = g.getFontMetrics();
         g.drawString(txt, (getWidth() - fm.stringWidth(txt)) / 2, getHeight() / 2);
@@ -381,7 +335,7 @@ public class PanelJuego extends JPanel {
     // -------------------------------------------------------------------------
 
     private BufferedImage nuevaImagen() {
-        return new BufferedImage(TILE_SIZE, TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
+        return new BufferedImage(Constantes.TILE_SIZE, Constantes.TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
     }
 
     private Graphics2D setup(BufferedImage img) {

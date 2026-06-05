@@ -2,74 +2,80 @@ package Juego.ciudades.recoleccionEnMatriz.ui;
 
 import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Jugador;
+import utils.ValidacionesUtiles;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
-/**
- * Ventana principal del juego. Contiene el panel de juego y maneja
- * la entrada del teclado, reemplazando el loop bloqueante de consola.
- *
- * USO: En lugar de new CiudadRecoleccion(...), instanciar GameWindow.
- *      GameWindow crea internamente la CiudadRecoleccion y el panel.
- */
 public class GameWindow extends JFrame implements KeyListener {
-
-    // -------------------------------------------------------------------------
-    // CONSTANTES
-    // -------------------------------------------------------------------------
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private static final String TITULO = "Al-Quest - Recolección en Matriz";
-
-    // -------------------------------------------------------------------------
-    // ATRIBUTOS
-    // -------------------------------------------------------------------------
-    private final CiudadRecoleccion juego;
-    private final PanelJuego panelJuego;
-
-    // Panel de mochila (se muestra/oculta con P)
+    private CiudadRecoleccion juego;
+    private PanelJuego panelJuego;
     private boolean mochilaVisible = false;
-
-    // -------------------------------------------------------------------------
-    // CONSTRUCTOR
-    // -------------------------------------------------------------------------
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
     /**
-     * Crea la ventana y arranca el juego.
-     *
-     * @param jugador       Jugador de la partida
-     * @param filas         Filas del mapa
-     * @param columnas      Columnas del mapa
-     * @param niveles       Niveles del mapa
-     * @param maxMochila    Capacidad máxima de la mochila
+     * Constructor del TDA GameWindow. Crea la ventana e inicia el juego
+     * @param jugador
+     * @param filas
+     * @param columnas
+     * @param niveles
+     * @param maxMochila
      */
     public GameWindow(Jugador jugador, int filas, int columnas, int niveles, int maxMochila) {
         super(TITULO);
 
-        // Crear el modelo del juego (sin arrancar el loop de consola)
-        this.juego = new CiudadRecoleccion(filas, columnas, niveles, maxMochila, jugador);
+        CiudadRecoleccion juego = new CiudadRecoleccion(filas, columnas, niveles, maxMochila, jugador);
+        setJuego(juego);
+        setPanelJuego(juego, filas, columnas);
 
-        // Crear el panel de renderizado
-        this.panelJuego = new PanelJuego(juego, filas, columnas);
-
-        // Configurar ventana
         configurarVentana();
-
-        // Registrar teclado
         addKeyListener(this);
         setFocusable(true);
         requestFocusInWindow();
 
         setVisible(true);
-
-        // Primer dibujado
         panelJuego.repaint();
     }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
 
-    // -------------------------------------------------------------------------
-    // CONFIGURACION DE VENTANA
-    // -------------------------------------------------------------------------
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        GameWindow that = (GameWindow) o;
+        return mochilaVisible == that.mochilaVisible && Objects.equals(juego, that.juego) && Objects.equals(panelJuego, that.panelJuego);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(juego, panelJuego, mochilaVisible);
+    }
+
+    @Override
+    public String toString() {
+        return "GameWindow{" +
+                "juego=" + juego +
+                ", panelJuego=" + panelJuego +
+                ", mochilaVisible=" + mochilaVisible +
+                '}';
+    }
+
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+    /**
+     * Configura la vetana del juego
+     */
     private void configurarVentana() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -89,10 +95,10 @@ public class GameWindow extends JFrame implements KeyListener {
         setLocationRelativeTo(null);
     }
 
-    // -------------------------------------------------------------------------
-    // KEYLISTENER
-    // -------------------------------------------------------------------------
-
+    /**
+     * Lee la entrada de teclado
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if (juego.estaFinalizado()) return;
@@ -142,20 +148,9 @@ public class GameWindow extends JFrame implements KeyListener {
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
 
-    // -------------------------------------------------------------------------
-    // VERIFICACION FIN DE JUEGO
-    // -------------------------------------------------------------------------
-
-    private void verificarFinDeJuego() {
-        if (juego.estaFinalizado()) {
-            panelJuego.repaint();
-            // Pequeño delay para que se vea el último estado
-            Timer timer = new Timer(800, ev -> mostrarPantallaFin());
-            timer.setRepeats(false);
-            timer.start();
-        }
-    }
-
+    /**
+     * Muestra la pantalla final con los puntos
+     */
     private void mostrarPantallaFin() {
         int puntos = juego.finalizar();
         JOptionPane.showMessageDialog(
@@ -166,21 +161,81 @@ public class GameWindow extends JFrame implements KeyListener {
         );
         dispose();
     }
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    /**
+     * Verifica si el juego termino
+     */
+    private void verificarFinDeJuego() {
+        if (juego.estaFinalizado()) {
+            panelJuego.repaint();
+            Timer timer = new Timer(800, ev -> mostrarPantallaFin());
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
 
-    // -------------------------------------------------------------------------
-    // PUNTO DE ENTRADA (para prueba standalone)
-    // -------------------------------------------------------------------------
+    /**
+     * Getter del atributo panelJuego
+     *
+     * @return: Devuelve el atributo panelJuego
+     */
+    public PanelJuego getPanelJuego() {
+        return panelJuego;
+    }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Jugador jugador = new Jugador("Héroe");
-            new GameWindow(
-                    jugador,
-                    Juego.Constantes.FILAS_MAPA,
-                    Juego.Constantes.COLUMNAS_MAPA,
-                    Juego.Constantes.NIVELES_MAPA,
-                    Juego.Constantes.CAPACIDAD_MAXIMA_MOCHILA
-            );
-        });
+    /**
+     * Getter del atributo mochilaVisible
+     *
+     * @return: Devuelve true si la mochila esta visible, false si no lo esta
+     */
+    public boolean isMochilaVisible() {
+        return mochilaVisible;
+    }
+
+    /**
+     * Getter del atributo juego
+     *
+     * @return: Devuelve el atributo juego
+     */
+    public CiudadRecoleccion getJuego() {
+        return juego;
+    }
+
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Setter del atributo juego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     *
+     * @param juego: juego de la ciudad
+     */
+    private void setJuego(CiudadRecoleccion juego) {
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        this.juego = juego;
+    }
+
+    /**
+     * Setter del atributo panelJuego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     * -Filas y columnas deben ser mayores a cero
+     *
+     * @param juego: juego
+     * @param filas: Filas del juego
+     * @param columnas: columnas del juego
+     */
+    private void setPanelJuego(CiudadRecoleccion juego, int filas, int columnas) {
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        ValidacionesUtiles.validarMayorACero(filas, "filas");
+        ValidacionesUtiles.validarMayorACero(columnas, "columnas");
+        this.panelJuego = new PanelJuego(juego, filas, columnas);
     }
 }
