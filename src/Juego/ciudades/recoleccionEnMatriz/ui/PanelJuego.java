@@ -1,4 +1,4 @@
-package Juego.ciudades.recoleccionEnMatriz.interfaz;
+package Juego.ciudades.recoleccionEnMatriz.ui;
 
 import Juego.Constantes;
 import Juego.ciudades.recoleccionEnMatriz.CartaDesplazamiento;

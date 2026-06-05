@@ -1,4 +1,4 @@
-package Juego.ciudades.recoleccionEnMatriz.interfaz;
+package Juego.ciudades.recoleccionEnMatriz.ui;
 
 import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Jugador;

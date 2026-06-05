@@ -6,6 +6,8 @@ import Juego.Constantes;
 
 import estructuras.vector.Vector;
 
+import java.util.Objects;
+
 public class CiudadRecoleccion {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
@@ -60,6 +62,40 @@ public class CiudadRecoleccion {
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+    /**
+     * Metodo equals del TDA CiudadRecoleccion.
+     * @param o   the reference object with which to compare.
+     * @return: true si son iguales, false si no lo son.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CiudadRecoleccion that = (CiudadRecoleccion) o;
+        return desplazamiento == that.desplazamiento && visibilidad == that.visibilidad && Objects.equals(mapa, that.mapa) && Objects.equals(mochila, that.mochila) && Objects.equals(elementos, that.elementos) && Objects.equals(jugador, that.jugador);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mapa, mochila, elementos, jugador, desplazamiento, visibilidad);
+    }
+
+    @Override
+    public String toString() {
+        return "CiudadRecoleccion{" +
+                "mapa=" + mapa +
+                ", mochila=" + mochila +
+                ", elementos=" + elementos +
+                ", jugador=" + jugador +
+                ", estado=" + estado +
+                ", cartaDisponible=" + cartaDisponible +
+                ", desplazamiento=" + desplazamiento +
+                ", visibilidad=" + visibilidad +
+                ", puntos=" + puntos +
+                ", ultimoMensaje='" + ultimoMensaje + '\'' +
+                '}';
+    }
+
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
@@ -332,6 +368,13 @@ public class CiudadRecoleccion {
         }
     }
 
+    /**
+     * Limpia el ultimo mensaje para que no se muestre dos veces.
+     */
+    public void limpiarUltimoMensaje() {
+        this.ultimoMensaje = null;
+    }
+
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
@@ -401,6 +444,11 @@ public class CiudadRecoleccion {
         return this.mochila.getElementos();
     }
 
+    /**
+     * Devuelve la carta disponible para guardar en la mochila
+     *
+     * @return: Carta disponible en el mapa
+     */
     public Elemento getCartaDisponible() {
         return this.cartaDisponible;
     }
@@ -416,12 +464,6 @@ public class CiudadRecoleccion {
         return this.ultimoMensaje;
     }
 
-    /**
-     * Limpia el ultimo mensaje para que no se muestre dos veces.
-     */
-    public void limpiarUltimoMensaje() {
-        this.ultimoMensaje = null;
-    }
 
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
