@@ -204,6 +204,7 @@ public class PanelHUD extends JPanel {
 
         String[] controles = {
                 "W / S / A / D  mover",
+                "E              recoger carta",  // ← nuevo
                 "P              mochila",
                 "1 / 2 / 3      usar carta",
                 "Q              cerrar mochila"

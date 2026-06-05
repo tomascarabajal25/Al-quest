@@ -111,6 +111,12 @@ public class GameWindow extends JFrame implements KeyListener {
                 panelJuego.setMostrarMochila(mochilaVisible);
                 panelJuego.repaint();
             }
+            case 'E' -> {
+                juego.recogerCarta();
+                panelJuego.repaint();
+                panelJuego.getHUD().repaint();
+                verificarFinDeJuego();
+            }
             default -> {
                 // Si la mochila está abierta y se presiona un número, usar carta
                 if (mochilaVisible && Character.isDigit(tecla) && tecla != '0') {

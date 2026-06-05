@@ -306,6 +306,12 @@ public class PanelJuego extends JPanel {
                 }
             }
         }
+        if (juego.getCartaDisponible() != null) {
+            g.setFont(new Font("Monospaced", Font.BOLD, 13));
+            g.setColor(new Color(255, 230, 100));
+            g.drawString("[E] Recoger: " + juego.getCartaDisponible().getNombre(),
+                    PADDING + 10, offsetY + filas * TILE_SIZE + 20);
+        }
     }
 
     /**

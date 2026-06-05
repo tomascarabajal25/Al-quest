@@ -181,7 +181,7 @@ public class Mochila {
      */
     public Elemento getElementoPorPosicion(int opcion){
         ValidacionesUtiles.validarMayorACero(opcion, "opcion");
-        return this.elementos.get(opcion);
+        return this.elementos.get(opcion - 1); // ← restar 1 para convertir a 0-based
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------

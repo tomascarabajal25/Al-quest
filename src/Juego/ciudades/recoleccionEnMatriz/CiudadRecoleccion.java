@@ -18,6 +18,7 @@ public class CiudadRecoleccion {
     private Jugador jugador = null;
 
     private EstadoDeJuego estado = null;
+    private Elemento cartaDisponible = null;
     private int desplazamiento;
     private int visibilidad;
     private int puntos;
@@ -84,9 +85,9 @@ public class CiudadRecoleccion {
      * Ubica los elementos carta dentro del mapa
      */
     public void ubicarElementosEnMapa() {
-        this.mapa.ocuparCelda(this.elementos.obtener(1), 5, 3, 1);
-        this.mapa.ocuparCelda(this.elementos.obtener(2), 2, 9, 2);
-        this.mapa.ocuparCelda(this.elementos.obtener(3), 1, 5, 3);
+        this.mapa.ocuparCelda(this.elementos.obtener(1), 13, 15, 1);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 17, 30, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(3), 18, 4, 3);
     }
 
     /**
@@ -155,6 +156,12 @@ public class CiudadRecoleccion {
         ValidacionesUtiles.validarMayorACero(columna, "columna");
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
 
+        // Verificar si la celda destino tiene una carta
+        Celda<?> celdaDestino = this.mapa.getNivel(nivel).getCeldaConPosicion(fila, columna);
+        if (celdaDestino != null && celdaDestino.getContenido() instanceof Elemento) {
+            return; // no se mueve, la carta bloquea el paso
+        }
+
         // Borrar jugador de la posición anterior
         int[] posAnterior = this.mapa.getPosicionCeldaConContenido(this.jugador);
         if (posAnterior != null) {
@@ -162,6 +169,29 @@ public class CiudadRecoleccion {
         }
 
         ubicarJugadorEnMapa(fila, columna, nivel);
+    }
+
+    public void recogerCarta() {
+        if (this.cartaDisponible == null) return;
+
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
+
+        // Vaciar la celda de la carta
+        int[] posCarta = this.mapa.getPosicionCeldaConContenido(this.cartaDisponible);
+        if (posCarta != null) {
+            this.mapa.VaciarCelda(posCarta[0], posCarta[1], posCarta[2]);
+        }
+
+        procesarCarta(this.cartaDisponible);
+        this.mochila.agregarElemento(this.cartaDisponible);
+        sumarPuntosCarta(posicionJugador);
+        validarMochila();
+
+        if (posicionJugador[2] < 3) {
+            moverJugadorEnMapa(1, 1, posicionJugador[2] + 1);
+        }
+
+        this.cartaDisponible = null;
     }
 
     /**
@@ -251,31 +281,19 @@ public class CiudadRecoleccion {
      * Verifica si el jugador se cruzo con alguna carta en el mapa
      */
     public void verificarCartasVecinas() {
+        this.cartaDisponible = null; // resetear cada vez que se mueve
+
         int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
-        Vector<Vector<Celda<?>>> vecinos = this.mapa.getNivel(posicionJugador[2])
-                .getCeldasVecinasRespectoPosicion(posicionJugador[0], posicionJugador[1], this.visibilidad);
+        // Siempre buscar adyacentes con distancia 1, independientemente de visibilidad
+        Vector<Vector<Celda<?>>> adyacentes = this.mapa.getNivel(posicionJugador[2])
+                .getCeldasVecinasRespectoPosicion(posicionJugador[0], posicionJugador[1], 1);
 
-        for (int i = 1; i <= vecinos.getLongitud(); i++) {          // ← empieza en 1
-            for (int j = 1; j <= vecinos.obtener(i).getLongitud(); j++) {  // ← empieza en 1
-                Celda<?> celda = vecinos.obtener(i).obtener(j);
+        for (int i = 1; i <= adyacentes.getLongitud(); i++) {
+            for (int j = 1; j <= adyacentes.obtener(i).getLongitud(); j++) {
+                Celda<?> celda = adyacentes.obtener(i).obtener(j);
                 if (celda != null && celda.getContenido() instanceof Elemento) {
-                    Elemento carta = (Elemento) celda.getContenido();
-
-                    // Vaciar la celda donde estaba la carta
-                    int[] posCarta = this.mapa.getPosicionCeldaConContenido(carta);
-                    if (posCarta != null) {
-                        this.mapa.VaciarCelda(posCarta[0], posCarta[1], posCarta[2]);
-                    }
-
-                    procesarCarta(carta);
-                    this.mochila.agregarElemento(carta);
-                    sumarPuntosCarta(posicionJugador);
-                    validarMochila();
-
-                    if (posicionJugador[2] < 3) {
-                        // moverJugadorEnMapa ya limpia la posición anterior
-                        moverJugadorEnMapa(1, 1, posicionJugador[2] + 1);
-                    }
+                    this.cartaDisponible = (Elemento) celda.getContenido();
+                    return; // con encontrar una alcanza
                 }
             }
         }
@@ -383,6 +401,10 @@ public class CiudadRecoleccion {
         return this.mochila.getElementos();
     }
 
+    public Elemento getCartaDisponible() {
+        return this.cartaDisponible;
+    }
+
     /**
      * Devuelve el ultimo mensaje generado por procesarCarta().
      * La GUI lo consume y lo muestra en pantalla.
@@ -471,9 +493,10 @@ public class CiudadRecoleccion {
                 "Carta Puntos",
                 "Esta carta tiene el efecto de aumentar exponencialmente los puntos");
 
-        this.elementos = new Vector<>(maximo, cartaVision);
-        this.elementos.agregar(cartaDesplazamiento);
-        this.elementos.agregar(cartaPuntos);
+        this.elementos = new Vector<>(3, null);          // datoInicial = null
+        this.elementos.agregar(1, cartaVision);           // posición 1 → CartaVision
+        this.elementos.agregar(2, cartaDesplazamiento);   // posición 2 → CartaDesplazamiento
+        this.elementos.agregar(3, cartaPuntos);           // posición 3 → CartaPuntos
     }
 
     /**
