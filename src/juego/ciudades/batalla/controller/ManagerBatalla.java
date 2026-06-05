@@ -1,13 +1,11 @@
 package com.aiquest.juego.ciudades.batalla.controller;
 
 import com.aiquest.estructuras.cola.Cola;
+import com.aiquest.estructuras.listas.ListaSimplementeEnlazada;
 import com.aiquest.estructuras.pilas.Pila;
-import com.aiquest.juego.ciudades.batalla.model.Accion;
-import com.aiquest.juego.ciudades.batalla.model.Enemigo;
-import com.aiquest.juego.ciudades.batalla.model.HabilidadEspecial;
-import com.aiquest.juego.ciudades.batalla.model.TipoAccion;
-import com.aiquest.juego.ciudades.batalla.model.TipoEnemigo;
+import com.aiquest.juego.ciudades.batalla.model.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,14 +19,14 @@ public class ManagerBatalla {
 		}
 	}
 
-	public static Cola<Enemigo> generarEnemigos(int dificultad) {
+	public static List<Enemigo> generarEnemigos(int dificultad) {
 		// generar enemigos segun dificultad:
 		//    - 1 Facil -----> 1 enemigo debilucho (sin habilidad especial)
 		//    - 2 Media -----> 3 enemigos normales (con habilidades especiales)
 		//    - 3 Dificil ---> 5 enemigos chetados (con habilidades especiales)
 
 		Random rand = new Random();
-		Cola<Enemigo> cola = new Cola<>();
+		List<Enemigo> lista = new ListaSimplementeEnlazada<>();
 
 		int cantidad;
 		int[] rango;
@@ -51,7 +49,7 @@ public class ManagerBatalla {
 				conHabilidad = true;
 				break;
 			default:
-				return cola;
+				return null;
 		}
 
 		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
@@ -68,7 +66,7 @@ public class ManagerBatalla {
 
 		for (int i = 0; i < cantidad; i++) {
 			TipoEnemigo tipo = tipos[rand.nextInt(tipos.length)];
-			String nombre = tipo + "#" + i;
+			String nombre = "" + tipo;
 
 			int vida = rand.nextInt(rango[1] - rango[0] + 1) + rango[0];
 			int fuerza = rand.nextInt(rango[3] - rango[2] + 1) + rango[2];
@@ -78,9 +76,13 @@ public class ManagerBatalla {
 					? habilidades[rand.nextInt(habilidades.length)]
 					: ninguna;
 
-			cola.offer(new Enemigo(nombre, tipo, vida, fuerza, armadura, habilidad));
+			lista.add(new Enemigo(nombre, tipo, vida, fuerza, armadura, habilidad));
 		}
 
-		return cola;
+		return lista;
+	}
+
+	static public boolean todosVivos(Cola<Combatiente> cola) {
+		return cola.stream().anyMatch(c -> c instanceof Enemigo && !c.estaVivo());
 	}
 }

@@ -4,9 +4,8 @@ import com.aiquest.juego.ciudades.batalla.model.Combatiente;
 import com.aiquest.juego.ciudades.batalla.model.Enemigo;
 
 public class UiManager {
-	public static void imprimirEstado(Combatiente p1, Combatiente p2) {
+	public static void imprimirEstado(Combatiente p1) {
 		System.out.println("-----------Estado-----------");
-		System.out.println(p2.toString());
 		System.out.println(p1.toString());
 		System.out.println("----------------------------\n");
 	}
