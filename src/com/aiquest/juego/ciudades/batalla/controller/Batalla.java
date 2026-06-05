@@ -36,7 +36,6 @@ public class Batalla {
 			Utils.sleep(1000);
 			UiManager.imprimirAcciones();
 			int accion = scanner.nextInt();
-
 			scanner.nextLine();
 			switch (accion) {
 				case 1:

@@ -18,7 +18,7 @@ Tendra 3 dificultades:
 - Formato pelea de pokemon clasico (Personaje vs enemigo/s enfrentados, turno x turno)
 - herramientas especiales random que el combatiente ira recolectando a lo largo de las distintas cuidades
 - Contador de turnos (para envenenamiento por ejemplo)
-- Manager para la batalla (hara los chequeos necesarios) --> evitamos el loop de juego
+- Manager para la batalla (hara los chequeos necesarios) --> evitamos el loop de com.aiquest.juego
 - Manejo de nuevas excepciones
 
 ## Ideas

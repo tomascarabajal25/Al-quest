@@ -28,7 +28,7 @@ public class Principal {
         
         System.out.println("--- DESAFÍO DE MEMORIA ---");
         System.out.println("¿Cómo se veían los tamaños de las cajas en el PASO NRO: " + pasoAleatorioX + "?");
-        System.out.println("(Presioná el botón 'Iniciar Animación' en la ventana para ver el juego correr antes de arriesgar!)");
+        System.out.println("(Presioná el botón 'Iniciar Animación' en la ventana para ver el com.aiquest.juego correr antes de arriesgar!)");
         
         // 3. El MAIN interactúa con el usuario y recupera los tamaños que él cree correctos
         // (Acá podés usar un Scanner para leer lo que meta el usuario por consola en vez de dejarlo fijo)

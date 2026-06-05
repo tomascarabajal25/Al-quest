@@ -4,7 +4,7 @@ package com.aiquest.juego.ciudades.torresDeHanoi;
  * Representa un nodo genérico dentro de una estructura enlazada.
  * 
  * Este TDA encapsula un dato y referencias a nodos adyacentes
- * (arriba y abajo), permitiendo modelar estructuras como pilas.
+ * (arriba y abajo), permitiendo modelar com.aiquest.estructuras como pilas.
  * 
  * @param <T> tipo de dato almacenado en el nodo
  */

@@ -20,7 +20,7 @@ public class PartidaOrdenamientos<T extends Comparable<T>> extends Partida {
      * - nombre de la ciudad no nulo
      * - jugador no nulo: jugador de la partida
      * - elementos no nulo: son los elementos que seran ordenados
-     * -ordenador elegido para el juego no nulo
+     * -ordenador elegido para el com.aiquest.juego no nulo
      * Post:
      * crea la partida de ordenamientos con los atributos indicados
      */

@@ -3,7 +3,7 @@ package com.aiquest.juego.ciudades.torresDeHanoi;
 import com.aiquest.utils.ValidacionesUtiles;
 
 /**
- * Representa una instantánea (DTO) del estado actual del juego.
+ * Representa una instantánea (DTO) del estado actual del com.aiquest.juego.
  * Es inmutable para garantizar que la vista no pueda alterar el modelo.
  */
 public class EstadoHanoi {

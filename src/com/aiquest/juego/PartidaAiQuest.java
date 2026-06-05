@@ -12,7 +12,7 @@ import com.aiquest.modelos.Partida;
 
 /**
  * clase incompleta:
- * va a representar la partida principal del juego aiquest, maneja el todas las ciudad (las demas partidas)
+ * va a representar la partida principal del com.aiquest.juego aiquest, maneja el todas las ciudad (las demas partidas)
  */
 public class PartidaAiQuest extends Partida {
     private List<Partida> ciudades;
@@ -68,11 +68,11 @@ public class PartidaAiQuest extends Partida {
 
     @Override
     public void iniciar() {
-        // Inicia el juego global
+        // Inicia el com.aiquest.juego global
     }
 
     @Override
     public void finalizar() {
-        // Finaliza el juego completo
+        // Finaliza el com.aiquest.juego completo
     }
 }

@@ -11,7 +11,7 @@ No build system (no Maven/Gradle). VS Code project with `src/` as source path, o
 ```
 Main.java                          ← entry point (default package, launches Swing)
 │
-├── modelos/                       ← domain model (shared by all cities)
+├── com.aiquest.modelos/                       ← domain model (shared by all cities)
 │   ├── Partida (abstract)         ← base class every city extends
 │   ├── Jugador, Mapa, Celda, Elemento, Mochila, Ciudad
 │
@@ -22,11 +22,11 @@ Main.java                          ← entry point (default package, launches Sw
 │       ├── reinas/                ← N-Queens city (backtracking)
 │       └── torresDeHanoi/         ← Towers of Hanoi city (recursion/stacks)
 │
-├── estructuras/                   ← custom data-structures library
+├── com.aiquest.estructuras/                   ← custom data-structures library
 │   ├── nodos, vector, listas, pilas, cola, conjuntos, hashing, arboles, grafos
 │   └── grafos/algoritmos/        ← Kruskal, Prim, Floyd, Warshall, Ford-Fulkerson, Hamilton
 │
-└── utils/                         ← reusable utilities
+└── com.aiquest.utils/                         ← reusable utilities
     ├── ValidacionesUtiles          ← precondition checker (used pervasively)
     ├── Teclado, SistemaUtiles, NumerosUtiles
     └── bitmap/Bitmap, BitmapViewerConMenu
@@ -46,7 +46,7 @@ Boots the N-Queens Swing UI. The `VictoriaListener` callback is a placeholder �
 
 ---
 
-## Module: `modelos/` — Domain Models
+## Module: `com.aiquest.modelos/` — Domain Models
 
 Shared domain objects used across all cities.
 
@@ -126,13 +126,13 @@ public PartidaAiQuest(Jugador combatiente) {
 
 ## Module: City — Ordenamientos (Sorting)
 
-**Package:** `Juego.ciudades.ordenamientos`
+**Package:** `com.aiquest.ciudades.ordenamientos`
 
 The player watches a sorting algorithm animate step-by-step, then must recall the array state at a randomly chosen step.
 
 ### `EstadoDePartida` (enum)
 
-`Creado`, `Iniciado` — shared across ALL city Partidas (referenced by `modelos.Partida`).
+`Creado`, `Iniciado` — shared across ALL city Partidas (referenced by `com.aiquest.modelos.Partida`).
 
 ### `Caja` extends `Elemento`
 
@@ -201,7 +201,7 @@ Static utility that creates a `Bitmap` canvas and animates the sort steps.
 
 ### `ui/RecursosOrdenamiento`
 
-Loads BMP images from `src/imagenesDeOrdenamiento/`. Falls back to solid-color rectangles (`Color.BLUE` / `Color.RED`) if files are missing.
+Loads BMP images from `src/com.aiquest.imagenesDeOrdenamiento/`. Falls back to solid-color rectangles (`Color.BLUE` / `Color.RED`) if files are missing.
 
 ### Game Flow (Sorting City)
 
@@ -218,7 +218,7 @@ Loads BMP images from `src/imagenesDeOrdenamiento/`. Falls back to solid-color r
 
 ## Module: City — Reinas (N-Queens)
 
-**Package:** `Juego.ciudades.reinas`
+**Package:** `com.aiquest.ciudades.reinas`
 
 The player places N queens on an NxN board so no two attack each other. A backtracking solver can show its steps.
 
@@ -299,7 +299,7 @@ Loads BMP images from `src/Juego/ciudades/reinas/resources/imagenes/`: `casilla-
 
 ## Module: City — Torres de Hanoi
 
-**Package:** `Juego.ciudades.torresDeHanoi`
+**Package:** `com.aiquest.ciudades.torresDeHanoi`
 
 Classic Towers of Hanoi with manual play and automatic solver. Follows MVC strictly.
 
@@ -320,7 +320,7 @@ Doubly-linked node for the tower stacks.
 - Fields: `T dato`, `Nodo<T> arriba`, `Nodo<T> abajo`.
 - `setDato(T)`, `setArriba(T)`, `setAbajo(T)`, getters.
 
-**Important:** This is NOT `estructuras.nodos.Nodo`. The Hanoi city has its own `Nodo<T>`.
+**Important:** This is NOT `com.aiquest.estructuras.nodos.Nodo`. The Hanoi city has its own `Nodo<T>`.
 
 ### `Pila<T>` (game-specific)
 
@@ -332,7 +332,7 @@ LIFO stack using `Nodo<T>` with `arriba`/`abajo` links.
 - `getContNodo()` — element count.
 - `getCabeza()` — returns the head `Nodo<T>`.
 
-**Important:** This is NOT `estructuras.pilas.Pila`. The Hanoi city has its own `Pila<T>`.
+**Important:** This is NOT `com.aiquest.estructuras.pilas.Pila`. The Hanoi city has its own `Pila<T>`.
 
 ### `CiudadHanoi`
 
@@ -349,7 +349,7 @@ Core game logic. Three `Pila<String>` towers (A, B, C). Disks are `"###"` string
 
 ### `PartidaDeHanoi` extends `Partida`
 
-- Fields: `CiudadHanoi juego`, `int cantidadDiscos`.
+- Fields: `CiudadHanoi com.aiquest.juego`, `int cantidadDiscos`.
 - `iniciar()` — validates not started, creates `CiudadHanoi`, sets `EstadoDePartida.Iniciado`.
 - `finalizar()` — validates is started, sets `EstadoDePartida.Creado`.
 - `actualizarPuntaje(int puntos)` — **protected**, bridge for `ControllerHanoi`.
@@ -381,7 +381,7 @@ Returns `true` to continue, `false` to stop the solver.
 MVC controller bridging `PartidaDeHanoi`/`CiudadHanoi` (model) and `VentanaPrincipalHanoi` (view).
 
 - Directional move methods: `moverA_B()`, `moverA_C()`, `moverB_A()`, `moverB_C()`, `moverC_A()`, `moverC_B()`.
-- Each calls `juego.mover()`, then `actualizarVista()`, then optionally `preguntarSiGano()`.
+- Each calls `com.aiquest.juego.mover()`, then `actualizarVista()`, then optionally `preguntarSiGano()`.
 - `resolver()` — creates a new `HanoiSolver`, calls `resolverHanoi()` with towers from `partida.getJuego()`.
 - `actualizarVista()` → `vista.actualizar(getEstado())`.
 - `onMovimiento(int paso)` — implements `ObservadorHanoi`: updates view and asks "Continue?" via dialog.
@@ -411,7 +411,7 @@ Swing UI with three `JTable`s for towers, directional move buttons, disc count c
 
 ---
 
-## Module: `estructuras/` — Custom Data Structures Library
+## Module: `com.aiquest.estructuras/` — Custom Data Structures Library
 
 Academic implementations from scratch. Two API styles per structure: a full Java Collections-compatible version and a simpler Spanish-named version.
 
@@ -515,7 +515,7 @@ Academic implementations from scratch. Two API styles per structure: a full Java
 
 ---
 
-## Module: `utils/` — Utilities
+## Module: `com.aiquest.utils/` — Utilities
 
 ### `ValidacionesUtiles` (static methods, all throw `RuntimeException`)
 
@@ -576,31 +576,31 @@ Displays one or more `Bitmap` objects in a grid with optional button menu.
 ## Cross-Module Dependencies
 
 ```
-modelos.Partida
+com.aiquest.modelos.Partida
   └── uses: EstadoDePartida (from ordenamientos), ValidacionesUtiles
   └── extended by: PartidaAiQuest, PartidaOrdenamientos, PartidaDeHanoi
 
-modelos.Mochila
-  └── uses: ListaSimplementeEnlazada (from estructuras)
+com.aiquest.modelos.Mochila
+  └── uses: ListaSimplementeEnlazada (from com.aiquest.estructuras)
 
-modelos.Mapa
+com.aiquest.modelos.Mapa
   └── uses: Celda<?>, ValidacionesUtiles
 
-Juego.ciudades.ordenamientos
-  └── uses: modelos.Partida, modelos.Jugador, modelos.Elemento (via Caja), ValidacionesUtiles, Bitmap
+com.aiquest.ciudades.ordenamientos
+  └── uses: com.aiquest.modelos.Partida, com.aiquest.modelos.Jugador, com.aiquest.modelos.Elemento (via Caja), ValidacionesUtiles, Bitmap
 
-Juego.ciudades.reinas
+com.aiquest.ciudades.reinas
   └── standalone (does NOT extend Partida — integration gap)
 
-Juego.ciudades.torresDeHanoi
-  └── uses: modelos.Partida, modelos.Jugador, EstadoDePartida (from ordenamientos), ValidacionesUtiles
-  └── has own Pila<Nodo> (NOT estructuras.pilas.Pila)
+com.aiquest.ciudades.torresDeHanoi
+  └── uses: com.aiquest.modelos.Partida, com.aiquest.modelos.Jugador, EstadoDePartida (from ordenamientos), ValidacionesUtiles
+  └── has own Pila<Nodo> (NOT com.aiquest.estructuras.pilas.Pila)
 
 Juego.PartidaAiQuest
   └── composes: PartidaOrdenamientos (more cities planned)
 ```
 
-**Key observation:** All cities import `EstadoDePartida` from the `ordenamientos` package. This enum should probably live in `modelos/` or a shared `Juego` package, but currently it's cross-referenced.
+**Key observation:** All cities import `EstadoDePartida` from the `ordenamientos` package. This enum should probably live in `com.aiquest.modelos/` or a shared `Juego` package, but currently it's cross-referenced.
 
 ---
 
@@ -617,32 +617,32 @@ src/Juego/ciudades/tuCiudad/
 ### 2. Extend `Partida`
 
 ```java
-package Juego.ciudades.tuCiudad;
+package com.aiquest.ciudades.tuCiudad;
 
-import modelos.Partida;
-import modelos.Jugador;
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import com.aiquest.modelos.Partida;
+import com.aiquest.modelos.Jugador;
+import com.aiquest.ciudades.ordenamientos.EstadoDePartida;
 
 public class PartidaTuCiudad extends Partida {
-    private TuLogica logica;
+	private TuLogica logica;
 
-    public PartidaTuCiudad(String nombre, Jugador combatiente, /* params */) {
-        super(nombre, combatiente);
-        // init fields
-    }
+	public PartidaTuCiudad(String nombre, Jugador combatiente, /* params */) {
+		super(nombre, combatiente);
+		// init fields
+	}
 
-    @Override
-    public void iniciar() {
-        ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya fue iniciada");
-        setEstado(EstadoDePartida.Iniciado);
-        // initialize game logic
-    }
+	@Override
+	public void iniciar() {
+		ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya fue iniciada");
+		setEstado(EstadoDePartida.Iniciado);
+		// initialize game logic
+	}
 
-    @Override
-    public void finalizar() {
-        ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no está iniciada");
-        setEstado(EstadoDePartida.Creado);
-    }
+	@Override
+	public void finalizar() {
+		ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no está iniciada");
+		setEstado(EstadoDePartida.Creado);
+	}
 }
 ```
 
@@ -674,7 +674,7 @@ Create `tests/tuCiudad/TuCiudadTest.java` following the JUnit 5 pattern in `test
 
 ### Contract checklist for a new city:
 
-- [ ] Extends `modelos.Partida`
+- [ ] Extends `com.aiquest.modelos.Partida`
 - [ ] Uses `EstadoDePartida.Iniciado` / `Creado` for state management
 - [ ] Calls `ValidacionesUtiles` for preconditions (matches project style)
 - [ ] Javadoc with PRE/POST on public methods

@@ -18,4 +18,12 @@ public class UiManager {
 //		System.out.println("4. Display your stats");
 		System.out.print("Ingrese acción: ");
 	}
+
+	public static void imprimirDificultad() {
+		System.out.println("Dificultades:");
+		System.out.println("1. Facil");
+		System.out.println("2. Media");
+		System.out.println("3. Dificil");
+		System.out.println("Seleccionar dificultad: ");
+	}
 }

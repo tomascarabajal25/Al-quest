@@ -52,7 +52,7 @@ public class OrdenadorSelection<T extends Comparable<T>> extends Ordenador<T> {
         for (int i = 0; i < n - 1; i++) {
             int indiceMinimo = i;
             //administradorPasos.guardarPaso(new PasoOrdenamiento<>(elementos, i, indiceMinimo, "Buscando el menor"));
-         // lo comento pq podria estar bien mostrar cada comparacion en el bitmap, pero se vuelve mucha cantidad de bitmaps q no son tan necesarios para el juego
+         // lo comento pq podria estar bien mostrar cada comparacion en el bitmap, pero se vuelve mucha cantidad de bitmaps q no son tan necesarios para el com.aiquest.juego
             for (int j = i + 1; j < n; j++) {
                 if (elementos.get(j).compareTo(elementos.get(indiceMinimo)) < 0) {
                     indiceMinimo = j;

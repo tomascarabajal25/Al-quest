@@ -7,14 +7,14 @@ import com.aiquest.modelos.Jugador;
 import com.aiquest.modelos.Partida;
 import com.aiquest.utils.ValidacionesUtiles;
 /**
- * Conecta el sistema general de partidas del juego con el puzzle específico de Hanoi.
+ * Conecta el sistema general de partidas del com.aiquest.juego con el puzzle específico de Hanoi.
  */
 public class PartidaDeHanoi extends Partida {
     private CiudadHanoi juego; // El motor lógico del puzzle
     private int cantidadDiscos;        // Guardamos la configuración del nivel
   //CONSTRUCTORES-----------------------------------------------------------------
     /**
-     * Crea un nuevo juego con una cantidad inicial de discos.
+     * Crea un nuevo com.aiquest.juego con una cantidad inicial de discos.
      * 
      * PRE:
      * - 3 <= discos <= 10
@@ -32,7 +32,7 @@ public class PartidaDeHanoi extends Partida {
     
   //METODOS DE COMPORTAMIENTO------------------------------------------------------
     /**
-     * Inicializa el estado del juego.
+     * Inicializa el estado del com.aiquest.juego.
      * 
      * POST:
      * - torreA contiene todos los discos.
