@@ -82,7 +82,7 @@ public class GameWindow extends JFrame implements KeyListener {
         setLayout(new BorderLayout());
 
         // Agregá estas dos líneas:
-        getContentPane().setBackground(new Color(15, 20, 35));
+        getContentPane().setBackground(new Color(22, 22, 22));
         ((JPanel) getContentPane()).setOpaque(true);
 
         add(panelJuego, BorderLayout.CENTER);

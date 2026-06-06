@@ -63,29 +63,27 @@ public class Constantes {
     // --- UI ---
     public static final int ANCHO  = 220;
     public static final int ALTO   = 720;
-    public static final Color COLOR_FONDO      = new Color(10, 14, 28);
-    public static final Color COLOR_TITULO     = new Color(100, 160, 255);
-    public static final Color COLOR_LABEL      = new Color(160, 180, 220);
-    public static final Color COLOR_VALOR      = new Color(230, 240, 255);
-    public static final Color COLOR_SEPARADOR  = new Color(40, 55, 85);
-    public static final Color COLOR_VISION     = new Color(100, 180, 255);
-    public static final Color COLOR_DESPLAZ    = new Color(255, 200, 60);
-    public static final Color COLOR_PUNTOS_C   = new Color(255, 100, 100);
-    public static final Color COLOR_JUGADOR    = new Color(80, 200, 120);
+    public static final Color COLOR_FONDO     = new Color(22, 22, 22);
+    public static final Color COLOR_TITULO    = new Color(190, 150, 65);
+    public static final Color COLOR_LABEL     = new Color(135, 120, 100);
+    public static final Color COLOR_VALOR     = new Color(205, 185, 150);
+    public static final Color COLOR_SEPARADOR = new Color(60, 55, 48);
+    public static final Color COLOR_VISION       = new Color(90, 150, 200);
+    public static final Color COLOR_DESPLAZ       = new Color(185, 150, 50);
+    public static final Color COLOR_PUNTOS_C      = new Color(170, 45, 45);
+    public static final Color COLOR_JUGADOR       = new Color(200, 200, 200);
 
     public static final int TILE_SIZE    = 32;   // px por celda
     public static final int PADDING      = 12;   // margen interior del panel
     // Paleta de colores del juego
-    public static final Color COLOR_FONDO_2         = new Color(15, 20, 35);
-    public static final Color COLOR_CELDA          = new Color(28, 38, 60);
-    public static final Color COLOR_CELDA_BORDE    = new Color(45, 60, 90);
-    public static final Color COLOR_JUGADOR_2       = new Color(80, 200, 120);
-    public static final Color COLOR_CARTA_VISION   = new Color(100, 180, 255);
-    public static final Color COLOR_CARTA_DESPLAZ  = new Color(255, 200, 60);
-    public static final Color COLOR_CARTA_PUNTOS   = new Color(255, 100, 100);
-    public static final Color COLOR_VACIO          = new Color(28, 38, 60);
-    public static final Color COLOR_MENSAJE        = new Color(255, 230, 100);
-    public static final Color COLOR_MOCHILA_FONDO  = new Color(10, 14, 28, 220);
+    public static final Color COLOR_CELDA     = new Color(45, 43, 40);
+    public static final Color COLOR_CELDA_BORDE = new Color(30, 28, 26);
+    public static final Color COLOR_CARTA_VISION = new Color(90, 150, 200);
+    public static final Color COLOR_CARTA_DESPLAZ = new Color(185, 150, 50);
+    public static final Color COLOR_CARTA_PUNTOS  = new Color(170, 45, 45);
+    public static final Color COLOR_VACIO     = new Color(45, 43, 40);
+    public static final Color COLOR_MENSAJE       = new Color(210, 175, 60);
+    public static final Color COLOR_MOCHILA_FONDO = new Color(15, 15, 15, 220);
 
     // Tipos de tile para el cache
     public static final String TILE_VACIO      = "vacio";
