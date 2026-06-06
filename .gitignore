@@ -32,3 +32,6 @@ out/
 build/
 
 .atl/
+overview.md
+.gitignore
+*.sh
