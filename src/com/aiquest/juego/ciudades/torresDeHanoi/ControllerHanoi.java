@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.aiquest.utils.ValidacionesUtiles;
 /**
- * Controlador del com.aiquest.juego Torres de Hanoi.
+ * Controlador del com.aiquest.com.aiquest.juego Torres de Hanoi.
  * 
  * Actúa como intermediario entre la vista (VentanaPrincipalHanoi)
  * y el modelo (JuegoHanoi), gestionando las acciones del usuario
@@ -30,7 +30,7 @@ public class ControllerHanoi implements ObservadorHanoi {
      * - vista != null
      * 
      * POST:
-     * - Se inicializa un nuevo com.aiquest.juego con la cantidad de discos indicada.
+     * - Se inicializa un nuevo com.aiquest.com.aiquest.juego con la cantidad de discos indicada.
      * - Se crea un solver asociado al controlador.
      * - Se establece la vista.
      */
@@ -88,7 +88,7 @@ public class ControllerHanoi implements ObservadorHanoi {
 	
 	@Override
 	public String toString() {
-		return "ControllerHanoi [com.aiquest.juego=" + partida.getJuego() + ", vista=" + vista + "]";
+		return "ControllerHanoi [com.aiquest.com.aiquest.juego=" + partida.getJuego() + ", vista=" + vista + "]";
 	}
 
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
@@ -96,11 +96,11 @@ public class ControllerHanoi implements ObservadorHanoi {
      * metodos para mover de una torre a la otra
      * 
      * PRE:
-     * - El com.aiquest.juego está inicializado.
+     * - El com.aiquest.com.aiquest.juego está inicializado.
      * - El movimiento es válido según reglas de Hanoi.
      * 
      * POST:
-     * - Se modifica el estado interno del com.aiquest.juego.
+     * - Se modifica el estado interno del com.aiquest.com.aiquest.juego.
      */
     public void moverA_B() {
         partida.getJuego().mover(partida.getJuego().getTorreA(), partida.getJuego().getTorreB());
@@ -147,13 +147,13 @@ public class ControllerHanoi implements ObservadorHanoi {
     }
     
     /*
-     * pregunta si el com.aiquest.juego ha sido ganado con la cantidad min de movimientos
+     * pregunta si el com.aiquest.com.aiquest.juego ha sido ganado con la cantidad min de movimientos
      */
     private boolean testearGanadorPerfecto() {
     	return partida.getJuego().esPerfecto();
     	}
     /*
-     * pregunta si el com.aiquest.juego ha sido ganado
+     * pregunta si el com.aiquest.com.aiquest.juego ha sido ganado
      */
     private boolean testearGanador() {
     	return partida.getJuego().haGanado();
@@ -162,14 +162,14 @@ public class ControllerHanoi implements ObservadorHanoi {
      * Resuelve automáticamente el problema de Torres de Hanoi.
      * 
      * PRE:
-     * - El com.aiquest.juego está inicializado.
+     * - El com.aiquest.com.aiquest.juego está inicializado.
      * 
      * POST:
-     * - Se ejecutan los movimientos necesarios para resolver el com.aiquest.juego.
+     * - Se ejecutan los movimientos necesarios para resolver el com.aiquest.com.aiquest.juego.
      * - La vista puede actualizarse progresivamente según el observador.
      */
     public void resolver() {
-    	ValidacionesUtiles.validarVerdadero(vista.getJuegoIniciado(), "no se puede resolver un com.aiquest.juego no iniciado");
+    	ValidacionesUtiles.validarVerdadero(vista.getJuegoIniciado(), "no se puede resolver un com.aiquest.com.aiquest.juego no iniciado");
     	solver = new HanoiSolver<String>(this);
     	solver.resolverHanoi(
                 partida.getJuego().getTorreA().getContNodo(),
@@ -180,7 +180,7 @@ public class ControllerHanoi implements ObservadorHanoi {
     }
     
     /**
-     * Actualiza la vista con el estado actual del com.aiquest.juego.
+     * Actualiza la vista con el estado actual del com.aiquest.com.aiquest.juego.
      * 
      * PRE:
      * - vista != null
@@ -192,13 +192,13 @@ public class ControllerHanoi implements ObservadorHanoi {
     	vista.actualizar(this.getEstado());
     }
     /**
-     * Reinicia el com.aiquest.juego con una nueva cantidad de discos.
+     * Reinicia el com.aiquest.com.aiquest.juego con una nueva cantidad de discos.
      * 
      * PRE:
      * - 10>discos > 3
      * 
      * POST:
-     * - El com.aiquest.juego vuelve a su estado inicial con los discos indicados.
+     * - El com.aiquest.com.aiquest.juego vuelve a su estado inicial con los discos indicados.
      * - El contador de movimientos se reinicia.
      */
     protected void reiniciar(int discos) {
@@ -229,7 +229,7 @@ public class ControllerHanoi implements ObservadorHanoi {
     
   //GETTER SIMPLES-----------------------------------------------------------------
     /**
-     * Devuelve el modelo del com.aiquest.juego.
+     * Devuelve el modelo del com.aiquest.com.aiquest.juego.
      */
     public CiudadHanoi getJuego() {
         return partida.getJuego();
@@ -256,7 +256,7 @@ public class ControllerHanoi implements ObservadorHanoi {
         return partida.getJuego().getDiscosDeTorre(partida.getJuego().getTorreC());
     }
     /*
-     * retorna el estado del com.aiquest.juego
+     * retorna el estado del com.aiquest.com.aiquest.juego
      */
     public EstadoHanoi getEstado() {
         

@@ -11,9 +11,9 @@ import com.aiquest.juego.ciudades.ordenamientos.EstadoDePartida;
 
 import com.aiquest.utils.ValidacionesUtiles;
 /**
- * TDA que representa el com.aiquest.juego de las Torres de Hanoi.
+ * TDA que representa el com.aiquest.com.aiquest.juego de las Torres de Hanoi.
  * 
- * Modela el estado del com.aiquest.juego mediante tres pilas (torres),
+ * Modela el estado del com.aiquest.com.aiquest.juego mediante tres pilas (torres),
  * la cantidad de movimientos realizados y el objetivo (número de discos).
  * 
  * INVARIANTES:
@@ -32,7 +32,7 @@ public class CiudadHanoi {
     
   //CONSTRUCTORES-----------------------------------------------------------------
     /**
-     * Crea un nuevo com.aiquest.juego con una cantidad inicial de discos.
+     * Crea un nuevo com.aiquest.com.aiquest.juego con una cantidad inicial de discos.
      * 
      * PRE:
      * - 3 <= discos <= 10
@@ -49,7 +49,7 @@ public class CiudadHanoi {
     
   //METODOS DE COMPORTAMIENTO------------------------------------------------------
     /**
-     * Inicializa el estado del com.aiquest.juego.
+     * Inicializa el estado del com.aiquest.com.aiquest.juego.
      * 
      * POST:
      * - torreA contiene todos los discos.
@@ -67,7 +67,7 @@ public class CiudadHanoi {
         }
     }
     /**
-     * Reinicia el com.aiquest.juego con un nuevo objetivo.
+     * Reinicia el com.aiquest.com.aiquest.juego con un nuevo objetivo.
      * 
      * PRE:
      * - 3 <= nuevoObjetivo <= 10
@@ -144,13 +144,13 @@ public class CiudadHanoi {
     }
     
     /*
-     * retorna si el com.aiquest.juego ha sido ganado
+     * retorna si el com.aiquest.com.aiquest.juego ha sido ganado
      */
     public boolean haGanado() {
         return torreC.getContNodo() == objetivo;
     }
     /*
-     * retorna si el com.aiquest.juego ha sido ganado con el minimo de movimientos
+     * retorna si el com.aiquest.com.aiquest.juego ha sido ganado con el minimo de movimientos
      */
     public boolean esPerfecto() {
         return haGanado() && movimientos == getMinMovimientos();
@@ -229,7 +229,7 @@ public class CiudadHanoi {
     	return torreC; 
     	}
     
-    // devuelve la cantidad de discos del com.aiquest.juego
+    // devuelve la cantidad de discos del com.aiquest.com.aiquest.juego
     public int getObjetivo() {
     	return objetivo;
     }

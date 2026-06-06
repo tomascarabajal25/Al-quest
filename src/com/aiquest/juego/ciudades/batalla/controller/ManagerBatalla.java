@@ -4,10 +4,14 @@ import com.aiquest.estructuras.cola.Cola;
 import com.aiquest.estructuras.listas.ListaSimplementeEnlazada;
 import com.aiquest.estructuras.pilas.Pila;
 import com.aiquest.juego.ciudades.batalla.model.*;
+import com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
+import com.aiquest.juego.ciudades.batalla.model.acciones.Defender;
+import com.aiquest.juego.ciudades.batalla.view.UiManager;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 public class ManagerBatalla {
 	Map<TipoAccion, Accion> acciones;
@@ -82,7 +86,23 @@ public class ManagerBatalla {
 		return lista;
 	}
 
-	static public boolean todosVivos(Cola<Combatiente> cola) {
-		return cola.stream().anyMatch(c -> c instanceof Enemigo && !c.estaVivo());
+	static public boolean todosVivos(List<Enemigo> enemigos) {
+		if (enemigos == null) { return false; }
+		return enemigos.stream().anyMatch(c -> !c.estaVivo());
+	}
+
+	public static Accion elegirAccionHeroe(Combatiente heroe, List<Enemigo> enemigos, Scanner scanner) {
+		Enemigo objetivo = UiManager.seleccionarEnemigo(enemigos, scanner);
+		if (objetivo == null) return null;
+
+		return switch (UiManager.seleccionarAccion(scanner)) {
+			case 1 -> new Atacar(heroe, objetivo);
+			case 2 -> new Defender(heroe, heroe);
+			default -> new Defender(heroe, heroe);
+		};
+	}
+
+	public static Accion elegirAccionEnemigo(Enemigo enemigo, Combatiente heroe) {
+		return new Atacar(enemigo, heroe);
 	}
 }

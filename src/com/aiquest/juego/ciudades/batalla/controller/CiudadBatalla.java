@@ -25,13 +25,13 @@ public class CiudadBatalla {
 
 		// TODO: crear habilidades especiales
 		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
-		Heroe heroe = new Heroe("Heroe", 100, 15, 5, ninguna);
+		Heroe heroe = new Heroe("Heroe", 100, 100, 5, ninguna);
 		List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(dificultad);
-		Cola<Combatiente> turnos = new Cola<Combatiente>();
+		Cola<Combatiente> turnos = new Cola<>();
 		turnos.add(heroe);
-		turnos.addAll(enemigos);
+		if (enemigos != null) { turnos.addAll(enemigos); }
 
-		boolean victoria = new Batalla(scanner, turnos).empezar();
+		boolean victoria = new Batalla(scanner, turnos, enemigos).empezar();
 		System.out.println(victoria ? "\nVictoria!" : "\nDerrota...");
 		scanner.close();
 	}

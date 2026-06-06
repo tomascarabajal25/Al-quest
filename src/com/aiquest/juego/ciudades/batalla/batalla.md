@@ -2,11 +2,11 @@
 
 ## 9.1. Descripción General
 
-En esta ciudad, el combatiente participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las com.aiquest.estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
+En esta ciudad, el combatiente participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las com.aiquest.com.aiquest.estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
 
 ## 9.2. Objetivo
 
-El combatiente deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de com.aiquest.estructuras de datos.
+El combatiente deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de com.aiquest.com.aiquest.estructuras de datos.
 
 ## 9.3. Estructuras Obligatorias
 
@@ -61,7 +61,7 @@ El combate finaliza cuando:
 
 El sistema deberá validar:
 
-- Que no existan elementos nulos en las com.aiquest.estructuras
+- Que no existan elementos nulos en las com.aiquest.com.aiquest.estructuras
 - Que los enemigos eliminados sean removidos correctamente de la lista
 - Que la cola mantenga el orden correcto de turnos
 - Que la pila respete el orden LIFO
@@ -70,7 +70,7 @@ El sistema deberá validar:
 
 Se evaluará:
 
-- Correcta implementación de las com.aiquest.estructuras
+- Correcta implementación de las com.aiquest.com.aiquest.estructuras
 - Uso adecuado de las operaciones (push, pop, enqueue, dequeue, etc.)
 - Claridad en la lógica del combate
 - Separación entre lógica y presentación

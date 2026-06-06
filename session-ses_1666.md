@@ -8,7 +8,7 @@
 
 ## User
 
-@src/juego/ciudades/batalla/ how to handle multiple action selections for the user. And also multiple selection for the AI of enemies
+@src/com.aiquest.juego/ciudades/batalla/ how to handle multiple action selections for the user. And also multiple selection for the AI of enemies
 
 ---
 
@@ -16,11 +16,11 @@
 
 _Thinking:_
 
-The user is asking about how to handle multiple action selections for the user AND multiple action selections for the AI of enemies, in the context of `src/juego/ciudades/batalla/`. They've shown me the directory contents.
+The user is asking about how to handle multiple action selections for the user AND multiple action selections for the AI of enemies, in the context of `src/com.aiquest.juego/ciudades/batalla/`. They've shown me the directory contents.
 
 Let me check the persona scope and rules:
 - Match user's current language: The user is writing in English (with some Spanish mixed in like "how to handle multiple action selections for the user. And also multiple selection for the AI of enemies")
-- Wait, actually re-reading: it's English with proper grammar. The directory is Spanish (`juego/ciudades/batalla`) but the user is asking in English.
+- Wait, actually re-reading: it's English with proper grammar. The directory is Spanish (`com.aiquest.juego/ciudades/batalla`) but the user is asking in English.
 - Short answer by default
 - One question at a time
 - Don't present option menus unless real fork
@@ -42,24 +42,24 @@ Voy a mirar la estructura primero para entender qué hay hoy antes de tirarte un
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/batalla.md"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/batalla.md"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/batalla.md</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/batalla.md</path>
 <type>file</type>
 <content>
 1: # Ciudad 9 – Batalla de Listas, Pilas y Colas
 2: 
 3: ## 9.1. Descripción General
 4: 
-5: En esta ciudad, el combatiente participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las com.aiquest.estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
+5: En esta ciudad, el combatiente participa de un sistema de combate por turnos contra múltiples enemigos. El objetivo es aplicar correctamente las com.aiquest.com.aiquest.estructuras de datos Lista, Cola y Pila dentro de un contexto dinámico.
 6: 
 7: ## 9.2. Objetivo
 8: 
-9: El combatiente deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de com.aiquest.estructuras de datos.
+9: El combatiente deberá derrotar a todos los enemigos presentes en el combate utilizando estrategias basadas en el uso eficiente de com.aiquest.com.aiquest.estructuras de datos.
 10: 
 11: ## 9.3. Estructuras Obligatorias
 12: 
@@ -114,7 +114,7 @@ Voy a mirar la estructura primero para entender qué hay hoy antes de tirarte un
 61: 
 62: El sistema deberá validar:
 63: 
-64: - Que no existan elementos nulos en las com.aiquest.estructuras
+64: - Que no existan elementos nulos en las com.aiquest.com.aiquest.estructuras
 65: - Que los enemigos eliminados sean removidos correctamente de la lista
 66: - Que la cola mantenga el orden correcto de turnos
 67: - Que la pila respete el orden LIFO
@@ -123,7 +123,7 @@ Voy a mirar la estructura primero para entender qué hay hoy antes de tirarte un
 70: 
 71: Se evaluará:
 72: 
-73: - Correcta implementación de las com.aiquest.estructuras
+73: - Correcta implementación de las com.aiquest.com.aiquest.estructuras
 74: - Uso adecuado de las operaciones (push, pop, enqueue, dequeue, etc.)
 75: - Claridad en la lógica del combate
 76: - Separación entre lógica y presentación
@@ -137,13 +137,13 @@ Voy a mirar la estructura primero para entender qué hay hoy antes de tirarte un
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller</path>
 <type>directory</type>
 <entries>
 Batalla.java
@@ -159,13 +159,13 @@ ManagerBatalla.java
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model</path>
 <type>directory</type>
 <entries>
 Accion.java
@@ -187,13 +187,13 @@ TipoEnemigo.java
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/view"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/view"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/view</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/view</path>
 <type>directory</type>
 <entries>
 UiManager.java
@@ -256,13 +256,13 @@ Let me also check the acciones/ subdirectory briefly.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/idea.md"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/idea.md"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/idea.md</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/idea.md</path>
 <type>file</type>
 <content>
 1: # Ciudad Batalla
@@ -285,7 +285,7 @@ Let me also check the acciones/ subdirectory briefly.
 18: - Formato pelea de pokemon clasico (Personaje vs enemigo/s enfrentados, turno x turno)
 19: - herramientas especiales random que el combatiente ira recolectando a lo largo de las distintas cuidades
 20: - Contador de turnos (para envenenamiento por ejemplo)
-21: - Manager para la batalla (hara los chequeos necesarios) --> evitamos el loop de com.aiquest.juego
+21: - Manager para la batalla (hara los chequeos necesarios) --> evitamos el loop de com.aiquest.com.aiquest.juego
 22: - Manejo de nuevas excepciones
 23: 
 24: ## Ideas
@@ -303,16 +303,16 @@ Let me also check the acciones/ subdirectory briefly.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Accion.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Accion.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Accion.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Accion.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model;
 2: 
 3: public abstract class Accion {
 4: 	private Combatiente combatiente;
@@ -347,16 +347,16 @@ Let me also check the acciones/ subdirectory briefly.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/TipoAccion.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/TipoAccion.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/TipoAccion.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/TipoAccion.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model;
 2: 
 3: public enum TipoAccion {
 4: 	ATAQUE,
@@ -374,24 +374,24 @@ Let me also check the acciones/ subdirectory briefly.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/ManagerBatalla.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/ManagerBatalla.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/ManagerBatalla.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/ManagerBatalla.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.controller;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.controller;
 2: 
-3: import com.aiquest.estructuras.cola.Cola;
-4: import com.aiquest.estructuras.pilas.Pila;
-5: import com.aiquest.juego.ciudades.batalla.model.Accion;
-6: import com.aiquest.juego.ciudades.batalla.model.Enemigo;
-7: import com.aiquest.juego.ciudades.batalla.model.HabilidadEspecial;
-8: import com.aiquest.juego.ciudades.batalla.model.TipoAccion;
-9: import com.aiquest.juego.ciudades.batalla.model.TipoEnemigo;
+3: import com.aiquest.com.aiquest.estructuras.cola.Cola;
+4: import com.aiquest.com.aiquest.estructuras.pilas.Pila;
+5: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Accion;
+6: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Enemigo;
+7: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.HabilidadEspecial;
+8: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.TipoAccion;
+9: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.TipoEnemigo;
 10: 
 11: import java.util.Map;
 12: import java.util.Random;
@@ -479,13 +479,13 @@ Let me also check the acciones/ subdirectory briefly.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones</path>
 <type>directory</type>
 <entries>
 Atacar.java
@@ -588,7 +588,7 @@ Also: "Push back when user asks for code without context or understanding" — b
 
 I should also remember the language rule: the user wrote in English, so I reply in English. The artifacts (spec, code) are in Spanish, but my reply to the user is in English.
 
-Wait, actually looking again at the user's message: "Called the Read tool with the following input..." — this seems to be a system message about a tool call, not the user's actual question. The actual user question is "@src/juego/ciudades/batalla/ how to handle multiple action selections for the user. And also multiple selection for the AI of enemies"
+Wait, actually looking again at the user's message: "Called the Read tool with the following input..." — this seems to be a system message about a tool call, not the user's actual question. The actual user question is "@src/com.aiquest.juego/ciudades/batalla/ how to handle multiple action selections for the user. And also multiple selection for the AI of enemies"
 
 The "@" syntax and the casual English suggest this is from a code tool/context. The user is asking in English. I'll reply in English.
 
@@ -877,16 +877,16 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Combatiente.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Combatiente.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Combatiente.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Combatiente.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model;
 2: 
 3: public abstract class Combatiente {
 4: //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
@@ -966,16 +966,16 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Heroe.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Heroe.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Heroe.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Heroe.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model;
 2: 
 3: public class Heroe extends Combatiente {
 4: 
@@ -993,16 +993,16 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Enemigo.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Enemigo.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/Enemigo.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/Enemigo.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model;
 2: 
 3: public class Enemigo extends Combatiente {
 4: 	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
@@ -1036,20 +1036,20 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones/Atacar.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones/Atacar.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones/Atacar.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones/Atacar.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model.acciones;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model.acciones;
 2: 
-3: import com.aiquest.juego.ciudades.batalla.model.Accion;
-4: import com.aiquest.juego.ciudades.batalla.model.Combatiente;
-5: import com.aiquest.juego.ciudades.batalla.model.TipoAccion;
+3: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Accion;
+4: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Combatiente;
+5: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.TipoAccion;
 6: 
 7: public class Atacar extends Accion {
 8: 
@@ -1080,20 +1080,20 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones/Defender.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones/Defender.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/model/acciones/Defender.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/model/acciones/Defender.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.model.acciones;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.model.acciones;
 2: 
-3: import com.aiquest.juego.ciudades.batalla.model.Accion;
-4: import com.aiquest.juego.ciudades.batalla.model.Combatiente;
-5: import com.aiquest.juego.ciudades.batalla.model.TipoAccion;
+3: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Accion;
+4: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Combatiente;
+5: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.TipoAccion;
 6: 
 7: public class Defender extends Accion {
 8: 
@@ -1118,19 +1118,19 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/view/UiManager.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/view/UiManager.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/view/UiManager.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/view/UiManager.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.view;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.view;
 2: 
-3: import com.aiquest.juego.ciudades.batalla.model.Combatiente;
-4: import com.aiquest.juego.ciudades.batalla.model.Enemigo;
+3: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Combatiente;
+4: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Enemigo;
 5: 
 6: public class UiManager {
 7: 	public static void imprimirEstado(Combatiente p1, Combatiente p2) {
@@ -1166,26 +1166,26 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/Batalla.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/Batalla.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/Batalla.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/Batalla.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.controller;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.controller;
 2: 
-3: import com.aiquest.utils.Utils;
-4: import com.aiquest.estructuras.cola.Cola;
-5: import com.aiquest.estructuras.pilas.Pila;
-6: import com.aiquest.juego.ciudades.batalla.model.Accion;
-7: import com.aiquest.juego.ciudades.batalla.model.Enemigo;
-8: import com.aiquest.juego.ciudades.batalla.view.UiManager;
-9: import com.aiquest.juego.ciudades.batalla.model.Combatiente;
-10: import com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
-11: import com.aiquest.juego.ciudades.batalla.model.acciones.Defender;
+3: import com.aiquest.com.aiquest.utils.Utils;
+4: import com.aiquest.com.aiquest.estructuras.cola.Cola;
+5: import com.aiquest.com.aiquest.estructuras.pilas.Pila;
+6: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Accion;
+7: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Enemigo;
+8: import com.aiquest.com.aiquest.juego.ciudades.batalla.view.UiManager;
+9: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.Combatiente;
+10: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
+11: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.acciones.Defender;
 12: 
 13: import java.util.Scanner;
 14: 
@@ -1254,21 +1254,21 @@ Good call. Let me read what you've got so I'm not guessing.
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/CiudadBatalla.java"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/CiudadBatalla.java"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/juego/ciudades/batalla/controller/CiudadBatalla.java</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.juego/ciudades/batalla/controller/CiudadBatalla.java</path>
 <type>file</type>
 <content>
-1: package com.aiquest.juego.ciudades.batalla.controller;
+1: package com.aiquest.com.aiquest.juego.ciudades.batalla.controller;
 2: 
-3: import com.aiquest.estructuras.cola.Cola;
-4: import com.aiquest.estructuras.pilas.Pila;
-5: import com.aiquest.juego.ciudades.batalla.model.*;
-6: import com.aiquest.juego.ciudades.batalla.view.UiManager;
+3: import com.aiquest.com.aiquest.estructuras.cola.Cola;
+4: import com.aiquest.com.aiquest.estructuras.pilas.Pila;
+5: import com.aiquest.com.aiquest.juego.ciudades.batalla.model.*;
+6: import com.aiquest.com.aiquest.juego.ciudades.batalla.view.UiManager;
 7: 
 8: import java.util.List;
 9: import java.util.Scanner;
@@ -1432,48 +1432,48 @@ Let me peek at the data structures to use the right method names.
 ```json
 {
   "pattern": "**/*.java",
-  "path": "/home/fballerio/uba/Al-quest/src/estructuras"
+  "path": "/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras"
 }
 ```
 
 **Output:**
 ```
-/home/fballerio/uba/Al-quest/src/estructuras/vector/Vector.java
-/home/fballerio/uba/Al-quest/src/estructuras/pilas/PilaBasica.java
-/home/fballerio/uba/Al-quest/src/estructuras/pilas/Pila.java
-/home/fballerio/uba/Al-quest/src/estructuras/nodos/NodoSimplementeEnlazado.java
-/home/fballerio/uba/Al-quest/src/estructuras/nodos/NodoDoblementeEnlazado.java
-/home/fballerio/uba/Al-quest/src/estructuras/nodos/Nodo.java
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaSimplementeEnlazada.java
-/home/fballerio/uba/Al-quest/src/estructuras/hashing/HashTable.java
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaDoblementeEnlazada.java
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaConCursor.java
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaCircularSimplementeEnlazada.java
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaCircularDoblementeEnlazada.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/fordFulkerson/FordFulkerson.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/warshall/WarshallAlgorithm.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/floyd/AlgoritmoFloydMarshall.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/prim/Prim.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/ciclos/CicloHamiltoniano.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/kruskal/Kruskal.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/algoritmos/kruskal/Edge.java
-/home/fballerio/uba/Al-quest/src/estructuras/cola/ColaBasica.java
-/home/fballerio/uba/Al-quest/src/estructuras/cola/ColaConPrioridad.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/Grafo.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/Arista.java
-/home/fballerio/uba/Al-quest/src/estructuras/grafos/Vertice.java
-/home/fballerio/uba/Al-quest/src/estructuras/conjuntos/ConjuntoBasico.java
-/home/fballerio/uba/Al-quest/src/estructuras/conjuntos/Conjunto.java
-/home/fballerio/uba/Al-quest/src/estructuras/cola/Cola.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/NodoB.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/TestDeArbolAVL.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/NodoDeArbol.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/TestDeArbolBinarioDeBusqueda.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/ArbolBinarioDeBusqueda.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/ArbolBinario.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/ArbolAVL.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/NodoAVL.java
-/home/fballerio/uba/Al-quest/src/estructuras/arboles/ArbolBinarioHeap.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/vector/Vector.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/pilas/PilaBasica.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/pilas/Pila.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/nodos/NodoSimplementeEnlazado.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/nodos/NodoDoblementeEnlazado.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/nodos/Nodo.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaSimplementeEnlazada.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/hashing/HashTable.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaDoblementeEnlazada.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaConCursor.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaCircularSimplementeEnlazada.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaCircularDoblementeEnlazada.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/fordFulkerson/FordFulkerson.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/warshall/WarshallAlgorithm.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/floyd/AlgoritmoFloydMarshall.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/prim/Prim.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/ciclos/CicloHamiltoniano.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/kruskal/Kruskal.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/algoritmos/kruskal/Edge.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/cola/ColaBasica.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/cola/ColaConPrioridad.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/Grafo.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/Arista.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/grafos/Vertice.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/conjuntos/ConjuntoBasico.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/conjuntos/Conjunto.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/cola/Cola.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/NodoB.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/TestDeArbolAVL.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/NodoDeArbol.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/TestDeArbolBinarioDeBusqueda.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/ArbolBinarioDeBusqueda.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/ArbolBinario.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/ArbolAVL.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/NodoAVL.java
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/arboles/ArbolBinarioHeap.java
 ```
 
 ---
@@ -1486,14 +1486,14 @@ Let me peek at the data structures to use the right method names.
 ```json
 {
   "pattern": "public (void|boolean|Object|T) (push|pop|peek|offer|dequeue|isEmpty|size|add|remove)",
-  "path": "/home/fballerio/uba/Al-quest/src/estructuras/pilas/Pila.java"
+  "path": "/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/pilas/Pila.java"
 }
 ```
 
 **Output:**
 ```
 Found 20 matches
-/home/fballerio/uba/Al-quest/src/estructuras/pilas/Pila.java:
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/pilas/Pila.java:
   Line 25: 	public void push(T elemento) {
 
   Line 30: 	public T pop() {
@@ -1542,14 +1542,14 @@ Found 20 matches
 ```json
 {
   "pattern": "public (void|boolean|Object|T) (offer|dequeue|peek|isEmpty|size|add|remove)",
-  "path": "/home/fballerio/uba/Al-quest/src/estructuras/cola/Cola.java"
+  "path": "/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/cola/Cola.java"
 }
 ```
 
 **Output:**
 ```
 Found 8 matches
-/home/fballerio/uba/Al-quest/src/estructuras/cola/Cola.java:
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/cola/Cola.java:
   Line 24:     public boolean offer(T e) {
 
   Line 38:     public boolean add(T e) {
@@ -1928,14 +1928,14 @@ Let me check the Lista API so I use the right methods.
 ```json
 {
   "pattern": "public (void|boolean|Object|T|int) (add|remove|get|size|isEmpty|contains|iterator|addAll)",
-  "path": "/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaSimplementeEnlazada.java"
+  "path": "/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaSimplementeEnlazada.java"
 }
 ```
 
 **Output:**
 ```
 Found 17 matches
-/home/fballerio/uba/Al-quest/src/estructuras/listas/ListaSimplementeEnlazada.java:
+/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas/ListaSimplementeEnlazada.java:
   Line 175:     public boolean add(T elemento) {
 
   Line 185:     public void addLast(T elemento) {
@@ -1977,13 +1977,13 @@ Found 17 matches
 **Input:**
 ```json
 {
-  "filePath": "/home/fballerio/uba/Al-quest/src/estructuras/listas"
+  "filePath": "/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas"
 }
 ```
 
 **Output:**
 ```
-<path>/home/fballerio/uba/Al-quest/src/estructuras/listas</path>
+<path>/home/fballerio/uba/Al-quest/src/com.aiquest.estructuras/listas</path>
 <type>directory</type>
 <entries>
 ListaCircularDoblementeEnlazada.java
@@ -2192,7 +2192,7 @@ for (int i = 0; i < enemigos.size(); i++) turnos.offer(enemigos.get(i));
 new Batalla(scanner, heroe, enemigos, turnos).startCombat();
 ```
 
-Concepto: la **Lista** cambió el contrato — antes en 1v1 no la usábamos, era `[heroe, enemigo]` solo en la Cola. Ahora la Lista es la fuente de verdad ("¿quién está vivo?") y la Cola es solo el orden de atención. Cada vez que el `instanceof Enemigo` se muere, lo limpiamos de ambas estructuras.
+Concepto: la **Lista** cambió el contrato — antes en 1v1 no la usábamos, era `[heroe, enemigo]` solo en la Cola. Ahora la Lista es la fuente de verdad ("¿quién está vivo?") y la Cola es solo el orden de atención. Cada vez que el `instanceof Enemigo` se muere, lo limpiamos de ambas com.aiquest.estructuras.
 
 Para la IA enemiga seguimos con "siempre atacar al héroe" — cuando quieras meterle estrategia (atacar al de menos vida, defenderse si HP bajo, etc.) lo movemos a `e.decidirAccion(heroe, aliados)`. Pero eso es el paso 3. ¿Querés que sigamos por ahí o querés implementar y probar este paso primero?
 

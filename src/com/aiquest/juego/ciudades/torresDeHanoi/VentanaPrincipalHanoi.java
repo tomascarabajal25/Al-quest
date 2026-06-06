@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.aiquest.modelos.Jugador;
 /**
- * Clase que representa la interfaz gráfica principal para el com.aiquest.juego de las Torres de Hanoi.
+ * Clase que representa la interfaz gráfica principal para el com.aiquest.com.aiquest.juego de las Torres de Hanoi.
  * hereda jframe para la interacción con las pilas y las tablas (JTable).
  * @author Compiladores
  * @version 1.0
@@ -40,7 +40,7 @@ public class VentanaPrincipalHanoi extends JFrame {
 
     /**
      * Inicializa los componentes de la ventana, configura el diseño y 
-     * prepara los com.aiquest.modelos de las tablas.
+     * prepara los com.aiquest.com.aiquest.modelos de las tablas.
      * todo realizado con windowbuilder
      */
     public VentanaPrincipalHanoi() {
@@ -326,7 +326,7 @@ public class VentanaPrincipalHanoi extends JFrame {
 	} 
     
     /*
-     * inicia el com.aiquest.juego con la cantidad de discos establecidos
+     * inicia el com.aiquest.com.aiquest.juego con la cantidad de discos establecidos
      */
     private void iniciar() {
     	objetivo= Integer.parseInt(comboBoxDiscos.getSelectedItem().toString());
@@ -409,13 +409,13 @@ public class VentanaPrincipalHanoi extends JFrame {
 	}
 	
 	//GETTER SIMPLES-----------------------------------------------------------------
-	//retorna si el com.aiquest.juego fue iniciado o no
+	//retorna si el com.aiquest.com.aiquest.juego fue iniciado o no
 	public boolean getJuegoIniciado() {
 		return this.juegoIniciado;
 	}
 	
 	//SETTERS SIMPLES---------------------------------------------------------------
-	// cambia el estado del com.aiquest.juego iniciado
+	// cambia el estado del com.aiquest.com.aiquest.juego iniciado
 	private void setJuegoIniciado(boolean estado) {
 		this.juegoIniciado=estado;
 	}
