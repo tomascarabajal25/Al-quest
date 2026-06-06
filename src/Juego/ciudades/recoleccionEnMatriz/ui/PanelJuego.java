@@ -9,29 +9,52 @@ import modelos.Celda;
 import modelos.Elemento;
 import modelos.Jugador;
 import modelos.Mapa;
+import utils.ValidacionesUtiles;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Vector;
 
 public class PanelJuego extends JPanel {
-
-    private final CiudadRecoleccion juego;
-    private final int filas;
-    private final int columnas;
-    private final Map<String, BufferedImage> tileCache = new HashMap<>();
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private CiudadRecoleccion juego;
+    private int filas;
+    private int columnas;
+    private Map<String, BufferedImage> tileCache = new HashMap<>();
     private PanelHUD hud;
     private boolean mostrarMochila = false;
     private String mensajeTemp = null;
-
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
+    /**
+     * Constructor del TDA PanelJuego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     * -Filas y columnas deben ser mayores a cero
+     *
+     * @param juego: juego
+     * @param filas: filas del nivel
+     * @param columnas: columnas del nivel
+     */
     public PanelJuego(CiudadRecoleccion juego, int filas, int columnas) {
-        this.juego   = juego;
-        this.filas   = filas;
-        this.columnas = columnas;
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        ValidacionesUtiles.validarMayorACero(filas, "filas");
+        ValidacionesUtiles.validarMayorACero(columnas, "columnas");
 
-        setOpaque(true);  // ← agregá esto
+        setJuego(juego);
+        setFilas(filas);
+        setColumnas(columnas);
+
+        setOpaque(true);
         setBackground(Constantes.COLOR_FONDO);
 
         int ancho = columnas * Constantes.TILE_SIZE + Constantes.PADDING * 2;
@@ -40,7 +63,37 @@ public class PanelJuego extends JPanel {
 
         generarBitmaps();
     }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PanelJuego that = (PanelJuego) o;
+        return filas == that.filas && columnas == that.columnas && mostrarMochila == that.mostrarMochila && Objects.equals(juego, that.juego) && Objects.equals(tileCache, that.tileCache) && Objects.equals(hud, that.hud) && Objects.equals(mensajeTemp, that.mensajeTemp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(juego, filas, columnas, tileCache, hud, mostrarMochila, mensajeTemp);
+    }
+
+    @Override
+    public String toString() {
+        return "PanelJuego{" +
+                "juego=" + juego +
+                ", filas=" + filas +
+                ", columnas=" + columnas +
+                ", tileCache=" + tileCache +
+                ", hud=" + hud +
+                ", mostrarMochila=" + mostrarMochila +
+                ", mensajeTemp='" + mensajeTemp + '\'' +
+                '}';
+    }
+
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
     /**
      * Genera y cachea todos los bitmaps del juego.
      * Se llama una sola vez en el constructor.
@@ -53,7 +106,10 @@ public class PanelJuego extends JPanel {
         tileCache.put(Constantes.TILE_PUNTOS,  crearTilePuntos());
     }
 
-    /** Celda vacía: fondo oscuro con borde sutil */
+    /**
+     * Crea una imagen de celda vacia
+     * @return: Devuelve la imagen creada
+     */
     private BufferedImage crearTileVacio() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
@@ -65,7 +121,10 @@ public class PanelJuego extends JPanel {
         return img;
     }
 
-    /** Jugador: círculo verde con sombra */
+    /**
+     * Crea la imagen del jugador
+     * @return: Devuelve la imagen del jugador
+     */
     private BufferedImage crearTileJugador() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
@@ -81,10 +140,7 @@ public class PanelJuego extends JPanel {
         g.fillOval(5, 7, Constantes.TILE_SIZE - 8, Constantes.TILE_SIZE - 8);
 
         // Cuerpo del jugador
-        GradientPaint gp = new GradientPaint(
-                6, 6, Constantes.COLOR_JUGADOR.brighter(),
-                Constantes.TILE_SIZE - 6, Constantes.TILE_SIZE - 6, Constantes.COLOR_JUGADOR.darker()
-        );
+        GradientPaint gp = new GradientPaint(6, 6, Constantes.COLOR_JUGADOR.brighter(), Constantes.TILE_SIZE - 6, Constantes.TILE_SIZE - 6, Constantes.COLOR_JUGADOR.darker());
         g.setPaint(gp);
         g.fillOval(4, 4, Constantes.TILE_SIZE - 8, Constantes.TILE_SIZE - 8);
 
@@ -96,7 +152,10 @@ public class PanelJuego extends JPanel {
         return img;
     }
 
-    /** Carta Visión: ojo estilizado en azul */
+    /**
+     * Crea la imagen de la carta vision
+     * @return: Devuelve la imagen de la carta vision
+     */
     private BufferedImage crearTileVision() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
@@ -125,7 +184,10 @@ public class PanelJuego extends JPanel {
         return img;
     }
 
-    /** Carta Desplazamiento: rayo en amarillo */
+    /**
+     * Crea la imagen de la carta desplazamiento
+     * @return: Devuelve la imagen de la carta desplazamiento
+     */
     private BufferedImage crearTileDesplazamiento() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
@@ -148,7 +210,10 @@ public class PanelJuego extends JPanel {
         return img;
     }
 
-    /** Carta Puntos: estrella en rojo/dorado */
+    /**
+     * Crea la imagen de la carta puntos
+     * @return: Devuelve la imagen de la carta puntos
+     */
     private BufferedImage crearTilePuntos() {
         BufferedImage img = nuevaImagen();
         Graphics2D g = setup(img);
@@ -171,10 +236,14 @@ public class PanelJuego extends JPanel {
         return img;
     }
 
-    // -------------------------------------------------------------------------
-    // PINTADO PRINCIPAL
-    // -------------------------------------------------------------------------
-
+    /**
+     * Dibuja toda la imagen de la interfaz grafica utilizando los elementos previamente creados
+     *
+     * PRE:
+     * -g0 no debe ser nulo
+     *
+     * @param g0:
+     */
     @Override
     protected void paintComponent(Graphics g0) {
         super.paintComponent(g0);
@@ -213,22 +282,46 @@ public class PanelJuego extends JPanel {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // SUBCOMPONENTES DE PINTADO
-    // -------------------------------------------------------------------------
-
+    /**
+     * Dibuja el indicador de nivel
+     *
+     * PRE:
+     * -G no debe ser nulo
+     * -Nivel debe ser mayor a cero
+     *
+     * @param g:
+     * @param nivel: Nivel donde se encuentra el jugador
+     */
     private void dibujarBarraNivel(Graphics2D g, int nivel) {
+        ValidacionesUtiles.esDistintoDeNull(g, "g");
+        ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+
         g.setColor(new Color(40, 55, 85));
         g.fillRoundRect(Constantes.PADDING, 8, columnas * Constantes.TILE_SIZE, 26, 8, 8);
 
         g.setFont(new Font("Monospaced", Font.BOLD, 13));
         g.setColor(new Color(160, 200, 255));
-        String txt = "  NIVEL " + nivel + " / " + Constantes.NIVELES_MAPA
-                + "      [WASD] mover    [P] mochila";
+        String txt = "  NIVEL " + nivel + " / " + Constantes.NIVELES_MAPA + "      [WASD] mover    [P] mochila";
         g.drawString(txt, Constantes.PADDING + 8, 26);
     }
 
+    /**
+     * Dibuja el mapa de la interfaz grafica
+     *
+     * PRE:
+     * -G no debe ser nulo
+     * -NivelActual debe ser mayor a cero
+     * -PosJugador no debe ser nulo
+     *
+     * @param g:
+     * @param nivelActual: Nivel actual del jugador
+     * @param posJugador: Posicion actual del jugador
+     */
     private void dibujarMapa(Graphics2D g, int nivelActual, int[] posJugador) {
+        ValidacionesUtiles.esDistintoDeNull(g, "g");
+        ValidacionesUtiles.validarMayorACero(nivelActual, "nivelActual");
+        ValidacionesUtiles.esDistintoDeNull(posJugador, "posJugador");
+
         Mapa mapa = juego.getMapaNivel(nivelActual);
         if (mapa == null) return;
 
@@ -240,7 +333,6 @@ public class PanelJuego extends JPanel {
                 int px = Constantes.PADDING + (col - 1) * Constantes.TILE_SIZE;
                 int py = offsetY + (fila - 1) * Constantes.TILE_SIZE;
 
-                // Verificar si la celda está dentro del rango de visibilidad
                 boolean esVisible = Math.abs(fila - posJugador[0]) <= visibilidad
                         && Math.abs(col  - posJugador[1]) <= visibilidad;
 
@@ -263,15 +355,23 @@ public class PanelJuego extends JPanel {
         if (juego.getCartaDisponible() != null) {
             g.setFont(new Font("Monospaced", Font.BOLD, 13));
             g.setColor(new Color(255, 230, 100));
-            g.drawString("[E] Recoger: " + juego.getCartaDisponible().getNombre(),
-                    Constantes.PADDING + 10, offsetY + filas * Constantes.TILE_SIZE + 20);
+            g.drawString("[E] Recoger: " + juego.getCartaDisponible().getNombre(), Constantes.PADDING + 10, offsetY + filas * Constantes.TILE_SIZE + 20);
         }
     }
 
     /**
-     * Determina qué bitmap corresponde a cada celda.
+     * Verifica que contiene la celda
+     *
+     * PRE:
+     * -PosJugador no debe ser nulo
+     *
+     * @param celda: Celda que verifica
+     * @param posJugador: Posicion del jugador
+     * @return: Devuelve el tile correspondiente
      */
     private BufferedImage resolverTile(Celda<?> celda, int[] posJugador) {
+        ValidacionesUtiles.esDistintoDeNull(posJugador, "posJugador");
+
         if (celda == null) return tileCache.get(Constantes.TILE_VACIO);
 
         Object contenido = celda.getContenido();
@@ -284,8 +384,17 @@ public class PanelJuego extends JPanel {
         return tileCache.get(Constantes.TILE_VACIO);
     }
 
+    /**
+     * Dibuja el panel de la mochila
+     *
+     * PRE:
+     * -G no debe ser nulo
+     *
+     * @param g:
+     */
     private void dibujarPanelMochila(Graphics2D g) {
-        // Fondo semi-transparente
+        ValidacionesUtiles.esDistintoDeNull(g, "g");
+
         g.setColor(Constantes.COLOR_MOCHILA_FONDO);
         g.fillRoundRect(Constantes.PADDING + 20, Constantes.PADDING + 50, columnas * Constantes.TILE_SIZE - 40, 160, 12, 12);
 
@@ -312,7 +421,20 @@ public class PanelJuego extends JPanel {
         g.drawString("[1-3] usar carta    [Q] cerrar", Constantes.PADDING + 40, Constantes.PADDING + 200);
     }
 
+    /**
+     * Dibuja mensaje inferior, como cuando se encuentra una carta
+     *
+     * PRE:
+     * -G no debe ser nulo
+     * -Msg no debe ser nulo
+     *
+     * @param g:
+     * @param msg: Mensaje a mostrar
+     */
     private void dibujarMensaje(Graphics2D g, String msg) {
+        ValidacionesUtiles.esDistintoDeNull(g, "g");
+        ValidacionesUtiles.esDistintoDeNull(msg, "msg");
+
         g.setFont(new Font("Monospaced", Font.BOLD, 13));
         g.setColor(new Color(0, 0, 0, 150));
         g.fillRoundRect(Constantes.PADDING + 10, getHeight() - 50, columnas * Constantes.TILE_SIZE - 20, 30, 8, 8);
@@ -320,7 +442,17 @@ public class PanelJuego extends JPanel {
         g.drawString(msg, Constantes.PADDING + 20, getHeight() - 30);
     }
 
+    /**
+     * Dibuja el mensaje de final
+     *
+     * PRE:
+     * -G no debe ser nulo
+     *
+     * @param g:
+     */
     private void dibujarPantallaFin(Graphics2D g) {
+        ValidacionesUtiles.esDistintoDeNull(g, "g");
+
         g.setColor(new Color(0, 0, 0, 160));
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setFont(new Font("Monospaced", Font.BOLD, 22));
@@ -330,22 +462,52 @@ public class PanelJuego extends JPanel {
         g.drawString(txt, (getWidth() - fm.stringWidth(txt)) / 2, getHeight() / 2);
     }
 
-    // -------------------------------------------------------------------------
-    // UTILIDADES
-    // -------------------------------------------------------------------------
-
+    /**
+     * Crea una nueva imagen
+     * @return: Devuelve la imagen cerada
+     */
     private BufferedImage nuevaImagen() {
         return new BufferedImage(Constantes.TILE_SIZE, Constantes.TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
     }
 
+    /**
+     * Setea para dibujar la imagen
+     *
+     * PRE:
+     * -Img no debe ser nulo
+     *
+     * @param img:
+     * @return: Devuelve el objeto g, que permite dibujar la imagen
+     */
     private Graphics2D setup(BufferedImage img) {
+        ValidacionesUtiles.esDistintoDeNull(img, "img");
+
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         return g;
     }
 
-    /** Genera un polígono de estrella de N puntas */
+    /**
+     * Crea la estrella asociada a la carta puntos
+     *
+     * PRE:
+     * -Los parametros no deben ser menores a cero
+     * -Puntas debe ser mayor a cero
+     *
+     * @param cx
+     * @param cy
+     * @param rExt
+     * @param rInt
+     * @param puntas
+     * @return: Devuelve el poligono con forma de estrella
+     */
     private Polygon crearEstrella(int cx, int cy, int rExt, int rInt, int puntas) {
+        ValidacionesUtiles.validarMayorOIgualACero(cx, "cx");
+        ValidacionesUtiles.validarMayorOIgualACero(cy, "cy");
+        ValidacionesUtiles.validarMayorOIgualACero(rExt, "rExt");
+        ValidacionesUtiles.validarMayorOIgualACero(rInt, "rInt");
+        ValidacionesUtiles.validarMayorACero(puntas, "puntas");
+
         Polygon p = new Polygon();
         double paso = Math.PI / puntas;
         for (int i = 0; i < 2 * puntas; i++) {
@@ -356,12 +518,147 @@ public class PanelJuego extends JPanel {
         return p;
     }
 
-    // -------------------------------------------------------------------------
-    // GETTERS / SETTERS USADOS POR GameWindow
-    // -------------------------------------------------------------------------
+    /**
+     * Muestra un mensaje y forza a que la interfaz se redibuje
+     *
+     * PRE:
+     * -Msg no debe ser nulo
+     *
+     * @param msg:
+     */
+    public void mostrarMensaje(String msg){
+        ValidacionesUtiles.esDistintoDeNull(msg, "msg");
+        this.mensajeTemp = msg; repaint();
+    }
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
 
-    public void setHUD(PanelHUD hud)               { this.hud = hud; }
-    public PanelHUD getHUD()                        { return hud; }
-    public void setMostrarMochila(boolean v)        { this.mostrarMochila = v; }
-    public void mostrarMensaje(String msg)          { this.mensajeTemp = msg; repaint(); }
+    /**
+     * Getter del atributo juego
+     * @return: Devuelve juego
+     */
+    public CiudadRecoleccion getJuego() {
+        return this.juego;
+    }
+
+    /**
+     * Getter del atributo filas
+     * @return: Devuelve filas
+     */
+    public int getFilas() {
+        return this.filas;
+    }
+
+    /**
+     * Getter del atributo columnas
+     * @return: Devuelve columnas
+     */
+    public int getColumnas() {
+        return this.columnas;
+    }
+
+    /**
+     * Getter del atributo tileCache
+     * @return: devuelve el hashmap
+     */
+    public Map<String, BufferedImage> getTileCache() {
+        return this.tileCache;
+    }
+
+    /**
+     * Getter del atributo hud
+     * @return: Devuelve el PanelHUD de hud
+     */
+    public PanelHUD getHUD(){
+        return this.hud;
+    }
+
+    /**
+     * Getter del atributo mostrarMochila
+     * @return: Devuelve el estado del atributo (true o false)
+     */
+    public boolean isMostrarMochila() {
+        return this.mostrarMochila;
+    }
+
+    /**
+     * Getter del atributo mensajeTemp
+     * @return: Devuelve el string del atributo
+     */
+    public String getMensajeTemp() {
+        return this.mensajeTemp;
+    }
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Setter del atributo juego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     *
+     * @param juego: juego de la ciudad
+     */
+    private void setJuego(CiudadRecoleccion juego) {
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        this.juego = juego;
+    }
+
+    /**
+     * Setter del atributo filas
+     *
+     * PRE:
+     * -Filas debe ser mayor a cero
+     *
+     * @param filas: filas del nivel
+     */
+    private void setFilas(int filas) {
+        ValidacionesUtiles.validarMayorACero(filas, "filas");
+        this.filas = filas;
+    }
+
+    /**
+     * Setter del atributo columnas
+     *
+     * PRE:
+     * -Columnas debe ser mayor a cero
+     *
+     * @param columnas: filas del nivel
+     */
+    private void setColumnas(int columnas) {
+        ValidacionesUtiles.validarMayorACero(columnas, "columnas");
+        this.columnas = columnas;
+    }
+
+    /**
+     * Setter del atributo hud
+     *
+     * PRE:
+     * -Hud no debe ser nulo
+     *
+     * @param hud:
+     */
+    public void setHUD(PanelHUD hud) {
+        ValidacionesUtiles.esDistintoDeNull(hud, "hud");
+        this.hud = hud;
+    }
+
+
+    /**
+     * Setter del atributo mostrarMochila
+     *
+     * PRE:
+     * -V no debe ser nulo
+     *
+     * @param v:
+     */
+    public void setMostrarMochila(boolean v){
+        ValidacionesUtiles.esDistintoDeNull(v, "v");
+        this.mostrarMochila = v;
+    }
+
+
 }

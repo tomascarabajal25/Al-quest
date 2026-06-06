@@ -19,7 +19,7 @@ public class PanelHUD extends JPanel {
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
     /**
-     *
+     * Constructor del TDA PanelHUD
      * @param juego
      */
     public PanelHUD(CiudadRecoleccion juego) {
@@ -37,18 +37,18 @@ public class PanelHUD extends JPanel {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PanelHUD panelHUD = (PanelHUD) o;
-        return Objects.equals(juego, panelHUD.juego);
+        return Objects.equals(this.juego, panelHUD.juego);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(juego);
+        return Objects.hashCode(this.juego);
     }
 
     @Override
     public String toString() {
         return "PanelHUD{" +
-                "juego=" + juego +
+                "juego=" + this.juego +
                 '}';
     }
 
@@ -270,9 +270,9 @@ public class PanelHUD extends JPanel {
      * @return
      */
     private String nivelTexto() {
-        int[] pos = juego.getPosicionJugador();
+        int[] pos = this.juego.getPosicionJugador();
         if (pos == null) return "?";
-        return pos[2] + " / " + juego.getNiveles();
+        return pos[2] + " / " + this.juego.getNiveles();
     }
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
@@ -286,7 +286,7 @@ public class PanelHUD extends JPanel {
      * @return: Devuelve el atributo juego
      */
     public CiudadRecoleccion getJuego() {
-        return juego;
+        return this.juego;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
