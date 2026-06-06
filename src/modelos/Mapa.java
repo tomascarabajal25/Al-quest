@@ -123,7 +123,7 @@ public class Mapa {
     public void validarFueraDeRango(int ancho, int alto) {
         ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
         ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
-        if (ancho >= this.celdas.getLongitud() || alto >= this.celdas.obtener(1).getLongitud()) {
+        if (ancho > this.celdas.getLongitud() || alto > this.celdas.obtener(1).getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }
@@ -225,8 +225,9 @@ public class Mapa {
         ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
         for (int i = 1; i <= this.celdas.getLongitud(); i++) {
             for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
-                if (contenido.equals(this.celdas.obtener(i).obtener(j).getContenido())){
-                    return this.celdas.obtener(i).obtener(j);
+                Celda<?> celda = this.celdas.obtener(i).obtener(j);
+                if (celda != null && Objects.equals(celda.getContenido(), contenido)) { // ← getContenido()
+                    return celda;
                 }
             }
         }
@@ -247,10 +248,10 @@ public class Mapa {
         int[] posicion = new int[2];
         for (int i = 1; i <= this.celdas.getLongitud(); i++) {
             for (int j = 1; j <= this.celdas.obtener(i).getLongitud(); j++) {
-                if(this.celdas.obtener(i).obtener(j).equals(contenido)){
+                Celda<?> celda = this.celdas.obtener(i).obtener(j);
+                if (celda != null && Objects.equals(celda.getContenido(), contenido)) { // ← getContenido()
                     posicion[0] = i;
                     posicion[1] = j;
-
                     return posicion;
                 }
             }

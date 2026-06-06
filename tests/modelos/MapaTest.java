@@ -1,4 +1,4 @@
-package tests.modelos;
+package modelos;
 
 import estructuras.vector.Vector;
 import org.junit.jupiter.api.Test;

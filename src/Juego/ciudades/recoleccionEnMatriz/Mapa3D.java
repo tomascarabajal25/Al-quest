@@ -6,6 +6,8 @@ import estructuras.vector.Vector;
 import modelos.Celda;
 import modelos.Mapa;
 
+import java.util.Objects;
+
 public class Mapa3D {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
@@ -27,6 +29,26 @@ public class Mapa3D {
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Mapa3D mapa3D = (Mapa3D) o;
+        return niveles == mapa3D.niveles && Objects.equals(mapa, mapa3D.mapa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mapa, niveles);
+    }
+
+    @Override
+    public String toString() {
+        return "Mapa3D{" +
+                "mapa=" + mapa +
+                ", niveles=" + niveles +
+                '}';
+    }
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
@@ -82,7 +104,7 @@ public class Mapa3D {
         ValidacionesUtiles.validarMayorACero(columna, "columna");
         ValidacionesUtiles.validarMayorACero(niveles, "nivel");
 
-        this.mapa.obtener(0).validarFueraDeRango(fila, columna);
+        this.mapa.obtener(1).validarFueraDeRango(fila, columna);
         if (niveles > this.mapa.getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
@@ -168,9 +190,12 @@ public class Mapa3D {
         ValidacionesUtiles.validarMayorACero(columnas, "columnas");
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
 
-        for (int i = 0; i < niveles; i++) {
+        Mapa mapaInicial = new Mapa(filas, columnas);
+        this.mapa = new Vector<>(niveles, mapaInicial);
+
+        for (int i = 1; i <= niveles; i++) {
             Mapa mapaAux = new Mapa(filas, columnas);
-            this.mapa.agregar(mapaAux);
+            this.mapa.agregar(i, mapaAux);
         }
     }
 

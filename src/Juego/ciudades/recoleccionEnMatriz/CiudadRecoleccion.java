@@ -6,6 +6,8 @@ import Juego.Constantes;
 
 import estructuras.vector.Vector;
 
+import java.util.Objects;
+
 public class CiudadRecoleccion {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
@@ -18,9 +20,11 @@ public class CiudadRecoleccion {
     private Jugador jugador = null;
 
     private EstadoDeJuego estado = null;
+    private Elemento cartaDisponible = null;
     private int desplazamiento;
     private int visibilidad;
     private int puntos;
+    private String ultimoMensaje = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
@@ -53,14 +57,48 @@ public class CiudadRecoleccion {
         setVisibilidad(Constantes.VISIBILIDAD_INICIAL);
         setPuntos(Constantes.PUNTOS_INICIALES_PARTIDA);
         iniciar();
-
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+    /**
+     * Metodo equals del TDA CiudadRecoleccion.
+     * @param o   the reference object with which to compare.
+     * @return: true si son iguales, false si no lo son.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CiudadRecoleccion that = (CiudadRecoleccion) o;
+        return desplazamiento == that.desplazamiento && visibilidad == that.visibilidad && Objects.equals(mapa, that.mapa) && Objects.equals(mochila, that.mochila) && Objects.equals(elementos, that.elementos) && Objects.equals(jugador, that.jugador);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mapa, mochila, elementos, jugador, desplazamiento, visibilidad);
+    }
+
+    @Override
+    public String toString() {
+        return "CiudadRecoleccion{" +
+                "mapa=" + mapa +
+                ", mochila=" + mochila +
+                ", elementos=" + elementos +
+                ", jugador=" + jugador +
+                ", estado=" + estado +
+                ", cartaDisponible=" + cartaDisponible +
+                ", desplazamiento=" + desplazamiento +
+                ", visibilidad=" + visibilidad +
+                ", puntos=" + puntos +
+                ", ultimoMensaje='" + ultimoMensaje + '\'' +
+                '}';
+    }
+
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
     /**
      * Establece los recursos en su estado inicial para comenzar el juego
      */
@@ -68,23 +106,6 @@ public class CiudadRecoleccion {
         ubicarElementosEnMapa();
         ubicarJugadorEnMapa(1, 1, 1);
         setEstado(EstadoDeJuego.COMENZADO);
-        comenzarJuego();
-    }
-
-    /**
-     *Comienza el juego
-     */
-    public void comenzarJuego() {
-        while (this.estado == EstadoDeJuego.COMENZADO) {
-            VistaCiudadRecoleccion.imprimirInterfaz(this.mapa, this.mochila, this.elementos, this.jugador, this.puntos, this.visibilidad);
-            char opcion = VistaCiudadRecoleccion.ingresarCaracter();
-            try{
-                llamarRutina(opcion);
-            }
-            catch(RuntimeException e){
-                System.out.println(e.getMessage());
-            }
-        }
     }
 
     /**
@@ -100,9 +121,9 @@ public class CiudadRecoleccion {
      * Ubica los elementos carta dentro del mapa
      */
     public void ubicarElementosEnMapa() {
-        this.mapa.ocuparCelda(this.elementos.obtener(1), 5, 3, 1);
-        this.mapa.ocuparCelda(this.elementos.obtener(2), 2, 9, 2);
-        this.mapa.ocuparCelda(this.elementos.obtener(3), 1, 5, 3);
+        this.mapa.ocuparCelda(this.elementos.obtener(1), 13, 15, 1);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 17, 30, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(3), 18, 4, 3);
     }
 
     /**
@@ -114,32 +135,6 @@ public class CiudadRecoleccion {
     public void ubicarJugadorEnMapa(int fila, int columna, int nivel) {
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
         this.mapa.ocuparCelda(this.jugador, fila, columna, nivel);
-    }
-
-    /**
-     * Llama a la rutina correspondiente a la tecla ingresada
-     *
-     * PRE:
-     * -Opcion debe ser distinto de null
-     *
-     * @param opcion: opcion ingreswada por el usuario
-     */
-    public void llamarRutina(char opcion) {
-        char teclaMayuscula = Character.toUpperCase(opcion);
-
-        switch (opcion) {
-            case 'W', 'S', 'A', 'D':
-                moverJugador(opcion);
-                break;
-            case 'P':
-                VistaCiudadRecoleccion.imprimirMochila(this.mochila, this.elementos);
-                if (Character.isDigit(opcion)) {
-                    int nuevaOpcion = opcion - '0';
-                    usarCartaMochila(nuevaOpcion);
-                } else if (opcion == 'Q' || opcion == 'q') {
-                    return;
-                }
-        }
     }
 
     /**
@@ -157,27 +152,25 @@ public class CiudadRecoleccion {
         int nuevaFilaJugador = posicionJugador[0];
         int nuevaColumnaJugador = posicionJugador[1];
 
-        switch (opcion){
+        switch (opcion) {
             case 'W':
                 nuevaFilaJugador -= desplazamiento;
                 break;
-
             case 'S':
                 nuevaFilaJugador += desplazamiento;
                 break;
-
             case 'A':
                 nuevaColumnaJugador -= desplazamiento;
                 break;
-
             case 'D':
                 nuevaColumnaJugador += desplazamiento;
                 break;
         }
 
-        //Verifica que, cuando el desplazamiento es mayor a 1, el jugador no quede en una posicion fuera de rango con un movimiento
+        // Verifica que, cuando el desplazamiento es mayor a 1, el jugador no quede
+        // en una posicion fuera de rango con un movimiento
         Mapa nivelActual = this.mapa.getNivel(posicionJugador[2]);
-        nuevaFilaJugador = Math.max(1, Math.min(nuevaFilaJugador, nivelActual.getAncho()));
+        nuevaFilaJugador    = Math.max(1, Math.min(nuevaFilaJugador,    nivelActual.getAncho()));
         nuevaColumnaJugador = Math.max(1, Math.min(nuevaColumnaJugador, nivelActual.getAlto()));
 
         moverJugadorEnMapa(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
@@ -199,7 +192,42 @@ public class CiudadRecoleccion {
         ValidacionesUtiles.validarMayorACero(columna, "columna");
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
 
+        // Verificar si la celda destino tiene una carta
+        Celda<?> celdaDestino = this.mapa.getNivel(nivel).getCeldaConPosicion(fila, columna);
+        if (celdaDestino != null && celdaDestino.getContenido() instanceof Elemento) {
+            return; // no se mueve, la carta bloquea el paso
+        }
+
+        // Borrar jugador de la posición anterior
+        int[] posAnterior = this.mapa.getPosicionCeldaConContenido(this.jugador);
+        if (posAnterior != null) {
+            this.mapa.VaciarCelda(posAnterior[0], posAnterior[1], posAnterior[2]);
+        }
+
         ubicarJugadorEnMapa(fila, columna, nivel);
+    }
+
+    public void recogerCarta() {
+        if (this.cartaDisponible == null) return;
+
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
+
+        // Vaciar la celda de la carta
+        int[] posCarta = this.mapa.getPosicionCeldaConContenido(this.cartaDisponible);
+        if (posCarta != null) {
+            this.mapa.VaciarCelda(posCarta[0], posCarta[1], posCarta[2]);
+        }
+
+        procesarCarta(this.cartaDisponible);
+        this.mochila.agregarElemento(this.cartaDisponible);
+        sumarPuntosCarta(posicionJugador);
+        validarMochila();
+
+        if (posicionJugador[2] < 3) {
+            moverJugadorEnMapa(1, 1, posicionJugador[2] + 1);
+        }
+
+        this.cartaDisponible = null;
     }
 
     /**
@@ -213,7 +241,7 @@ public class CiudadRecoleccion {
     public void usarCartaMochila(int opcion) {
         ValidacionesUtiles.validarMayorACero(opcion, "opcion");
 
-        if(opcion > mochila.getCantidadElementos()){
+        if (opcion > mochila.getCantidadElementos()) {
             throw new RuntimeException("No existe esa carta");
         }
 
@@ -222,11 +250,16 @@ public class CiudadRecoleccion {
         this.mochila.eliminarElemento(carta);
     }
 
-    private void sumarPuntosCarta(int[] posicionJugador){
-        if (posicionJugador[2] == 1){
+    /**
+     * Suma los puntos correspondientes segun el nivel donde se encontro la carta
+     *
+     * @param posicionJugador: Posicion actual del jugador [fila, columna, nivel]
+     */
+    private void sumarPuntosCarta(int[] posicionJugador) {
+        if (posicionJugador[2] == 1) {
             sumarPuntosVision(Constantes.PUNTAJE_VISIBILIDAD);
         }
-        if (posicionJugador[2] == 2){
+        if (posicionJugador[2] == 2) {
             sumarPuntosDesplazamiento(Constantes.PUNTAJE_DESPLAZAMIENTO);
         }
     }
@@ -237,6 +270,7 @@ public class CiudadRecoleccion {
     public void aumentarVision() {
         this.visibilidad += Constantes.CANTIDAD_AUMENTO_VISIBILIDAD;
     }
+
     /**
      * Suma los puntos de la carta visibilidad al encontrarla
      *
@@ -256,6 +290,7 @@ public class CiudadRecoleccion {
     public void aumentardesplazamiento() {
         this.desplazamiento += Constantes.CANTIDAD_AUMENTO_DESPLAZAMIENTO;
     }
+
     /**
      * Suma los puntos de la carta desplazamiento al encontrarla
      *
@@ -274,36 +309,35 @@ public class CiudadRecoleccion {
      */
     public void aumentarPuntos() {
         setPuntos(this.puntos * Constantes.CANTIDAD_AUMENTO_PUNTOS);
-
     }
 
-
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+
     /**
      * Verifica si el jugador se cruzo con alguna carta en el mapa
      */
     public void verificarCartasVecinas() {
-        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
-        Vector<Vector<Celda<?>>> vecinos = this.mapa.getNivel(posicionJugador[2]).getCeldasVecinasRespectoPosicion(posicionJugador[0],  posicionJugador[1], this.visibilidad);
+        this.cartaDisponible = null; // resetear cada vez que se mueve
 
-        for (int i = 0; i < vecinos.getLongitud(); i++ ){
-            for (int j = 0; j < vecinos.obtener(i).getLongitud(); j++){
-                if (vecinos.obtener(i).obtener(j).getContenido() instanceof Elemento) {
-                    Elemento carta = ((Elemento) vecinos.obtener(i).obtener(j).getContenido());
-                    procesarCarta(carta);
-                    this.mochila.agregarElemento(carta);
-                    sumarPuntosCarta(posicionJugador);
-                    validarMochila();
-                    if (posicionJugador[2] <= 3){
-                        ubicarJugadorEnMapa(1, 1, posicionJugador[2]+1);
-                    }
+        int[] posicionJugador = this.mapa.getPosicionCeldaConContenido(this.jugador);
+        // Siempre buscar adyacentes con distancia 1, independientemente de visibilidad
+        Vector<Vector<Celda<?>>> adyacentes = this.mapa.getNivel(posicionJugador[2])
+                .getCeldasVecinasRespectoPosicion(posicionJugador[0], posicionJugador[1], 1);
+
+        for (int i = 1; i <= adyacentes.getLongitud(); i++) {
+            for (int j = 1; j <= adyacentes.obtener(i).getLongitud(); j++) {
+                Celda<?> celda = adyacentes.obtener(i).obtener(j);
+                if (celda != null && celda.getContenido() instanceof Elemento) {
+                    this.cartaDisponible = (Elemento) celda.getContenido();
+                    return; // con encontrar una alcanza
                 }
             }
         }
     }
 
     /**
-     * Procesa la carta y verifica a que TDA carta pertenece
+     * Procesa la carta, identifica su tipo y guarda el mensaje
+     * correspondiente para que la GUI lo muestre.
      *
      * PRE:
      * -La carta no debe ser null
@@ -314,32 +348,123 @@ public class CiudadRecoleccion {
         ValidacionesUtiles.esDistintoDeNull(carta, "carta");
 
         if (carta instanceof CartaVision cartaV) {
-            VistaCiudadRecoleccion.cartaEncontrada(cartaV.getNombre(), cartaV.getDescripcion());
+            this.ultimoMensaje = "¡Carta encontrada! " + cartaV.getNombre() + " - " + cartaV.getDescripcion();
         }
-
         else if (carta instanceof CartaDesplazamiento cartaD) {
-            VistaCiudadRecoleccion.cartaEncontrada(cartaD.getNombre(), cartaD.getDescripcion());
+            this.ultimoMensaje = "¡Carta encontrada! " + cartaD.getNombre() + " - " + cartaD.getDescripcion();
         }
-
         else if (carta instanceof CartaPuntos cartaP) {
-            VistaCiudadRecoleccion.cartaEncontrada(cartaP.getNombre(), cartaP.getDescripcion());
-
+            this.ultimoMensaje = "¡Carta encontrada! " + cartaP.getNombre() + " - " + cartaP.getDescripcion();
         }
     }
 
     /**
-     *Valida si mochila guarda tres elementos
+     * Valida si la mochila contiene la Carta Puntos y finaliza el juego
      */
-    public void validarMochila(){
-        if (this.mochila.getElementoPorNombre("Carta Puntos") != null){
+    public void validarMochila() {
+        if (this.mochila.getElementoPorNombre("Carta Puntos") != null) {
             this.mochila.getElementoPorNombre("Carta Puntos").aplicarEfecto(this);
             setEstado(EstadoDeJuego.FINALIZADO);
         }
     }
+
+    /**
+     * Limpia el ultimo mensaje para que no se muestre dos veces.
+     */
+    public void limpiarUltimoMensaje() {
+        this.ultimoMensaje = null;
+    }
+
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Devuelve la posicion actual del jugador en el mapa 3D.
+     * [0]=fila, [1]=columna, [2]=nivel
+     *
+     * @return int[3] con la posicion, o null si no se encontro
+     */
+    public int[] getPosicionJugador() {
+        return this.mapa.getPosicionCeldaConContenido(this.jugador);
+    }
+
+    /**
+     * Devuelve el Mapa (2D) correspondiente a un nivel dado.
+     *
+     * @param nivel nivel a obtener (1-based)
+     * @return Mapa del nivel
+     */
+    public modelos.Mapa getMapaNivel(int nivel) {
+        return this.mapa.getNivel(nivel);
+    }
+
+    /**
+     * Devuelve los puntos actuales del juego.
+     */
+    public int getPuntos() {
+        return this.puntos;
+    }
+
+    /**
+     * Devuelve la visibilidad actual del jugador.
+     */
+    public int getVisibilidad() {
+        return this.visibilidad;
+    }
+
+    /**
+     * Devuelve el desplazamiento actual del jugador.
+     */
+    public int getDesplazamiento() {
+        return this.desplazamiento;
+    }
+
+    /**
+     * Devuelve la cantidad de niveles del mapa.
+     */
+    public int getNiveles() {
+        return this.mapa.getNiveles();
+    }
+
+    /**
+     * Devuelve true si el juego esta en estado FINALIZADO.
+     */
+    public boolean estaFinalizado() {
+        return this.estado == EstadoDeJuego.FINALIZADO;
+    }
+
+    /**
+     * Devuelve los elementos actualmente en la mochila.
+     *
+     * @return ListaSimplementeEnlazada con los elementos de la mochila
+     */
+    public estructuras.listas.ListaSimplementeEnlazada<modelos.Elemento> getItemsMochila() {
+        return this.mochila.getElementos();
+    }
+
+    /**
+     * Devuelve la carta disponible para guardar en la mochila
+     *
+     * @return: Carta disponible en el mapa
+     */
+    public Elemento getCartaDisponible() {
+        return this.cartaDisponible;
+    }
+
+    /**
+     * Devuelve el ultimo mensaje generado por procesarCarta().
+     * La GUI lo consume y lo muestra en pantalla.
+     * Despues de leerlo se recomienda llamar a limpiarUltimoMensaje().
+     *
+     * @return String con el mensaje, o null si no hay mensaje pendiente
+     */
+    public String getUltimoMensaje() {
+        return this.ultimoMensaje;
+    }
+
+
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 
@@ -353,7 +478,7 @@ public class CiudadRecoleccion {
      * @param columnas: Columnas del mapa
      * @param niveles: Niveles del mapa
      */
-    private void setMapa(int filas, int columnas, int niveles){
+    private void setMapa(int filas, int columnas, int niveles) {
         ValidacionesUtiles.validarMayorACero(filas, "filas");
         ValidacionesUtiles.validarMayorACero(columnas, "columnas");
         ValidacionesUtiles.validarMayorACero(niveles, "niveles");
@@ -368,7 +493,7 @@ public class CiudadRecoleccion {
      *
      * @param maximoMochila: Cantidad de elementos que guardara la mochila
      */
-    private void setMochila(int maximoMochila){
+    private void setMochila(int maximoMochila) {
         ValidacionesUtiles.validarMayorACero(maximoMochila, "maximoMochila");
         mochila = new Mochila(maximoMochila);
     }
@@ -381,7 +506,7 @@ public class CiudadRecoleccion {
      *
      * @param jugador: Jugador de la ciudad
      */
-    private void setJugador(Jugador jugador){
+    private void setJugador(Jugador jugador) {
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
         this.jugador = jugador;
     }
@@ -395,17 +520,25 @@ public class CiudadRecoleccion {
      *
      * @param maximo: Cantidad de elementos que guardara la mochila
      */
-    private void setElementos(int maximo){
+    private void setElementos(int maximo) {
         ValidacionesUtiles.validarMayorACero(maximo, "maximo");
 
-        CartaVision cartaVision = new CartaVision("Carta Vision", "Esta carta tiene el efecto de aumentar la visibilidad en una celda", 5000);
-        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento("Carta Desplazamiento", "Esta carta tiene el efecto de aumentar el desplazamiento en una celda",2000);
-        CartaPuntos cartaPuntos = new CartaPuntos("Carta Puntos", "Esta carta tiene el efecto de aumentar exponencialmente los puntos");
+        CartaVision cartaVision = new CartaVision(
+                "Carta Vision",
+                "Esta carta tiene el efecto de aumentar la visibilidad en una celda",
+                5000);
+        CartaDesplazamiento cartaDesplazamiento = new CartaDesplazamiento(
+                "Carta Desplazamiento",
+                "Esta carta tiene el efecto de aumentar el desplazamiento en una celda",
+                2000);
+        CartaPuntos cartaPuntos = new CartaPuntos(
+                "Carta Puntos",
+                "Esta carta tiene el efecto de aumentar exponencialmente los puntos");
 
-        this.elementos = new Vector<>(maximo, cartaVision);
-        this.elementos.agregar(cartaDesplazamiento);
-        this.elementos.agregar(cartaPuntos);
-
+        this.elementos = new Vector<>(3, null);          // datoInicial = null
+        this.elementos.agregar(1, cartaVision);           // posición 1 → CartaVision
+        this.elementos.agregar(2, cartaDesplazamiento);   // posición 2 → CartaDesplazamiento
+        this.elementos.agregar(3, cartaPuntos);           // posición 3 → CartaPuntos
     }
 
     /**
@@ -414,7 +547,7 @@ public class CiudadRecoleccion {
      * PRE:
      * -El desplazamiento debe ser mayor a cero
      */
-    private void setDesplazamiento(int desplazamiento){
+    private void setDesplazamiento(int desplazamiento) {
         ValidacionesUtiles.validarMayorACero(desplazamiento, "desplazamiento");
         this.desplazamiento = desplazamiento;
     }
@@ -425,7 +558,7 @@ public class CiudadRecoleccion {
      * PRE:
      * -La visibilidad debe ser mayor a cero
      */
-    private void setVisibilidad(int visibilidad){
+    private void setVisibilidad(int visibilidad) {
         ValidacionesUtiles.validarMayorACero(visibilidad, "visibilidad");
         this.visibilidad = visibilidad;
     }
@@ -436,11 +569,10 @@ public class CiudadRecoleccion {
      * PRE:
      * -Puntos debe ser mayor o igual a cero
      */
-    private void setPuntos(int puntos){
+    private void setPuntos(int puntos) {
         ValidacionesUtiles.validarMayorOIgualACero(puntos, "puntos");
         this.puntos = puntos;
     }
-
 
     /**
      * Setter del atributo estado
@@ -448,7 +580,7 @@ public class CiudadRecoleccion {
      * PRE:
      * -Estado no debe ser null
      */
-    private void setEstado(EstadoDeJuego estado){
+    private void setEstado(EstadoDeJuego estado) {
         ValidacionesUtiles.esDistintoDeNull(estado, "estado");
         this.estado = estado;
     }

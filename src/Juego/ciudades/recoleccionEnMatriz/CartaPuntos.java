@@ -3,6 +3,8 @@ package Juego.ciudades.recoleccionEnMatriz;
 import modelos.Elemento;
 import utils.ValidacionesUtiles;
 
+import java.util.Objects;
+
 public class CartaPuntos extends Elemento {
 //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
@@ -31,6 +33,20 @@ public class CartaPuntos extends Elemento {
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
     //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CartaPuntos that = (CartaPuntos) o;
+        return Objects.equals(descripcion, that.descripcion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), descripcion);
+    }
 
     @Override
     public String toString() {

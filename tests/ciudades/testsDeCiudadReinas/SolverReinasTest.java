@@ -1,4 +1,4 @@
-package Ciudades.testsDeCiudadReinas;
+package ciudades.testsDeCiudadReinas;
 
 import Juego.ciudades.reinas.Tablero;
 import Juego.ciudades.reinas.SolverReinas;
