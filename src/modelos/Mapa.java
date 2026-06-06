@@ -123,7 +123,7 @@ public class Mapa {
     public void validarFueraDeRango(int ancho, int alto) {
         ValidacionesUtiles.validarMayorOIgualACero(ancho, "ancho");
         ValidacionesUtiles.validarMayorOIgualACero(alto, "alto");
-        if (ancho >= this.celdas.getLongitud() || alto >= this.celdas.obtener(1).getLongitud()) {
+        if (ancho > this.celdas.getLongitud() || alto > this.celdas.obtener(1).getLongitud()) {
             throw new RuntimeException("Posicion fuera de rango");
         }
     }

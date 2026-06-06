@@ -39,7 +39,7 @@ public class Bitmap {
     	ValidacionesUtiles.validarMayorACero(height, "alto");
         this.width = width;
         this.height = height;
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
     
 //METODOS ABSTRACTOS --------------------------------------------------------------------------------------

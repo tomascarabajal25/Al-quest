@@ -69,8 +69,8 @@ public class ciudadBusqueda {
         int ancho = texto.getAncho(); 
         int alto = texto.getAlto();   
         
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < alto; j++) {
+        for (int i = 1; i <= ancho; i++) {
+            for (int j = 1; j <= alto; j++) {
                 Celda<?> celda = texto.getCeldaConPosicion(i, j);
                 
                 if (celda != null && celda.getContenido() != null) {

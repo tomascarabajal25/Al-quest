@@ -112,7 +112,7 @@ public class PruebaCiudad5 {
             for (int j = 0; j < columnas; j++) {
                 String palabra = matriz[i][j];
                 if (palabra != null && !palabra.isEmpty()) {
-                    mapa.ocuparCelda(palabra.trim(), i, j);
+                    mapa.ocuparCelda(palabra.trim(), i + 1, j + 1);
                     System.out.println("Insertado (" + i + "," + j + ") -> " + palabra);
                 }
             }
