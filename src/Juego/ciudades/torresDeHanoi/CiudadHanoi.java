@@ -1,216 +1,144 @@
 package Juego.ciudades.torresDeHanoi;
 
-
 import java.util.Objects;
-import modelos.Jugador;
-import modelos.Partida;
-import Juego.ciudades.ordenamientos.EstadoDePartida;
-
-
-
-
 import utils.ValidacionesUtiles;
+
 /**
  * TDA que representa el juego de las Torres de Hanoi.
- * 
- * Modela el estado del juego mediante tres pilas (torres),
- * la cantidad de movimientos realizados y el objetivo (número de discos).
- * 
+ *
+ * Modela el estado del juego mediante tres pilas (torres) de enteros,
+ * donde cada entero representa el TAMAÑO del disco (1 = más pequeño).
+ *
  * INVARIANTES:
  * - 3 <= objetivo <= 10
  * - movimientos >= 0
- * - Las torres solo contienen discos válidos (Strings con "#")
- * - En cada torre, los discos están ordenados de mayor a menor (de abajo hacia arriba)
+ * - En cada torre, los discos están ordenados de mayor a menor
+ *   (mayor en el fondo, menor en el tope).
  */
 public class CiudadHanoi {
-	//ATRIBUTOS----------------------------------------------------------------------
-    private Pila<String> torreA;
-    private Pila<String> torreB;
-    private Pila<String> torreC;
+
+    // ── Atributos ─────────────────────────────────────────────────────────────
+    private Pila<Integer> torreA;
+    private Pila<Integer> torreB;
+    private Pila<Integer> torreC;
     private int movimientos;
     private int objetivo;
-    
-  //CONSTRUCTORES-----------------------------------------------------------------
+
+    // ── Constructores ─────────────────────────────────────────────────────────
+
     /**
-     * Crea un nuevo juego con una cantidad inicial de discos.
-     * 
-     * PRE:
-     * - 3 <= discos <= 10
-     * 
-     * POST:
-     * - Se inicializan las tres torres.
-     * - Todos los discos se ubican en la torre A.
-     * - movimientos = 0
+     * PRE:  3 <= discos <= 10
+     * POST: torreA contiene todos los discos ordenados; torreB y torreC vacías;
+     *       movimientos = 0.
      */
     public CiudadHanoi(int discos) {
-    	setObjetivo(discos);
+        setObjetivo(discos);
         iniciar();
     }
-    
-  //METODOS DE COMPORTAMIENTO------------------------------------------------------
+
+    // ── Comportamiento ────────────────────────────────────────────────────────
+
     /**
      * Inicializa el estado del juego.
-     * 
-     * POST:
-     * - torreA contiene todos los discos.
-     * - torreB y torreC están vacías.
-     * - movimientos = 0
+     * POST: torreA tiene todos los discos (objetivo en el fondo, 1 en el tope).
      */
     public void iniciar() {
-        torreA = new Pila<String>();
-        torreB = new Pila<String>();
-        torreC = new Pila<String>();
+        torreA = new Pila<Integer>();
+        torreB = new Pila<Integer>();
+        torreC = new Pila<Integer>();
         movimientos = 0;
 
+        // objetivo = disco más grande; se apila de mayor a menor
+        // → queda mayor en el fondo y 1 (el más chico) en el tope.
         for (int i = objetivo; i >= 1; i--) {
-            torreA.push(new Nodo<String>("#".repeat(i)));
+            torreA.push(new Nodo<Integer>(i));
         }
     }
+
     /**
-     * Reinicia el juego con un nuevo objetivo.
-     * 
-     * PRE:
-     * - 3 <= nuevoObjetivo <= 10
-     * 
-     * POST:
-     * - Se vacían todas las torres.
-     * - torreA vuelve a contener todos los discos.
-     * - movimientos = 0
+     * PRE:  3 <= nuevoObjetivo <= 10
+     * POST: estado equivalente a haber creado una nueva instancia con ese objetivo.
      */
     public void reiniciar(int nuevoObjetivo) {
-    	ValidacionesUtiles.validarRangoNumerico(nuevoObjetivo, 3, 10, "No es un objetivo valido");
-        this.setObjetivo(nuevoObjetivo); 
-        this.setMovimientos(0); 
-        
-        // vaciar todas las pilas para limpiar cualquier estado previo
+        ValidacionesUtiles.validarRangoNumerico(nuevoObjetivo, 3, 10, "No es un objetivo valido");
+        setObjetivo(nuevoObjetivo);
+        setMovimientos(0);
         vaciarPila(torreA);
         vaciarPila(torreB);
         vaciarPila(torreC);
-        
-        // volver a llenar la torre A
         for (int i = objetivo; i >= 1; i--) {
-            torreA.push(new Nodo<String>("#".repeat(i)));
+            torreA.push(new Nodo<Integer>(i));
         }
     }
 
-    /**
-     * Vacía completamente una pila.
-     * 
-     * PRE:
-     * - p != null
-     * 
-     * POST:
-     * - p queda vacía
-     */
-    private void vaciarPila(Pila<String> p) {
-    	ValidacionesUtiles.esDistintoDeNull(p, "no se puede vaciar pila nula");
-        while (p.getContNodo() > 0) {
-            p.pop();
-        }
+    /** POST: p queda vacía. */
+    private void vaciarPila(Pila<Integer> p) {
+        ValidacionesUtiles.esDistintoDeNull(p, "no se puede vaciar pila nula");
+        while (p.getContNodo() > 0) p.pop();
     }
+
     /**
      * Realiza un movimiento entre torres.
-     * 
-     * PRE:
-     * - origen != null
-     * - destino != null
-     * 
-     * POST:
-     * - Si el movimiento es válido:
-     *      - Se mueve un disco de origen a destino
-     *      - movimientos se incrementa en 1
-     *      - Retorna true
-     * - Si el movimiento no es válido:
-     *      - El estado no cambia
-     *      - Retorna false
+     *
+     * PRE:  origen != null, destino != null
+     * POST: si es válido, mueve el disco del tope de origen al tope de destino
+     *       e incrementa movimientos; retorna true.
+     *       Si no es válido (origen vacía o disco mayor sobre menor), no cambia
+     *       nada y retorna false.
      */
-    public boolean mover(Pila<String> origen, Pila<String> destino) {
-    	ValidacionesUtiles.esDistintoDeNull(origen, "no se puede mover pila a una pila nula");
-    	ValidacionesUtiles.esDistintoDeNull(destino, "no se puede mover una pila nula");
-    	
+    public boolean mover(Pila<Integer> origen, Pila<Integer> destino) {
+        ValidacionesUtiles.esDistintoDeNull(origen,  "origen no puede ser null");
+        ValidacionesUtiles.esDistintoDeNull(destino, "destino no puede ser null");
+
         if (origen.getContNodo() == 0) return false;
 
-        Nodo<String> plataforma = new Nodo<String> (origen.peek());
+        int discoMovido = origen.peek();
 
-        if (destino.getContNodo() > 0 &&
-            plataforma.getDato().compareTo(destino.peek()) > 0) {
+        // No se puede poner un disco mayor sobre uno menor
+        if (destino.getContNodo() > 0 && discoMovido > destino.peek()) {
             return false;
         }
 
         origen.pop();
-        destino.push(plataforma);
-        setMovimientos(++movimientos);;
+        destino.push(new Nodo<Integer>(discoMovido));
+        setMovimientos(++movimientos);
         return true;
     }
-    
-    /*
-     * retorna si el juego ha sido ganado
-     */
+
+    /** Retorna true si todos los discos están en la torre C. */
     public boolean haGanado() {
         return torreC.getContNodo() == objetivo;
     }
-    /*
-     * retorna si el juego ha sido ganado con el minimo de movimientos
-     */
+
+    /** Retorna true si ganó con el mínimo de movimientos posible. */
     public boolean esPerfecto() {
-        return haGanado() && movimientos == getMinMovimientos();
-    }
-  //METODOS DE CLASES-------------------------------------------------------------
-  //METODOS GENERALES------------------------------------------------------------
-    @Override
-	public String toString() {
-		return "JuegoHanoi [movimientos=" + movimientos + ", objetivo=" + objetivo + "]";
-	}
-    @Override
-	public int hashCode() {
-		return Objects.hash(movimientos, objetivo);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CiudadHanoi other = (CiudadHanoi) obj;
-		return movimientos == other.movimientos && objetivo == other.objetivo;
-	}
-  //GETTER SIMPLES-----------------------------------------------------------------
-	/**
-     * Calcula el mínimo número de movimientos necesarios.
-     * 
-     * POST:
-     * - Retorna 2^objetivo - 1
-     */
-	public double getMinMovimientos() {
-        return Math.pow(2, objetivo) - 1;
+        return haGanado() && movimientos == (int) getMinMovimientos();
     }
 
-	/**
-     * Devuelve la cantidad de movimientos realizados.
+    // ── Getters ───────────────────────────────────────────────────────────────
+
+    /**
+     * Devuelve los tamaños de los discos de una torre en un arreglo de enteros.
+     *
+     * El arreglo tiene longitud fija = objetivo (máximo discos posibles).
+     * Posición 0 = fondo de la pila (disco más grande que haya).
+     * Posiciones vacías = 0.
+     *
+     * PRE:  torre != null
+     * POST: retorna int[objetivo]; posiciones con disco contienen su tamaño (>0),
+     *       posiciones vacías contienen 0.
      */
-	public int getMovimientos() {
-        return movimientos;
-    }
-	/**
-     * Devuelve los discos de una torre en forma de arreglo.
-     * 
-     * PRE:
-     * - torre != null
-     * 
-     * POST:
-     * - Retorna un arreglo con los discos (de abajo hacia arriba)
-     * - Las posiciones vacías contienen null
-     */
-    public String[] getDiscosDeTorre(Pila<String> torre) {
-    	ValidacionesUtiles.esDistintoDeNull(torre, "no se puede obtener los discos de una pila nula");
-        String[] discos = new String[10]; 
-        int i = 0; // Empezamos desde la última fila (abajo)
-        
-        Nodo<String> actual = torre.getCabeza();
-        
+    public int[] getDiscosDeTorre(Pila<Integer> torre) {
+        ValidacionesUtiles.esDistintoDeNull(torre, "torre no puede ser null");
+
+        int[] discos = new int[objetivo]; // 0 significa "slot vacío"
+
+        // Recorremos desde la cabeza (tope) hacia el fondo
+        // y llenamos el arreglo desde el índice 0.
+        // discos[0] = tope de pila (disco más pequeño presente)
+        // discos[contNodo-1] = fondo de pila (disco más grande presente)
+        Nodo<Integer> actual = torre.getCabeza();
+        int i = 0;
         while (actual != null && i < discos.length) {
             discos[i] = actual.getDato();
             actual = actual.getAbajo();
@@ -218,35 +146,39 @@ public class CiudadHanoi {
         }
         return discos;
     }
-  
-    public Pila<String> getTorreA() { 
-    	return torreA; 
-    	}
-    public Pila<String> getTorreB() { 
-    	return torreB; 
-    	}
-    public Pila<String> getTorreC() { 
-    	return torreC; 
-    	}
-    
-    // devuelve la cantidad de discos del juego
-    public int getObjetivo() {
-    	return objetivo;
+
+    public double getMinMovimientos() { return Math.pow(2, objetivo) - 1; }
+    public int    getMovimientos()    { return movimientos; }
+    public int    getObjetivo()       { return objetivo; }
+
+    public Pila<Integer> getTorreA() { return torreA; }
+    public Pila<Integer> getTorreB() { return torreB; }
+    public Pila<Integer> getTorreC() { return torreC; }
+
+    // ── Setters privados ──────────────────────────────────────────────────────
+
+    private void setMovimientos(int m) { this.movimientos = m; }
+
+    private void setObjetivo(int o) {
+        ValidacionesUtiles.validarRangoNumerico(o, 3, 10, "No es una cantidad de discos valida");
+        this.objetivo = o;
     }
-  //SETTERS SIMPLES---------------------------------------------------------------
-    /**
-     * PRE:
-     * - movimientos >= 0
-     */
-    private void setMovimientos(int objetivoNuevo) {
-        this.movimientos = objetivoNuevo;
-     }
-    /**
-     * PRE:
-     * - 3 <= objetivo <= 10
-     */
-    private void setObjetivo(int objetivoNuevo) {
-    	ValidacionesUtiles.validarRangoNumerico(objetivoNuevo, 3, 10, "No es una cantidad de discos valida");
-       this.objetivo = objetivoNuevo;
+
+    // ── Object ────────────────────────────────────────────────────────────────
+
+    @Override
+    public String toString() {
+        return "CiudadHanoi [movimientos=" + movimientos + ", objetivo=" + objetivo + "]";
+    }
+
+    @Override
+    public int hashCode() { return Objects.hash(movimientos, objetivo); }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        CiudadHanoi other = (CiudadHanoi) obj;
+        return movimientos == other.movimientos && objetivo == other.objetivo;
     }
 }

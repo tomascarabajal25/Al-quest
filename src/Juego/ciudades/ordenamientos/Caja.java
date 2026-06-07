@@ -2,13 +2,14 @@ package Juego.ciudades.ordenamientos;
 
 import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
+import modelos.Objeto;
 import utils.ValidacionesUtiles;
 
 /**
  * Clase caja, elemento q sera utilizado para comparar en la ciudad de ordenamiento
  * se compara en base al tamaño
  */
-public class Caja extends Elemento implements Comparable<Caja>{
+public class Caja extends Objeto implements Comparable<Caja>{
 	//ATRIBUTOS----------------------------------------------------------------------
 	private int tamaño;
 	//CONSTRUCTORES-----------------------------------------------------------------
@@ -18,8 +19,8 @@ public class Caja extends Elemento implements Comparable<Caja>{
 	 * @param tamaño mayor a 0
 	 * post: crea la caja con el tamaño y nombre ingresados
 	 */
-	public Caja(String nombre, int tamaño) {
-		super(nombre);
+	public Caja(String nombre, int tamaño, boolean colision) {
+		super(nombre,colision);
 		this.setTamaño(tamaño);
 	}
 	
@@ -43,9 +44,7 @@ public class Caja extends Elemento implements Comparable<Caja>{
 		return tamaño==other.getTamaño();
 	}
 
-    @Override
-    public void aplicarEfecto(CiudadRecoleccion juego) {}
-
+   
     //GETTER SIMPLES-----------------------------------------------------------------
 	/**
 	 * devuelve el tamaño

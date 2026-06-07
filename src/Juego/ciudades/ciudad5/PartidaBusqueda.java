@@ -1,89 +1,88 @@
 package Juego.ciudades.ciudad5;
 
-import java.util.List;
-import java.util.Random;
+import javax.swing.JFrame;
 
-import Juego.ciudades.ciudad5.UI.vistaBusqueda;
+import Juego.ciudades.ciudad5.UI.MinijuegoDesafio;
 import Juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;
+import modelos.Vista;
 
 public class PartidaBusqueda extends Partida {
 
-    private ciudadBusqueda juego;
-    private vistaBusqueda  vista;
+    private Vista    vista;
+    private JFrame   ventana;
+    private MinijuegoDesafio minijuego;
 
     /**
      * pre:  nombre y jugador no nulos, mapa no nulo
-     * post: crea la partida, indexa el mapa y abre la ventana BMP
+     * post: crea la partida e indexa el mapa.
+     *       La ventana y el bucle se crean en iniciar().
      */
     public PartidaBusqueda(String nombre, Jugador jugador, Mapa mapa) {
         super(nombre, jugador);
-        this.juego = new ciudadBusqueda(mapa);
-        this.vista = new vistaBusqueda();
+
+        // Crear vista y minijuego (sin arrancar el hilo todavía)
+        this.vista     = new Vista("/maps/world01.txt");
+        this.minijuego = new MinijuegoDesafio(mapa, vista.tamaño);
+        vista.setMinijuego(minijuego);
+        vista.adminObjt.setObjetos(minijuego.getPuertaLista(),
+                                   minijuego.getPuertaArbol());
+        // Cuando el minijuego termine, llamar a finalizar() automáticamente
+        minijuego.setOnFinalizadoCallback(this::finalizar);
+
         setEstado(EstadoDePartida.Creado);
     }
 
+    /**
+     * post: abre la ventana, arranca el bucle del juego y cambia el estado.
+     *       El control vuelve inmediatamente al llamador;
+     *       el juego corre en su propio hilo (igual que en Princi).
+     */
     @Override
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
 
-        // Palabras reales que vienen del mapa ya indexado
-        List<String> palabras = juego.getPalabras();
+        // Igual que Princi.main() — la ventana vive aquí en vez de en main
+        ventana = new JFrame();
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventana.setResizable(false);
+        ventana.setTitle("Ciudad de Búsqueda");
+        ventana.add(vista);
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
 
-        if (palabras.isEmpty()) {
-            finalizar();
-            return;
-        }
-
-        Random random = new Random();
-
-        while (getEstado() == EstadoDePartida.Iniciado) {
-
-            // 1. Elegimos una palabra al azar del mapa
-            String palabraAleatoria = palabras.get(random.nextInt(palabras.size()));
-
-            // 2. Medimos tiempos en ambas estructuras
-            long tiempoLista = juego.medirTiempoPorLista(palabraAleatoria);
-            long tiempoArbol = juego.medirTiempoPorArbol(palabraAleatoria);
-
-            // 3. Mostramos la ronda y esperamos que el jugador elija
-            String respuesta = vista.mostrarRondaYEsperarRespuesta(
-                    palabraAleatoria, tiempoLista, tiempoArbol);
-
-            // 4. El jugador eligió salir
-            if (respuesta.equals("SALIR")) {
-                finalizar();
-                continue;
-            }
-
-            // 5. Determinamos la respuesta correcta
-            String correcta = tiempoArbol < tiempoLista ? "ARBOL" : "LISTA";
-            boolean acerto  = respuesta.equals(correcta);
-
-            // 6. Mostramos si acertó o no
-            vista.mostrarFeedback(acerto, correcta);
-
-            // 7. Verificamos si el jugador ya ganó
-            if (vista.estaGanada()) {
-                vista.mostrarVictoria();
-                finalizar();
-            }
-        }
+        // Arranca el bucle (run → actualizar → repaint a 60 fps)
+        vista.startGameThread();
     }
 
+    /**
+     * post: cierra la ventana, detiene el hilo y guarda el puntaje.
+     *       Puede llamarse desde el callback del minijuego o desde afuera.
+     */
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
         setPuntaje(calcularPuntaje());
-        //falta completar para cerrar la ventana y volver a partida aiquest
+
+        // Detener el hilo del juego
+        vista.detenerHilo();
+
+        // Cerrar la ventana
+        if (ventana != null) {
+            ventana.dispose();
+            ventana = null;
+        }
+
+        // TODO: notificar a la partida contenedora que esta partida terminó
     }
 
     /**
-     * post: devuelve 100 si ganó, 0 si salió antes
+     * post: devuelve 100 si ganó todas las rondas, 0 si salió antes.
      */
     private int calcularPuntaje() {
-        return vista.estaGanada() ? 100 : 0;
+        return minijuego != null && minijuego.isGanado() ? 100 : 0;
     }
 }
