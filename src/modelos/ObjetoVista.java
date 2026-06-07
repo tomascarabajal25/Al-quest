@@ -70,10 +70,10 @@ public class ObjetoVista extends Objeto {
         return worldY - vista.jugadorVista.getWorldY()
                       + vista.jugadorVista.getScreenY();
     }
-	private void setWorldY(int worldY) {
+	public void setWorldY(int worldY) {
 		this.worldY = worldY;
 	}
-	private void setWorldX(int worldX) {
+	public void setWorldX(int worldX) {
 		this.worldX = worldX;
 	}
 

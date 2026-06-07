@@ -8,8 +8,6 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import Juego.ciudades.ciudad5.UI.MinijuegoDesafio;
-
 public class Vista extends JPanel implements Runnable{
 	
 	/**
@@ -43,7 +41,7 @@ public class Vista extends JPanel implements Runnable{
 	ChequeadorDeColision chequeadorDeColision= new ChequeadorDeColision(this);
 	private Vector<ObjetoVista> objetos=new Vector<ObjetoVista>();
 	
-	public MinijuegoDesafio miniJuego;
+	public Minijuego miniJuego;
 	
 	public Vista(String rutaMundo) {
 		this.setPreferredSize(new Dimension(anchoDePantalla,largoDePantalla));
@@ -58,7 +56,7 @@ public class Vista extends JPanel implements Runnable{
 
 		
 	}
-	public void setMinijuego(MinijuegoDesafio minijuego) {
+	public void setMinijuego(Minijuego minijuego) {
 		miniJuego=minijuego;
 	}
 	

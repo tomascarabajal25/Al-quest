@@ -1,6 +1,7 @@
 package Juego.ciudades.ciudad5.UI;
 
 import java.awt.Color;
+import modelos.Minijuego;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.List;
@@ -27,7 +28,7 @@ import modelos.Mapa;
  *   2. En actualizar(): minijuego.actualizar(jugadorCiudad5);
  *   3. En paintComponent(): minijuego.draw(g2, jugadorCiudad5);
  */
-public class MinijuegoDesafio {
+public class MinijuegoDesafio implements Minijuego {
 
     // ── Configuración del mapa (ajustar si cambia el diseño) ──────────────────
     // Zona de activación: entrada a la sala, cols 23-26, filas 28-30

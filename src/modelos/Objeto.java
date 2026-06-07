@@ -3,7 +3,6 @@ package modelos;
 
 
 public class Objeto extends Entidad {
-	private String nombre;
 	private boolean colision=false;
 	
 	
@@ -22,12 +21,6 @@ public class Objeto extends Entidad {
 		this.colision = colision;
 	}
 	
-	public String getNombre() {
-		return nombre;
-	}
-	
-	private void setNombre(String nombre) {
-		this.nombre=nombre;
-	}
+
 
 }
