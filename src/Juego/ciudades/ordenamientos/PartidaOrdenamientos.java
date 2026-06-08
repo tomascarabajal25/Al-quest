@@ -67,15 +67,15 @@ public class PartidaOrdenamientos extends Partida {
                                  Jugador jugador,
                                  List<Caja> cajas,
                                  Ordenador<Caja> ordenador,
-                                 Vista vista,
                                  int filaBase,
                                  int colInicio) {
         super(nombreCiudad, jugador);
         setCajasIniciales(new ArrayList<>(cajas));
         setOrdenador(ordenador);
-        setVista(vista);
         this.filaBase  = filaBase;
         this.colInicio = colInicio;
+        setVista(new Vista("/maps/world02.txt", getJugador(), colInicio,filaBase,"/assets/jugador/boy"));
+        
     }
 
     // ── Comportamiento ────────────────────────────────────────────────────────

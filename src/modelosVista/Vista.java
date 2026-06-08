@@ -46,19 +46,44 @@ public class Vista extends JPanel implements Runnable{
 	
 	public Minijuego miniJuego;
 	
-	public Vista(String rutaMundo) {
-		this.setPreferredSize(new Dimension(anchoDePantalla,largoDePantalla));
-		this.setBackground(Color.black);
-		this.setDoubleBuffered(true);
-		this.addKeyListener(keyhandler);
-		this.setFocusable(true);
-		jugadorVista=new JugadorVista(new Jugador("hardcode"), keyhandler,25,23,"/assets/jugador/boy",this);
-		construccionesM.loadMap(rutaMundo);
-		setUpJuego();
-		
+	
+	public Vista(String rutaMundo, Jugador jugador,
+	        int spawnCol, int spawnFila, String rutaSprites) {
+
+	    // configuración visual
+	    this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
+	    this.setBackground(Color.black);
+	    this.setDoubleBuffered(true);
+	    this.addKeyListener(keyhandler);
+	    this.setFocusable(true);
+
+	    // jugador con datos reales, no hardcodeado
+	    jugadorVista = new JugadorVista(
+	        jugador, keyhandler,
+	        spawnCol, spawnFila,
+	        rutaSprites, this
+	    );
+
+	    construccionesM.loadMap(rutaMundo);
+	    setUpJuego();
+	}	
+	public Vista(String rutaMundo, Jugador jugador,
+            int spawnCol, int spawnFila, String rutaSprites,
+            KeyHandler key) {
+	   this.keyhandler = key;
+	   this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
+	   this.setBackground(Color.black);
+	   this.setDoubleBuffered(true);
+	   this.addKeyListener(keyhandler);   // ← usa el key inyectado
+	   this.setFocusable(true);
+	   jugadorVista = new JugadorVista(
+	       jugador, keyhandler, spawnCol, spawnFila, rutaSprites, this);
+	   construccionesM.loadMap(rutaMundo);
+	   setUpJuego();
+	}
+
 
 		
-	}
 	public void setMinijuego(Minijuego minijuego) {
 		miniJuego=minijuego;
 	}
@@ -69,6 +94,7 @@ public class Vista extends JPanel implements Runnable{
 	public void agregarObjeto(ObjetoVista objeto) {
 		objetos.add(objeto);
 	}
+	
 
 	
 	public void startGameThread() {

@@ -14,6 +14,8 @@ public class AdministradorDeObjetos {
 		}
 	}
 	
+	
+	
 	public Vista getVista() {
 		return vista;
 	}

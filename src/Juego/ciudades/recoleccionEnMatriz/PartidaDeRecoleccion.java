@@ -2,12 +2,17 @@ package Juego.ciudades.recoleccionEnMatriz;
 
 import Juego.Constantes;
 import Juego.ciudades.recoleccionEnMatriz.ui.GameWindow;
+import Juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
+import Juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
 import modelos.Mochila;
 import modelos.Partida;
+import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
+
 import java.util.Objects;
 
 public class PartidaDeRecoleccion extends Partida {
@@ -73,15 +78,23 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void iniciar() {
-        SwingUtilities.invokeLater(() -> {
-            new GameWindow(
-                    getJugador(),
-                    Constantes.FILAS_MAPA,
-                    Constantes.COLUMNAS_MAPA,
-                    Constantes.NIVELES_MAPA,
-                    Constantes.CAPACIDAD_MAXIMA_MOCHILA
-            );
-        });
+    	KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
+        Vista vista = new Vista("/maps/world_recoleccion.txt", getJugador(), 24,21,"/assets/jugador/boy", key );
+
+
+        MinijuegoRecoleccion minijuego =new MinijuegoRecoleccion(juego, vista, key);
+        vista.setMinijuego(minijuego);
+        minijuego.setOnFinalizadoCallback(this::finalizar);
+
+        // Igual que PartidaBusqueda
+        JFrame ventana = new JFrame("Ciudad de Recolección");
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventana.setResizable(false);
+        ventana.add(vista);
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+        vista.startGameThread();
     }
 
     @Override

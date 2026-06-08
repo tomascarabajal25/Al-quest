@@ -12,7 +12,6 @@ public class Principal {
         Jugador jugador = new Jugador("Tester");
 
         // 2. Vista del juego (ruta al mapa de la ciudad de ordenamientos)
-        Vista vista = new Vista("/maps/world02.txt");
 
         // 3. Cajas a ordenar
         List<Caja> cajas = List.of(
@@ -34,7 +33,6 @@ public class Principal {
                 jugador,
                 cajas,
                 ordenador,
-                vista,
                 20,   // fila del mundo
                 22    // columna inicial
         );
