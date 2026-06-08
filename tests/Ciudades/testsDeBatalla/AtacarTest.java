@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.aiquest.juego.ciudades.batalla.model.*;
-import com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
+import juego.ciudades.batalla.model.*;
+import juego.ciudades.batalla.model.acciones.Atacar;
 
 public class AtacarTest {
 

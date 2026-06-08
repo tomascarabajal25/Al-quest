@@ -6,10 +6,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.aiquest.juego.ciudades.ordenamientos.AdministradorDePasos;
-import com.aiquest.juego.ciudades.ordenamientos.Caja;
-import com.aiquest.juego.ciudades.ordenamientos.OrdenadorSelection;
-import com.aiquest.juego.ciudades.ordenamientos.PasoOrdenamiento;
+import juego.ciudades.ordenamientos.AdministradorDePasos;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.OrdenadorSelection;
+import juego.ciudades.ordenamientos.PasoOrdenamiento;
 
 public class OrdenadorSelectionTest {
 

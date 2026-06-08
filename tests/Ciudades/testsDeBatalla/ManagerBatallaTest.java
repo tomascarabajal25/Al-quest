@@ -3,11 +3,11 @@ package tests.Ciudades.testsDeBatalla;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.aiquest.estructuras.pilas.Pila;
-import com.aiquest.juego.ciudades.batalla.model.*;
-import com.aiquest.juego.ciudades.batalla.model.acciones.Atacar;
-import com.aiquest.juego.ciudades.batalla.model.acciones.Defender;
-import com.aiquest.juego.ciudades.batalla.controller.ManagerBatalla;
+import estructuras.pilas.Pila;
+import juego.ciudades.batalla.model.*;
+import juego.ciudades.batalla.model.acciones.Atacar;
+import juego.ciudades.batalla.model.acciones.Defender;
+import juego.ciudades.batalla.controller.ManagerBatalla;
 
 import java.util.List;
 

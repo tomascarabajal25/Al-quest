@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.aiquest.juego.ciudades.torresDeHanoi.CiudadHanoi;
-import com.aiquest.juego.ciudades.torresDeHanoi.PartidaDeHanoi;
-import com.aiquest.modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
+import juego.ciudades.torresDeHanoi.CiudadHanoi;
+import juego.ciudades.torresDeHanoi.PartidaDeHanoi;
+import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
 
 
 public class JuegoHanoiTest {
@@ -25,7 +25,7 @@ public class JuegoHanoiTest {
         
         // 3. Opcional: Si tu lógica de mover() requiere que la partida esté en estado "Iniciado",
         // descomentá la línea de abajo. Si se puede mover sin iniciar, podés dejarlo así.
-        // com.aiquest.com.aiquest.juego.iniciar();
+        // juego.iniciar();
     }
 
     @Test
@@ -75,7 +75,7 @@ public class JuegoHanoiTest {
     public void testReinicio() {
         juego.mover(juego.getTorreA(), juego.getTorreB()); // Hacemos un movimiento
         
-        juego.reiniciar(4); // Reiniciamos el com.aiquest.com.aiquest.juego con 4 discos
+        juego.reiniciar(4); // Reiniciamos el juego con 4 discos
         
         assertEquals(4, juego.getTorreA().getContNodo(), "La Torre A debería tener 4 discos");
         assertEquals(0, juego.getTorreB().getContNodo(), "La Torre B debería haberse vaciado");
