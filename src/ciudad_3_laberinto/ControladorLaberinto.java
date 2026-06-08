@@ -3,13 +3,12 @@ package ciudad_3_laberinto;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.http.WebSocket.Listener;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class ControladorLaberinto {
-    private static final String RUTA_LABERINTO = "recursos/laberinto.txt";
+    private static final String RUTA_LABERINTO = "src\\ciudad_3_laberinto\\resources\\laberinto.txt";
     private static final String RUTA_IMAGENES = "partidas/laberinto";
     private static final int INTERVALO_TIMER = 300;
 
