@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import Juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
-import modelos.Vista;
+import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
 /**

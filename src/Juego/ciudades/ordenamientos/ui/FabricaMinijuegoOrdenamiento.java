@@ -5,7 +5,7 @@ import java.util.List;
 
 import Juego.ciudades.ordenamientos.Caja;
 import Juego.ciudades.ordenamientos.Ordenador;
-import modelos.Vista;
+import modelosVista.Vista;
 
 /**
  * Fábrica que construye el MinijuegoOrdenamiento:

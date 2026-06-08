@@ -1,4 +1,4 @@
-package modelos;
+package modelosVista;
 
 import java.awt.image.BufferedImage;
 

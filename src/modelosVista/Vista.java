@@ -1,4 +1,4 @@
-package modelos;
+package modelosVista;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +7,9 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 
 import javax.swing.JPanel;
+
+import modelos.Jugador;
+import modelos.Minijuego;
 
 public class Vista extends JPanel implements Runnable{
 	

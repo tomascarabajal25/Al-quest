@@ -1,7 +1,9 @@
-package modelos;
+package modelosVista;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
+import modelos.Objeto;
 
 public class ObjetoVista extends Objeto {
 	private BufferedImage imagen;

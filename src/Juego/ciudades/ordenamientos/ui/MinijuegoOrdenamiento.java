@@ -14,9 +14,9 @@ import Juego.ciudades.ordenamientos.AdministradorDePasos;
 import Juego.ciudades.ordenamientos.Caja;
 import Juego.ciudades.ordenamientos.Ordenador;
 import Juego.ciudades.ordenamientos.PasoOrdenamiento;
-import modelos.JugadorVista;
 import modelos.Minijuego;
-import modelos.Vista;
+import modelosVista.JugadorVista;
+import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
 /**

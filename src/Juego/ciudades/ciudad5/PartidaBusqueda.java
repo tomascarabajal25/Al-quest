@@ -7,7 +7,7 @@ import Juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;
-import modelos.Vista;
+import modelosVista.Vista;
 
 public class PartidaBusqueda extends Partida {
 

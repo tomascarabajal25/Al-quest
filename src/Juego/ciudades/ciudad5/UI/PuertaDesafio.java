@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import modelos.JugadorVista;
-import modelos.ObjetoVista;
-import modelos.Vista;
+import modelosVista.JugadorVista;
+import modelosVista.ObjetoVista;
+import modelosVista.Vista;
 
 /**
  * Puerta física en el mapa del desafío.

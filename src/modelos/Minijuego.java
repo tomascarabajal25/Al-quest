@@ -2,6 +2,8 @@ package modelos;
 
 import java.awt.Graphics2D;
 
+import modelosVista.JugadorVista;
+
 public interface Minijuego {
 
 	void actualizar(JugadorVista jugadorVista);

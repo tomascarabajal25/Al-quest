@@ -1,4 +1,4 @@
-package modelos;
+package modelosVista;
 
 
 
@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import modelos.Jugador;
 
 
 

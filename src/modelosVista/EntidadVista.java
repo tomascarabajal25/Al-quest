@@ -1,7 +1,9 @@
-package modelos;
+package modelosVista;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import modelos.Entidad;
 
 public class EntidadVista extends Entidad {
 	public EntidadVista(String nombre) {

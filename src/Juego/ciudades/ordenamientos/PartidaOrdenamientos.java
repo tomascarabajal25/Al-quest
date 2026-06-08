@@ -10,7 +10,7 @@ import Juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
 import Juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import modelos.Jugador;
 import modelos.Partida;
-import modelos.Vista;
+import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
 /**

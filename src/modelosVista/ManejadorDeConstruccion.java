@@ -1,4 +1,4 @@
-package modelos;
+package modelosVista;
 
 import java.awt.Graphics2D;
 import java.io.BufferedReader;

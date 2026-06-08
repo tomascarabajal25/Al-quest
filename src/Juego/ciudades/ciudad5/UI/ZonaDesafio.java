@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import modelos.JugadorVista;
+import modelosVista.JugadorVista;
 
 /**
  * Zona invisible en el mapa que activa el minijuego cuando el jugador la pisa.

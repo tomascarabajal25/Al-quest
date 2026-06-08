@@ -1,4 +1,4 @@
-package modelos;
+package modelosVista;
 
 public class AdministradorDeObjetos {
 	Vista vista;

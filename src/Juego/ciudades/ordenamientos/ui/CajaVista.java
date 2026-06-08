@@ -9,8 +9,8 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import Juego.ciudades.ordenamientos.Caja;
-import modelos.ObjetoVista;
-import modelos.Vista;
+import modelosVista.ObjetoVista;
+import modelosVista.Vista;
 
 /**
  * Representación visual de una Caja en el mundo del juego.

@@ -5,8 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import modelos.JugadorVista;
 import modelos.Minijuego;
+import modelosVista.JugadorVista;
 
 /**
  * Integra el puzzle de Torres de Hanoi en la Vista del juego.
