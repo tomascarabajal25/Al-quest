@@ -31,6 +31,9 @@ Thumbs.db
 out/
 build/
 
+# Dependencias locales
+lib/
+
 .atl/
 overview.md
 .gitignore

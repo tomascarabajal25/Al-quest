@@ -69,8 +69,8 @@ public class ciudadBusqueda {
         int ancho = texto.getAncho(); 
         int alto = texto.getAlto();   
         
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < alto; j++) {
+        for (int i = 1; i <= ancho; i++) {
+            for (int j = 1; j <= alto; j++) {
                 Celda<?> celda = texto.getCeldaConPosicion(i, j);
                 
                 if (celda != null && celda.getContenido() != null) {
@@ -126,7 +126,19 @@ public class ciudadBusqueda {
 	}
 
 
-
+	// Agregar este método en ciudadBusqueda.java
+	 
+	/**
+	 * post: devuelve la lista de strings indexados (sin posiciones)
+	 *       para que PartidaBusqueda pueda elegir palabras al azar
+	 */
+	public List<String> getPalabras() {
+	    List<String> resultado = new ArrayList<>();
+	    for (PalabraConPosiciones p : this.listaDePalabras) {
+	        resultado.add(p.getPalabra());
+	    }
+	    return resultado;
+	}
 	public void iniciar() {
 		
 	}

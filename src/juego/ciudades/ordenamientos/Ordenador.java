@@ -44,7 +44,7 @@ public abstract class Ordenador<T extends Comparable<T>> {
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
     protected abstract void ordenar(List<T> elementos);
     
-    protected abstract void ordenar(List<T> elementos, AdministradorDePasos<T> historialDePasos);
+    public abstract void ordenar(List<T> elementos, AdministradorDePasos<T> historialDePasos);
     
     //GETTER SIMPLES-----------------------------------------------------------------
     public String getNombre() {

@@ -129,6 +129,15 @@ public class Mochila {
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
+     * Getter de los elementos guardados
+     *
+     * @return: Lista de elementos
+     */
+    public ListaSimplementeEnlazada<Elemento> getElementos(){
+        return this.elementos;
+    }
+
+    /**
      * Getter de la cantidad de elementos en la mochila
      *
      * @return: cantidad de elementos
@@ -160,6 +169,19 @@ public class Mochila {
             }
         }
         return null;
+    }
+
+    /**
+     * Getter para obtener elemento por posicion
+     *
+     * PRE:
+     * -Opcion debe ser mayor a cero
+     *
+     * @return: Devuelve un elemento
+     */
+    public Elemento getElementoPorPosicion(int opcion){
+        ValidacionesUtiles.validarMayorACero(opcion, "opcion");
+        return this.elementos.get(opcion - 1); // ← restar 1 para convertir a 0-based
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------

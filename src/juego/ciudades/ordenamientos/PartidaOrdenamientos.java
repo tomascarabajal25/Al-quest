@@ -4,188 +4,186 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.JFrame;
+
+import Juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
+import Juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import modelos.Jugador;
 import modelos.Partida;
+import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
-public class PartidaOrdenamientos<T extends Comparable<T>> extends Partida {
-	//ATRIBUTOS----------------------------------------------------------------------
-    private List<T> elementosIniciales;
-    private Ordenador<T> ordenador;
-    private AdministradorDePasos<T> administradorPasos;
-    //CONSTRUCTORES-----------------------------------------------------------------
+/**
+ * Partida de la ciudad de ordenamientos en el mundo 2D.
+ *
+ * Cambio respecto a la versión anterior:
+ *   - Ya NO maneja una ventana BMP separada ni un bucle bloqueante.
+ *   - iniciar() configura el MinijuegoOrdenamiento en la Vista y arranca
+ *     el hilo del juego. El loop de Vista.run() se encarga del resto.
+ *   - La partida se puede marcar como finalizada desde afuera cuando el
+ *     minijuego notifica victoria (via onVictoria).
+ *
+ * Tipo T está fijado a Caja porque el juego trabaja con objetos físicos
+ * en el mundo. Si en el futuro se generalizan otros elementos, se puede
+ * volver a parametrizar.
+ */
+public class PartidaOrdenamientos extends Partida {
+
+    // ── Atributos ─────────────────────────────────────────────────────────────
+
+    /** Cajas en su orden inicial (no se modifican) */
+    private List<Caja>          cajasIniciales;
+
+    /** Algoritmo seleccionado antes de iniciar */
+    private Ordenador<Caja>     ordenador;
+
+    /** Referencia a la Vista del juego donde se va a montar el minijuego */
+    private Vista               vista;
+    
+    public JFrame ventana;
+
+    /** Posición en el mapa donde se colocan las cajas (en celdas) */
+    private final int           filaBase;
+    private final int           colInicio;
+
+    /** El minijuego activo (se crea en iniciar()) */
+    private MinijuegoOrdenamiento minijuego;
+
+    // ── Constructor ───────────────────────────────────────────────────────────
+
     /**
-     * Constructor de la partida específica de la Ciudad ordenamientos
      * Pre:
-     * - nombre de la ciudad no nulo
-     * - jugador no nulo: jugador de la partida
-     * - elementos no nulo: son los elementos que seran ordenados
-     * -ordenador elegido para el juego no nulo
-     * Post:
-     * crea la partida de ordenamientos con los atributos indicados
+     * @param nombreCiudad  no nulo
+     * @param jugador       no nulo
+     * @param cajas         lista no nula con al menos 2 cajas
+     * @param ordenador     no nulo (ya seleccionado: Bubble, Selection, etc.)
+     * @param vista         Vista activa donde vive el jugador
+     * @param filaBase      fila del mundo donde se spawnean las cajas (en celdas)
+     * @param colInicio     columna inicial de la primera caja (en celdas)
+     *
+     * Post: crea la partida en estado "Creado", sin iniciarla todavía
      */
-    public PartidaOrdenamientos(String nombreCiudad, Jugador jugador, List<T> elementos, Ordenador<T> ordenador) {
-        super(nombreCiudad, jugador); 
-        
-        setElementosIniciales(new ArrayList<>(elementos));
+    public PartidaOrdenamientos(String nombreCiudad,
+                                 Jugador jugador,
+                                 List<Caja> cajas,
+                                 Ordenador<Caja> ordenador,
+                                 Vista vista,
+                                 int filaBase,
+                                 int colInicio) {
+        super(nombreCiudad, jugador);
+        setCajasIniciales(new ArrayList<>(cajas));
         setOrdenador(ordenador);
-        setAdministradorDePasos(new AdministradorDePasos<>());
+        setVista(vista);
+        this.filaBase  = filaBase;
+        this.colInicio = colInicio;
     }
-    //METODOS DE CLASES-------------------------------------------------------------
-    //METODOS GENERALES------------------------------------------------------------
-    
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(elementosIniciales, ordenador);
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PartidaOrdenamientos<?> other = (PartidaOrdenamientos<?>) obj;
-		return Objects.equals(elementosIniciales, other.elementosIniciales)
-				&& Objects.equals(ordenador, other.ordenador);
-	}
-    
-    
-    @Override
-	public String toString() {
-		return "PartidaOrdenamientos [elementosIniciales=" + elementosIniciales + ", ordenador=" + ordenador + "]";
-	}
+    // ── Comportamiento ────────────────────────────────────────────────────────
 
-	//METODOS DE COMPORTAMIENTO------------------------------------------------------
-    @Override
     /**
-     * Pre:
-     * - la partida no debe estar iniciada
-     * Post:
-     * -inicia la partida y comienza el ordenamiento de los elementos
-     * -cambia el estado a iniciado
+     * Pre:  la partida no debe estar iniciada
+     * Post: crea las CajaVista en el mundo, registra el MinijuegoOrdenamiento
+     *       en la Vista y arranca el hilo del juego.
+     *       El jugador ya puede caminar e interactuar con las cajas.
      */
+    @Override
     public void iniciar() {
         ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya ha sido iniciada");
-        
-        List<T> copiaDeTrabajo = new ArrayList<>(this.elementosIniciales);
-        
         setEstado(EstadoDePartida.Iniciado);
-        ordenador.ordenar(copiaDeTrabajo, administradorPasos);
-    }
-    
-    
-	@Override
-    /**
-     * Pre:
-     * -la partida debe estar iniciada
-     * post: 
-     * -cambia el estado a creado
-     */
-    public void finalizar() {
-    	ValidacionesUtiles.validarVerdadero(estaIniciada(), getNombreAlgoritmo());
-    	setEstado(EstadoDePartida.Creado);
-    }
-    /**
-     * Post:
-     * Elige un paso X aleatorio del historial generado por el algoritmo
-     * para usarlo como el desafío de memoria.
-     * @return El número de paso seleccionado.
-     */
-    public PasoOrdenamiento<T> seleccionarPasoDesafioAleatorio() {
-    	ValidacionesUtiles.validarVerdadero(estaIniciada(), getNombreAlgoritmo());
-        List<PasoOrdenamiento<T>> pasosTotales = administradorPasos.getPasos();
-        ValidacionesUtiles.validarMayorACero(pasosTotales.size(), "Debe haber almenos un paso");
-        
-        int pasoDesafio = (int) (Math.random() * (pasosTotales.size() - 1)) + 1;
-        
-        return administradorPasos.getPasos().get(pasoDesafio);
-    }
-    
-    /**
-     * Post:
-     * Valida si la lista de tamaños que el jugador recuerda 
-     * coincide exactamente con el orden de los tamaños de las cajas en el paso X.
-     * * @param elementos Lista de cajas con los tamaños en el orden que cree el usuario.
-     * @param nroPaso El número de paso que el Main determinó para el desafío.
-     * @return true si memorizó y ordenó correctamente, false si falló.
-     */
-    public boolean verificarEstadosDePasos(List<T> elementos, int nroPaso) {
-        ValidacionesUtiles.esDistintoDeNull(elementos, "La lista de elementos a verificar no puede ser nula");
 
-        List<PasoOrdenamiento<T>> pasos = administradorPasos.getPasos();
-        
-        ValidacionesUtiles.validarRangoNumerico(nroPaso, 0, pasos.size() - 1, "Numero de paso fuera de rango ");
-        
-        int cantidadReal = pasos.get(nroPaso).getCopiasEnEstePaso().size();
-        ValidacionesUtiles.validarVerdadero(elementos.size() == cantidadReal, 
-            "La cantidad de elementos tiene q coincidir con la cantidad de elementos que tenia el paso");
-        
-        List<T> elementosReales = pasos.get(nroPaso).getCopiasEnEstePaso();
-      
-        for (int i = 0; i < elementosReales.size(); i++) {
-            if (!elementosReales.get(i).equals(elementos.get(i))) {
-                return false; 
-            }
-        }
-        return true; 
+        // Construir y registrar el minijuego en el mundo
+        minijuego = FabricaMinijuegoOrdenamiento.crear(
+                vista,
+                cajasIniciales,
+                ordenador,
+                filaBase,
+                colInicio
+        );
+
+        // Callback: cuando el jugador gane, esta partida se finaliza
+        minijuego.setOnVictoria(() -> {
+            setPuntaje(100);
+            finalizar();
+        });
+
+        // Arrancar el loop visual (si no estaba corriendo ya)
+        ventana = new JFrame();
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventana.setResizable(false);
+        ventana.setTitle("Ciudad de Ordenamientos");
+        ventana.add(vista);
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+
+        // Arranca el bucle (run → actualizar → repaint a 60 fps)
+        vista.startGameThread();
     }
-    
-    //GETTER SIMPLES-----------------------------------------------------------------
+
     /**
-     * post:
-     * @return del historial de pasos de la partida
+     * Pre:  la partida debe estar iniciada
+     * Post: detiene el hilo del juego y cambia el estado a Creado
      */
-    public List<PasoOrdenamiento<T>> getHistorialDePasos() {
-        return administradorPasos.getPasos();
+    @Override
+    public void finalizar() {
+        ValidacionesUtiles.validarVerdadero(estaIniciada(), getNombreAlgoritmo());
+        vista.detenerHilo();
+        setEstado(EstadoDePartida.Creado);
     }
-    
-    /**
-     * Post:
-     * @return el nombre del algoritmo seleccionado para la partida
-     */
+
+    // ── Getters ───────────────────────────────────────────────────────────────
+
+    /** Post: devuelve el nombre del algoritmo configurado */
     public String getNombreAlgoritmo() {
         return ordenador.getNombre();
     }
-    
-    // SETTERS SIMPLES---------------------------------------------------------------------------------------
-    /**
-     * Pre:
-     * @param elementos no nulos
-     * Post:
-     * - modifica los elementos
-     */
-    private void setElementosIniciales(List<T> elementos) {
-    	ValidacionesUtiles.esDistintoDeNull(elementos, "La lista de elementos no puede ser nula");
-    	this.elementosIniciales = elementos;
-    	}
-    
-    /**
-     * Pre:
-     * @param ordenador no nulo
-     * Post:
-     * - modifica el ordenador
-     */
-    private void setOrdenador(Ordenador<T> ordenador) {
-    	ValidacionesUtiles.esDistintoDeNull(ordenador, "El ordenador seleccionado no puede ser nulo");
-    	this.ordenador = ordenador;
-    	}
-    
-    /**
-     * Pre:
-     * @param administrador de pasos no nulo
-     * Post:
-     * - modifica el administrador de pasos
-     */
-    private void setAdministradorDePasos(AdministradorDePasos<T> admin) { 
-    	ValidacionesUtiles.esDistintoDeNull(admin, "El Administrador de pasos no puede ser nulo");
-    	this.administradorPasos = admin; 
+
+    /** Post: devuelve el minijuego activo (null si no se inició todavía) */
+    public MinijuegoOrdenamiento getMinijuego() {
+        return minijuego;
+    }
+
+    // ── Métodos generales ─────────────────────────────────────────────────────
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(cajasIniciales, ordenador);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        PartidaOrdenamientos other = (PartidaOrdenamientos) obj;
+        return Objects.equals(cajasIniciales, other.cajasIniciales)
+                && Objects.equals(ordenador, other.ordenador);
+    }
+
+    @Override
+    public String toString() {
+        return "PartidaOrdenamientos [cajas=" + cajasIniciales
+                + ", ordenador=" + ordenador + "]";
+    }
+
+    // ── Setters privados ──────────────────────────────────────────────────────
+
+    private void setCajasIniciales(List<Caja> cajas) {
+        ValidacionesUtiles.esDistintoDeNull(cajas, "Las cajas no pueden ser nulas");
+        this.cajasIniciales = cajas;
+    }
+
+    private void setOrdenador(Ordenador<Caja> ordenador) {
+        ValidacionesUtiles.esDistintoDeNull(ordenador, "El ordenador no puede ser nulo");
+        this.ordenador = ordenador;
+    }
+
+    private void setVista(Vista vista) {
+        ValidacionesUtiles.esDistintoDeNull(vista, "La vista no puede ser nula");
+        this.vista = vista;
     }
 }
