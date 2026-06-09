@@ -8,6 +8,7 @@ public class CiudadComplejidad {
     private final SolverTeoremaMaestro solver;
     private EcuacionRecurrencia ecuacion;
     private List<PasoTeoremaMaestro> pasos;
+    private String resultado;
 
     /**
      * Crea una nueva ciudad de complejidad algorítmica.
@@ -29,7 +30,13 @@ public class CiudadComplejidad {
         if (ecuacion == null) return false;
 
         pasos = solver.resolver(ecuacion);
+        resultado = solver.getResultado(ecuacion);
         return true;
+    }
+
+    /** @return complejidad resultante como string, ej: "O(n log n)" */
+    public String getResultado() {
+        return resultado;
     }
 
     /**

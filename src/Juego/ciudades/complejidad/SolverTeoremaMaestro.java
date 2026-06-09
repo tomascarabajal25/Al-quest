@@ -64,4 +64,31 @@ public class SolverTeoremaMaestro {
 
         return 0; // default
     }
+
+    /**
+     * Devuelve la complejidad resultante sin grabar pasos.
+     *
+     * @param ec ecuación de recurrencia
+     * @return complejidad como string
+     */
+    public String getResultado(EcuacionRecurrencia ec) {
+        double logBA = Math.log(ec.getA()) / Math.log(ec.getB());
+        double expFn = obtenerExponente(ec.getFn());
+
+        if (expFn < logBA) {
+            return "O(n^" + String.format("%.0f", logBA) + ")";
+
+        } else if (expFn == logBA) {
+            if (logBA == 1) return "O(n log n)";
+
+            return "O(n^" + String.format("%.0f", logBA) + " log n)";
+
+        } else {
+            if (expFn == 0) return "O(1)";
+            if (expFn == 1) return "O(n)";
+            if (expFn == 2) return "O(n^2)";
+            
+            return "O(n^" + String.format("%.0f", expFn) + ")";
+        }
+    }
 }
