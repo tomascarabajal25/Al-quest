@@ -1,17 +1,13 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
-import Juego.Constantes;
-import Juego.ciudades.recoleccionEnMatriz.ui.GameWindow;
 import Juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import Juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
-import modelos.Mochila;
 import modelos.Partida;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
 
 import java.util.Objects;
 

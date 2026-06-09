@@ -22,8 +22,8 @@ public class Vista extends JPanel implements Runnable{
 	final int escala=3; 
 	
 	public final int tamaño = tamañoOriginal *escala;
-	final int columnas = 16;
-	final int filas = 12;
+	public final int columnas = 16;
+	public final int filas = 12;
 	final int anchoDePantalla= tamaño * columnas; //768pix	
 	final int largoDePantalla= tamaño*filas; //576pix
 	public JugadorVista jugadorVista;

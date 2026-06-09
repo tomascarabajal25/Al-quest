@@ -494,6 +494,14 @@ public class CiudadRecoleccion {
         return this.ultimoMensaje;
     }
 
+    /**
+     * Getter de posicion de spawn del jugador
+     * @return: Devuelve la posicion inicial del jugador
+     */
+    public int[] getPosicionSpawnSiguienteNivel() {
+        return new int[]{1, 1}; // fila, columna del spawn
+    }
+
 
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------

@@ -10,17 +10,16 @@ import java.util.List;
 
 public class MinijuegoRecoleccion implements Minijuego {
 
-    private final CiudadRecoleccion     juego;
+    private final CiudadRecoleccion juego;
     private final KeyHandlerRecoleccion key;
-    private Runnable                    onFinalizadoCallback;
-    private final List<CartaVista>      cartas = new ArrayList<>();
+    private Runnable onFinalizadoCallback;
+    private final List<CartaVista> cartas = new ArrayList<>();
 
     private boolean finalizado     = false;
     private boolean mochilaVisible = false;
+    public int cartaPresionada = 0;
 
-    public MinijuegoRecoleccion(CiudadRecoleccion juego,
-                                 Vista vista,
-                                 KeyHandlerRecoleccion key) {
+    public MinijuegoRecoleccion(CiudadRecoleccion juego, Vista vista, KeyHandlerRecoleccion key) {
         this.juego = juego;
         this.key   = key;
         inyectarCartas(vista);
@@ -38,25 +37,100 @@ public class MinijuegoRecoleccion implements Minijuego {
     @Override
     public void actualizar(JugadorVista jugador) {
         if (finalizado) return;
-        // píxeles → tile (base 1)
-        int tamaño = jugador.getVistaDelJuego().tamaño;
-        int col  = jugador.getWorldX() / tamaño + 1;  // columna = X
-        int fila = jugador.getWorldY() / tamaño + 1;  // fila    = Y
-        juego.actualizarPosicionJugador(col, fila);    // (col, fila) → el método los clampea
 
-        // Notificar al modelo dónde está el jugador visualmente
+        int tamaño = jugador.getVistaDelJuego().tamaño;
+        int col  = jugador.getWorldX() / tamaño + 1;
+        int fila = jugador.getWorldY() / tamaño + 1;
+
+        // Colisión con cartas — empujar al jugador en dirección contraria
+        for (CartaVista carta : cartas) {
+            if (!carta.isRecogido() && carta.colisionaConJugador(jugador, obtenerNivelActual())) {
+                int t = jugador.getVistaDelJuego().tamaño;
+                switch (jugador.getDireccion()) {
+                    case Arriba    -> jugador.setWorldY(jugador.getWorldY() + t);
+                    case Abajo     -> jugador.setWorldY(jugador.getWorldY() - t);
+                    case Izquierda -> jugador.setWorldX(jugador.getWorldX() + t);
+                    case Derecha   -> jugador.setWorldX(jugador.getWorldX() - t);
+                }
+                return;
+            }
+        }
+
         juego.actualizarPosicionJugador(col, fila);
+
+        // Recoger carta
         if (key.ePressed) {
+            int nivelAntes = obtenerNivelActual();
             juego.recogerCarta();
             key.ePressed = false;
+
+            int nivelDespues = obtenerNivelActual();
+            if (nivelDespues != nivelAntes) {
+                int t = jugador.getVistaDelJuego().tamaño;
+                jugador.setWorldX(2 * t);
+                jugador.setWorldY(2 * t);
+            }
         }
+
+        // Abrir/cerrar mochila
         if (key.pPressed) {
             mochilaVisible = !mochilaVisible;
             key.pPressed   = false;
         }
+
+        // Usar carta de la mochila
+        if (mochilaVisible && key.cartaPresionada > 0) {
+            try {
+                juego.usarCartaMochila(key.cartaPresionada);
+            } catch (RuntimeException ex) {
+                // slot inválido, ignorar
+            }
+            key.cartaPresionada = 0;
+        }
+
+        // Verificar fin de juego
         if (juego.estaFinalizado()) {
             finalizado = true;
             if (onFinalizadoCallback != null) onFinalizadoCallback.run();
+        }
+    }
+
+    private int obtenerNivelActual() {
+        int[] pos = juego.getPosicionJugador();
+        return (pos != null) ? pos[2] : 1;
+    }
+
+    private void dibujarOverlayVisibilidad(Graphics2D g2, JugadorVista jugador) {
+        modelosVista.Vista vista = jugador.getVistaDelJuego();
+        int tamaño      = vista.tamaño;
+        int visibilidad = juego.getVisibilidad();
+
+        // Posición del jugador en pantalla (centro)
+        int jScreenX = jugador.getScreenX();
+        int jScreenY = jugador.getScreenY();
+
+        // Recorrer todas las celdas visibles en pantalla
+        for (int col = 0; col < vista.columnas + 2; col++) {
+            for (int fila = 0; fila < vista.filas + 2; fila++) {
+                // worldX/Y de esta celda
+                int worldX = (jugador.getWorldX() / tamaño - vista.columnas / 2 + col) * tamaño;
+                int worldY = (jugador.getWorldY() / tamaño - vista.filas   / 2 + fila) * tamaño;
+
+                // screenX/Y de esta celda
+                int screenX = worldX - jugador.getWorldX() + jScreenX;
+                int screenY = worldY - jugador.getWorldY() + jScreenY;
+
+                // Distancia en tiles al jugador
+                int distCol = Math.abs(worldX / tamaño - jugador.getWorldX() / tamaño);
+                int distFila = Math.abs(worldY / tamaño - jugador.getWorldY() / tamaño);
+
+                if (distCol > visibilidad || distFila > visibilidad) {
+                    int dist = Math.max(distCol, distFila);
+                    int alpha = Math.min(190, 130 + (dist - visibilidad) * 15);
+                    g2.setColor(new Color(0, 0, 0, alpha));
+                    g2.fillRect(screenX, screenY, tamaño, tamaño);
+                }
+            }
         }
     }
 
@@ -71,17 +145,15 @@ public class MinijuegoRecoleccion implements Minijuego {
      * en adminObjt sino que las guardamos en la lista local y las dibujamos
      * manualmente con el nivel correcto.
      */
-    @Override
     public void draw(Graphics2D g2, JugadorVista jugador) {
         int[] pos = juego.getPosicionJugador();
         int nivelActual = (pos != null) ? pos[2] : 1;
 
-        // Dibujamos las cartas con la sobrecarga que filtra por nivel.
-        // Vista no las dibuja porque no están en adminObjt.
         for (CartaVista carta : cartas) {
             carta.draw(g2, jugador.getVistaDelJuego(), nivelActual);
         }
 
+        dibujarOverlayVisibilidad(g2, jugador);  // ← nuevo
         dibujarHUD(g2);
         if (mochilaVisible) dibujarMochila(g2);
     }
@@ -126,8 +198,8 @@ public class MinijuegoRecoleccion implements Minijuego {
         g2.setFont(new Font("Arial", Font.PLAIN, 12));
         g2.setColor(new Color(220, 220, 100));
         int ly = y + 40;
-        for (int i = 1; i <= items.size(); i++) {
-            g2.drawString(i + ". " + items.get(i).getNombre(), x + 10, ly);
+        for (int i = 0; i < items.size(); i++) {        // ← 0-based
+            g2.drawString((i + 1) + ". " + items.get(i).getNombre(), x + 10, ly);  // ← get(i)
             ly += 20;
         }
     }
