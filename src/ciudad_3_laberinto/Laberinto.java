@@ -75,7 +75,7 @@ public class Laberinto {
     }
 
     public boolean posicionValida(int fila, int columna) {
-        return fila >= 0 && fila <= filas && columna >= 0 && columna <= columnas;
+        return fila >= 0 && fila < filas && columna >= 0 && columna < columnas;
     }
 
     //  GETTERS

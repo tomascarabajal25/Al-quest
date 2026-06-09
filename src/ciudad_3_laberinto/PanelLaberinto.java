@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class PanelLaberinto extends JPanel {
     
-    private static final int TAMANIO_CELDA = 60;
+    private static final int TAMANIO_CELDA = 40;
 
     private static final Color COLOR_PARED = Color.BLACK;
     private static final Color COLOR_LIBRE = Color.WHITE;
