@@ -24,8 +24,8 @@ public class Vista extends JPanel implements Runnable{
 	public final int tamaño = tamañoOriginal *escala;
 	public final int columnas = 16;
 	public final int filas = 12;
-	final int anchoDePantalla= tamaño * columnas; //768pix	
-	final int largoDePantalla= tamaño*filas; //576pix
+	private final int anchoDePantalla= tamaño * columnas; //768pix
+	private int largoDePantalla= tamaño*filas; //576pix
 	public JugadorVista jugadorVista;
 	
 	//configuracion del mundo
@@ -159,5 +159,13 @@ public class Vista extends JPanel implements Runnable{
 	}
 	public void detenerHilo() {
         hiloDelJuego = null; // el while(hiloDelJuego != null) termina solo
+    }
+
+    public int getAnchoDePantalla() {
+        return this.anchoDePantalla;
+    }
+
+    public int getLargoDePantalla() {
+        return this.largoDePantalla;
     }
 }

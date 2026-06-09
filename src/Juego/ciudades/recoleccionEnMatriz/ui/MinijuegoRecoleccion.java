@@ -4,6 +4,7 @@ import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelosVista.JugadorVista;
 import modelos.Minijuego;
 import modelosVista.Vista;
+import utils.ValidacionesUtiles;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,53 +12,98 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MinijuegoRecoleccion implements Minijuego {
-
-    private final CiudadRecoleccion juego;
-    private final KeyHandlerRecoleccion key;
-    private Runnable onFinalizadoCallback;
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private CiudadRecoleccion juego = null;
+    private KeyHandlerRecoleccion key = null;
+    private Runnable onFinalizadoCallback = null;
     private JFrame ventana = null;
-    private final List<CartaVista> cartas = new ArrayList<>();
+    private List<CartaVista> cartas = new ArrayList<>();
 
     private boolean finalizado     = false;
     private boolean mochilaVisible = false;
     public int cartaPresionada = 0;
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
+    /**
+     * Constructor del TDA MinijuegoRecoleccion
+     *
+     * PRE:
+     * -Juego, vista, key y ventana no deben ser nulo
+     *
+     * @param juego: Juego asocioado a la UI
+     * @param vista: Vista general de la UI
+     * @param key: Manejador de controles propios del juego
+     * @param ventana: Vista propia del juego
+     */
     public MinijuegoRecoleccion(CiudadRecoleccion juego, Vista vista, KeyHandlerRecoleccion key, JFrame ventana) {
-        this.juego = juego;
-        this.key   = key;
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        ValidacionesUtiles.esDistintoDeNull(ventana, "ventana");
+
+        setJuego(juego);
+        setKey(key);
         setVentana(ventana);
         inyectarCartas(vista);
     }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
+    /**
+     * Guarda todas las vistas de las cartas
+     *
+     * Pre:
+     * -Vista no debe ser nulo
+     *
+     * @param vista: vista general de la UI
+     */
     private void inyectarCartas(Vista vista) {
-        // Las cartas NO van en adminObjt porque ElementoVista no extiende ObjetoVista.
-        // El minijuego las guarda localmente y las dibuja en draw() con la sobrecarga
-        // draw(g2, vista, nivelActual) que filtra por nivel.
-        for (CartaVista carta : juego.getCartasVista(vista.tamaño)) {
-            cartas.add(carta);
-        }
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+        this.cartas.addAll(juego.getCartasVista(vista.tamaño));
     }
 
+    /**
+     * Actualiza el estado del minijuego frame a frame
+     *
+     * Pre:
+     * -Jugador no debe ser nulo
+     *
+     * @param jugador: Jugador
+     */
     @Override
     public void actualizar(JugadorVista jugador) {
-        if (finalizado) return;
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
 
         int tamaño = jugador.getVistaDelJuego().tamaño;
         int col  = jugador.getWorldX() / tamaño + 1;
         int fila = jugador.getWorldY() / tamaño + 1;
+        boolean colisionaCarta = false;
+
+        if (finalizado){
+            return;
+        }
 
         // Colisión con cartas — chequear posición futura
-        boolean colisionaCarta = false;
         for (CartaVista carta : cartas) {
-            if (carta.isRecogido()) continue;
-            if (carta.getNivel() != obtenerNivelActual()) continue;
+            if (carta.isRecogido() || carta.getNivel() != obtenerNivelActual()){
+                continue;
+            }
 
             int cartaTileX = carta.getWorldX() / tamaño; // columna 0-based
             int cartaTileY = carta.getWorldY() / tamaño; // fila 0-based
 
             int futuroX = jugador.getWorldX();
             int futuroY = jugador.getWorldY();
-            int vel     = jugador.getVelocidad();
+            int vel = jugador.getVelocidad();
 
             switch (jugador.getDireccion()) {
                 case Arriba    -> futuroY -= vel;
@@ -75,18 +121,18 @@ public class MinijuegoRecoleccion implements Minijuego {
                 break;
             }
         }
-
         if (!colisionaCarta) {
             juego.actualizarPosicionJugador(col, fila);
         }
 
         // Recoger carta
-        if (key.ePressed) {
+        if (key.getEPressed()) {
             int nivelAntes = obtenerNivelActual();
-            juego.recogerCarta();
-            key.ePressed = false;
-
             int nivelDespues = obtenerNivelActual();
+
+            juego.recogerCarta();
+            key.modificarEstadoEPressed(false);
+
             if (nivelDespues != nivelAntes) {
                 int t = jugador.getVistaDelJuego().tamaño;
                 jugador.setWorldX(2 * t);
@@ -95,19 +141,17 @@ public class MinijuegoRecoleccion implements Minijuego {
         }
 
         // Abrir/cerrar mochila
-        if (key.pPressed) {
+        if (key.getPPressed()) {
             mochilaVisible = !mochilaVisible;
-            key.pPressed   = false;
+            key.modificarEstadoPPressed(false);
         }
 
         // Usar carta de la mochila
-        if (mochilaVisible && key.cartaPresionada > 0) {
+        if (mochilaVisible && key.getCartaPresionada() > 0) {
             try {
-                juego.usarCartaMochila(key.cartaPresionada);
-            } catch (RuntimeException ex) {
-                // slot inválido, ignorar
-            }
-            key.cartaPresionada = 0;
+                juego.usarCartaMochila(key.getCartaPresionada());
+            } catch (RuntimeException ex) {}
+            key.restablecerCartaPresionada();
         }
 
         // Sincronizar velocidad visual con desplazamiento del modelo
@@ -115,35 +159,55 @@ public class MinijuegoRecoleccion implements Minijuego {
 
         // Verificar fin de juego
         if (juego.estaFinalizado()) {
-            finalizado = true;
-            if (onFinalizadoCallback != null) onFinalizadoCallback.run();
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                javax.swing.JOptionPane.showMessageDialog(
-                        ventana,
-                        "¡Ciudad completada!\nPuntos obtenidos: " + juego.getPuntos(),
-                        "Fin del juego",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE
-                );
-                if (ventana != null) ventana.dispose();
-            });
-        }
+            this.finalizado = true;
+            if (onFinalizadoCallback != null){
+                onFinalizadoCallback.run();
+            }
+
+            javax.swing.SwingUtilities.invokeLater(() -> {javax.swing.JOptionPane.showMessageDialog(
+                    ventana,
+           "¡Ciudad completada!\nPuntos obtenidos: " + juego.getPuntos(),
+               "Fin del juego",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            if (ventana != null){
+                ventana.dispose();
+            }
+            }
+         );
+      }
     }
 
-    private int obtenerNivelActual() {
-        int[] pos = juego.getPosicionJugador();
-        return (pos != null) ? pos[2] : 1;
-    }
-
+    /**
+     * Dibuja el rango de visibilidad limitado del jugador
+     *
+     * Pre:
+     * -G2 y jugador no deben ser nulos
+     *
+     * @param g2: Vista del juego donde se limita la visibilidad
+     * @param jugador: Jugador
+     */
     private void dibujarOverlayVisibilidad(Graphics2D g2, JugadorVista jugador) {
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+
         modelosVista.Vista vista = jugador.getVistaDelJuego();
-        int tamaño      = vista.tamaño;
+        int tamaño = vista.tamaño;
         int visibilidad = juego.getVisibilidad();
 
         int jugadorTileX = jugador.getWorldX() / tamaño;
         int jugadorTileY = jugador.getWorldY() / tamaño;
 
-        for (int col = 0; col < vista.columnasDelMundo; col++) {
-            for (int fila = 0; fila < vista.filasDelMundo; fila++) {
+        int mitadCols  = vista.getAnchoDePantalla()  / tamaño / 2 + 1;
+        int mitadFilas = vista.getLargoDePantalla() / tamaño / 2 + 1;
+
+        for (int col = jugadorTileX - mitadCols; col <= jugadorTileX + mitadCols; col++) {
+            for (int fila = jugadorTileY - mitadFilas; fila <= jugadorTileY + mitadFilas; fila++) {
+                if (col < 0 || fila < 0 || col >= vista.columnasDelMundo || fila >= vista.filasDelMundo){
+                    continue;
+                }
+
                 int distCol  = Math.abs(col  - jugadorTileX);
                 int distFila = Math.abs(fila - jugadorTileY);
 
@@ -161,30 +225,46 @@ public class MinijuegoRecoleccion implements Minijuego {
     }
 
     /**
-     * draw() del minijuego se llama DESPUÉS de que Vista dibujó los objetos.
-     * Las cartas ya fueron dibujadas por Vista con draw(g2, vista) — sin nivel.
-     * Acá redibujamos solo las cartas usando la sobrecarga con nivel,
-     * lo que oculta las del nivel incorrecto pintando encima... 
+     * Dibuja todos los elementos o entidades en la vista de la UI
      *
-     * MEJOR: Vista no dibuja las CartaVista directamente; el minijuego
-     * las dibuja acá con la versión correcta. Para eso NO las inyectamos
-     * en adminObjt sino que las guardamos en la lista local y las dibujamos
-     * manualmente con el nivel correcto.
+     * Pre:
+     * -G2 y jugador no debe ser nulos
+     *
+     * @param g2: Vista del juego donde se dibujan los elementos/entidades
+     * @param jugador: Jugador
      */
     public void draw(Graphics2D g2, JugadorVista jugador) {
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+
         int[] pos = juego.getPosicionJugador();
-        int nivelActual = (pos != null) ? pos[2] : 1;
+
+        int nivelActual = 0;
+        if (pos != null) {
+            nivelActual = pos[2];
+        } else {
+            nivelActual = 1;
+        }
 
         for (CartaVista carta : cartas) {
             carta.draw(g2, jugador.getVistaDelJuego(), nivelActual);
         }
 
-        dibujarOverlayVisibilidad(g2, jugador);  // ← nuevo
+        dibujarOverlayVisibilidad(g2, jugador);
         dibujarHUD(g2);
         if (mochilaVisible) dibujarMochila(g2);
     }
 
+    /**
+     * Dibuja el panel HUD con los datos del juego
+     *
+     * Pre:
+     * -G2 no debe ser nulo
+     *
+     * @param g2
+     */
     private void dibujarHUD(Graphics2D g2) {
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
         int x = 10, y = 20;
         g2.setColor(new Color(0, 0, 0, 160));
         g2.fillRoundRect(x, y, 200, 90, 12, 12);
@@ -200,7 +280,17 @@ public class MinijuegoRecoleccion implements Minijuego {
         g2.drawString("Mochila: [P]",                           x + 10, y + 82);
     }
 
+    /**
+     * Dibuja la vista de la mochila
+     *
+     * Pre:
+     * -G2 no debe ser nulo
+     *
+     * @param g2
+     */
     private void dibujarMochila(Graphics2D g2) {
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+
         int x = 10, y = 120;
         var items = juego.getItemsMochila();
         int alto = 30 + (items != null ? items.size() * 20 : 0) + 10;
@@ -229,13 +319,197 @@ public class MinijuegoRecoleccion implements Minijuego {
             ly += 20;
         }
     }
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
 
-    public void setOnFinalizadoCallback(Runnable cb) { this.onFinalizadoCallback = cb; }
+    /**
+     * Metodo para obtener el nivel actual del jugador
+     *
+     * @return: Devuelve el nivel
+     */
+    private int obtenerNivelActual() {
+        int[] pos = juego.getPosicionJugador();
+        return (pos != null) ? pos[2] : 1;
+    }
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
 
-    public void setVentana(JFrame ventana) {
-        this.ventana = ventana;
+    /**
+     * Getter del atributo juego
+     * @return: Devuelve el valor del atributo juego
+     */
+    public CiudadRecoleccion getJuego(){
+        return this.juego;
     }
 
-    public boolean isFinalizado() { return finalizado; }
-    public int     getPuntaje()   { return juego.getPuntos(); }
+    /**
+     * Getter del atributo key
+     * @return: Devuelve el valor del atributo key
+     */
+    public KeyHandlerRecoleccion getKey(){
+        return this.key;
+    }
+
+    /**
+     * Getter del atributo onFinalizadoCallback
+     * @return: Devuelve el valor del atributo onFinalizadoCallback
+     */
+    public Runnable getOnFinalizadoCallback(){
+        return this.onFinalizadoCallback;
+    }
+
+    /**
+     * Getter del atributo ventana
+     * @return: Devuelve el valor del atributo ventana
+     */
+    public JFrame getVentana(){
+        return this.ventana;
+    }
+
+    /**
+     * Getter del atributo cartas
+     * @return: Devuelve la lista del atributo cartas
+     */
+    public List<CartaVista> getCartas(){
+        return this.cartas;
+    }
+
+    /**
+     * Getter del atributo finalizado
+     * @return: Devuelve el estado del atriuto finalizado
+     */
+    public boolean getFinalizado(){
+        return this.finalizado;
+    }
+
+    /**
+     * Getter del atributo mochilaVisible
+     * @return: Devuelve el estado del atriuto mochilaVisible
+     */
+    public boolean getMochilaVisible(){
+        return this.mochilaVisible;
+    }
+
+    /**
+     * Getter del atributo cartaPresionada
+     * @return: Devuelve el valor del atributo cartaPresionada
+     */
+    public int getCartasPresionadas(){
+        return this.cartaPresionada;
+    }
+
+    /**
+     * Getter del puntaje del juego
+     * @return: puntaje del objeto juego
+     */
+    public int getPuntaje(){
+        return this.juego.getPuntos();
+    }
+
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Setter del atributo juego
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     *
+     * @param juego: Objeto juego nuevo
+     */
+    private void setJuego(CiudadRecoleccion juego){
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        this.juego = juego;
+    }
+
+    /**
+     * Setter del atributo key
+     *
+     * Pre:
+     * -Key no debe ser nulo
+     *
+     * @param key: Objeto key nuevo
+     */
+    private void setKey(KeyHandlerRecoleccion key){
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        this.key = key;
+    }
+
+    /**
+     * Setter del atributo onFinalizadoCallback
+     *
+     * PRE:
+     * -Callback no debe ser nulo
+     *
+     * @param callback: Objeto callback nuevo
+     */
+    private void setOnFinalizadoCallback(Runnable callback){
+        ValidacionesUtiles.esDistintoDeNull(callback, "callback");
+        this.onFinalizadoCallback = callback;
+    }
+
+    /**
+     * Setter del atributo ventana
+     *
+     * Pre:
+     * -Ventana no debe ser nulo
+     *
+     * @param ventana: Objeto ventana nuevo
+     */
+    private void setVentana(JFrame ventana) {
+        ValidacionesUtiles.esDistintoDeNull(ventana, "ventana");
+        this.ventana =  ventana;
+    }
+
+    /**
+     * Setter del atributo cartas
+     *
+     * PRE:
+     * -Cartas no debe ser nulo
+     *
+     * @param cartas: Nueva lista de cartas
+     */
+    private void setCartas(List<CartaVista> cartas){
+        this.cartas = cartas;
+    }
+
+    /**
+     * Setter del atributo finalizado
+     *
+     * Pre:
+     * -Estado no debe ser nulo
+     *
+     * @param estado: Estado nuevo del atributo
+     */
+    private void setFinalizado(boolean estado){
+        ValidacionesUtiles.esDistintoDeNull(estado, "estado");
+        this.finalizado =  estado;
+    }
+
+    /**
+     * Setter del atributo mochilaVisible
+     *
+     * Pre:
+     * -Estado no debe ser nulo
+     *
+     * @param estado: Nuevo estado
+     */
+    private void setMochilaVisible(boolean estado){
+        ValidacionesUtiles.esDistintoDeNull(estado, "estado");
+        this.mochilaVisible = estado;
+    }
+
+    /**
+     * Setter del atributo cartaPresionada
+     *
+     * Pre:
+     * -Valor debe ser mayor o igual a cero
+     *
+     * @param valor: Nuevo valor
+     */
+    private void setCartasPresionadas(int valor){
+        ValidacionesUtiles.validarMayorOIgualACero(valor, "valor");
+        this.cartaPresionada =  valor;
+    }
+
 }

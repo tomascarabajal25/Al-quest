@@ -34,8 +34,8 @@ public class JugadorVista extends EntidadVista {
 		setJugador(jugador) ;
 		setVista(vista);
 		setKey(key);
-		screenX=vistaDelJuego.anchoDePantalla/2 -(vistaDelJuego.tamaño/2);
-		screenY=vistaDelJuego.largoDePantalla/2 -(vistaDelJuego.tamaño/2);
+		screenX=vistaDelJuego.getAnchoDePantalla()/2 -(vistaDelJuego.tamaño/2);
+		screenY=vistaDelJuego.getLargoDePantalla()/2 -(vistaDelJuego.tamaño/2);
 		
 		setWorldX(spawnCol * vistaDelJuego.tamaño);
 		setWorldY(spawnFila * vistaDelJuego.tamaño); 
