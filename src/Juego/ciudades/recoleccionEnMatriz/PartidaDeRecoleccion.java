@@ -77,11 +77,6 @@ public class PartidaDeRecoleccion extends Partida {
     	KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
         Vista vista = new Vista("/maps/world_recoleccion.txt", getJugador(), 24,21,"/assets/jugador/boy", key );
 
-
-        MinijuegoRecoleccion minijuego =new MinijuegoRecoleccion(juego, vista, key);
-        vista.setMinijuego(minijuego);
-        minijuego.setOnFinalizadoCallback(this::finalizar);
-
         // Igual que PartidaBusqueda
         JFrame ventana = new JFrame("Ciudad de Recolección");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -90,6 +85,11 @@ public class PartidaDeRecoleccion extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+
+        MinijuegoRecoleccion minijuego =new MinijuegoRecoleccion(juego, vista, key, ventana);
+        vista.setMinijuego(minijuego);
+        minijuego.setOnFinalizadoCallback(this::finalizar);
+
         vista.startGameThread();
     }
 

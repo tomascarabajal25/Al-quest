@@ -4,6 +4,8 @@ import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelosVista.JugadorVista;
 import modelos.Minijuego;
 import modelosVista.Vista;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +15,17 @@ public class MinijuegoRecoleccion implements Minijuego {
     private final CiudadRecoleccion juego;
     private final KeyHandlerRecoleccion key;
     private Runnable onFinalizadoCallback;
+    private JFrame ventana = null;
     private final List<CartaVista> cartas = new ArrayList<>();
 
     private boolean finalizado     = false;
     private boolean mochilaVisible = false;
     public int cartaPresionada = 0;
 
-    public MinijuegoRecoleccion(CiudadRecoleccion juego, Vista vista, KeyHandlerRecoleccion key) {
+    public MinijuegoRecoleccion(CiudadRecoleccion juego, Vista vista, KeyHandlerRecoleccion key, JFrame ventana) {
         this.juego = juego;
         this.key   = key;
+        setVentana(ventana);
         inyectarCartas(vista);
     }
 
@@ -42,21 +46,39 @@ public class MinijuegoRecoleccion implements Minijuego {
         int col  = jugador.getWorldX() / tamaño + 1;
         int fila = jugador.getWorldY() / tamaño + 1;
 
-        // Colisión con cartas — empujar al jugador en dirección contraria
+        // Colisión con cartas — chequear posición futura
+        boolean colisionaCarta = false;
         for (CartaVista carta : cartas) {
-            if (!carta.isRecogido() && carta.colisionaConJugador(jugador, obtenerNivelActual())) {
-                int t = jugador.getVistaDelJuego().tamaño;
-                switch (jugador.getDireccion()) {
-                    case Arriba    -> jugador.setWorldY(jugador.getWorldY() + t);
-                    case Abajo     -> jugador.setWorldY(jugador.getWorldY() - t);
-                    case Izquierda -> jugador.setWorldX(jugador.getWorldX() + t);
-                    case Derecha   -> jugador.setWorldX(jugador.getWorldX() - t);
-                }
-                return;
+            if (carta.isRecogido()) continue;
+            if (carta.getNivel() != obtenerNivelActual()) continue;
+
+            int cartaTileX = carta.getWorldX() / tamaño; // columna 0-based
+            int cartaTileY = carta.getWorldY() / tamaño; // fila 0-based
+
+            int futuroX = jugador.getWorldX();
+            int futuroY = jugador.getWorldY();
+            int vel     = jugador.getVelocidad();
+
+            switch (jugador.getDireccion()) {
+                case Arriba    -> futuroY -= vel;
+                case Abajo     -> futuroY += vel;
+                case Izquierda -> futuroX -= vel;
+                case Derecha   -> futuroX += vel;
+            }
+
+            int futuroTileX = futuroX / tamaño;
+            int futuroTileY = futuroY / tamaño;
+
+            // Si el tile futuro del jugador coincide con el tile de la carta, bloquear
+            if (futuroTileX == cartaTileX && futuroTileY == cartaTileY) {
+                colisionaCarta = true;
+                break;
             }
         }
 
-        juego.actualizarPosicionJugador(col, fila);
+        if (!colisionaCarta) {
+            juego.actualizarPosicionJugador(col, fila);
+        }
 
         // Recoger carta
         if (key.ePressed) {
@@ -88,10 +110,22 @@ public class MinijuegoRecoleccion implements Minijuego {
             key.cartaPresionada = 0;
         }
 
+        // Sincronizar velocidad visual con desplazamiento del modelo
+        jugador.setVelocidad(4 * juego.getDesplazamiento());
+
         // Verificar fin de juego
         if (juego.estaFinalizado()) {
             finalizado = true;
             if (onFinalizadoCallback != null) onFinalizadoCallback.run();
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                javax.swing.JOptionPane.showMessageDialog(
+                        ventana,
+                        "¡Ciudad completada!\nPuntos obtenidos: " + juego.getPuntos(),
+                        "Fin del juego",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                if (ventana != null) ventana.dispose();
+            });
         }
     }
 
@@ -105,28 +139,20 @@ public class MinijuegoRecoleccion implements Minijuego {
         int tamaño      = vista.tamaño;
         int visibilidad = juego.getVisibilidad();
 
-        // Posición del jugador en pantalla (centro)
-        int jScreenX = jugador.getScreenX();
-        int jScreenY = jugador.getScreenY();
+        int jugadorTileX = jugador.getWorldX() / tamaño;
+        int jugadorTileY = jugador.getWorldY() / tamaño;
 
-        // Recorrer todas las celdas visibles en pantalla
-        for (int col = 0; col < vista.columnas + 2; col++) {
-            for (int fila = 0; fila < vista.filas + 2; fila++) {
-                // worldX/Y de esta celda
-                int worldX = (jugador.getWorldX() / tamaño - vista.columnas / 2 + col) * tamaño;
-                int worldY = (jugador.getWorldY() / tamaño - vista.filas   / 2 + fila) * tamaño;
-
-                // screenX/Y de esta celda
-                int screenX = worldX - jugador.getWorldX() + jScreenX;
-                int screenY = worldY - jugador.getWorldY() + jScreenY;
-
-                // Distancia en tiles al jugador
-                int distCol = Math.abs(worldX / tamaño - jugador.getWorldX() / tamaño);
-                int distFila = Math.abs(worldY / tamaño - jugador.getWorldY() / tamaño);
+        for (int col = 0; col < vista.columnasDelMundo; col++) {
+            for (int fila = 0; fila < vista.filasDelMundo; fila++) {
+                int distCol  = Math.abs(col  - jugadorTileX);
+                int distFila = Math.abs(fila - jugadorTileY);
 
                 if (distCol > visibilidad || distFila > visibilidad) {
-                    int dist = Math.max(distCol, distFila);
-                    int alpha = Math.min(190, 130 + (dist - visibilidad) * 15);
+                    int screenX = col  * tamaño - jugador.getWorldX() + jugador.getScreenX();
+                    int screenY = fila * tamaño - jugador.getWorldY() + jugador.getScreenY();
+
+                    int dist  = Math.max(distCol, distFila);
+                    int alpha = Math.min(210, 150 + (dist - visibilidad) * 15);
                     g2.setColor(new Color(0, 0, 0, alpha));
                     g2.fillRect(screenX, screenY, tamaño, tamaño);
                 }
@@ -205,6 +231,11 @@ public class MinijuegoRecoleccion implements Minijuego {
     }
 
     public void setOnFinalizadoCallback(Runnable cb) { this.onFinalizadoCallback = cb; }
+
+    public void setVentana(JFrame ventana) {
+        this.ventana = ventana;
+    }
+
     public boolean isFinalizado() { return finalizado; }
     public int     getPuntaje()   { return juego.getPuntos(); }
 }
