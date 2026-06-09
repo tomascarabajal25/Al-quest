@@ -16,6 +16,11 @@ public class CargadorLaberinto {
 
     private static final char FINAL = 'F';
 
+    /**
+     * Lee el archivo del laberinto
+     * @return el laberinto cargado
+     * @throws IOException
+     */
     public Laberinto cargar(String ruta) throws IOException {
         List<String[]> lineas = leerLineas(ruta);
 
@@ -47,6 +52,13 @@ public class CargadorLaberinto {
         return new Laberinto(grilla, filas, columnas, celdaInicio, celdaFin);
     }
 
+
+    /**
+     * Metodo encargado de leer el archivo .txt
+     * @param ruta acceso al laberinto
+     * @return las lineas del archivo a procesar
+     * @throws IOException si el archivo esta vacio
+     */
     private List<String[]> leerLineas(String ruta) throws IOException {
         List<String[]> lineas = new ArrayList<>();
 
@@ -67,6 +79,9 @@ public class CargadorLaberinto {
         return lineas;
     }
 
+    /**
+     * Valida que las dimensiones del laberinto cargado coincide con los valores leidos del archivo
+     */
     private void validarDimensiones(List<String[]> lineas, int columnas) {
         for (int i = 0; i < lineas.size(); i++) {
             if (lineas.get(i).length != columnas) {
@@ -78,6 +93,10 @@ public class CargadorLaberinto {
         }
     }
 
+    /**
+     * Interpreta los simbolos del laberinto para representar cada casilla
+     * @throws IOException si se usa un simbolo invalido o desconocido en el archivo
+     */
     private EstadoCelda parsearSimbolo(char simbolo, int fila, int columna) {
         switch (simbolo) {
             case PARED:  return EstadoCelda.PARED;
@@ -92,6 +111,11 @@ public class CargadorLaberinto {
         }
     }
 
+    /**
+     * Verifica que exista en el laberinto una celda de inicio como una celda final
+     * @param celdaInicio
+     * @param celdaFin
+     */
     private void validarInicioYFin(Celda celdaInicio, Celda celdaFin) {
         if (celdaInicio == null) {
             throw new IllegalArgumentException(

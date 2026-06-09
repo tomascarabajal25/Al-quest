@@ -67,7 +67,11 @@ public class ControladorLaberinto {
             }
         });
     }
-
+    /**
+     * Ejecuta todos los pasos implicados al avanzar una casilla
+     * Pinta las celdas al estado correspondiente (DESCARTADA, SOLUCION, EN_CAMINO)
+     * Si termina todo su recorrido, indica si este llego a una solucion o si no hay ninguna
+     */
     private void avanzarPaso() {
         ResultadoPaso resultado = backtracking.avanzarPaso();
 
@@ -131,6 +135,7 @@ public class ControladorLaberinto {
         });
     }
 
+    // Ejecuta el boton de inicio
     private void accionIniciar() {
         timer.start();
         ventana.setLabelEstado("En progreso...");
@@ -139,6 +144,7 @@ public class ControladorLaberinto {
         ventana.getBotonResetear().setEnabled(true);
     }
 
+    // Ejecuta el boton de pausa
     private void accionPausar() {
         if (pausado) {
             timer.start();
@@ -153,6 +159,7 @@ public class ControladorLaberinto {
         }
     }
 
+    // Ejecuta el boton de reinicio
     private void accionResetear() {
         timer.stop();
         pausado = false;

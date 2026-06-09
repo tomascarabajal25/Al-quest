@@ -10,7 +10,8 @@ public class Laberinto {
     private int columnas;
     private Celda celdaInicio;
     private Celda celdaFin;
-
+    
+    //Constructor del laberinto
     public Laberinto(Celda[][] grilla, int filas, int columnas, Celda celdaInicio, Celda celdaFin) {
         this.grilla = grilla;
         this.filas = filas;
@@ -19,6 +20,10 @@ public class Laberinto {
         this.celdaFin = celdaFin;
     }
 
+    /**
+     * Obtiene las celdas transitables para moverse en forma de cruz.
+     * Verifica las posiciones en cada direccion
+     */
     public List<Celda> obtenerCeldasTransitables(Celda celda) {
         List<Celda> vecinos = new ArrayList<>();
         int f = celda.getFila();
@@ -42,6 +47,10 @@ public class Laberinto {
         return vecinos;
     }
 
+    /**
+     * Reinicia el laberinto a su estado inicial.
+     * Establece las celdas de inicio y fin en sus posiciones originales.
+     */
     public void reiniciarLaberinto() {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -51,6 +60,8 @@ public class Laberinto {
                     || estado == EstadoCelda.SOLUCION) {
                         grilla[i][j].setEstadoCelda(EstadoCelda.LIBRE);
                 }
+                getCeldaInicio().setEstadoCelda(EstadoCelda.INICIO);
+                getCeldaFin().setEstadoCelda(EstadoCelda.FIN);
             }
         }
     }
@@ -67,13 +78,19 @@ public class Laberinto {
                     case DESCARTADA: sb.append("x "); break;
                     case EN_CAMINO: sb.append("o "); break;
                     case SOLUCION: sb.append("V "); break;
-                } 
+                }
             }
             sb.append("\n");
         }
         return sb.toString();
     }
 
+    /**
+     * Verifica que el laberinto se encuentra dentro de laberinto.
+     * @param fila
+     * @param columna
+     * @return
+     */
     public boolean posicionValida(int fila, int columna) {
         return fila >= 0 && fila < filas && columna >= 0 && columna < columnas;
     }
