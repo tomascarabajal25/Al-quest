@@ -196,16 +196,21 @@ public class VistaGlobal extends Vista {
      * POST: no modifica estado; es una consulta pura O(10).
      */
     private int detectarCiudadCercana() {
-        int jCx = getJugadorVista().getAreaSolida().x
-                + getJugadorVista().getAreaSolida().width  / 2;
+        // 1. Obtener el centro del jugador utilizando estrictamente coordenadas del MUNDO
+        int jCx = getJugadorVista().getWorldX() 
+                + getJugadorVista().getAreaSolida().x
+                + getJugadorVista().getAreaSolida().width / 2;
+                
         int jCy = getJugadorVista().getWorldY()
                 + getJugadorVista().getAreaSolida().y
                 + getJugadorVista().getAreaSolida().height / 2;
 
+        // 2. Comparar contra la posición absoluta de cada ciudad en el mundo
         for (int[] pos : POSICIONES_CIUDADES) {
             int id  = pos[0];
             int cx  = pos[1] * getTamanio() + getTamanio() / 2;
             int cy  = pos[2] * getTamanio() + getTamanio() / 2;
+            
             double dist = Math.hypot(cx - jCx, cy - jCy);
             if (dist <= RADIO_INTERACCION_PX) {
                 return id;
