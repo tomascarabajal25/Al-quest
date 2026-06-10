@@ -56,7 +56,7 @@ public class KeyHandlerRecoleccion extends KeyHandler {
     /**
      * Metodo manejador para la teclas liberadas asociadas a la recoleccion de las cartar y a la mochila
      *
-     * Pre:
+     * PRE:
      * -E no debe ser nulo
      *
      * @param e the event to be processed
@@ -78,7 +78,7 @@ public class KeyHandlerRecoleccion extends KeyHandler {
     /**
      * Actualiza el estado del atributo ePressed
      *
-     * Pre:
+     * PRE:
      * -Estado no debe  ser nulo
      *
      * @param estado: Estado nuevo
@@ -91,7 +91,7 @@ public class KeyHandlerRecoleccion extends KeyHandler {
     /**
      * Actualiza el estado del atributo pPressed
      *
-     * Pre:
+     * PRE:
      * -Estado no debe ser nulo
      *
      * @param estado: Estado nuevo

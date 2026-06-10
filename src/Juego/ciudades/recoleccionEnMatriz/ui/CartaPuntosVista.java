@@ -18,7 +18,7 @@ public class CartaPuntosVista extends CartaVista {
      * -Carta no debe ser nulo
      * -Col, fila, nivel y tamanio deben ser mayores a cero
      *
-     * Post:
+     * POST:
      * -Se crea una nueva instancia de CartaPuntosVista para la UI
      *
      * @param carta: Carta a la que pertenece la vista

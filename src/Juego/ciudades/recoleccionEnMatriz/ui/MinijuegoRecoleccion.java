@@ -61,7 +61,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Guarda todas las vistas de las cartas
      *
-     * Pre:
+     * PRE:
      * -Vista no debe ser nulo
      *
      * @param vista: vista general de la UI
@@ -74,7 +74,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Actualiza el estado del minijuego frame a frame
      *
-     * Pre:
+     * PRE:
      * -Jugador no debe ser nulo
      *
      * @param jugador: Jugador
@@ -106,10 +106,10 @@ public class MinijuegoRecoleccion implements Minijuego {
             int vel = jugador.getVelocidad();
 
             switch (jugador.getDireccion()) {
-                case Arriba    -> futuroY -= vel;
-                case Abajo     -> futuroY += vel;
-                case Izquierda -> futuroX -= vel;
-                case Derecha   -> futuroX += vel;
+                case ARRIBA    -> futuroY -= vel;
+                case ABAJO     -> futuroY += vel;
+                case IZQUIERDA -> futuroX -= vel;
+                case DERECHA   -> futuroX += vel;
             }
 
             int futuroTileX = futuroX / tamaño;
@@ -182,7 +182,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Dibuja el rango de visibilidad limitado del jugador
      *
-     * Pre:
+     * PRE:
      * -G2 y jugador no deben ser nulos
      *
      * @param g2: Vista del juego donde se limita la visibilidad
@@ -227,7 +227,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Dibuja todos los elementos o entidades en la vista de la UI
      *
-     * Pre:
+     * PRE:
      * -G2 y jugador no debe ser nulos
      *
      * @param g2: Vista del juego donde se dibujan los elementos/entidades
@@ -258,7 +258,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Dibuja el panel HUD con los datos del juego
      *
-     * Pre:
+     * PRE:
      * -G2 no debe ser nulo
      *
      * @param g2
@@ -283,7 +283,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Dibuja la vista de la mochila
      *
-     * Pre:
+     * PRE:
      * -G2 no debe ser nulo
      *
      * @param g2
@@ -425,7 +425,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Setter del atributo key
      *
-     * Pre:
+     * PRE:
      * -Key no debe ser nulo
      *
      * @param key: Objeto key nuevo
@@ -451,7 +451,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Setter del atributo ventana
      *
-     * Pre:
+     * PRE:
      * -Ventana no debe ser nulo
      *
      * @param ventana: Objeto ventana nuevo
@@ -476,7 +476,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Setter del atributo finalizado
      *
-     * Pre:
+     * PRE:
      * -Estado no debe ser nulo
      *
      * @param estado: Estado nuevo del atributo
@@ -502,7 +502,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     /**
      * Setter del atributo cartaPresionada
      *
-     * Pre:
+     * PRE:
      * -Valor debe ser mayor o igual a cero
      *
      * @param valor: Nuevo valor
