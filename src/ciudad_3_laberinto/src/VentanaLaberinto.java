@@ -1,4 +1,4 @@
-package ciudad_3_laberinto;
+package ciudad_3_laberinto.src;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

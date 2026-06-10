@@ -1,6 +1,8 @@
-package ciudad_3_laberinto;
+package ciudad_3_laberinto.src;
 
 import java.util.List;
+
+import Juego.ordenamientos.EstadoDePartida;
 
 public class BacktrackingLaberinto {
     private Laberinto laberinto;
@@ -19,7 +21,6 @@ public class BacktrackingLaberinto {
 
     private void inicializar() {
         Celda celdaInicio = laberinto.getCeldaInicio();
-        celdaInicio.setEstadoCelda(EstadoCelda.EN_CAMINO);
         pila.apilar(celdaInicio);
     }
 
@@ -93,11 +94,16 @@ public class BacktrackingLaberinto {
         // Marcar cada celda como SOLUCION
         while (!pilaAux.estaVacia()) {
             Celda celda = pilaAux.desapilar();
-            celda.setEstadoCelda(EstadoCelda.SOLUCION);
+            if (celda.getEstadoCelda() == EstadoCelda.INICIO) {
+                break;
+            } else {
+                celda.setEstadoCelda(EstadoCelda.SOLUCION);
+            }
+            
         }
 
         // Marcar tambien el FIN
-        laberinto.getCeldaFin().setEstadoCelda(EstadoCelda.SOLUCION);
+        //laberinto.getCeldaFin().setEstadoCelda(EstadoCelda.SOLUCION);
     }
 
     public boolean isTerminado() {

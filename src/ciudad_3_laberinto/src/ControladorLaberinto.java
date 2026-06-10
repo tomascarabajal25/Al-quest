@@ -1,4 +1,4 @@
-package ciudad_3_laberinto;
+package ciudad_3_laberinto.src;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +9,7 @@ import javax.swing.Timer;
 
 public class ControladorLaberinto {
     private static final String RUTA_LABERINTO = "src\\ciudad_3_laberinto\\resources\\laberinto.txt";
+    private static  final String RUTA_SPRITES = "src\\ciudad_3_laberinto\\resources\\sprites";
     private static final String RUTA_IMAGENES = "partidas/laberinto";
     private static final int INTERVALO_TIMER = 300;
 
@@ -31,7 +32,9 @@ public class ControladorLaberinto {
         if (!cargarLaberinto()) {
             return;
         }
-        inicializarComponentes();
+        if (!inicializarComponentes()) {
+            return;
+        }
         configurarTimer();
         configurarBotones();
         ventana.mostrar();
@@ -53,11 +56,24 @@ public class ControladorLaberinto {
         }
     }
 
-    private void inicializarComponentes() {
-        backtracking = new BacktrackingLaberinto(laberinto);
-        gestorImagenes =  new GestorImagenes(RUTA_IMAGENES);
-        panelLaberinto = new PanelLaberinto(laberinto);
-        ventana = new VentanaLaberinto(panelLaberinto);
+    private boolean inicializarComponentes() {
+        try {
+            GestorSprites gestorSprites = new GestorSprites(RUTA_SPRITES);
+            backtracking = new BacktrackingLaberinto(laberinto);
+            gestorImagenes =  new GestorImagenes(RUTA_IMAGENES, gestorSprites);
+            panelLaberinto = new PanelLaberinto(laberinto, gestorSprites);
+            ventana = new VentanaLaberinto(panelLaberinto);
+            return true;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                null,
+                "No se pudieron cargar los sprites:\n" + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+        
     }
 
     private void configurarTimer() {

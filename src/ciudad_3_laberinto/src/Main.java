@@ -1,4 +1,4 @@
-package ciudad_3_laberinto;
+package ciudad_3_laberinto.src;
 
 import javax.swing.SwingUtilities;
 public class Main {
