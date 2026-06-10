@@ -1,8 +1,6 @@
 package ciudades.testDeCiudadRecoleccion.testUi;
 
 import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
-import Juego.ciudades.recoleccionEnMatriz.ui.PanelHUD;
-import Juego.ciudades.recoleccionEnMatriz.ui.PanelJuego;
 import modelos.Jugador;
 import org.junit.jupiter.api.Test;
 

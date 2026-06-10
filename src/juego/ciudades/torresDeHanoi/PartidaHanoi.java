@@ -55,13 +55,13 @@ public class PartidaHanoi extends Partida {
         this.cantidadDiscos = discos;
 
         // Vista con el mapa de la ciudad Hanoi
-        this.vista     = new Vista("/maps/world03.txt");
+        this.vista     = new Vista("/maps/world03.txt", getJugador(), 24,21,"/assets/jugador/boy");
 
         // MinijuegoHanoi recibe 'this' para poder llamar a iniciar()/finalizar()
-        this.minijuego = new MinijuegoHanoi(jugador, vista.tamaño, this);
+        this.minijuego = new MinijuegoHanoi(jugador, vista.getTamanio(), this);
 
         // Inyectar en Vista
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
 
         // KeyListener para las teclas del puzzle (1/2/3/R/ESC)
         vista.addKeyListener(new KeyAdapter() {

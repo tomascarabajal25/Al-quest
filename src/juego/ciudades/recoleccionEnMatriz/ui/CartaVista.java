@@ -1,28 +1,36 @@
-package modelosVista;
+package Juego.ciudades.recoleccionEnMatriz.ui;
 
-import utils.ValidacionesUtiles;
+import modelosVista.ElementoVista;
+import modelos.Elemento;
 
-public class AdministradorDeObjetos {
+public abstract class CartaVista extends ElementoVista {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private Vista vista = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
     /**
-     * Constructor del TDA AdministradorDeObjetos
+     * Constructor del TDA CartaVista
      *
      * PRE:
-     * -Vista no debe ser nulo
+     * -Elemento y rutaImagen no deben ser nulos
+     * -Col, fil, nivel y tamanio deben ser mayores a cero
      *
-     * @param vista: Vista
+     * POST:
+     * -Se crea una nueva instancia de CartaVista para la UI
+     *
+     * @param elemento: Carta a la cual pertenece la vista
+     * @param col: Columna de la posicion de la carta
+     * @param fil: Fila de la posicion de la carta
+     * @param nivel: Nivel de la posicion de la carta
+     * @param tamanio: Tamanio de la carta
+     * @param rutaImagen: Ruta de la imagen de la carta
      */
-    public AdministradorDeObjetos(Vista vista) {
-        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
-        setVista(vista);
+    public CartaVista(Elemento elemento, int col, int fil, int nivel, int tamanio, String rutaImagen) {
+        super(elemento, col, fil, nivel, tamanio, rutaImagen);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -30,54 +38,11 @@ public class AdministradorDeObjetos {
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
-
-    /**
-     * Agrega objetos a la vista
-     *
-     * PRE:
-     * -Objetos no debe ser nulo
-     *
-     * @param objetos: Objetos a agregar a la vista
-     */
-    public void setObjetos(ObjetoVista ...objetos) {
-        ValidacionesUtiles.esDistintoDeNull(objetos, "objetos");
-
-        for (ObjetoVista objeto:objetos) {
-            if (objeto != null) {
-                vista.agregarObjeto(objeto);
-            }
-        }
-    }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
     //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
-
-    /**
-     * Getter del atributo vista
-     *
-     * @return: Devuelve el valor del atributo vista
-     */
-    public Vista getVista() {
-        return this.vista;
-    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
-    /**
-     * Setter del atributo vista
-     *
-     * PRE:
-     * -Vista no debe ser nulo
-     *
-     * @param vista: Vista
-     */
-    private void setVista(Vista vista) {
-        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
-        this.vista = vista;
-    }
-
-
-
-
 }

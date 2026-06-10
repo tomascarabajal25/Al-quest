@@ -1,11 +1,16 @@
 package Juego.ciudades.recoleccionEnMatriz;
 
 import modelos.*;
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import utils.ValidacionesUtiles;
 import Juego.Constantes;
-
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaDesplazamientoVista;
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaPuntosVista;
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaVisionVista;
 import estructuras.vector.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CiudadRecoleccion {
@@ -115,6 +120,31 @@ public class CiudadRecoleccion {
      */
     public int finalizar() {
         return this.puntos;
+    }
+    public List<CartaVista> getCartasVista(int tamaño) {
+        List<CartaVista> resultado = new ArrayList<>();
+
+        // mapa es Mapa3D: iterar cada nivel, y dentro de él cada fila/columna.
+        // getAncho()/getAlto() los tiene Mapa (cada nivel), no Mapa3D.
+        for (int nivel = 1; nivel <= mapa.getNiveles(); nivel++) {
+            modelos.Mapa mapaDeNivel = mapa.getNivel(nivel);
+            for (int fila = 1; fila <= mapaDeNivel.getAncho(); fila++) {
+                for (int col = 1; col <= mapaDeNivel.getAlto(); col++) {
+                    Celda<?> celda = mapaDeNivel.getCeldaConPosicion(fila, col);
+                    if (celda == null || celda.getContenido() == null) continue;
+
+                    Object contenido = celda.getContenido();
+                    // Se pasa el nivel para que ElementoVista.draw(g2,vista,nivel) filtre correctamente
+                    if (contenido instanceof CartaPuntos c)
+                        resultado.add(new CartaPuntosVista(c, col, fila, nivel, tamaño));
+                    else if (contenido instanceof CartaVision c)
+                        resultado.add(new CartaVisionVista(c, col, fila, nivel, tamaño));
+                    else if (contenido instanceof CartaDesplazamiento c)
+                        resultado.add(new CartaDesplazamientoVista(c, col, fila, nivel, tamaño));
+                }
+            }
+        }
+        return resultado;
     }
 
     /**
@@ -464,6 +494,14 @@ public class CiudadRecoleccion {
         return this.ultimoMensaje;
     }
 
+    /**
+     * Getter de posicion de spawn del jugador
+     * @return: Devuelve la posicion inicial del jugador
+     */
+    public int[] getPosicionSpawnSiguienteNivel() {
+        return new int[]{1, 1}; // fila, columna del spawn
+    }
+
 
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
@@ -583,5 +621,26 @@ public class CiudadRecoleccion {
     private void setEstado(EstadoDeJuego estado) {
         ValidacionesUtiles.esDistintoDeNull(estado, "estado");
         this.estado = estado;
+    }
+
+ // En CiudadRecoleccion.java
+    public void actualizarPosicionJugador(int colVisual, int filaVisual) {
+        // El mapa lógico puede ser más chico que el mundo visual.
+        // Clampear para no salir de rango.
+        modelos.Mapa nivel1 = this.mapa.getNivel(1);
+        
+        // IMPORTANTE: moverJugadorEnMapa espera (fila, columna) — no al revés
+        int filaLogica = Math.max(1, Math.min(filaVisual, nivel1.getAncho()));
+        int colLogica  = Math.max(1, Math.min(colVisual,  nivel1.getAlto()));
+        
+        moverJugadorEnMapa(filaLogica, colLogica, 
+                           obtenerNivelActual()); // en vez de hardcodear 1
+        verificarCartasVecinas();
+    }
+
+    // Helper para no perder el nivel actual del jugador al sincronizar
+    private int obtenerNivelActual() {
+        int[] pos = this.mapa.getPosicionCeldaConContenido(this.jugador);
+        return (pos != null) ? pos[2] : 1;
     }
 }

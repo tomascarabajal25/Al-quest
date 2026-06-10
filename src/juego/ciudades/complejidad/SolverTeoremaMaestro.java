@@ -34,9 +34,11 @@ public class SolverTeoremaMaestro {
         if (expFn < logBA) {
             pasos.add(new PasoTeoremaMaestro("f(n) crece más lento que n^" + String.format("%.2f", logBA)));
             pasos.add(new PasoTeoremaMaestro("→ Caso 1: T(n) = Θ(n^" + String.format("%.2f", logBA) + ")"));
+
         } else if (expFn == logBA) {
             pasos.add(new PasoTeoremaMaestro("f(n) crece igual que n^" + String.format("%.2f", logBA)));
             pasos.add(new PasoTeoremaMaestro("→ Caso 2: T(n) = Θ(n^" + String.format("%.2f", logBA) + " * log n)"));
+
         } else {
             pasos.add(new PasoTeoremaMaestro("f(n) crece más rápido que n^" + String.format("%.2f", logBA)));
             pasos.add(new PasoTeoremaMaestro("→ Caso 3: T(n) = Θ(" + fn + ")"));
@@ -60,8 +62,38 @@ public class SolverTeoremaMaestro {
         if (fn.startsWith("n^")) {
             return Double.parseDouble(fn.substring(2));
         }
-        if (fn.contains("log")) return 1; // n*log(n) tratado como caso especial
+        
+        if (fn.contains("log")) {   // n*log(n) tratado como caso especial
+            return 1;
+        } 
 
         return 0; // default
+    }
+
+    /**
+     * Devuelve la complejidad resultante sin grabar pasos.
+     *
+     * @param ec ecuación de recurrencia
+     * @return complejidad como string
+     */
+    public String getResultado(EcuacionRecurrencia ec) {
+        double logBA = Math.log(ec.getA()) / Math.log(ec.getB());
+        double expFn = obtenerExponente(ec.getFn());
+
+        if (expFn < logBA) {
+            return "O(n^" + String.format("%.0f", logBA) + ")";
+
+        } else if (expFn == logBA) {
+            if (logBA == 1) return "O(n log n)";
+
+            return "O(n^" + String.format("%.0f", logBA) + " log n)";
+
+        } else {
+            if (expFn == 0) return "O(1)";
+            if (expFn == 1) return "O(n)";
+            if (expFn == 2) return "O(n^2)";
+            
+            return "O(n^" + String.format("%.0f", expFn) + ")";
+        }
     }
 }

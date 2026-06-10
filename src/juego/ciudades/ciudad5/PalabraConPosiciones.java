@@ -85,7 +85,7 @@ public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
 	
 	/**
 	 * pre:
-	 * @param posiciones2 distinto de null y con largo mayor a 0
+	 * @param palabra2 distinto de null y con largo mayor a 0
 	 * post:
 	 * modifica la palabra
 	 */

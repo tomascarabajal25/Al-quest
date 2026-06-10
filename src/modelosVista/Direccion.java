@@ -1,8 +1,5 @@
 package modelosVista;
 
 public enum Direccion {
-	Arriba,
-	Abajo,
-	Izquierda,
-	Derecha
+	ARRIBA, ABAJO, IZQUIERDA, DERECHA
 }
