@@ -163,20 +163,19 @@ public class Vista extends JPanel implements Runnable{
     }
 
 
+    /**
+     * Ejecuta la vista del juego
+     */
     @Override
     public void run() {
-
         double drawInterval = 1000000000/FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
         while(hiloDelJuego != null) {
-
             currentTime = System.nanoTime();
-
             delta += (currentTime - lastTime) / drawInterval;
-
             lastTime = currentTime;
 
             if(delta >= 1) {
@@ -184,12 +183,12 @@ public class Vista extends JPanel implements Runnable{
                 repaint();
                 delta--;
             }
-
         }
-
     }
 
-
+    /**
+     * Actualiza la vista
+     */
     public void actualizar() {
         if (miniJuego != null) {
             miniJuego.actualizar(jugadorVista);
@@ -198,17 +197,22 @@ public class Vista extends JPanel implements Runnable{
 
     }
 
+    /**
+     * Pinta el componente con g
+     *
+     * PRE:
+     * -G no debe ser null
+     *
+     * @param g:
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D)g;
-        //Construcciones
         construccionesM.draw(g2);
-        //Objetos
         for(ObjetoVista objeto:objetos) {
             objeto.draw(g2, this);
         }
-        //}
-        //Jugador
 
         jugadorVista.draw(g2);
         if (miniJuego != null) {
@@ -217,8 +221,25 @@ public class Vista extends JPanel implements Runnable{
 
         g2.dispose();
     }
+
+    /**
+     * Detiene el hilo
+     */
     public void detenerHilo() {
         hiloDelJuego = null; // el while(hiloDelJuego != null) termina solo
+    }
+
+    /**
+     * Cambiar valor de minijuego
+     *
+     * PRE
+     * -Minijuego
+     *
+     * @param minijuego: Minijuego a guardar
+     */
+    public void establecerMinijuego(Minijuego minijuego){
+        ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
+        setMinijuego(minijuego);
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
@@ -336,7 +357,7 @@ public class Vista extends JPanel implements Runnable{
      *
      * @param minijuego:
      */
-    public void setMinijuego(Minijuego minijuego) {
+    private void setMinijuego(Minijuego minijuego) {
         ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
         this.miniJuego = minijuego;
     }

@@ -60,7 +60,7 @@ public class FabricaMinijuegoOrdenamiento {
         MinijuegoOrdenamiento minijuego =
             new MinijuegoOrdenamiento(cajasVista, ordenador, vista);
 
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
         return minijuego;
     }
 }
