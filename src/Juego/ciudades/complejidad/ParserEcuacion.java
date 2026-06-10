@@ -17,7 +17,9 @@ public class ParserEcuacion {
      * @return EcuacionRecurrencia con los valores extraídos, o null si el formato es inválido
      */
     public EcuacionRecurrencia parsear(String entrada) {
-        if (entrada == null || entrada.isBlank()) return null;
+        if (entrada == null || entrada.isBlank()) {
+            return null;
+        }
 
         Matcher m = PATRON.matcher(entrada.trim());
 

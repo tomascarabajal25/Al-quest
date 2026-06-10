@@ -101,12 +101,16 @@ public class TableroPanel extends JPanel{
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (juegoTerminado || solucionRevelada) return;
+                if (juegoTerminado || solucionRevelada){
+                    return;
+                }
 
                 int col = (e.getX() - ESQUINA) / CASILLA;
                 int fila = (e.getY() - ESQUINA) / CASILLA;
 
-                if (fila < 0 || fila >= tamanio || col < 0 || col >= tamanio) return;
+                if (fila < 0 || fila >= tamanio || col < 0 || col >= tamanio){
+                    return;
+                }
 
                 if (esperandoPrimeraReina) {
                     if (SwingUtilities.isLeftMouseButton(e)) {
@@ -125,7 +129,9 @@ public class TableroPanel extends JPanel{
                 }
 
                 // comportamiento normal
-                if (fila == filaJugadorInicial && col == columnaJugadorInicial) return;
+                if (fila == filaJugadorInicial && col == columnaJugadorInicial) {
+                    return;
+                }
 
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     int reinasActuales = 0;
@@ -192,7 +198,7 @@ public class TableroPanel extends JPanel{
         pasos = ciudad.obtenerPasos();
 
         if (pasos == null){
-            JOptionPane.showMessageDialog(this, "Las reinas colocadas no permites completar el tablero.\n\n" +
+            JOptionPane.showMessageDialog(this, "Las reinas colocadas no permiten completar el tablero.\n\n" +
             "Reinicie e intente en otra posicion", "Sin solucion posible", JOptionPane.WARNING_MESSAGE
             );
 

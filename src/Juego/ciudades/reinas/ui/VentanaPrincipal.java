@@ -174,7 +174,9 @@ public class VentanaPrincipal extends JFrame{
 
         combo.addActionListener(e -> {
             int nuevoTamanio = (Integer) combo.getSelectedItem();
-            if (nuevoTamanio == tamanioActual) return;
+            if (nuevoTamanio == tamanioActual) {
+                return;
+            }
 
             int respuesta = JOptionPane.showConfirmDialog(
                 this,
