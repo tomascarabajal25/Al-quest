@@ -240,8 +240,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
     private void togglePausaResolver() {
         resolverPausado = !resolverPausado;
         mensajeEstado   = resolverPausado
-            ? "⏸ Pausado — R para continuar"
-            : "▶ Resolviendo — " + ordenador.getNombre();
+            ? "Pausado — R para continuar"
+            : "Resolviendo — " + ordenador.getNombre();
     }
 
     private void detenerResolver() {
@@ -290,7 +290,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
         estado = Estado.FINALIZADO;
         limpiarEstadosVisuales();
         for (CajaVista cv : cajasVista) cv.setCorrecta(true);
-        mensajeEstado = "✓ Ordenamiento completado con " + ordenador.getNombre() + "!";
+        mensajeEstado = "Ordenamiento completado con " + ordenador.getNombre() + "!";
     }
 
     private void verificarVictoriaManual() {
@@ -304,7 +304,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
         estado = Estado.FINALIZADO;
         for (CajaVista cv : cajasVista) cv.setCorrecta(true);
-        mensajeEstado = "✓ ¡Ordenado manualmente en " + intercambiosManuales + " movimientos!";
+        mensajeEstado = "¡Ordenado manualmente en " + intercambiosManuales + " movimientos!";
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────
@@ -377,7 +377,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
 
     private void dibujarHUD(Graphics2D g2, JugadorVista jugador) {
         // Panel semitransparente en la esquina superior izquierda de la pantalla
-        int panelX = 10, panelY = 10, panelW = 340, panelH = 130;
+        int panelX = 10, panelY = 10, panelW = 500, panelH = 130;
 
         Composite orig = g2.getComposite();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));

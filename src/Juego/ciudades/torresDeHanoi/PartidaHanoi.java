@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
@@ -35,7 +36,7 @@ public class PartidaHanoi extends Partida {
 
     // ── Modelo del puzzle ─────────────────────────────────────────────────────
     private CiudadHanoi juego;
-    private final int   cantidadDiscos;
+    private int   cantidadDiscos;
 
     // ── Infraestructura de vista ──────────────────────────────────────────────
     private Vista          vista;
@@ -44,26 +45,56 @@ public class PartidaHanoi extends Partida {
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-    /**
-     * PRE:  3 <= discos <= 10 | jugador != null
-     * POST: crea Vista y MinijuegoHanoi; no abre ventana ni arranca hilo todavía.
-     */
-    public PartidaHanoi(int discos, String nombre, Jugador jugador) {
+ // El constructor ya no pide la cantidad de discos de forma estática
+    public PartidaHanoi(String nombre, Jugador jugador) {
         super(nombre, jugador);
-        ValidacionesUtiles.validarRangoNumerico(discos, 3, 10, "Cantidad de discos inválida");
+    }
 
-        this.cantidadDiscos = discos;
+    @Override
+    public void iniciar() {
+    	ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya está iniciada");
+        setEstado(EstadoDePartida.Iniciado);
 
-        // Vista con el mapa de la ciudad Hanoi
-        this.vista     = new Vista("/maps/world03.txt", getJugador(), 24,21,"/assets/jugador/boy");
+        // 1. PEDIR LA DIFICULTAD AL JUGADOR
+        Integer[] opcionesDiscos = {3, 4, 5, 6, 7, 8, 9, 10};
+        Integer discosElegidos = (Integer) JOptionPane.showInputDialog(
+            null, 
+            "Selecciona la cantidad de discos (Dificultad):", 
+            "Configuración de Torres de Hanoi",
+            JOptionPane.QUESTION_MESSAGE, 
+            null, 
+            opcionesDiscos, 
+            opcionesDiscos[0]
+        );
 
+<<<<<<< HEAD
         // MinijuegoHanoi recibe 'this' para poder llamar a iniciar()/finalizar()
         this.minijuego = new MinijuegoHanoi(jugador, vista.getTamanio(), this);
 
         // Inyectar en Vista
         vista.establecerMinijuego(minijuego);
+=======
+        if (discosElegidos == null) {
+            finalizar();
+            return;
+        }
 
-        // KeyListener para las teclas del puzzle (1/2/3/R/ESC)
+        this.cantidadDiscos = discosElegidos;
+
+        // 1. Creación del motor lógico con la cantidad de discos elegida
+        this.juego = new CiudadHanoi(cantidadDiscos);
+
+        // 2. Creación de la infraestructura de vista (Mundo 3 de Hanoi)
+        this.vista = new Vista("/maps/world03.txt", getJugador(), 24, 21, "/assets/jugador/boy");
+
+        // 3. Creación del controlador del minijuego pasándole la vista ya creada
+        this.minijuego = new MinijuegoHanoi(getJugador(), vista.tamaño, this);
+
+        // 4. Inyecciones y vinculaciones de comportamiento
+        vista.setMinijuego(minijuego);
+>>>>>>> fix/VistaAiQuest
+
+        // KeyListener para capturar el control de teclas del puzzle (1/2/3/R/ESC)
         vista.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -74,26 +105,10 @@ public class PartidaHanoi extends Partida {
             }
         });
 
-        // Callback al finalizar: el minijuego avisa cuando el jugador gana/sale
+        // Configuración del callback para que el minijuego avise al terminar
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
-        setEstado(EstadoDePartida.Creado);
-    }
-
-    // ── Ciclo de vida ─────────────────────────────────────────────────────────
-
-    /**
-     * PRE:  estado == Creado
-     * POST: crea CiudadHanoi, abre ventana, arranca hilo de Vista.
-     */
-    @Override
-    public void iniciar() {
-        ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya está iniciada");
-        setEstado(EstadoDePartida.Iniciado);
-
-        // Crear el motor del puzzle recién aquí (igual que hacía PartidaDeHanoi)
-        this.juego = new CiudadHanoi(cantidadDiscos);
-
+        // 5. Despliegue de la interfaz gráfica
         ventana = new JFrame();
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventana.setResizable(false);
@@ -103,6 +118,10 @@ public class PartidaHanoi extends Partida {
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
 
+        // Asegura que la ventana tome el foco del teclado inmediatamente
+        vista.requestFocusInWindow();
+
+        // 6. Arranca el bucle principal de renderizado (60 FPS)
         vista.startGameThread();
     }
 

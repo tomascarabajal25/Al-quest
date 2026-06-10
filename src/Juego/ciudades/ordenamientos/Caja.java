@@ -1,7 +1,6 @@
 package Juego.ciudades.ordenamientos;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
-import modelos.Elemento;
+
 import modelos.Objeto;
 import utils.ValidacionesUtiles;
 
