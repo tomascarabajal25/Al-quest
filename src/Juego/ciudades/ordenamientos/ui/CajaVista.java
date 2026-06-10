@@ -94,7 +94,7 @@ public class CajaVista extends ObjetoVista {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int tamaño  = vista.tamaño;
+        int tamaño  = vista.getTamanio();
         int sx      = getScreenX(vista);
         int sy      = getScreenY(vista);
 
