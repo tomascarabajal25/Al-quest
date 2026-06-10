@@ -167,7 +167,7 @@ public class ObjetoVista extends Objeto {
      *
      * @param imagen: imagen del objeto
      */
-    private void setImagen(BufferedImage imagen) {
+    protected void setImagen(BufferedImage imagen) {
         ValidacionesUtiles.esDistintoDeNull(imagen, "imagen");
         this.imagen = imagen;
     }

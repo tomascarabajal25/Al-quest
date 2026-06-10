@@ -281,6 +281,14 @@ public class Vista extends JPanel implements Runnable{
     public int getFilasDelMundo() {
         return this.filasDelMundo;
     }
+
+    /**
+     * Getter del atributo adminObjt
+     * @return: Devuelve el valor del atributo
+     */
+    public AdministradorDeObjetos getAdminObjt(){
+        return this.adminObjt;
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 
