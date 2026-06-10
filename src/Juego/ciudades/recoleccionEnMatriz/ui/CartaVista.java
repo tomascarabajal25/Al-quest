@@ -3,32 +3,46 @@ package Juego.ciudades.recoleccionEnMatriz.ui;
 import modelosVista.ElementoVista;
 import modelos.Elemento;
 
-/**
- * Clase base para todas las cartas visuales de la ciudad de recolección.
- * Cada tipo de carta tiene su propio BMP y hereda de esta.
- *
- * Jerarquía:
- *   ElementoVista
- *     └── CartaVista          ← esta clase
- *           ├── CartaVisionVista
- *           ├── CartaPuntosVista
- *           └── CartaDesplazamientoVista
- *
- * CartaVista no se instancia directamente — es abstracta.
- * Cada subclase solo aporta la ruta del BMP en su constructor.
- */
 public abstract class CartaVista extends ElementoVista {
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
     /**
-     * @param elemento    modelo de dominio (CartaVision, CartaPuntos, etc.)
-     * @param col         columna del mapa (base 0)
-     * @param fila        fila del mapa (base 0)
-     * @param nivel       nivel del mapa (base 1)
-     * @param tamaño      tamaño de tile en px
-     * @param rutaImagen  ruta al .bmp de la carta
+     * Constructor del TDA CartaVista
+     *
+     * PRE:
+     * -Elemento y rutaImagen no deben ser nulos
+     * -Col, fil, nivel y tamanio deben ser mayores a cero
+     *
+     * POST:
+     * -Se crea una nueva instancia de CartaVista para la UI
+     *
+     * @param elemento: Carta a la cual pertenece la vista
+     * @param col: Columna de la posicion de la carta
+     * @param fil: Fila de la posicion de la carta
+     * @param nivel: Nivel de la posicion de la carta
+     * @param tamanio: Tamanio de la carta
+     * @param rutaImagen: Ruta de la imagen de la carta
      */
-    public CartaVista(Elemento elemento, int col, int fila,
-                      int nivel, int tamaño, String rutaImagen) {
-        super(elemento, col, fila, nivel, tamaño, rutaImagen);
+    public CartaVista(Elemento elemento, int col, int fil, int nivel, int tamanio, String rutaImagen) {
+        super(elemento, col, fil, nivel, tamanio, rutaImagen);
     }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 }

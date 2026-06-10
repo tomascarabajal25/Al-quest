@@ -10,154 +10,339 @@ import javax.swing.JPanel;
 
 import modelos.Jugador;
 import modelos.Minijuego;
+import utils.ValidacionesUtiles;
 
 public class Vista extends JPanel implements Runnable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	//configuracion screen
-	final int tamañoOriginal=16; //16x16 pixeles
-	final int escala=3; 
-	
-	public final int tamaño = tamañoOriginal *escala;
-	public final int columnas = 16;
-	public final int filas = 12;
-	final int anchoDePantalla= tamaño * columnas; //768pix	
-	final int largoDePantalla= tamaño*filas; //576pix
-	public JugadorVista jugadorVista;
-	
-	//configuracion del mundo
-	public final int columnasDelMundo=50;
-	public final int filasDelMundo=50;
-	public final int anchoDeMundo=tamaño*columnasDelMundo;
-	public final int largoDeMundo=tamaño*filasDelMundo;
-	
-	//fps
-	int FPS=60;
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private static final long serialVersionUID = 1L;
 
-	protected ManejadorDeConstruccion construccionesM=new ManejadorDeConstruccion(this);
-	KeyHandler keyhandler=new KeyHandler();
-	Thread hiloDelJuego;
-	public AdministradorDeObjetos adminObjt= new AdministradorDeObjetos(this);
-	ChequeadorDeColision chequeadorDeColision= new ChequeadorDeColision(this);
-	private Vector<ObjetoVista> objetos=new Vector<ObjetoVista>();
-	
-	public Minijuego miniJuego;
-	
-	
-	public Vista(String rutaMundo, Jugador jugador,
-	        int spawnCol, int spawnFila, String rutaSprites) {
+    //fps
+    int FPS=60;
 
-	    // configuración visual
-	    this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
-	    this.setBackground(Color.black);
-	    this.setDoubleBuffered(true);
-	    this.addKeyListener(keyhandler);
-	    this.setFocusable(true);
+    //configuracion screen
+    private final int tamanioOriginal=16; //16x16 pixeles
+    private final int escala=3;
 
-	    // jugador con datos reales, no hardcodeado
-	    jugadorVista = new JugadorVista(
-	        jugador, keyhandler,
-	        spawnCol, spawnFila,
-	        rutaSprites, this
-	    );
+    private final int tamanio = tamanioOriginal * escala;
+    private final int columnas = 16;
+    private final int filas = 12;
+    private final int anchoDePantalla= tamanio * columnas; //768pix
+    private int largoDePantalla= tamanio*filas; //576pix
+    private JugadorVista jugadorVista = null;
 
-	    construccionesM.loadMap(rutaMundo);
-	    setUpJuego();
-	}	
-	public Vista(String rutaMundo, Jugador jugador,
-            int spawnCol, int spawnFila, String rutaSprites,
-            KeyHandler key) {
-	   this.keyhandler = key;
-	   this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
-	   this.setBackground(Color.black);
-	   this.setDoubleBuffered(true);
-	   this.addKeyListener(keyhandler);   // ← usa el key inyectado
-	   this.setFocusable(true);
-	   jugadorVista = new JugadorVista(
-	       jugador, keyhandler, spawnCol, spawnFila, rutaSprites, this);
-	   construccionesM.loadMap(rutaMundo);
-	   setUpJuego();
-	}
+    //configuracion del mundo
+    private final int columnasDelMundo=50;
+    private final int filasDelMundo=50;
+    private final int anchoDeMundo = tamanio * columnasDelMundo;
+    private final int largoDeMundo = tamanio * filasDelMundo;
+
+    protected ManejadorDeConstruccion construccionesM = null;
+    private KeyHandler keyhandler = null;
+    private Thread hiloDelJuego = null;
+    private AdministradorDeObjetos adminObjt = null;
+    private ChequeadorDeColision chequeadorDeColision = null;
+    private Vector<ObjetoVista> objetos = null;
+    public Minijuego miniJuego = null;
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
+    /**
+     * Constructor del TDA Vista sin keyhandler
+     *
+     * PRE:
+     * -Jugador y rutaSprites no deben ser nulos
+     * -SpawnCol y spawnFil deben ser mayores o iguales a cero
+     *
+     * @param rutaMundo:
+     * @param jugador:
+     * @param spawnCol:
+     * @param spawnFil:
+     * @param rutaSprites:
+     */
+    public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites) {
+        ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnFil, "spawnFil");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnCol, "spawnCol");
+
+        this.construccionesM = new ManejadorDeConstruccion(this);
+        this.keyhandler = new KeyHandler();
+        this.adminObjt = new AdministradorDeObjetos(this);
+        this.chequeadorDeColision = new ChequeadorDeColision(this);
+        this.objetos = new Vector<ObjetoVista>();
+
+        this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyhandler);
+        this.setFocusable(true);
+
+        setJugadorVista(jugador, this.keyhandler, spawnCol, spawnFil, rutaSprites);
+        this.construccionesM.loadMap(rutaMundo);
+
+        setUpJuego();
+    }
+
+    /**
+     * Constructor del TDA Vista con keyhandler
+     *
+     * PRE:
+     * -Jugador, key y rutaSprites no deben ser nulos
+     * -SpawnCol y spawnFil deben ser mayores o iguales a cero
+     *
+     * @param rutaMundo:
+     * @param jugador:
+     * @param spawnCol:
+     * @param spawnFil:
+     * @param rutaSprites:
+     * @param key:
+     */
+    public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites, KeyHandler key) {
+        ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnFil, "spawnFil");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnCol, "spawnCol");
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
 
 
-		
-	public void setMinijuego(Minijuego minijuego) {
-		miniJuego=minijuego;
-	}
-	
-	public void setUpJuego() {
-		adminObjt.setObjetos();
-	}
-	public void agregarObjeto(ObjetoVista objeto) {
-		objetos.add(objeto);
-	}
-	
+        this.construccionesM = new ManejadorDeConstruccion(this);
+        this.adminObjt = new AdministradorDeObjetos(this);
+        this.chequeadorDeColision = new ChequeadorDeColision(this);
+        this.objetos = new Vector<ObjetoVista>();
 
-	
-	public void startGameThread() {
-		hiloDelJuego= new Thread(this);
-		hiloDelJuego.start();	
-	}
-	
-	
-	@Override
-	public void run() {
-		
-		double drawInterval = 1000000000/FPS;
-		double delta = 0;
-		long lastTime = System.nanoTime();
-		long currentTime;
-		
-		while(hiloDelJuego != null) {
-			
-			currentTime = System.nanoTime();
-			
-			delta += (currentTime - lastTime) / drawInterval;
-			
-			lastTime = currentTime;
-			
-			if(delta >= 1) {
-				actualizar();
-				repaint();
-				delta--;
-			}
-			
-		}
-		
-	}
-		
-	
-	public void actualizar() {
-		if (miniJuego != null) {
-	        miniJuego.actualizar(jugadorVista);
-	    }
-		jugadorVista.actualizar();
-		
-	}
-	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
-		//Construcciones
-		construccionesM.draw(g2);
-		//Objetos
-		for(ObjetoVista objeto:objetos) {
-				objeto.draw(g2, this);
-			}
-		//}
-		//Jugador
-		
-		jugadorVista.draw(g2);
-		if (miniJuego != null) {
-	        miniJuego.draw(g2, jugadorVista);
-	    }
-		
-		g2.dispose();
-	}
-	public void detenerHilo() {
+        setKey(key);
+
+        this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyhandler);   // ← usa el key inyectado
+        this.setFocusable(true);
+        setJugadorVista(jugador, key, spawnCol, spawnFil, rutaSprites);
+        this.construccionesM.loadMap(rutaMundo);
+
+        setUpJuego();
+    }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Setea el juego
+     */
+    public void setUpJuego() {
+        this.adminObjt.setObjetos();
+    }
+
+    /**
+     * Agrega objeto a la vista
+     *
+     * PRE:
+     * -Objeto no debe ser nulo
+     *
+     * @param objeto
+     */
+    public void agregarObjeto(ObjetoVista objeto) {
+        ValidacionesUtiles.esDistintoDeNull(objeto, "objeto");
+        this.objetos.add(objeto);
+    }
+
+    /**
+     * Comienza el hilo del juego
+     */
+    public void startGameThread() {
+        this.hiloDelJuego= new Thread(this);
+        this.hiloDelJuego.start();
+    }
+
+
+    @Override
+    public void run() {
+
+        double drawInterval = 1000000000/FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+
+        while(hiloDelJuego != null) {
+
+            currentTime = System.nanoTime();
+
+            delta += (currentTime - lastTime) / drawInterval;
+
+            lastTime = currentTime;
+
+            if(delta >= 1) {
+                actualizar();
+                repaint();
+                delta--;
+            }
+
+        }
+
+    }
+
+
+    public void actualizar() {
+        if (miniJuego != null) {
+            miniJuego.actualizar(jugadorVista);
+        }
+        jugadorVista.actualizar();
+
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D)g;
+        //Construcciones
+        construccionesM.draw(g2);
+        //Objetos
+        for(ObjetoVista objeto:objetos) {
+            objeto.draw(g2, this);
+        }
+        //}
+        //Jugador
+
+        jugadorVista.draw(g2);
+        if (miniJuego != null) {
+            miniJuego.draw(g2, jugadorVista);
+        }
+
+        g2.dispose();
+    }
+    public void detenerHilo() {
         hiloDelJuego = null; // el while(hiloDelJuego != null) termina solo
     }
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Getter del atributo anchoDePantalla
+     * @return: Devuelve el valor del atributo
+     */
+    public int getAnchoDePantalla() {
+        return this.anchoDePantalla;
+    }
+
+    /**
+     * Getter del atributo largoDePantalla
+     * @return: Devuelve el valor del atributo
+     */
+    public int getLargoDePantalla() {
+        return this.largoDePantalla;
+    }
+
+    /**
+     * Getter del atributo tamanio
+     * @return: Devuelve el valor del atributo
+     */
+    public int getTamanio(){
+        return this.tamanio;
+    }
+
+    /**
+     * Getter del atributo jugadorVista
+     * @return: Devuelve la vista del jugador guardada en el atributo
+     */
+    public JugadorVista getJugadorVista() {
+        return this.jugadorVista;
+    }
+
+    /**
+     * Getter del atributo chequeadorDeColision
+     * @return: Devuelve el valor del atributo
+     */
+    public ChequeadorDeColision getChequeadorDeColision() {
+        return this.chequeadorDeColision;
+    }
+
+    /**
+     * Getter del atributo columnasDelMundo
+     * @return: valor del atributo
+     */
+    public int getColumnasDelMundo() {
+        return this.columnasDelMundo;
+    }
+
+    /**
+     * Getter del atributo filasDelMundo
+     * @return: valor del atributo
+     */
+    public int getFilasDelMundo() {
+        return this.filasDelMundo;
+    }
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Setter del atributo key
+     *
+     * PRE:
+     * -Key no debe ser nulo
+     *
+     * @param key: Manejador de teclas
+     */
+    private void setKey(KeyHandler key) {
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        this.keyhandler = key;
+    }
+
+    /**
+     * Setter del atributo jugadorVista
+     *
+     * PRE:
+     * -Jugador, key y rutaSprites no deben ser nulos
+     * -SpawnCol y spawnFil deben ser mayores o iguales a cero
+     *
+     * @param jugador:
+     * @param key:
+     * @param spawnCol:
+     * @param spawnFil:
+     * @param rutaSprites:
+     */
+    private void setJugadorVista(Jugador jugador, KeyHandler key, int spawnCol, int spawnFil, String rutaSprites){
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnFil, "spawnFil");
+        ValidacionesUtiles.validarMayorOIgualACero(spawnCol, "spawnCol");
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+
+        this.jugadorVista = new JugadorVista(jugador, key, spawnCol, spawnFil, rutaSprites, this);;
+    }
+
+    /**
+     * Setter del atributo miniJuego
+     *
+     * PRE:
+     * -MiniJuego no debe ser nulo
+     *
+     * @param minijuego:
+     */
+    public void setMinijuego(Minijuego minijuego) {
+        ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
+        this.miniJuego = minijuego;
+    }
+
+
+	
+	
+
+
+
+		
+
+	
+
+
+
 }

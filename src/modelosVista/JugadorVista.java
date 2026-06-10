@@ -1,191 +1,275 @@
 package modelosVista;
 
-
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+import java.util.Objects;
 import javax.imageio.ImageIO;
-
 import modelos.Jugador;
-
-
+import utils.ValidacionesUtiles;
 
 public class JugadorVista extends EntidadVista {
-	private Vista vistaDelJuego;
-	private KeyHandler keyHa;
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private Vista vistaDelJuego = null;
+    private KeyHandler keyHa = null;
+    private Jugador jugador = null;
+    private final int screenX;
+    private final int screenY;
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
+    public JugadorVista(Jugador jugador, KeyHandler key, int spawnCol, int spawnFila, String rutaSprites,Vista vista){
+        super(jugador.getNombre());
+
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+
+        setJugador(jugador) ;
+        setVista(vista);
+        setKey(key);
+
+        this.screenX=vistaDelJuego.getAnchoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
+        this.screenY=vistaDelJuego.getLargoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
+
+        setWorldX(spawnCol * vistaDelJuego.getTamanio());
+        setWorldY(spawnFila * vistaDelJuego.getTamanio());
+
+        setAreaSolida(new Rectangle(8, 16, 32, 32));
+        setDireccion(Direccion.ABAJO);;
+
+        getImagenesDelJugador(rutaSprites);
+    }
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Actualiza el estado del jugador
+     */
+    public void actualizar() {
+        if(this.keyHa.getUpPressed() || this.keyHa.getDownPressed() || this.keyHa.getLeftPressed() || this.keyHa.getRightPressed()) {
+            if(this.keyHa.getUpPressed()) {
+                setDireccion(Direccion.ARRIBA);
+            }
+            if(this.keyHa.getDownPressed()) {
+                setDireccion(Direccion.ABAJO);
+            }
+            if(this.keyHa.getLeftPressed()) {
+                setDireccion(Direccion.IZQUIERDA);
+            }
+            if(this.keyHa.getRightPressed()) {
+                setDireccion(Direccion.DERECHA);
+            }
+            setColisionOn(false);
+            this.vistaDelJuego.getChequeadorDeColision().chequearConstruccion(this);
+
+            if(!isColisionOn()) {
+                switch (getDireccion()) {
+                    case ARRIBA: {
+                        setWorldY(getWorldY()-getVelocidad());
+                        break;
+                    }
+                    case ABAJO: {
+                        setWorldY(getWorldY()+getVelocidad());
+                        break;
+                    }
+                    case IZQUIERDA: {
+                        setWorldX(getWorldX()-getVelocidad());
+                        break;
+                    }
+                    case DERECHA: {
+                        setWorldX(getWorldX()+getVelocidad());
+                        break;
+                    }
+                }
+            }
+
+            setSpriteCounter(getSpriteCounter()+1);
+            if(getSpriteCounter() >12) {
+                if(getSpriteNum() == 1) {
+                    setSpriteNum(2);;
+                }
+                else {
+                    setSpriteNum(1);
+                }
+                setSpriteCounter(0);
+            }
+        }
+    }
+
+    /**
+     * Carga las imagenes usadas para jugador
+     *
+     * PRE:
+     * -Ruta no debe ser nulo
+     *
+     * @param ruta: Ruta de las imagenes
+     */
+    public void getImagenesDelJugador(String ruta) {
+        ValidacionesUtiles.esDistintoDeNull(ruta, "ruta");
+
+        try {
+            setUp1(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_up_1.bmp"))));
+            setUp2(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_up_2.bmp"))));
+            setDown1(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_down_1.bmp"))));
+            setDown2(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_down_2.bmp"))));
+            setRight1(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_right_1.bmp"))));
+            setRight2(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_right_2.bmp"))));
+            setLeft1(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_left_1.bmp"))));
+            setLeft2(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_left_2.bmp"))));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Dibuja al jugador en la UI
+     *
+     * PRE:
+     * -G2 no debe ser nulo
+     *
+     * @param g2:
+     */
+    public void draw(Graphics2D g2) {
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+
+        BufferedImage image=null;
+        switch (getDireccion()) {
+            case Direccion.ARRIBA:
+                if(getSpriteNum()==1) {
+                    image=getUp1();
+                }
+                if(getSpriteNum() == 2) {
+                    image=getUp2();
+                }
+                break;
+            case Direccion.ABAJO:
+                if(getSpriteNum()==1) {
+                    image=getDown1();
+                }
+                if(getSpriteNum() == 2) {
+                    image=getDown2();
+                }
+                break;
+            case Direccion.IZQUIERDA:
+                if(getSpriteNum()==1) {
+                    image=getLeft1();
+                }
+                if(getSpriteNum() == 2) {
+                    image=getLeft2();
+                }
+                break;
+            case Direccion.DERECHA:
+                if(getSpriteNum()==1) {
+                    image=getRight1();
+                }
+                if(getSpriteNum() == 2) {
+                    image=getRight2();
+                }
+                break;
+        }
+        g2.drawImage(image, screenX, screenY, vistaDelJuego.getTamanio(), vistaDelJuego.getTamanio(),null);
+    }
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Getter del atributo vistaDelJuego
+     * @return: Devuelve la vista guardada en vistaDelJugador
+     */
+    public Vista getVistaDelJuego() {
+        return this.vistaDelJuego;
+    }
+
+    /**
+     * Getter del atributo jugador
+     * @return: Devuelve el jugador
+     */
+    public Jugador getJugador() {
+        return this.jugador;
+    }
+
+    /**
+     * Getter del atributo KeyHa
+     * @return: Devuelve el keyHandler guardado en keyHa
+     */
+    public KeyHandler getKeyHa() {
+        return this.keyHa;
+    }
+
+    /**
+     * Getter del atributo screenX
+     * @return: Devuelve el valor del atributo
+     */
+    public int getScreenX() {
+        return this.screenX;
+    }
+
+    /**
+     * Getter del atributo screenY
+     * @return: Devuelve el valor del atributo
+     */
+    public int getScreenY() {
+        return this.screenY;
+    }
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * setter del atributo jugador
+     *
+     * PRE:
+     * -Jugador no debe ser nulo
+     *
+     * @param jugador: jugador a guardar en el atributo
+     */
+    private void setJugador(Jugador jugador) {
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        this.jugador=jugador;
+    }
+
+    /**
+     * Setter del atributo vistaDelJuego
+     *
+     * PRE:
+     * -Vista no debe ser nulo
+     *
+     * @param vista: Viasta a guardar
+     */
+    private void setVista(Vista vista) {
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+        this.vistaDelJuego=vista;
+    }
+
+    /**
+     * Setter del atributo keyHa
+     * @param key: KeyHandler
+     */
+    private void setKey(KeyHandler key){
+        ValidacionesUtiles.esDistintoDeNull(key, "key");
+        this.keyHa=key;
+    }
+
+
+
 	
-	private final int screenX;
-	private final int screenY;
-	private Jugador jugador;
-	
-	
-	
-	//deberia heredar de entidad
-	
-	
-	public JugadorVista(Jugador jugador, KeyHandler key,
-            int spawnCol, int spawnFila,
-            String rutaSprites,Vista vista
-            ) {
-		super(jugador.getNombre());
-		setJugador(jugador) ;
-		setVista(vista);
-		setKey(key);
-		screenX=vistaDelJuego.anchoDePantalla/2 -(vistaDelJuego.tamaño/2);
-		screenY=vistaDelJuego.largoDePantalla/2 -(vistaDelJuego.tamaño/2);
-		
-		setWorldX(spawnCol * vistaDelJuego.tamaño);
-		setWorldY(spawnFila * vistaDelJuego.tamaño); 
-		
-		setAreaSolida(new Rectangle(8, 16, 32, 32)); 
-		setDireccion(Direccion.Abajo);;
-		
-		getImagenesDelJugador(rutaSprites);
-		}
 	
 	
 
-	private void setJugador(Jugador jugador2) {
-		jugador=jugador2;
-	}
-	public Jugador getJugador() {
-		return jugador;
-	}
 
-	public void actualizar() {
-		if(keyHa.upPressed==true 
-				|| keyHa.downPressed==true 
-				|| keyHa.leftPressed==true
-				|| keyHa.rightPressed==true ) {
-			if(keyHa.upPressed) {setDireccion(Direccion.Arriba);}
-			if(keyHa.downPressed) {setDireccion(Direccion.Abajo);}
-			if(keyHa.leftPressed) {setDireccion(Direccion.Izquierda);}
-			if(keyHa.rightPressed) {setDireccion(Direccion.Derecha);}
-			setColisionOn(false);
-			vistaDelJuego.chequeadorDeColision.chequearConstruccion(this);
-			
-			if(isColisionOn()==false) {
-				switch (getDireccion()) {
-					case Arriba: {
-						setWorldY(getWorldY()-getVelocidad());
-						break;
-					}
-					case Abajo: {
-						setWorldY(getWorldY()+getVelocidad());
-						break;
-					}
-					case Izquierda: {
-						setWorldX(getWorldX()-getVelocidad());
-						break;
-					}
-					case Derecha: {
-						setWorldX(getWorldX()+getVelocidad());
-						break;
-					}
-				}
-			}
-			
-			
-			setSpriteCounter(getSpriteCounter()+1);
-			if(getSpriteCounter() >12) {
-				if(getSpriteNum() == 1) {
-					setSpriteNum(2);;
-				}
-				else {
-					setSpriteNum(1);
-				}
-				setSpriteCounter(0);
-			}
-		}
-	}
-	public void getImagenesDelJugador(String ruta) {
-		try {
-			setUp1(ImageIO.read(getClass().getResourceAsStream(ruta + "_up_1.bmp")));
-			setUp2(ImageIO.read(getClass().getResourceAsStream(ruta + "_up_2.bmp")));
-			setDown1(ImageIO.read(getClass().getResourceAsStream(ruta + "_down_1.bmp")));
-			setDown2(ImageIO.read(getClass().getResourceAsStream(ruta + "_down_2.bmp")));
-			setRight1(ImageIO.read(getClass().getResourceAsStream(ruta + "_right_1.bmp")));
-			setRight2(ImageIO.read(getClass().getResourceAsStream(ruta + "_right_2.bmp")));
-			setLeft1(ImageIO.read(getClass().getResourceAsStream(ruta + "_left_1.bmp")));
-			setLeft2(ImageIO.read(getClass().getResourceAsStream(ruta + "_left_2.bmp")));
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void draw(Graphics2D g2) {
-		BufferedImage image=null;
-		switch (getDireccion()) {
-		case Direccion.Arriba: 
-			if(getSpriteNum()==1) {
-				image=getUp1();
-			}
-			if(getSpriteNum() == 2) {
-				image=getUp2();
-			}
-			break;
-		case Direccion.Abajo: 
-			if(getSpriteNum()==1) {
-				image=getDown1();
-			}
-			if(getSpriteNum() == 2) {
-				image=getDown2();
-			}
-			break;
-		case Direccion.Izquierda: 
-			if(getSpriteNum()==1) {
-				image=getLeft1();
-			}
-			if(getSpriteNum() == 2) {
-				image=getLeft2();
-			}
-			break;
-		case Direccion.Derecha: 
-			if(getSpriteNum()==1) {
-				image=getRight1();
-			}
-			if(getSpriteNum() == 2) {
-				image=getRight2();
-			}
-			break;
-			}
-		g2.drawImage(image, screenX, screenY, vistaDelJuego.tamaño, vistaDelJuego.tamaño,null);
-	}
-	
-	
-	
-	public Vista getVistaDelJuego() {
-		return vistaDelJuego;
-	}
 
-	
 
-	public KeyHandler getKeyHa() {
-		return keyHa;
-	}
-
-	
-	
-	public int getScreenX() {
-		return screenX;
-	}
-	public int getScreenY() {
-		return screenY;
-	}
-	
-	
-	
-
-	private void setVista(Vista vista) {
-		this.vistaDelJuego=vista;
-	}
-	
-	private void setKey(KeyHandler key){
-		this.keyHa=key;
-	}
-	
 }
