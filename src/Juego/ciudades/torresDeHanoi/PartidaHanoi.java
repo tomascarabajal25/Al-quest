@@ -58,7 +58,7 @@ public class PartidaHanoi extends Partida {
         this.vista     = new Vista("/maps/world03.txt", getJugador(), 24,21,"/assets/jugador/boy");
 
         // MinijuegoHanoi recibe 'this' para poder llamar a iniciar()/finalizar()
-        this.minijuego = new MinijuegoHanoi(jugador, vista.tamaño, this);
+        this.minijuego = new MinijuegoHanoi(jugador, vista.getTamanio(), this);
 
         // Inyectar en Vista
         vista.setMinijuego(minijuego);
