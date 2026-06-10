@@ -2,7 +2,7 @@ package ciudad_3_laberinto.src;
 
 import java.util.List;
 
-import Juego.ordenamientos.EstadoDePartida;
+import Juego.ciudades.ordenamientos.EstadoDePartida;
 
 public class BacktrackingLaberinto {
     private Laberinto laberinto;

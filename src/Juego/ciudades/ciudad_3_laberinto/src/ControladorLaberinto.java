@@ -10,7 +10,7 @@ import javax.swing.Timer;
 public class ControladorLaberinto {
     private static final String RUTA_LABERINTO = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
     private static  final String RUTA_SPRITES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
-    private static final String RUTA_IMAGENES = "src\\ciudad_3_laberinto\\partidas\\laberinto";
+    private static final String RUTA_IMAGENES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\partidas\\laberinto";
     private static final int INTERVALO_TIMER = 300;
 
     private Laberinto laberinto;
