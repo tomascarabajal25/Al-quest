@@ -1,6 +1,5 @@
 package modelosVista;
 
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import utils.ValidacionesUtiles;
 import java.util.List;
 

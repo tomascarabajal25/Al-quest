@@ -1,9 +1,9 @@
 package ciudades.testsDeCiudadReinas;
 
-import Juego.ciudades.reinas.Tablero;
-import Juego.ciudades.reinas.SolverReinas;
-import Juego.ciudades.reinas.Paso;
-import Juego.ciudades.reinas.Accion;
+import juego.ciudades.reinas.Tablero;
+import juego.ciudades.reinas.SolverReinas;
+import juego.ciudades.reinas.Paso;
+import juego.ciudades.reinas.Accion;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

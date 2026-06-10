@@ -1,6 +1,6 @@
 package ciudades.testDeCiudadRecoleccion.testUi;
 
-import Juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.event.KeyEvent;

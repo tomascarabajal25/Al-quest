@@ -8,7 +8,6 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 import java.util.List;
 
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import modelos.Jugador;
 import utils.ValidacionesUtiles;
 

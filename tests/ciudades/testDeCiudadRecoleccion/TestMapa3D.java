@@ -1,6 +1,6 @@
-package ciudades.testDeCiudadRecoleccion;
+package tests.ciudades.testDeCiudadRecoleccion;
 
-import Juego.ciudades.recoleccionEnMatriz.Mapa3D;
+import juego.ciudades.recoleccionEnMatriz.Mapa3D;
 import modelos.Celda;
 import org.junit.jupiter.api.Test;
 

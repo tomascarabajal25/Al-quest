@@ -1,0 +1,68 @@
+package juego.ciudades.complejidad.ui;
+
+import juego.ciudades.complejidad.CiudadComplejidad;
+import juego.ciudades.reinas.VictoriaListener;
+import java.awt.*;
+import javax.swing.*;
+
+public class VentanaComplejidad extends JFrame {
+
+    private PanelComplejidad panel;
+
+    /**
+     * @param victoriaListener callback que se ejecuta cuando el jugador resuelve correctamente
+     */
+    public VentanaComplejidad(VictoriaListener victoriaListener) {
+        super("Complejidad Algorítmica");
+
+        CiudadComplejidad ciudad = new CiudadComplejidad();
+        panel = new PanelComplejidad(ciudad, victoriaListener);
+
+        JPanel contenedor = new JPanel(new BorderLayout());
+        contenedor.add(panel, BorderLayout.CENTER);
+        contenedor.add(crearPanelDerecho(), BorderLayout.EAST);
+
+        add(contenedor);
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private JPanel crearPanelDerecho() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(24, 20, 24, 20));
+        panel.setPreferredSize(new Dimension(220, 0));
+
+        JLabel titulo = new JLabel("Instrucciones");
+        titulo.setFont(new Font("Arial", Font.BOLD, 16));
+        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JTextArea instrucciones = new JTextArea(
+            "Ingresá una ecuación de\n" +
+            "recurrencia con el formato:\n\n" +
+            "T(n) = aT(n/b) + f(n)\n\n" +
+            "Donde:\n" +
+            "• a: cantidad de subproblemas\n" +
+            "• b: factor de división\n" +
+            "• f(n): función de costo\n\n" +
+            "Ejemplos válidos:\n" +
+            "T(n) = 2T(n/2) + n\n" +
+            "T(n) = 4T(n/2) + n^2\n" +
+            "T(n) = 3T(n/3) + 1"
+        );
+        instrucciones.setEditable(false);
+        instrucciones.setLineWrap(true);
+        instrucciones.setWrapStyleWord(true);
+        instrucciones.setOpaque(false);
+        instrucciones.setFont(new Font("Arial", Font.PLAIN, 13));
+        instrucciones.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panel.add(titulo);
+        panel.add(Box.createVerticalStrut(12));
+        panel.add(instrucciones);
+
+        return panel;
+    }
+}
