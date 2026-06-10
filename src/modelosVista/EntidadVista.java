@@ -39,6 +39,19 @@ public class EntidadVista extends Entidad {
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Cambia el valor de velocidad
+     *
+     * PRE:
+     * -Velocidad debe ser mayor a cero
+     *
+     * @param velocidad: velocidad
+     */
+    public void cambiarVelocidad(int velocidad) {
+        ValidacionesUtiles.validarMayorACero(velocidad, "velocidad");
+        this.velocidad = velocidad;
+    }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
@@ -181,7 +194,7 @@ public class EntidadVista extends Entidad {
      *
      * @param up1: imagen a guardar en el atributo
      */
-	public void setUp1(BufferedImage up1) {
+	protected void setUp1(BufferedImage up1) {
         ValidacionesUtiles.esDistintoDeNull(up1, "up1");
         this.up1 = up1;
 	}
@@ -194,7 +207,7 @@ public class EntidadVista extends Entidad {
      *
      * @param up2: imagen a guardar en el atributo
      */
-	public void setUp2(BufferedImage up2) {
+	protected void setUp2(BufferedImage up2) {
         ValidacionesUtiles.esDistintoDeNull(up2, "up2");
         this.up2 = up2;
 	}
@@ -207,7 +220,7 @@ public class EntidadVista extends Entidad {
      *
      * @param right1: imagen a guardar en el atributo
      */
-	public void setRight1(BufferedImage right1) {
+	protected void setRight1(BufferedImage right1) {
         ValidacionesUtiles.esDistintoDeNull(right1, "right1");
         this.right1 = right1;
 	}
@@ -220,7 +233,7 @@ public class EntidadVista extends Entidad {
      *
      * @param down1: imagen a guardar en el atributo
      */
-	public void setDown1(BufferedImage down1) {
+    protected void setDown1(BufferedImage down1) {
         ValidacionesUtiles.esDistintoDeNull(down1, "down1");
         this.down1 = down1;
 	}
@@ -233,7 +246,7 @@ public class EntidadVista extends Entidad {
      *
      * @param down2: imagen a guardar en el atributo
      */
-	public void setDown2(BufferedImage down2) {
+    protected void setDown2(BufferedImage down2) {
         ValidacionesUtiles.esDistintoDeNull(down2, "down2");
         this.down2 = down2;
 	}
@@ -246,7 +259,7 @@ public class EntidadVista extends Entidad {
      *
      * @param right2: imagen a guardar en el atributo
      */
-	public void setRight2(BufferedImage right2) {
+    protected void setRight2(BufferedImage right2) {
         ValidacionesUtiles.esDistintoDeNull(right2, "right2");
         this.right2 = right2;
 	}
@@ -260,7 +273,7 @@ public class EntidadVista extends Entidad {
      * @param left1: imagen a guardar en el atributo
      */
 
-    public void setLeft1(BufferedImage left1) {
+    protected void setLeft1(BufferedImage left1) {
         ValidacionesUtiles.esDistintoDeNull(left1, "left1");
         this.left1 = left1;
 	}
@@ -273,7 +286,7 @@ public class EntidadVista extends Entidad {
      *
      * @param left2: imagen a guardar en el atributo
      */
-	public void setLeft2(BufferedImage left2) {
+    protected void setLeft2(BufferedImage left2) {
         ValidacionesUtiles.esDistintoDeNull(left2, "left2");
         this.left2 = left2;
 	}
@@ -286,7 +299,7 @@ public class EntidadVista extends Entidad {
      *
      * @param worldX: coordenada horizontal a guardar en el atributo
      */
-	public void setWorldX(int worldX) {
+    public void setWorldX(int worldX) {
         ValidacionesUtiles.validarMayorOIgualACero(worldX, "worldX");
         this.worldX = worldX;
 	}
@@ -299,7 +312,7 @@ public class EntidadVista extends Entidad {
      *
      * @param velocidad: velocidad a guardar en el atributo
      */
-	public void setVelocidad(int velocidad) {
+	protected void setVelocidad(int velocidad) {
         ValidacionesUtiles.validarMayorOIgualACero(velocidad, "velocidad");
         this.velocidad = velocidad;
 	}
@@ -312,7 +325,7 @@ public class EntidadVista extends Entidad {
      *
      * @param worldY: coordenada vertical a guardar en el atributo
      */
-	public void setWorldY(int worldY) {
+    public void setWorldY(int worldY) {
         ValidacionesUtiles.validarMayorOIgualACero(worldY, "worldY");
         this.worldY = worldY;
 	}

@@ -2,7 +2,6 @@ package Juego.ciudades.ordenamientos;
 
 import java.util.List;
 import modelos.Jugador;
-import modelosVista.Vista;
 
 public class Principal {
 

@@ -296,8 +296,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
     private void verificarVictoriaManual() {
         // Verifica si el orden actual coincide con el orden correcto (creciente por tamaño)
         for (int i = 0; i < cajasVista.size() - 1; i++) {
-            if (cajasVista.get(i).getCaja().getTamaño()
-                    > cajasVista.get(i + 1).getCaja().getTamaño()) return;
+            if (cajasVista.get(i).getCaja().getTamanio()
+                    > cajasVista.get(i + 1).getCaja().getTamanio()) return;
         }
         if (onVictoria != null) {
         	onVictoria.run();

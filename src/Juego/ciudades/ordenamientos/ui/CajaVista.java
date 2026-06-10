@@ -100,7 +100,7 @@ public class CajaVista extends ObjetoVista {
 
         // Altura proporcional: tamaño lógico / 50 * celda (máx = celda completa)
         int altoMax  = tamaño - 4;
-        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamaño() * altoMax) / 50));
+        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamanio() * altoMax) / 50));
         int yDibujo  = sy + (tamaño - altoReal);
 
         // ── Sombra ────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ public class CajaVista extends ObjetoVista {
         g2.setFont(FONT_ETIQUETA);
         g2.setColor(COLOR_TEXTO);
         FontMetrics fm = g2.getFontMetrics();
-        String txt = caja.getNombre() + "\n" + caja.getTamaño();
+        String txt = caja.getNombre() + "\n" + caja.getTamanio();
 
         // Nombre
         String linea1 = caja.getNombre();
@@ -160,7 +160,7 @@ public class CajaVista extends ObjetoVista {
         g2.drawString(linea1, x1, sy + tam - 14);
 
         // Tamaño
-        String linea2 = String.valueOf(caja.getTamaño());
+        String linea2 = String.valueOf(caja.getTamanio());
         int x2 = sx + (tam - fm.stringWidth(linea2)) / 2;
         g2.drawString(linea2, x2, sy + tam - 4);
     }

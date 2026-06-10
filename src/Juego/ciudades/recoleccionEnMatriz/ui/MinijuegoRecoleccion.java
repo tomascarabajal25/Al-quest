@@ -153,7 +153,7 @@ public class MinijuegoRecoleccion implements Minijuego {
         }
 
         // Sincronizar velocidad visual con desplazamiento del modelo
-        jugador.setVelocidad(4 * juego.getDesplazamiento());
+        jugador.cambiarVelocidad(4 * juego.getDesplazamiento());
 
         // Verificar fin de juego
         if (juego.estaFinalizado()) {

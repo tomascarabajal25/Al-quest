@@ -81,11 +81,7 @@ public class JugadorVista extends EntidadVista {
             this.vistaDelJuego.getChequeadorDeColision().chequearConstruccion(this);
             this.vistaDelJuego.getChequeadorDeColision().chequearCartas(this, this.cartas, this.nivelActual);
 
-            System.out.println("COLISION = " + isColisionOn());
             if(!isColisionOn()) {
-                System.out.println(
-                        "ME MUEVO - colision=" + isColisionOn()
-                );
                 switch (getDireccion()) {
                     case ARRIBA: {
                         setWorldY(getWorldY()-getVelocidad());

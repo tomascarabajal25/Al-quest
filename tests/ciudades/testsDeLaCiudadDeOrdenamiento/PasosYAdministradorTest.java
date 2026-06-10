@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
+package ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
