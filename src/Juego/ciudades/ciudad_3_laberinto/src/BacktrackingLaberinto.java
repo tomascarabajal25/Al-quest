@@ -2,16 +2,18 @@ package ciudad_3_laberinto.src;
 
 import java.util.List;
 
+import estructuras.pilas.PilaBasica;
+
 public class BacktrackingLaberinto {
     private Laberinto laberinto;
-    private PilaLaberinto<Celda> pila;
+    private PilaBasica<Celda> pila;
 
     private boolean terminado;
     private ResultadoPaso resultado;
 
     public BacktrackingLaberinto(Laberinto laberinto) {
         this.laberinto = laberinto;
-        this.pila = new PilaLaberinto<>();
+        this.pila = new PilaBasica<>();
         this.terminado = false;
         this.resultado = ResultadoPaso.EN_PROGRESO;
         inicializar();
@@ -33,7 +35,7 @@ public class BacktrackingLaberinto {
             return resultado;
         }
 
-        Celda celdaActual = pila.verCima();
+        Celda celdaActual = pila.obtener();
 
         // Verificar si llegamos al fin
         if (celdaActual.getEstadoCelda() == EstadoCelda.FIN 
@@ -82,7 +84,7 @@ public class BacktrackingLaberinto {
     }
 
     private void marcarSolucion() {
-        PilaLaberinto<Celda> pilaAux = new PilaLaberinto<>();
+        PilaBasica<Celda> pilaAux = new PilaBasica<>();
 
         // Pasar todo a la pila auxiliar para no perder el orden
         while (!pila.estaVacia()) {
@@ -112,7 +114,7 @@ public class BacktrackingLaberinto {
         return resultado;
     }
 
-    public PilaLaberinto<Celda> getPila() {
+    public PilaBasica<Celda> getPila() {
         return pila;
     }
 }
