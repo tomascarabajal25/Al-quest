@@ -1,7 +1,7 @@
-package Juego.ciudades.recoleccionEnMatriz;
+package juego.ciudades.recoleccionEnMatriz;
 
-import Juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
-import Juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
 import modelos.Partida;
 import modelosVista.Vista;

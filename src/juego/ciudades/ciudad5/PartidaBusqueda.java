@@ -1,12 +1,12 @@
-package Juego.ciudades.ciudad5;
+package juego.ciudades.ciudad5;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import Juego.ciudades.ciudad5.UI.MinijuegoDesafio;
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ciudad5.UI.MinijuegoDesafio;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;
@@ -66,10 +66,10 @@ public class PartidaBusqueda extends Partida {
         // 3. INICIALIZACIÓN DE LA VISTA Y PRESENTACIÓN (Paso del Mapa dinámico)
         // Nota: El mapa gráfico del mundo sigue cargándose por recurso (con barra '/')
         this.vista = new Vista("/maps/world01.txt", getJugador(), 24, 3, "/assets/jugador/boy");
-        this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.tamaño);
+        this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.getTamanio());
         
         vista.setMinijuego(minijuego);
-        vista.adminObjt.setObjetos(minijuego.getPuertaLista(), minijuego.getPuertaArbol());
+        vista.getAdminObjt().setObjetos(minijuego.getPuertaLista(), minijuego.getPuertaArbol());
         
         // Enlaza el callback para el cierre automático al ganar/perder
         minijuego.setOnFinalizadoCallback(this::finalizar);

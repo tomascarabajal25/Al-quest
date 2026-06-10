@@ -1,6 +1,6 @@
-package ciudades.testDeCiudadRecoleccion;
+package tests.ciudades.testDeCiudadRecoleccion;
 
-import Juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import modelos.Jugador;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ public class TestPartidaDeRecoleccion {
 
         assertEquals("Partida", partida.getNombre());
         assertEquals(jugador, partida.getJugador());
-        assertEquals(0, partida.getPuntajeActual());
+        assertEquals(0, partida.getPuntaje());
         assertNotNull(partida.getJuego());
     }
 

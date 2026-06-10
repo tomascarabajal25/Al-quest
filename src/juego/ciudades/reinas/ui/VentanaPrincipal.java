@@ -1,7 +1,7 @@
-package Juego.ciudades.reinas.ui;
+package juego.ciudades.reinas.ui;
 
-import Juego.ciudades.reinas.PartidaReinas;
-import Juego.ciudades.reinas.VictoriaListener;
+import juego.ciudades.reinas.PartidaReinas;
+import juego.ciudades.reinas.VictoriaListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

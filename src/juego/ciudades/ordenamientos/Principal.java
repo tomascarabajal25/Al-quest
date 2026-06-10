@@ -1,4 +1,4 @@
-package Juego.ciudades.ordenamientos;
+package juego.ciudades.ordenamientos;
 
 
 import modelos.Jugador;

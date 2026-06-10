@@ -1,7 +1,7 @@
-package Juego.ciudades.complejidad.ui;
+package juego.ciudades.complejidad.ui;
 
-import Juego.ciudades.complejidad.CiudadComplejidad;
-import Juego.ciudades.reinas.VictoriaListener;
+import juego.ciudades.complejidad.CiudadComplejidad;
+import juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import javax.swing.*;
 

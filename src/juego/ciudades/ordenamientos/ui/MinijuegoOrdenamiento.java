@@ -1,4 +1,4 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -10,10 +10,10 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ciudades.ordenamientos.AdministradorDePasos;
-import Juego.ciudades.ordenamientos.Caja;
-import Juego.ciudades.ordenamientos.Ordenador;
-import Juego.ciudades.ordenamientos.PasoOrdenamiento;
+import juego.ciudades.ordenamientos.AdministradorDePasos;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Ordenador;
+import juego.ciudades.ordenamientos.PasoOrdenamiento;
 import modelos.Minijuego;
 import modelosVista.JugadorVista;
 import modelosVista.Vista;

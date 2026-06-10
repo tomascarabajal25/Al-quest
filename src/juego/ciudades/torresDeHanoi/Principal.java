@@ -1,4 +1,4 @@
-package Juego.ciudades.torresDeHanoi;
+package juego.ciudades.torresDeHanoi;
 
 import modelos.Jugador;
 

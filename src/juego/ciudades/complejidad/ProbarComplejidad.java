@@ -1,6 +1,6 @@
-package Juego.ciudades.complejidad;
+package juego.ciudades.complejidad;
 
-import Juego.ciudades.complejidad.ui.VentanaComplejidad;
+import juego.ciudades.complejidad.ui.VentanaComplejidad;
 import javax.swing.*;
 
 public class ProbarComplejidad {

@@ -1,4 +1,4 @@
-package ciudades.testDeCiudadRecoleccion.testUi;
+package tests.ciudades.testDeCiudadRecoleccion.testUi;
 
 import modelos.Jugador;
 import org.junit.jupiter.api.Test;

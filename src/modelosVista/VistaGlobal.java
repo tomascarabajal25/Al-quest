@@ -152,7 +152,7 @@ public class VistaGlobal extends Vista {
 
         // Limpiar el cooldown cuando se suelta ENTER
         // (KeyHandler expone los booleans directamente, igual que en Vista)
-        if (!keyhandler.enterPresionado) {
+        if (!this.keyhandler.enterPresionado) {
             teclaEnterConsumed = false;
         }
 
@@ -196,17 +196,16 @@ public class VistaGlobal extends Vista {
      * POST: no modifica estado; es una consulta pura O(10).
      */
     private int detectarCiudadCercana() {
-        int jCx = jugadorVista.getWorldX()
-                + jugadorVista.getAreaSolida().x
-                + jugadorVista.getAreaSolida().width  / 2;
-        int jCy = jugadorVista.getWorldY()
-                + jugadorVista.getAreaSolida().y
-                + jugadorVista.getAreaSolida().height / 2;
+        int jCx = getJugadorVista().getAreaSolida().x
+                + getJugadorVista().getAreaSolida().width  / 2;
+        int jCy = getJugadorVista().getWorldY()
+                + getJugadorVista().getAreaSolida().y
+                + getJugadorVista().getAreaSolida().height / 2;
 
         for (int[] pos : POSICIONES_CIUDADES) {
             int id  = pos[0];
-            int cx  = pos[1] * tamaño + tamaño / 2;
-            int cy  = pos[2] * tamaño + tamaño / 2;
+            int cx  = pos[1] * getTamanio() + getTamanio() / 2;
+            int cy  = pos[2] * getTamanio() + getTamanio() / 2;
             double dist = Math.hypot(cx - jCx, cy - jCy);
             if (dist <= RADIO_INTERACCION_PX) {
                 return id;
@@ -274,8 +273,8 @@ public class VistaGlobal extends Vista {
 
         for (int[] pos : POSICIONES_CIUDADES) {
             int id  = pos[0];
-            int cx  = pos[1] * tamaño + tamaño / 2 - jugadorVista.getWorldX() + jugadorVista.getScreenX();
-            int cy  = pos[2] * tamaño  + tamaño / 2  - jugadorVista.getWorldY() + jugadorVista.getScreenY();
+            int cx  = pos[1] * getTamanio() + getTamanio() / 2 - getJugadorVista().getWorldX() + getJugadorVista().getScreenX();
+            int cy  = pos[2] * getTamanio()  + getTamanio() / 2  - getJugadorVista().getWorldY() + getJugadorVista().getScreenY();
 
             NodoCiudad nodo = nodos.get(id);
 
@@ -298,7 +297,7 @@ public class VistaGlobal extends Vista {
             }
 
             // ── Círculo indicador ──────────────────────────────────────────
-            int radio = tamaño / 2 - 2;
+            int radio = getTamanio() / 2 - 2;
             Composite orig = g2.getComposite();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
             g2.setColor(colorEstado);

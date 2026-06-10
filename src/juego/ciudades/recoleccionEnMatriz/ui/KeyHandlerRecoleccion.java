@@ -1,4 +1,4 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
 
 import modelosVista.KeyHandler;
 import utils.ValidacionesUtiles;

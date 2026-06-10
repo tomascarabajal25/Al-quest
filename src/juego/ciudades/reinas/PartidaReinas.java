@@ -1,6 +1,6 @@
-package Juego.ciudades.reinas;
+package juego.ciudades.reinas;
 
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 

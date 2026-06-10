@@ -1,6 +1,6 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
  
-import Juego.ciudades.recoleccionEnMatriz.CartaVision;
+import juego.ciudades.recoleccionEnMatriz.CartaVision;
  
 public class CartaVisionVista extends CartaVista {
     //INTERFACES ----------------------------------------------------------------------------------------------

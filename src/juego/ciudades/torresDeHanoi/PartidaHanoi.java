@@ -1,4 +1,4 @@
-package Juego.ciudades.torresDeHanoi;
+package juego.ciudades.torresDeHanoi;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelosVista.Vista;
@@ -45,7 +45,7 @@ public class PartidaHanoi extends Partida {
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
- // El constructor ya no pide la cantidad de discos de forma estática
+    // El constructor ya no pide la cantidad de discos de forma estática
     public PartidaHanoi(String nombre, Jugador jugador) {
         super(nombre, jugador);
     }
@@ -67,13 +67,6 @@ public class PartidaHanoi extends Partida {
             opcionesDiscos[0]
         );
 
-<<<<<<< HEAD
-        // MinijuegoHanoi recibe 'this' para poder llamar a iniciar()/finalizar()
-        this.minijuego = new MinijuegoHanoi(jugador, vista.getTamanio(), this);
-
-        // Inyectar en Vista
-        vista.establecerMinijuego(minijuego);
-=======
         if (discosElegidos == null) {
             finalizar();
             return;
@@ -88,11 +81,11 @@ public class PartidaHanoi extends Partida {
         this.vista = new Vista("/maps/world03.txt", getJugador(), 24, 21, "/assets/jugador/boy");
 
         // 3. Creación del controlador del minijuego pasándole la vista ya creada
-        this.minijuego = new MinijuegoHanoi(getJugador(), vista.tamaño, this);
+        this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
 
         // 4. Inyecciones y vinculaciones de comportamiento
         vista.setMinijuego(minijuego);
->>>>>>> fix/VistaAiQuest
+
 
         // KeyListener para capturar el control de teclas del puzzle (1/2/3/R/ESC)
         vista.addKeyListener(new KeyAdapter() {

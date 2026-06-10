@@ -1,6 +1,6 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
  
-import Juego.ciudades.recoleccionEnMatriz.CartaPuntos;
+import juego.ciudades.recoleccionEnMatriz.CartaPuntos;
  
 public class CartaPuntosVista extends CartaVista {
     //INTERFACES ----------------------------------------------------------------------------------------------

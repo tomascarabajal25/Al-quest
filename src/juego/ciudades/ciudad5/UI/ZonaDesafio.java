@@ -1,4 +1,4 @@
-package Juego.ciudades.ciudad5.UI;
+package juego.ciudades.ciudad5.UI;
 
 import java.awt.Color;
 import java.awt.Font;

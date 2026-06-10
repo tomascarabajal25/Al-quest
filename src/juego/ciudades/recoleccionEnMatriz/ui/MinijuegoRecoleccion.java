@@ -1,6 +1,6 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelosVista.JugadorVista;
 import modelos.Minijuego;
 import modelosVista.Vista;
@@ -68,7 +68,7 @@ public class MinijuegoRecoleccion implements Minijuego {
      */
     private void inyectarCartas(Vista vista) {
         ValidacionesUtiles.esDistintoDeNull(vista, "vista");
-        this.cartas.addAll(juego.getCartasVista(vista.tamaño));
+        this.cartas.addAll(juego.getCartasVista(vista.getTamanio()));
     }
 
     /**
@@ -83,7 +83,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     public void actualizar(JugadorVista jugador) {
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
 
-        int tamaño = jugador.getVistaDelJuego().tamaño;
+        int tamaño = jugador.getVistaDelJuego().getTamanio();
         int col  = jugador.getWorldX() / tamaño + 1;
         int fila = jugador.getWorldY() / tamaño + 1;
         boolean colisionaCarta = false;
@@ -134,7 +134,7 @@ public class MinijuegoRecoleccion implements Minijuego {
             key.modificarEstadoEPressed(false);
 
             if (nivelDespues != nivelAntes) {
-                int t = jugador.getVistaDelJuego().tamaño;
+                int t = jugador.getVistaDelJuego().getTamanio();
                 jugador.setWorldX(2 * t);
                 jugador.setWorldY(2 * t);
             }
@@ -193,7 +193,7 @@ public class MinijuegoRecoleccion implements Minijuego {
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
 
         modelosVista.Vista vista = jugador.getVistaDelJuego();
-        int tamaño = vista.tamaño;
+        int tamaño = vista.getTamanio();
         int visibilidad = juego.getVisibilidad();
 
         int jugadorTileX = jugador.getWorldX() / tamaño;
@@ -204,7 +204,7 @@ public class MinijuegoRecoleccion implements Minijuego {
 
         for (int col = jugadorTileX - mitadCols; col <= jugadorTileX + mitadCols; col++) {
             for (int fila = jugadorTileY - mitadFilas; fila <= jugadorTileY + mitadFilas; fila++) {
-                if (col < 0 || fila < 0 || col >= vista.columnasDelMundo || fila >= vista.filasDelMundo){
+                if (col < 0 || fila < 0 || col >= vista.getColumnasDelMundo() || fila >= vista.getFilasDelMundo()){
                     continue;
                 }
 
@@ -315,16 +315,11 @@ public class MinijuegoRecoleccion implements Minijuego {
         g2.setFont(new Font("Arial", Font.PLAIN, 12));
         g2.setColor(new Color(220, 220, 100));
         int ly = y + 40;
-<<<<<<< HEAD
         for (int i = 0; i < items.size(); i++) {        // ← 0-based
             g2.drawString((i + 1) + ". " + items.get(i).getNombre(), x + 10, ly);  // ← get(i)
-=======
-        // base 0 — si tu lista es base 1, cambiá a i=1; i<=cantidad
-        for (int i = 0; i < cantidad; i++) {
-            g2.drawString((i + 1) + ". " + items.get(i).getNombre(), x + 10, ly);
->>>>>>> fix/VistaAiQuest
-            ly += 20;
-        }
+
+            ly += 20; 	
+           }
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
 
@@ -450,7 +445,7 @@ public class MinijuegoRecoleccion implements Minijuego {
      *
      * @param callback: Objeto callback nuevo
      */
-    private void setOnFinalizadoCallback(Runnable callback){
+    public void setOnFinalizadoCallback(Runnable callback){
         ValidacionesUtiles.esDistintoDeNull(callback, "callback");
         this.onFinalizadoCallback = callback;
     }

@@ -1,10 +1,10 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ciudades.ordenamientos.Caja;
-import Juego.ciudades.ordenamientos.Ordenador;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Ordenador;
 import modelosVista.Vista;
 
 /**

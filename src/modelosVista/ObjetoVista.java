@@ -141,7 +141,7 @@ public class ObjetoVista extends Objeto {
      *
      * @param worldY:
      */
-    private void setWorldY(int worldY) {
+    public void setWorldY(int worldY) {
         ValidacionesUtiles.validarMayorOIgualACero(worldY, "worldY");
         this.worldY = worldY;
     }
@@ -154,7 +154,7 @@ public class ObjetoVista extends Objeto {
      *
      * @param worldX:
      */
-    private void setWorldX(int worldX) {
+    public void setWorldX(int worldX) {
         ValidacionesUtiles.validarMayorOIgualACero(worldY, "worldX");
         this.worldX = worldX;
     }

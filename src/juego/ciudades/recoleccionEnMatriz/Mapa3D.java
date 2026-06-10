@@ -1,4 +1,4 @@
-package Juego.ciudades.recoleccionEnMatriz;
+package juego.ciudades.recoleccionEnMatriz;
 
 import utils.ValidacionesUtiles;
 

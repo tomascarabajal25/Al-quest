@@ -7,8 +7,8 @@ import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
-import Juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
+import juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
+import juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import modelos.Jugador;
 import modelos.Partida;
 import modelosVista.Vista;

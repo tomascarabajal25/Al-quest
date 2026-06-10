@@ -1,5 +1,5 @@
-package Juego.ciudades.reinas;
-import Juego.ciudades.reinas.ui.VentanaPrincipal;
+package juego.ciudades.reinas;
+import juego.ciudades.reinas.ui.VentanaPrincipal;
 import javax.swing.*;
 
 public class ProbarReinas {

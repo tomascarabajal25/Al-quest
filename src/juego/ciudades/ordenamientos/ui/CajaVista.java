@@ -1,6 +1,7 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.awt.Color;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -8,7 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
-import Juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Caja;
 import modelosVista.ObjetoVista;
 import modelosVista.Vista;
 

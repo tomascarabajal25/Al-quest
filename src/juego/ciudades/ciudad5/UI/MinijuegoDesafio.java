@@ -1,4 +1,4 @@
-package Juego.ciudades.ciudad5.UI;
+package juego.ciudades.ciudad5.UI;
 
 import java.awt.Color;
 import modelos.Minijuego;
@@ -9,9 +9,9 @@ import java.awt.Graphics2D;
 import java.util.List;
 import java.util.Random;
 
-import Juego.ciudades.ciudad5.ciudadBusqueda;
-import Juego.ciudades.ciudad5.UI.PuertaDesafio.EstadoPuerta;
-import Juego.ciudades.ciudad5.UI.PuertaDesafio.TipoPuerta;
+import juego.ciudades.ciudad5.ciudadBusqueda;
+import juego.ciudades.ciudad5.UI.PuertaDesafio.EstadoPuerta;
+import juego.ciudades.ciudad5.UI.PuertaDesafio.TipoPuerta;
 import modelos.Mapa;
 
 /**

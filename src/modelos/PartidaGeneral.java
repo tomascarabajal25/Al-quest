@@ -3,9 +3,9 @@ package modelos;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import Juego.ciudades.ordenamientos.PartidaOrdenamientos;
-import Juego.ciudades.ciudad5.PartidaBusqueda;
-import Juego.ciudades.torresDeHanoi.PartidaHanoi;
+import juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import juego.ciudades.ciudad5.PartidaBusqueda;
+import juego.ciudades.torresDeHanoi.PartidaHanoi;
 // Descomentá a medida que implementes las ciudades restantes:
 // import Juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 // import Juego.ciudades.reinas.PartidaReinas;
@@ -13,7 +13,7 @@ import Juego.ciudades.torresDeHanoi.PartidaHanoi;
 // import Juego.ciudades.ciudad9.PartidaGrafos;
 
 import modelosVista.VistaGlobal;
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 
 /**
  * TDA PartidaGeneral — orquestador central de Al-Quest.

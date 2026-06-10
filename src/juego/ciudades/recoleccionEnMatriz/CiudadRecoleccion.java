@@ -1,12 +1,12 @@
-package Juego.ciudades.recoleccionEnMatriz;
+package juego.ciudades.recoleccionEnMatriz;
 
 import modelos.*;
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
+import juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import utils.ValidacionesUtiles;
-import Juego.Constantes;
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaDesplazamientoVista;
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaPuntosVista;
-import Juego.ciudades.recoleccionEnMatriz.ui.CartaVisionVista;
+import juego.Constantes;
+import juego.ciudades.recoleccionEnMatriz.ui.CartaDesplazamientoVista;
+import juego.ciudades.recoleccionEnMatriz.ui.CartaPuntosVista;
+import juego.ciudades.recoleccionEnMatriz.ui.CartaVisionVista;
 import estructuras.vector.Vector;
 
 import java.util.ArrayList;
