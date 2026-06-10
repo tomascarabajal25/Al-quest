@@ -25,9 +25,9 @@ public class PartidaBusqueda extends Partida {
 
         // Crear vista y minijuego (sin arrancar el hilo todavía)
         this.vista     = new Vista("/maps/world01.txt", getJugador(), 24,21,"/assets/jugador/boy");
-        this.minijuego = new MinijuegoDesafio(mapa, vista.tamaño);
-        vista.setMinijuego(minijuego);
-        vista.adminObjt.setObjetos(minijuego.getPuertaLista(),
+        this.minijuego = new MinijuegoDesafio(mapa, vista.getTamanio());
+        vista.establecerMinijuego(minijuego);
+        vista.getAdminObjt().setObjetos(minijuego.getPuertaLista(),
                                    minijuego.getPuertaArbol());
         // Cuando el minijuego termine, llamar a finalizar() automáticamente
         minijuego.setOnFinalizadoCallback(this::finalizar);

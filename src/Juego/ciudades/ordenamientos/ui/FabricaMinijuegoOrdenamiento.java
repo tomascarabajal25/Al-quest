@@ -51,8 +51,8 @@ public class FabricaMinijuegoOrdenamiento {
         List<CajaVista> cajasVista = new ArrayList<>();
 
         for (int i = 0; i < cajas.size(); i++) {
-            int worldX = (colInicio + i*3) * vista.tamaño;
-            int worldY =  filaBase       * vista.tamaño;
+            int worldX = (colInicio + i*3) * vista.getTamanio();
+            int worldY =  filaBase       * vista.getTamanio();
             CajaVista cv = new CajaVista(cajas.get(i), worldX, worldY, i);
             cajasVista.add(cv);
         }
@@ -60,7 +60,7 @@ public class FabricaMinijuegoOrdenamiento {
         MinijuegoOrdenamiento minijuego =
             new MinijuegoOrdenamiento(cajasVista, ordenador, vista);
 
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
         return minijuego;
     }
 }

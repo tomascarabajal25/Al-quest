@@ -57,7 +57,6 @@ public class PartidaOrdenamientos extends Partida {
      * @param jugador       no nulo
      * @param cajas         lista no nula con al menos 2 cajas
      * @param ordenador     no nulo (ya seleccionado: Bubble, Selection, etc.)
-     * @param vista         Vista activa donde vive el jugador
      * @param filaBase      fila del mundo donde se spawnean las cajas (en celdas)
      * @param colInicio     columna inicial de la primera caja (en celdas)
      *

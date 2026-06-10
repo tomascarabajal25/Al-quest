@@ -87,7 +87,7 @@ public class PartidaDeRecoleccion extends Partida {
         ventana.setVisible(true);
 
         MinijuegoRecoleccion minijuego =new MinijuegoRecoleccion(juego, vista, key, ventana);
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
         vista.startGameThread();
