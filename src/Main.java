@@ -1,15 +1,11 @@
-import Juego.ciudades.reinas.ui.VentanaPrincipal;
-import javax.swing.*;
+
+import modelos.Jugador;
+import modelos.PartidaGeneral;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new VentanaPrincipal(() -> {
-
-                // acá se conectará con la siguiente ciudad cuando exista, es un print temporal
-                System.out.println("Ciudad completada");
-
-            });
-        });
+        Jugador jugador = new Jugador("Héroe");
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+        partida.iniciar();
     }
 }

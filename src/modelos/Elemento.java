@@ -1,10 +1,11 @@
 package modelos;
 
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import utils.ValidacionesUtiles;
 
 import java.util.Objects;
 
-public class Elemento {
+public abstract class Elemento {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
@@ -58,6 +59,16 @@ public class Elemento {
     //METODOS DE CLASE ----------------------------------------------------------------------------------------
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
+
+    /**
+     * Metodo abstracto para el efecto correspondiente a cada elemento
+     *
+     * PRE:
+     * -Juego no debe ser nulo
+     *
+     * @param juego: Juego correspondiente a cada ciudad
+     */
+    public abstract void aplicarEfecto(CiudadRecoleccion juego);
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 package modelos;
 
-import utils.ValidacionesUtiles;
 
 import java.util.Objects;
 
@@ -24,7 +23,6 @@ public class Celda<T> {
      * @param contenido: nombre del elemento
      */
     public Celda(T contenido){
-        ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
         setContenido(contenido);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
@@ -80,7 +78,6 @@ public class Celda<T> {
      * -Establece el valor del parametro contenido
      */
     private void setContenido(T contenido) {
-        ValidacionesUtiles.esDistintoDeNull(contenido, "contenido");
         this.contenido = contenido;
     }
 }

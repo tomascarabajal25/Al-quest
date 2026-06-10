@@ -1,9 +1,7 @@
-package tests.modelos;
+package modelos;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import modelos.Celda;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +42,7 @@ public class CeldaTest<T> {
 
     @Test
     public void testHashCode(){
-        Celda celda3 = new Celda(20);
+        Celda celda3 = new Celda(10);
         Celda celda4 = new Celda("Adios");
 
         assertEquals(celda.hashCode(), celda3.hashCode());

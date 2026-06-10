@@ -2,12 +2,16 @@
 .idea/
 *.iml
 /bin/
+
 # Eclipse
 .project
 .classpath
 .settings/
 .metadata/
 bin/
+
+# vscode
+.vscode/
 
 # Logs
 *.log
@@ -26,3 +30,11 @@ Thumbs.db
 # Java compilados (si usás carpetas propias)
 out/
 build/
+
+# Dependencias locales
+lib/
+
+.atl/
+overview.md
+.gitignore
+*.sh
