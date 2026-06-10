@@ -48,7 +48,8 @@ public class PartidaDeHanoi extends Partida {
     	ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no esta iniciada");
     	setEstado(EstadoDePartida.Creado);
 		
-        this.setPuntaje(getPuntajeActual());
+        actualizarPuntaje(cantidadDiscos*1000);
+        notificarFinalizacion();
     }
     /**
      * Metodo puente público para que clases externas (como el controlador)

@@ -100,8 +100,7 @@ public class PartidaDeRecoleccion extends Partida {
     @Override
     public void finalizar() {
         int puntos = juego.finalizar();
-        int puntajeActual = this.getPuntajeActual();
-        this.setPuntaje(puntajeActual + puntos);
+        this.setPuntaje( puntos);
 
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------

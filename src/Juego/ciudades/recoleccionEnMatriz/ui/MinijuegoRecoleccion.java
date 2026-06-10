@@ -105,7 +105,8 @@ public class MinijuegoRecoleccion implements Minijuego {
     private void dibujarMochila(Graphics2D g2) {
         int x = 10, y = 120;
         var items = juego.getItemsMochila();
-        int alto = 30 + (items != null ? items.size() * 20 : 0) + 10;
+        int cantidad = (items != null) ? items.size() : 0;
+        int alto = 30 + cantidad * 20 + 10;
 
         g2.setColor(new Color(0, 0, 0, 180));
         g2.fillRoundRect(x, y, 220, alto, 12, 12);
@@ -116,7 +117,7 @@ public class MinijuegoRecoleccion implements Minijuego {
         g2.setColor(Color.WHITE);
         g2.drawString("── Mochila ──", x + 10, y + 20);
 
-        if (items == null || items.size() == 0) {
+        if (cantidad == 0) {
             g2.setFont(new Font("Arial", Font.ITALIC, 12));
             g2.setColor(new Color(160, 160, 160));
             g2.drawString("(vacía)", x + 10, y + 40);
@@ -126,8 +127,9 @@ public class MinijuegoRecoleccion implements Minijuego {
         g2.setFont(new Font("Arial", Font.PLAIN, 12));
         g2.setColor(new Color(220, 220, 100));
         int ly = y + 40;
-        for (int i = 1; i <= items.size(); i++) {
-            g2.drawString(i + ". " + items.get(i).getNombre(), x + 10, ly);
+        // base 0 — si tu lista es base 1, cambiá a i=1; i<=cantidad
+        for (int i = 0; i < cantidad; i++) {
+            g2.drawString((i + 1) + ". " + items.get(i).getNombre(), x + 10, ly);
             ly += 20;
         }
     }

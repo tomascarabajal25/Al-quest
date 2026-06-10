@@ -11,7 +11,8 @@ public abstract class Partida {
 	private Jugador jugador;
 	private int puntajeActual;
 	private EstadoDePartida estado;
-
+	// NUEVO ATRIBUTO PARA EL CALLBACK------------------------------------------------
+	private Runnable onFinalizadoCallback;
 	
 	//CONSTRUCTORES-----------------------------------------------------------------
 	public Partida(String nombre, Jugador jugador) {
@@ -57,6 +58,25 @@ public abstract class Partida {
 	public boolean estaIniciada() {
 		return estado==EstadoDePartida.Iniciado;
 	}
+	
+	
+	// NUEVO MÉTODO DE COMPORTAMIENTO (SETTER)----------------------------------------
+	/**
+	 * pre: callback no nulo.
+	 * post: asigna la acción a ejecutar cuando la partida finalice.
+	 */
+	public void setOnFinalizadoCallback(Runnable callback) {
+		this.onFinalizadoCallback = callback;
+	}
+
+	/**
+	 * post: ejecuta el callback registrado si existe uno disponible.
+	 */
+	protected void notificarFinalizacion() {
+		if (this.onFinalizadoCallback != null) {
+			this.onFinalizadoCallback.run();
+		}
+	}
 	//GETTER SIMPLES-----------------------------------------------------------------
 	public String getNombre() {
 		return nombre;
@@ -66,7 +86,7 @@ public abstract class Partida {
 		return jugador;
 	}
 
-	public int getPuntajeActual() {
+	public int getPuntaje() {
 		return puntajeActual;
 	}
 
@@ -97,4 +117,7 @@ public abstract class Partida {
 		ValidacionesUtiles.validarMayorAUno(nombre.length(), "El nombre debe ser mas largo");
 		this.nombre=nombre;
 	}
+
+	
+	
 }

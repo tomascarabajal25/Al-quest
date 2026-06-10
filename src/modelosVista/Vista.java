@@ -155,7 +155,7 @@ public class Vista extends JPanel implements Runnable{
 	        miniJuego.draw(g2, jugadorVista);
 	    }
 		
-		g2.dispose();
+		
 	}
 	public void detenerHilo() {
         hiloDelJuego = null; // el while(hiloDelJuego != null) termina solo

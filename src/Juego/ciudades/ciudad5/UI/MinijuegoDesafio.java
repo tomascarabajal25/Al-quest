@@ -206,10 +206,10 @@ public class MinijuegoDesafio implements Minijuego {
             g2.setFont(new Font("Arial", Font.BOLD, 22));
             if (ultimaRespuestaCorrecta) {
                 g2.setColor(new Color(0, 230, 0));
-                g2.drawString("✓ ¡Correcto!", panelX + 330, panelY + 62);
+                g2.drawString("Correcto", panelX + 330, panelY + 62);
             } else {
                 g2.setColor(new Color(230, 50, 50));
-                g2.drawString("✗ Era " + respuestaCorrecta, panelX + 295, panelY + 62);
+                g2.drawString("Incorrecto. Era " + respuestaCorrecta, panelX + 295, panelY + 62);
             }
         }
 
