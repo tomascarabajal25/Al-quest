@@ -310,6 +310,14 @@ public class Vista extends JPanel implements Runnable{
     public AdministradorDeObjetos getAdminObjt(){
         return this.adminObjt;
     }
+
+    /**
+     * Getter del atributo minijuegos
+     * @return: Devuelve del valor del atributo
+     */
+    public Minijuego getMinijuego(){
+        return this.miniJuego;
+    }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 

@@ -1,11 +1,14 @@
 package modelosVista;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import javax.imageio.ImageIO;
+import java.util.List;
+
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import modelos.Jugador;
 import utils.ValidacionesUtiles;
 
@@ -18,8 +21,11 @@ public class JugadorVista extends EntidadVista {
     private Vista vistaDelJuego = null;
     private KeyHandler keyHa = null;
     private Jugador jugador = null;
+    private List<ElementoVista> cartas = null;
     private final int screenX;
     private final int screenY;
+    private int nivelActual;
+
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
     public JugadorVista(Jugador jugador, KeyHandler key, int spawnCol, int spawnFila, String rutaSprites,Vista vista){
@@ -34,6 +40,7 @@ public class JugadorVista extends EntidadVista {
         setVista(vista);
         setKey(key);
 
+        this.cartas = new ArrayList<>();
         this.screenX=vistaDelJuego.getAnchoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
         this.screenY=vistaDelJuego.getLargoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
 
@@ -69,10 +76,16 @@ public class JugadorVista extends EntidadVista {
             if(this.keyHa.getRightPressed()) {
                 setDireccion(Direccion.DERECHA);
             }
+
             setColisionOn(false);
             this.vistaDelJuego.getChequeadorDeColision().chequearConstruccion(this);
+            this.vistaDelJuego.getChequeadorDeColision().chequearCartas(this, this.cartas, this.nivelActual);
 
+            System.out.println("COLISION = " + isColisionOn());
             if(!isColisionOn()) {
+                System.out.println(
+                        "ME MUEVO - colision=" + isColisionOn()
+                );
                 switch (getDireccion()) {
                     case ARRIBA: {
                         setWorldY(getWorldY()-getVelocidad());
@@ -180,6 +193,34 @@ public class JugadorVista extends EntidadVista {
         }
         g2.drawImage(image, screenX, screenY, vistaDelJuego.getTamanio(), vistaDelJuego.getTamanio(),null);
     }
+
+    /**
+     * Fuerza una colision
+     */
+    public void forzarColision() {
+        System.out.println("FORZANDO");
+        setColisionOn(true);
+    }
+
+    /**
+     * Agrega una carta
+     *
+     * PRE:
+     * -Carta no debe ser nulo
+     */
+    public void agregarCarta(ElementoVista carta){
+        ValidacionesUtiles.esDistintoDeNull(carta, "carta");
+        this.cartas.add(carta);
+    }
+
+    /**
+     * NivelActual
+     */
+    public void establecerNivelActual(int nivel){
+        ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+        this.nivelActual=nivel;
+    }
+
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
@@ -200,6 +241,14 @@ public class JugadorVista extends EntidadVista {
      */
     public Jugador getJugador() {
         return this.jugador;
+    }
+
+    /**
+     * Getter del atributo cartas
+     * @return: Devuelve la lista de cartas
+     */
+    public List<ElementoVista> getCartas() {
+        return this.cartas;
     }
 
     /**

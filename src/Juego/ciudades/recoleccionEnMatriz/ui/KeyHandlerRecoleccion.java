@@ -165,10 +165,10 @@ public class KeyHandlerRecoleccion extends KeyHandler {
      * Setter del atributo cartaPresionada
      *
      * PRE:
-     * -Valor debe ser mayor a cero
+     * -Valor debe ser mayor o igual a cero
      */
     private void setCartaPresionada(int valor) {
-        ValidacionesUtiles.validarMayorACero(valor, "valor");
+        ValidacionesUtiles.validarMayorOIgualACero(valor, "valor");
         this.cartaPresionada = valor;
     }
 

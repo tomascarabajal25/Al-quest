@@ -1,6 +1,10 @@
 package modelosVista;
 
+import Juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import utils.ValidacionesUtiles;
+import java.util.List;
+
+import java.awt.*;
 
 public class ChequeadorDeColision {
     //INTERFACES ----------------------------------------------------------------------------------------------
@@ -92,6 +96,55 @@ public class ChequeadorDeColision {
                     entidad.setColisionOn(true);;
                 }
                 break;
+        }
+    }
+
+    public void chequearCartas(EntidadVista entidad, List<ElementoVista> cartas, int nivel) {
+
+        int futuroX = entidad.getWorldX();
+        int futuroY = entidad.getWorldY();
+
+        switch (entidad.getDireccion()) {
+            case ARRIBA:
+                futuroY -= entidad.getVelocidad();
+                break;
+
+            case ABAJO:
+                futuroY += entidad.getVelocidad();
+                break;
+
+            case IZQUIERDA:
+                futuroX -= entidad.getVelocidad();
+                break;
+
+            case DERECHA:
+                futuroX += entidad.getVelocidad();
+                break;
+        }
+
+        Rectangle futuro = new Rectangle(
+                futuroX,
+                futuroY,
+                gp.getTamanio(),
+                gp.getTamanio()
+        );
+
+        for (ElementoVista carta : cartas) {
+            if (carta.isRecogido()) {
+                continue;
+            }
+
+            Rectangle rectCarta = new Rectangle(
+                    carta.getWorldX(),
+                    carta.getWorldY(),
+                    gp.getTamanio(),
+                    gp.getTamanio()
+            );
+
+            if (futuro.intersects(rectCarta)) {
+                entidad.setColisionOn(true);
+                return;
+            }
         }
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
