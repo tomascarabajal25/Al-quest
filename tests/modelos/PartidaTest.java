@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 
 public class PartidaTest {
 
@@ -33,7 +33,7 @@ public class PartidaTest {
 
         assertEquals("Partida 1", partida.getNombre());
         assertEquals(jugador, partida.getJugador());
-        assertEquals(0, partida.getPuntajeActual());
+        assertEquals(0, partida.getPuntaje());
         assertEquals(EstadoDePartida.Creado, partida.getEstado());
     }
 
