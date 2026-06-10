@@ -2,7 +2,7 @@ package modelos;
 
 import java.util.Objects;
 
-import Juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import utils.ValidacionesUtiles;
 
 public abstract class Partida {

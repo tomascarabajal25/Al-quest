@@ -3,7 +3,7 @@ package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Caja;
 
 public class CajaTest {
 	    @Test

@@ -2,12 +2,16 @@
 .idea/
 *.iml
 /bin/
+
 # Eclipse
 .project
 .classpath
 .settings/
 .metadata/
 bin/
+
+# vscode
+.vscode/
 
 # Logs
 *.log
@@ -29,3 +33,8 @@ build/
 
 # Dependencias locales
 lib/
+
+.atl/
+overview.md
+.gitignore
+*.sh
