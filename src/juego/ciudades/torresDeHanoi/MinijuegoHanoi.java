@@ -22,8 +22,8 @@ import modelosVista.JugadorVista;
 public class MinijuegoHanoi implements Minijuego {
 
     // ── Zona de activación ────────────────────────────────────────────────────
-    private static final int ZONA_COL   = 20;
-    private static final int ZONA_FILA  = 15;
+    private static final int ZONA_COL   = 34;
+    private static final int ZONA_FILA  = 4;
     private static final int ZONA_ANCHO = 5;
     private static final int ZONA_ALTO  = 3;
 

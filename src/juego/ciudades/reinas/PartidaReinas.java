@@ -55,7 +55,7 @@ public class PartidaReinas extends Partida {
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
-        // setPuntaje(...) si corresponde
+        setPuntaje(300*tamanio);
 
         if (this.ventana != null) {
             this.ventana.dispose();

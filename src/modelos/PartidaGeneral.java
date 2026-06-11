@@ -101,9 +101,9 @@ public class PartidaGeneral extends Partida {
     private void construirGrafo() {
         Jugador jugador = getJugador();
 
-        NodoCiudad ciudad1 = crearNodo(2, "Ciudad de Recoleccion",
+        NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
                 new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
-        NodoCiudad ciudad2 = crearNodo(1, "Ciudad De Reinas", 
+        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas", 
         		new PartidaReinas(jugador));
         
         NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",

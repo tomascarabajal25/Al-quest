@@ -33,6 +33,9 @@ import utils.ValidacionesUtiles;
  *   new PartidaHanoi(discos, nombre, jugador) → iniciar() → [juego corre] → finalizar()
  */
 public class PartidaHanoi extends Partida {
+	
+	private final int SPAWN_JUGADORX=8;
+	private final int SPAWN_JUGADORY=48;
 
     // ── Modelo del puzzle ─────────────────────────────────────────────────────
     private CiudadHanoi juego;
@@ -78,7 +81,7 @@ public class PartidaHanoi extends Partida {
         this.juego = new CiudadHanoi(cantidadDiscos);
 
         // 2. Creación de la infraestructura de vista (Mundo 3 de Hanoi)
-        this.vista = new Vista("/maps/world03.txt", getJugador(), 24, 21, "/assets/jugador/boy");
+        this.vista = new Vista("/maps/world03.txt", getJugador(), SPAWN_JUGADORX, SPAWN_JUGADORY, "/assets/jugador/boy");
 
         // 3. Creación del controlador del minijuego pasándole la vista ya creada
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
@@ -134,6 +137,7 @@ public class PartidaHanoi extends Partida {
             ventana.dispose();
             ventana = null;
         }
+        notificarFinalizacion();
     }
 
     /**
@@ -148,7 +152,7 @@ public class PartidaHanoi extends Partida {
     private int calcularPuntaje() {
         if (juego == null || !juego.haGanado()) return 0;
         int multiplicador = juego.getObjetivo();
-        int puntos        = juego.esPerfecto() ? 150 : 100;
+        int puntos        = juego.esPerfecto() ? 1000 : 500;
         return puntos * multiplicador;
     }
 

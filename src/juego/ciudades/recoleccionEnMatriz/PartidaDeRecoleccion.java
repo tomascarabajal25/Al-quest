@@ -107,7 +107,17 @@ public class PartidaDeRecoleccion extends Partida {
     public void finalizar() {
         int puntos = juego.finalizar();
         this.setPuntaje( puntos);
+        
+        
+        if (vista != null) {
+            vista.detenerHilo();
+        }
 
+        if (ventana != null) {
+            ventana.dispose();
+            ventana = null;
+        }
+        notificarFinalizacion();
     }
     
     

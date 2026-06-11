@@ -106,7 +106,7 @@ public class PartidaBusqueda extends Partida {
     }
 
     private int calcularPuntaje() {
-        return minijuego != null && minijuego.isGanado() ? 100 : 0;
+        return minijuego != null && minijuego.isGanado() ? 1000 : 0;
     }
 
     /**
