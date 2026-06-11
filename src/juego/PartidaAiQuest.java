@@ -3,11 +3,12 @@ package Juego;
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ciudades.ordenamientos.Caja;
-import Juego.ciudades.ordenamientos.OrdenadorBubble;
-import Juego.ciudades.ordenamientos.OrdenadorSelection;
-import Juego.ciudades.ordenamientos.PartidaOrdenamientos;
-import Juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.OrdenadorBubble;
+import juego.ciudades.ordenamientos.OrdenadorSelection;
+import juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
+import juego.ciudades.grafos.controller.PartidaGrafos;
 import modelos.Jugador;
 import modelos.Partida;
 
@@ -38,6 +39,8 @@ public class PartidaAiQuest extends Partida {
                 Constantes.NIVELES_MAPA,
                 Constantes.CAPACIDAD_MAXIMA_MOCHILA
         ));
+        // Ciudad 7: Grafos y Flujo
+        ciudades.add(new PartidaGrafos("Grafos", getJugador()));
     }
 
     /**
