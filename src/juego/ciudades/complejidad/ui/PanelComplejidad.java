@@ -223,7 +223,10 @@ public class PanelComplejidad extends JPanel {
                         JOptionPane.INFORMATION_MESSAGE
                     );
 
-                    if (victoriaListener != null) victoriaListener.onVictoria();
+                    if (victoriaListener != null) {
+                    	victoriaListener.onVictoria();
+                    	
+                    }
 
                 } else {
                     juegoTerminado = true;

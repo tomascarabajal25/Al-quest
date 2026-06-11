@@ -6,11 +6,7 @@ import modelos.Jugador;
 
 public class ProbarComplejidad {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Jugador jugador = new Jugador("Jugador 1");
-            new VentanaComplejidad(jugador, () -> {
-                System.out.println("Ciudad completada");
-            });
-        });
+        PartidaComplejidad partida = new PartidaComplejidad(new Jugador(""));
+        partida.iniciar();
     }
 }
