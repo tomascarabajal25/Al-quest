@@ -47,11 +47,16 @@ public class VistaGlobal extends Vista {
 
     // ── Constantes de spawn ───────────────────────────────────────────────────
 
-    /** Columna de spawn del jugador en el mapa global (en tiles). */
-    public static final int SPAWN_COL  = 5;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** Columna de spawn del jugador en el mapa global (en tiles). */
+    public static final int SPAWN_COL  = 3;
 
     /** Fila de spawn del jugador en el mapa global (en tiles). */
-    public static final int SPAWN_FILA = 5;
+    public static final int SPAWN_FILA = 25;
 
     // ── Constantes de interacción ─────────────────────────────────────────────
 
@@ -68,9 +73,16 @@ public class VistaGlobal extends Vista {
     //
     // Formato: { idCiudad, columna, fila }
     private static final int[][] POSICIONES_CIUDADES = {
-    	    {  1, 10, 10 },   // Ciudad Ordenamiento — visible desde el spawn
-    	    {  5, 30, 10 },   // Ciudad Búsqueda
-    	    {  8, 20, 30 },   // Torres de Hanoi
+    	    {  1, 46, 25 },   // Ciudad de reco
+    	    {  2, 46, 14 },   // Ciudad 2
+    	    {  3, 22, 3 },   // Ciudad 3
+    	    {  4, 3, 9 },   // Ciudad 4
+    	    {  5, 46, 40 },   // Ciudad de Búsqueda
+    	    {  6, 36, 46 },   // Ciudad 6
+    	    {  7, 19, 35 },   // Ciudad 7
+    	    {  8, 4, 39 },   // Torres de Hanoi
+    	    {  9, 15, 47 },   // Ciudad 9
+    	    { 10,  6, 35 },   // Ciudad 10
     	};
 
     // ── Colores de estado de ciudad ───────────────────────────────────────────

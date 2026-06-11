@@ -167,10 +167,8 @@ public class MinijuegoRecoleccion implements Minijuego {
                "Fin del juego",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE
             );
-
-            if (ventana != null){
-                ventana.dispose();
-            }
+            
+            
             }
          );
       }
