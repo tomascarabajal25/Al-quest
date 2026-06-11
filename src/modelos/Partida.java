@@ -20,7 +20,6 @@ public abstract class Partida {
 		setPuntaje(0);
 		setEstado(EstadoDePartida.Creado);
 	}
-	//METODOS DE CLASES-------------------------------------------------------------
 	//METODOS GENERALES-------------------------------------------------------------
 	
 	@Override

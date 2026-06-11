@@ -7,11 +7,15 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+import modelos.Partida;
+
 public class ControladorLaberinto {
     private static final String RUTA_LABERINTO = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
     private static  final String RUTA_SPRITES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
     private static final String RUTA_IMAGENES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\partidas\\laberinto";
     private static final int INTERVALO_TIMER = 300;
+
+    private PartidaLaberinto partida;
 
     private Laberinto laberinto;
 
@@ -27,7 +31,8 @@ public class ControladorLaberinto {
 
     private boolean pausado;
 
-    public ControladorLaberinto() {
+    public ControladorLaberinto(PartidaLaberinto partida) {
+        this.partida = partida;
         pausado = false;
         if (!cargarLaberinto()) {
             return;
@@ -107,6 +112,7 @@ public class ControladorLaberinto {
         if (resultado == ResultadoPaso.SOLUCION_ENCONTRADA) {
             timer.stop();
             ventana.setLabelEstado("Solucion encontrada");
+            partida.finalizar(gestorImagenes.getNumeroPaso());
             ventana.getBotonIniciar().setEnabled(false);
             ventana.getBotonPausar().setEnabled(false);
             JOptionPane.showMessageDialog(
