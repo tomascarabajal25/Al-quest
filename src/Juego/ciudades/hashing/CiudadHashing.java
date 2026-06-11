@@ -1,4 +1,4 @@
-package Juego.ciudades.hashing;
+package juego.ciudades.hashing;
 
 import estructuras.hashing.HashTable;
 import estructuras.hashing.HashTable.EntradaHash;

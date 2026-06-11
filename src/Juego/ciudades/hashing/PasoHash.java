@@ -1,4 +1,4 @@
-package Juego.ciudades.hashing;
+package juego.ciudades.hashing;
 
 /**
  * Archivo tipo DTO, no contiene logica.

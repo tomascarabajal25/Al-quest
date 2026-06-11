@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.hashing.AdministradorPasosHash;
-import Juego.ciudades.hashing.PasoHash;
+import juego.ciudades.hashing.AdministradorPasosHash;
+import juego.ciudades.hashing.PasoHash;
 
 /**
  * Tests de PasoHash y AdministradorPasosHash.

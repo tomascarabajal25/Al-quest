@@ -1,4 +1,4 @@
-package Juego.ciudades.hashing;
+package juego.ciudades.hashing;
 
 import java.util.ArrayList;
 import java.util.List;

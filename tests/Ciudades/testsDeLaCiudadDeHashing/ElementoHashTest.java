@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import Juego.ciudades.hashing.ElementoHash;
+import juego.ciudades.hashing.ElementoHash;
 import modelos.Elemento;
 
 
