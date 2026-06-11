@@ -1,5 +1,6 @@
 package modelos;
 
+
 import javax.swing.JFrame;
 
 import javax.swing.SwingUtilities;
@@ -66,7 +67,8 @@ public class PartidaGeneral extends Partida {
 
     /** Puntaje acumulado a lo largo de todas las ciudades completadas. */
     private int puntajeTotal;
-
+ 
+    
     // ── Constructor ───────────────────────────────────────────────────────────
 
     /**
@@ -259,6 +261,8 @@ public class PartidaGeneral extends Partida {
         });
     }
 
+ 
+    
     // ── Getters ───────────────────────────────────────────────────────────────
 
     /** @return el grafo del mundo (solo lectura desde la vista). */

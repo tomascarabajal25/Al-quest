@@ -8,7 +8,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import javax.imageio.ImageIO;
 
 import modelos.GrafoCiudades;
 import modelos.Jugador;
@@ -113,6 +118,8 @@ public class VistaGlobal extends Vista {
 
     /** Cooldown para evitar disparar entrarACiudad múltiples veces con la misma pulsación. */
     private boolean teclaEnterConsumed = false;
+    // atributo nuevo
+    private final Map<Integer, BufferedImage> iconosCiudad = new HashMap<>();
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
@@ -142,6 +149,8 @@ public class VistaGlobal extends Vista {
 
         this.partidaGeneral = partidaGeneral;
         System.out.println(partidaGeneral.getMapaMundi().getNodos().size());
+
+        cargarIconosCiudades();
     }
 
     // ── Loop de actualización ─────────────────────────────────────────────────
@@ -196,6 +205,21 @@ public class VistaGlobal extends Vista {
         dibujarMensajeFlotante(g2);
 
         g2.dispose();
+    }
+    private void cargarIconosCiudades() {
+        int[] ids = {1, 2, 4, 5, 8};
+        for (int id : ids) {
+            try {
+                BufferedImage img = ImageIO.read(
+                    Objects.requireNonNull(
+                        getClass().getResourceAsStream("/assets/ciudades/ciudad_" + id + ".bmp")
+                    )
+                );
+                iconosCiudad.put(id, img);
+            } catch (Exception e) {
+                System.out.println("No se encontró ícono para ciudad " + id);
+            }
+        }
     }
 
     // ── Detección de ciudades ─────────────────────────────────────────────────
@@ -313,20 +337,32 @@ public class VistaGlobal extends Vista {
                 etiqueta    = "C" + id + " 🔒 " + nodo.getNombre();
             }
 
-            // ── Círculo indicador ──────────────────────────────────────────
-            int radio = getTamanio() / 2 - 2;
+            // ── Ícono de ciudad ────────────────────────────────────────────
+            int lado = getTamanio()*3; // tamaño del tile (48px con tu escala)
+            BufferedImage icono = iconosCiudad.get(id);
+
             Composite orig = g2.getComposite();
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-            g2.setColor(colorEstado);
-            g2.fillOval(cx - radio, cy - radio, radio * 2, radio * 2);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+
+            if (icono != null) {
+                // Dibujar bitmap centrado en (cx, cy)
+                g2.drawImage(icono, cx - lado / 2, cy - lado / 2, lado, lado, null);
+            } else {
+                // Fallback: círculo si no hay imagen (ciudades próximamente, etc.)
+                int radio = lado / 2 - 2;
+                g2.setColor(colorEstado);
+                g2.fillOval(cx - radio, cy - radio, radio * 2, radio * 2);
+            }
+
             g2.setComposite(orig);
 
-            // Borde del círculo
+            // Borde de color según estado 
+            int radio = lado / 2 - 2;
             g2.setColor(colorEstado.darker());
             g2.setStroke(new BasicStroke(2f));
             g2.drawOval(cx - radio, cy - radio, radio * 2, radio * 2);
             g2.setStroke(new BasicStroke(1f));
-
+            
             // ── Etiqueta de texto ──────────────────────────────────────────
             g2.setFont(FONT_LABEL);
             int anchoTexto = g2.getFontMetrics().stringWidth(etiqueta);
