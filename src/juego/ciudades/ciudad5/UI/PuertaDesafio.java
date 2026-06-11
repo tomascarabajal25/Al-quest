@@ -41,25 +41,26 @@ public class PuertaDesafio extends ObjetoVista {
         super(col * tamaño, fila * tamaño,
               tipo == TipoPuerta.LISTA ? "PuertaLista" : "PuertaArbol",
               false,   // sin colisión de mapa — la colisión la maneja MinijuegoDesafio
-              null);   // imagen null → cargarImagenPuerta() la asigna abajo
+              cargarSprite(tipo));   // imagen null → cargarImagenPuerta() la asigna abajo
 
         this.tipo   = tipo;
         this.tamaño = tamaño;
-        cargarImagenPuerta();
+        
     }
 
     // ── Imagen ────────────────────────────────────────────────────────────
 
-    private void cargarImagenPuerta() {
+    private static BufferedImage cargarSprite(TipoPuerta tipo) {
         try {
             String ruta = tipo == TipoPuerta.LISTA
                 ? "/assets/objetos/door.bmp"
                 : "/assets/objetos/door_iron.bmp";
-            BufferedImage img = ImageIO.read(
-                getClass().getResourceAsStream(ruta));
-            setImagen(img);
+
+            return ImageIO.read(
+                PuertaDesafio.class.getResourceAsStream(ruta)
+            );
         } catch (IOException | IllegalArgumentException e) {
-            setImagen(null); // sin BMP → draw() usa placeholder de color
+            return null;
         }
     }
 

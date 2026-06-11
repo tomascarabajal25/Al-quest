@@ -1,11 +1,11 @@
 package juego.ciudades.complejidad.ui;
 
-import juego.ciudades.complejidad.CiudadComplejidad;
-import juego.ciudades.complejidad.PasoTeoremaMaestro;
-import juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
+import juego.ciudades.complejidad.CiudadComplejidad;
+import juego.ciudades.complejidad.PasoTeoremaMaestro;
+import juego.ciudades.reinas.VictoriaListener;
 
 public class PanelComplejidad extends JPanel {
 
@@ -29,7 +29,7 @@ public class PanelComplejidad extends JPanel {
     private boolean juegoTerminado = false;
 
     private static final String[] COMPLEJIDADES = {
-        "O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n^2)", "O(n^3)", "O(2^n)"
+        "O(1)", "O(n)", "O(n log n)", "O(n^2)", "O(n^2 log n)", "O(n^3)"
     };
 
     /**
@@ -193,13 +193,20 @@ public class PanelComplejidad extends JPanel {
             return;
         }
 
+        String entrada = campoEcuacion.getText();
+        if (!ciudad.esEntradaValida(entrada)) {
+            return;
+        }
+        ciudad.procesarEcuacion(entrada);
+
         String respuestaCorrecta = ciudad.getResultado();
         boolean acerto = seleccion.equals(respuestaCorrecta);
 
         btnListo.setEnabled(false);
         btnReiniciar.setVisible(true);
+        campoEcuacion.setEditable(false);
+        btnResolver.setEnabled(false);
 
-        // mostrar paso a paso
         pasos = ciudad.getPasos();
         pasoActual = 0;
 

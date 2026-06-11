@@ -7,6 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import juego.ciudades.ordenamientos.Caja;
@@ -50,8 +52,9 @@ public class CajaVista extends ObjetoVista {
     private int tickParpadeo = 0;
 
     // ── Imagen de caja (opcional, si hay sprite) ──────────────────────────
-    private BufferedImage spriteCaja;
+    private static BufferedImage spriteCaja;
 
+    
     // ── Constructor ────────────────────────────────────────────────────────
 
     /**
@@ -62,12 +65,24 @@ public class CajaVista extends ObjetoVista {
      * @param indiceLogico  posición en el arreglo lógico
      */
     public CajaVista(Caja caja, int worldX, int worldY, int indiceLogico) {
-        super(worldX, worldY, caja.getNombre(), false, null);
+        super(worldX, worldY, caja.getNombre(), false, cargarSprite());
         this.caja         = caja;
         this.indiceLogico = indiceLogico;
         intentarCargarSprite();
     }
-
+    
+    private static BufferedImage cargarSprite() {
+        try {
+            return ImageIO.read(
+                CajaVista.class.getResourceAsStream("/assets/objetos/caja.bmp")
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+ 	
+    
     // ── Ciclo de juego ─────────────────────────────────────────────────────
 
     /**

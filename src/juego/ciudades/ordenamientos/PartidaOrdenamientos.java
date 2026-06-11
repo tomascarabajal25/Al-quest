@@ -128,6 +128,7 @@ public class PartidaOrdenamientos extends Partida {
             ventana.dispose();
             ventana = null;
         }
+        
 
         // Sincronización obligatoria con el grafo del mapa global
         notificarFinalizacion();
@@ -196,7 +197,6 @@ public class PartidaOrdenamientos extends Partida {
     // ── Lógica de Puntaje ─────────────────────────────────────────────────────
 
     public int calcularPuntaje() {
-    	//validar si gano
         return 1000;
     }
 

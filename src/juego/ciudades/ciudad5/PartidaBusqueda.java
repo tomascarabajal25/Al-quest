@@ -68,7 +68,7 @@ public class PartidaBusqueda extends Partida {
         this.vista = new Vista("/maps/world01.txt", getJugador(), 24, 3, "/assets/jugador/boy");
         this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.getTamanio());
         
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
         vista.getAdminObjt().setObjetos(minijuego.getPuertaLista(), minijuego.getPuertaArbol());
         
         // Enlaza el callback para el cierre automático al ganar/perder
@@ -106,7 +106,7 @@ public class PartidaBusqueda extends Partida {
     }
 
     private int calcularPuntaje() {
-        return minijuego != null && minijuego.isGanado() ? 100 : 0;
+        return minijuego != null && minijuego.isGanado() ? 1000 : 0;
     }
 
     /**

@@ -1,12 +1,14 @@
 package juego.ciudades.complejidad;
 
-import juego.ciudades.complejidad.ui.VentanaComplejidad;
 import javax.swing.*;
+import juego.ciudades.complejidad.ui.VentanaComplejidad;
+import modelos.Jugador;
 
 public class ProbarComplejidad {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new VentanaComplejidad(() -> {
+            Jugador jugador = new Jugador("Jugador 1");
+            new VentanaComplejidad(jugador, () -> {
                 System.out.println("Ciudad completada");
             });
         });
