@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import juego.ciudades.hashing.ui.FabricaMinijuegoHashing;
 import juego.ciudades.hashing.ui.MinijuegoHashing;
@@ -26,65 +27,35 @@ import utils.ValidacionesUtiles;
  */
 
 public class PartidaHashing extends Partida {
-    //CONSTANTES
-    private static final int PUNTAJE_VICTORIA = 100; //Puntaje que otorga al ganar la ciudad
+    // CONSTANTES
+    private static final int PUNTAJE_VICTORIA = 500;
     private static final String TITULO_VENTANA = "Ciudad de Hashing";
     private static final int FILA_SPAWN = 48;
     private static final int COL_SPAWN  = 1;
-    private static final String RUTA_MAPA    = "/maps/world_hashing.txt";
+    private static final String RUTA_MAPA = "/maps/world_hashing.txt";
     private static final String RUTA_SPRITES = "/assets/jugador/boy";
 
-
-    //ATRIBUTOS    
-    private final int cantidadSlots; //Cantidad de slots de la tabla (numero primo es mejor)
-    private final List<ElementoHash> elementos; //Elementos que el jugador debe insertar
-    private final List<Integer> clavesABuscar; //Claves que jugador va a buscar luego de insertar
-    private final List<Point> posicionesSlots; //Posiciones donde se reparten los slots por el mapa
-
-
-    /**
-     * Logica de la ciudad y minijuego activos
-     */
+    // ATRIBUTOS
     private CiudadHashing ciudad;
     private MinijuegoHashing minijuego;
     private Vista vista;
     private JFrame ventana;
 
-
-
-    //CONSTRUCTORES
-    /**
-     * PRE:
-     * @param nombreCiudad    no nulo, de al menos 2 caracteres
-     * @param jugador         no nulo
-     * @param cantidadSlots   mayor a 0
-     * @param elementos       no nula, al menos 1 elemento a insertar
-     * @param clavesABuscar   no nula (puede estar vacia)
-     * @param posicionesSlots no nula, una posicion (x = columna, y = fila, en celdas) por cada slot
-     *
-     * POST: crea la partida en estado "Creado", sin iniciarla todavia.
-     */
-    public PartidaHashing(String nombreCiudad, Jugador jugador, int cantidadSlots,
-                          List<ElementoHash> elementos, List<Integer> clavesABuscar,
-                          List<Point> posicionesSlots) {
+    // CONFIGURACIÓN DINÁMICA
+    private int cantidadSlots;
+    private List<ElementoHash> elementos;
+    private List<Integer> clavesABuscar;
     
-        super(nombreCiudad, jugador);
+    // CONFIGURACIÓN ESTÁTICA
+    private List<Point> posicionesSlots;
 
-        ValidacionesUtiles.validarMayorACero(cantidadSlots, "cantidad de slots");
-        ValidacionesUtiles.esDistintoDeNull(elementos, "elementos");
-        ValidacionesUtiles.esDistintoDeNull(clavesABuscar, "claves a buscar");
-        ValidacionesUtiles.esDistintoDeNull(posicionesSlots, "posiciones de los slots");
-
-        if (elementos.isEmpty()) {
-            throw new IllegalArgumentException("ERROR: se necesita al menos 1 elemento para insertar.");
-        }
-
-        this.cantidadSlots   = cantidadSlots;
-        this.elementos       = new ArrayList<>(elementos);
-        this.clavesABuscar   = new ArrayList<>(clavesABuscar);
-        this.posicionesSlots = new ArrayList<>(posicionesSlots);
+    /**
+     * Constructor estandarizado de la Partida Hashing.
+     */
+    public PartidaHashing(String nombre, Jugador jugador) {
+        super(nombre, jugador);
+        setEstado(EstadoDePartida.Creado);
     }
-
 
 
     //METODOS DE COMPORTAMIENTO
@@ -97,8 +68,37 @@ public class PartidaHashing extends Partida {
     public void iniciar() {
         ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya ha sido iniciada");
         setEstado(EstadoDePartida.Iniciado);
+     // 1. INPUT DEL JUGADOR (El usuario elige la cantidad de slots, elementos y claves)
+        try {
+            // A. Cantidad de Slots
+            this.cantidadSlots = pedirEnteroValido("Ingrese la cantidad de SLOTS para la Tabla Hash:", 3, 7);
 
-        this.vista = new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, RUTA_SPRITES);
+            // B. Ingresar los Elementos
+            int cantElementos = pedirEnteroValido("¿Cuántos ELEMENTOS querés insertar en la tabla?", 1, this.cantidadSlots);
+            
+            this.elementos = new ArrayList<>();
+            this.clavesABuscar = new ArrayList<>(); // Llenaremos esto automáticamente
+
+            for (int i = 0; i < cantElementos; i++) {
+                int clave = pedirEnteroValido("Ingrese la CLAVE (número) del elemento " + (i + 1) + ":", 0, 9999);
+                String nombre = pedirStringValido("Ingrese el NOMBRE del elemento " + (i + 1) + ":");
+                
+                this.elementos.add(new ElementoHash(clave, nombre));
+                
+                // EL SISTEMA ELIGE EL DESAFÍO: 
+                // Agregamos la clave recién creada a la lista de tareas a buscar.
+                this.clavesABuscar.add(clave); 
+            }
+
+            // (Eliminamos por completo el paso C donde le preguntábamos al jugador)
+
+        } catch (SecurityException e) {
+            finalizar();
+            return; // Aborta limpiamente si el usuario cancela
+        }
+        cargarPosicionesSlots(cantidadSlots);
+
+        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, RUTA_SPRITES));
 
         this.ciudad = new CiudadHashing(cantidadSlots);
 
@@ -106,7 +106,7 @@ public class PartidaHashing extends Partida {
 
         // Cuando el jugador gane, esta partida suma puntaje y se finaliza
         minijuego.setOnVictoria(() -> {
-            setPuntaje(PUNTAJE_VICTORIA);
+            setPuntaje(PUNTAJE_VICTORIA*cantidadSlots);
             finalizar();
         });
 
@@ -128,6 +128,49 @@ public class PartidaHashing extends Partida {
 
 
     /**
+     * Carga las posiciones físicas estáticas y recorta la lista
+     * para que coincida exactamente con la cantidad de slots elegida.
+     */
+    private void cargarPosicionesSlots(int cantidad) {
+        List<Point> todasLasPosiciones = new ArrayList<>();
+        todasLasPosiciones.add(new Point(4, 4));   
+        todasLasPosiciones.add(new Point(40, 40)); 
+        todasLasPosiciones.add(new Point(11, 9));  
+        todasLasPosiciones.add(new Point(6, 40));  
+        todasLasPosiciones.add(new Point(23, 22)); 
+        todasLasPosiciones.add(new Point(40, 6));  
+        todasLasPosiciones.add(new Point(38, 24)); 
+
+        // Recortamos la lista para que tenga exactamente la misma cantidad que los slots
+        this.posicionesSlots = new ArrayList<>(todasLasPosiciones.subList(0, cantidad));
+    }
+
+    private int pedirEnteroValido(String mensaje, int min, int max) {
+        while (true) {
+            String input = JOptionPane.showInputDialog(null, mensaje + " (" + min + " a " + max + "):", 
+                    "Configuración Hashing", JOptionPane.QUESTION_MESSAGE);
+            if (input == null) throw new SecurityException("Cancelado");
+            try {
+                int valor = Integer.parseInt(input.trim());
+                if (valor >= min && valor <= max) return valor;
+                JOptionPane.showMessageDialog(null, "El valor debe estar entre " + min + " y " + max + ".");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Entrada inválida. Ingrese un número entero.");
+            }
+        }
+    }
+
+    private String pedirStringValido(String mensaje) {
+        while (true) {
+            String input = JOptionPane.showInputDialog(null, mensaje, "Configuración Hashing", JOptionPane.QUESTION_MESSAGE);
+            if (input == null) throw new SecurityException("Cancelado");
+            if (!input.trim().isEmpty()) return input.trim();
+            JOptionPane.showMessageDialog(null, "El campo no puede estar vacío.");
+        }
+    }
+
+
+	/**
      * PRE: la partida debe estar iniciada
      * POST: detiene el hilo del juego y vuelve el estado a "Creado"
      */
