@@ -23,6 +23,7 @@ public class PanelLaberinto extends JPanel {
         setBackground(Color.DARK_GRAY);
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 

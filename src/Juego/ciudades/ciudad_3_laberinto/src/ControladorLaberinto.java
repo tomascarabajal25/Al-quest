@@ -7,8 +7,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import modelos.Partida;
-
 public class ControladorLaberinto {
     private static final String RUTA_LABERINTO = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
     private static  final String RUTA_SPRITES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
