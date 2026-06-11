@@ -3,7 +3,6 @@ package modelos;
 import utils.ValidacionesUtiles;
 
 import estructuras.vector.Vector;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Mapa {

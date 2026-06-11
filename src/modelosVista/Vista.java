@@ -365,7 +365,7 @@ public class Vista extends JPanel implements Runnable{
      *
      * @param minijuego:
      */
-    public void setMinijuego(Minijuego minijuego) {
+    private void setMinijuego(Minijuego minijuego) {
         ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
         this.miniJuego = minijuego;
     }

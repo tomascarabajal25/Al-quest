@@ -84,7 +84,7 @@ public class PartidaHanoi extends Partida {
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
 
         // 4. Inyecciones y vinculaciones de comportamiento
-        vista.setMinijuego(minijuego);
+        vista.establecerMinijuego(minijuego);
 
 
         // KeyListener para capturar el control de teclas del puzzle (1/2/3/R/ESC)

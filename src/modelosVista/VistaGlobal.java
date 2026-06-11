@@ -68,9 +68,11 @@ public class VistaGlobal extends Vista {
     //
     // Formato: { idCiudad, columna, fila }
     private static final int[][] POSICIONES_CIUDADES = {
-    	    {  1, 10, 10 },   // Ciudad Ordenamiento — visible desde el spawn
-    	    {  5, 30, 10 },   // Ciudad Búsqueda
-    	    {  8, 20, 30 },   // Torres de Hanoi
+    	    {  1, 10, 10 },
+    	    {  2, 15, 20 },
+    	    {  4, 20, 30 },
+    	    {  5, 30, 10 },   
+    	    {  8, 20, 30 },   
     	};
 
     // ── Colores de estado de ciudad ───────────────────────────────────────────
