@@ -1,22 +1,29 @@
 package juego.ciudades.complejidad.ui;
 
-import juego.ciudades.complejidad.CiudadComplejidad;
-import juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import javax.swing.*;
+import juego.ciudades.complejidad.PartidaComplejidad;
+import modelos.Jugador;
 
+/**
+ * Ventana principal de la Ciudad Complejidad Algorítmica.
+ */
 public class VentanaComplejidad extends JFrame {
 
     private PanelComplejidad panel;
 
     /**
-     * @param victoriaListener callback que se ejecuta cuando el jugador resuelve correctamente
+     * @param jugador jugador que participa en la partida
+     * @param onFinalizado callback que se ejecuta cuando el jugador completa la ciudad
      */
-    public VentanaComplejidad(VictoriaListener victoriaListener) {
+    public VentanaComplejidad(Jugador jugador, Runnable onFinalizado) {
         super("Complejidad Algorítmica");
 
-        CiudadComplejidad ciudad = new CiudadComplejidad();
-        panel = new PanelComplejidad(ciudad, victoriaListener);
+        PartidaComplejidad partida = new PartidaComplejidad(jugador);
+        partida.setOnFinalizadoCallback(onFinalizado);
+        partida.iniciar();
+
+        panel = new PanelComplejidad(partida.getCiudad(), () -> partida.finalizar());
 
         JPanel contenedor = new JPanel(new BorderLayout());
         contenedor.add(panel, BorderLayout.CENTER);
