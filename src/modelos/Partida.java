@@ -14,6 +14,10 @@ public abstract class Partida {
 	private EstadoDePartida estado;
 	// NUEVO ATRIBUTO PARA EL CALLBACK------------------------------------------------
 	private Runnable onFinalizadoCallback;
+	/**
+	 * nuevo atributo para manejo de skins, por defecto boy
+	 */
+	private String rutaSprites = "/assets/jugador/boy";
 	
 	//CONSTRUCTORES-----------------------------------------------------------------
 	public Partida(String nombre, Jugador jugador) {
@@ -77,6 +81,9 @@ public abstract class Partida {
 			this.onFinalizadoCallback.run();
 		}
 	}
+
+
+
 	//GETTER SIMPLES-----------------------------------------------------------------
 	public String getNombre() {
 		return nombre;
@@ -93,6 +100,18 @@ public abstract class Partida {
 	public EstadoDePartida getEstado() {
 		return estado;
 	}
+
+
+	//GESTION DE SKINS
+	/**
+	 * @return ruta base de los sprites
+	 * para que esta partida construya su Vista
+	 */
+	public String getRutaSprites(){
+		return rutaSprites;
+	}
+
+
 
 	//SETTERS SIMPLES---------------------------------------------------------------
 	protected void setEstado(EstadoDePartida estado) {
@@ -116,6 +135,18 @@ public abstract class Partida {
 		ValidacionesUtiles.esDistintoDeNull(nombre, "El nombre no puede ser nulo");
 		ValidacionesUtiles.validarMayorAUno(nombre.length(), "El nombre debe ser mas largo");
 		this.nombre=nombre;
+	}
+
+
+	/**
+	 * GESTION DE SKINS
+	 * PRE: rutaSprites nopuede ser null.
+	 * POST: proxima Vista que cree iniciar() va a usar esta ruta para sprites
+	 * 		 tiene que invocarse antes de iniciar() para que funcione
+	 */
+	public void setRutaSprites(String rutaSprites) {
+		ValidacionesUtiles.esDistintoDeNull(rutaSprites, "La ruta sprites no puede ser nula");
+		this.rutaSprites = rutaSprites;
 	}
 
 	

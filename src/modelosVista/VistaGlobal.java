@@ -8,12 +8,15 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import modelos.GrafoCiudades;
 import modelos.Jugador;
@@ -121,6 +124,13 @@ public class VistaGlobal extends Vista {
     // atributo nuevo
     private final Map<Integer, BufferedImage> iconosCiudad = new HashMap<>();
 
+    //Gestion de SKINS
+    //Cooldown para la tecla T de la tienda de SKINS
+    private boolean teclaTiendaConsumed = false;
+
+    //Estado de la tecla T
+    private boolean teclaTPresionada = false;
+
     // ── Constructor ───────────────────────────────────────────────────────────
 
     /**
@@ -151,6 +161,26 @@ public class VistaGlobal extends Vista {
         System.out.println(partidaGeneral.getMapaMundi().getNodos().size());
 
         cargarIconosCiudades();
+
+        //Gestion de SKINS
+        //Tienda Skins
+        //KeyAdapter propio para detectar T sin modificar KeyHandler
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_T) {
+                    teclaTPresionada = true;
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_T) {
+                    teclaTPresionada = false;
+                }
+            }
+        }
+        );
+
     }
 
     // ── Loop de actualización ─────────────────────────────────────────────────
@@ -180,6 +210,17 @@ public class VistaGlobal extends Vista {
         if (ciudadCercanaId != -1 && keyhandler.enterPresionado && !teclaEnterConsumed) {
             teclaEnterConsumed = true;
             procesarEntradaCiudad(ciudadCercanaId);
+        }
+
+        //Gestion de SKINS
+        //Detectar T para Tienda de Skins
+        if (!teclaTPresionada) {
+            teclaTiendaConsumed = false;
+        }
+
+        if (teclaTPresionada && !teclaTiendaConsumed) {
+            teclaTiendaConsumed = true;
+            abrirTienda();
         }
     }
 
@@ -221,6 +262,26 @@ public class VistaGlobal extends Vista {
             }
         }
     }
+
+
+    //Tienda de SKINS / GESTION DE SKINS
+    /**
+     * Pausa el loop del juego, abre TiendaSkins como dialogo modal y reanuda el loop
+     * cuando la persona cierre la tienda
+     * 
+     * pre: el hilo del juego corriendo
+     * post: loop se detiene durante la tienda y se reanuda al cerrar
+     *           la skin del jugador posiblemente cambio
+     */
+    private void abrirTienda() {
+        detenerHilo();
+        SwingUtilities.invokeLater(() -> {
+            TiendaSkins tienda = new TiendaSkins(partidaGeneral, this);
+            tienda.setVisible(true); // bloquea hasta que el usuario cierra el dialogo
+            startGameThread();       // reanuda el loop
+        });
+    }
+
 
     // ── Detección de ciudades ─────────────────────────────────────────────────
 
@@ -391,6 +452,7 @@ public class VistaGlobal extends Vista {
     /**
      * Dibuja el panel HUD en la esquina superior izquierda con el puntaje
      * acumulado del jugador y el nombre de la ciudad cercana (si aplica).
+     * Tambien, muestra el "T" para la Tienda de Skins
      *
      * PRE:  partidaGeneral != null.
      * POST: renderiza el HUD; no modifica estado del modelo.
@@ -417,7 +479,7 @@ public class VistaGlobal extends Vista {
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 13));
-        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal(), px + 12, py + 40);
+        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() + "    |    [T] Tienda de Skins", px + 12, py + 40);
 
         // Ciudad cercana
         if (ciudadCercanaId != -1) {
