@@ -114,9 +114,9 @@ public class CajaVista extends ObjetoVista {
         int sx      = getScreenX(vista);
         int sy      = getScreenY(vista);
 
-        // Altura proporcional: tamaño lógico / 50 * celda (máx = celda completa)
-        int altoMax  = tamaño - 4;
-        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamanio() * altoMax) / 50));
+        
+        int altoMax  = tamaño ;
+        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamanio() * altoMax) / 50)) *2;
         int yDibujo  = sy + (tamaño - altoReal);
 
         // ── Sombra ────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ public class CajaVista extends ObjetoVista {
 
         // ── Cuerpo de la caja ─────────────────────────────────────────────
         if (spriteCaja != null) {
-            g2.drawImage(spriteCaja, sx + 2, yDibujo, tamaño - 4, altoReal, null);
+            g2.drawImage(spriteCaja, sx + 2, yDibujo, tamaño , altoReal, null);
         } else {
             dibujarCajaVectorial(g2, sx, yDibujo, tamaño, altoReal);
         }
@@ -168,8 +168,7 @@ public class CajaVista extends ObjetoVista {
         g2.setFont(FONT_ETIQUETA);
         g2.setColor(COLOR_TEXTO);
         FontMetrics fm = g2.getFontMetrics();
-        String txt = caja.getNombre() + "\n" + caja.getTamanio();
-
+        
         // Nombre
         String linea1 = caja.getNombre();
         int x1 = sx + (tam - fm.stringWidth(linea1)) / 2;

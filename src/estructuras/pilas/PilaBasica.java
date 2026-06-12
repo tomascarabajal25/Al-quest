@@ -5,7 +5,6 @@ import java.util.List;
 import estructuras.nodos.NodoSimplementeEnlazado;
 
 public class PilaBasica<T> {
-	//ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
 	//ATRIBUTOS -----------------------------------------------------------------------------------------------
 
 	private NodoSimplementeEnlazado<T> tope = null;
@@ -21,10 +20,6 @@ public class PilaBasica<T> {
 		this.tope = null;
 		this.tamanio = 0;
 	}
-
-	//METODOS DE CLASE ----------------------------------------------------------------------------------------
-	//METODOS GENERALES ---------------------------------------------------------------------------------------
-	//METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
 
 	/*
 	 * post: indica si la cola tiene algún elemento.
@@ -87,8 +82,4 @@ public class PilaBasica<T> {
 	public int contarElementos() {
 		return this.tamanio;
 	}
-
-	//GETTERS SIMPLES -----------------------------------------------------------------------------------------
-	//SETTERS SIMPLES -----------------------------------------------------------------------------------------	
-
 }

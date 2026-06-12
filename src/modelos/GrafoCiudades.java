@@ -1,6 +1,7 @@
 package modelos;
 
 import java.util.Collections;
+import java.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,6 +161,51 @@ public class GrafoCiudades {
      */
     public Map<Integer, NodoCiudad> getNodos() {
         return Collections.unmodifiableMap(nodos);
+    }
+  
+
+    /**
+    * post: marca la ciudad indicada como completada, si existe en el grafo.
+    *       No tiene efecto si idCiudad no corresponde a ningún nodo registrado.
+    *
+    * @param idCiudad id de la ciudad a marcar como completada
+    */
+    public void marcarCiudadCompletada(int idCiudad) {
+     NodoCiudad nodo = nodos.get(idCiudad);
+     if (nodo != null) {
+         nodo.setCompletada(true);
+     }
+    }
+
+    /**
+    * post: devuelve los ids de todas las ciudades marcadas como completadas.
+    *
+    * @return ids de ciudades completadas
+    */
+    public Vector<Integer> obtenerIdsCompletadas() {
+     Vector<Integer> idsCompletadas = new Vector<>();
+     for (NodoCiudad nodo : nodos.values()) {
+         if (nodo.isCompletada()) {
+             idsCompletadas.add(nodo.getId());
+         }
+     }
+     return idsCompletadas;
+    }
+
+    /**
+    * post: devuelve los ids de todas las ciudades actualmente accesibles
+    *       según esCiudadAccesible().
+    *
+    * @return ids de ciudades accesibles
+    */
+    public Vector<Integer> obtenerIdsAccesibles() {
+     Vector<Integer> idsAccesibles = new Vector<>();
+     for (Integer idCiudad : nodos.keySet()) {
+         if (esCiudadAccesible(idCiudad)) {
+             idsAccesibles.add(idCiudad);
+         }
+     }
+     return idsAccesibles;
     }
 
     // ── Object overrides ──────────────────────────────────────────────────────

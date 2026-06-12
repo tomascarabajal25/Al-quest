@@ -39,9 +39,17 @@ public class ArbolBinarioHeap<E> {
 
 	// ... (Métodos getParentIndex, getLeftChildIndex, getRightChildIndex, swap, siftUp, siftDown)
 
-	private int getParentIndex(int i) { return (i - 1) / 2; }
-	private int getLeftChildIndex(int i) { return 2 * i + 1; }
-	private int getRightChildIndex(int i) { return 2 * i + 2; }
+	private int getParentIndex(int i) {
+		return (i - 1) / 2;
+	}
+
+	private int getLeftChildIndex(int i) {
+		return 2 * i + 1;
+	}
+
+	private int getRightChildIndex(int i) {
+		return 2 * i + 2;
+	}
 
 	private void swap(int i, int j) {
 		E temp = heapArray[i];

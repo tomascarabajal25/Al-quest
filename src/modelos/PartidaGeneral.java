@@ -7,7 +7,12 @@ import javax.swing.SwingUtilities;
 
 import juego.ciudades.reinas.PartidaReinas;
 import juego.ciudades.ciudad5.PartidaBusqueda;
+import juego.ciudades.ciudad_3_laberinto.src.PartidaLaberinto;
+import juego.ciudades.complejidad.PartidaComplejidad;
+import juego.ciudades.hashing.PartidaHashing;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
+import persistencia.DatosGuardado;
+import utils.ValidacionesUtiles;
 import juego.ciudades.ordenamientos.PartidaOrdenamientos;
 import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import juego.ciudades.batalla.controller.PartidaBatalla;
@@ -108,34 +113,44 @@ public class PartidaGeneral extends Partida {
 
         NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
         		new PartidaReinas(jugador));
+NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
+        		new PartidaLaberinto(jugador));
 
         NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
             new PartidaOrdenamientos("Ordenamiento", jugador));
-
         NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
             new PartidaBusqueda("Búsqueda", jugador));
-
+NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
+                new PartidaHashing("Hash", jugador));
+        
         NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
             new PartidaHanoi("Torres de Hanoi", jugador));
 
         NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas",
             new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador));
 
-        //NodoCiudad ciudad10= crearNodo(10, "Ciudad De Complejidad",
-        //		new );
+        NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
+            new PartidaComplejidad(jugador));
 
         mapaMundi.agregarCiudad(ciudad1);
         mapaMundi.agregarCiudad(ciudad2);
+        mapaMundi.agregarCiudad(ciudad3);
         mapaMundi.agregarCiudad(ciudad4);
         mapaMundi.agregarCiudad(ciudad5);
+        mapaMundi.agregarCiudad(ciudad6);
         mapaMundi.agregarCiudad(ciudad8);
         mapaMundi.agregarCiudad(ciudad9);
+        mapaMundi.agregarCiudad(ciudad10);
 
+        
         mapaMundi.conectarCiudades(1, 2);
-        mapaMundi.conectarCiudades(2, 4);
+        mapaMundi.conectarCiudades(2, 3);
+        mapaMundi.conectarCiudades(3, 4);
         mapaMundi.conectarCiudades(4, 5);
-        mapaMundi.conectarCiudades(5, 8);
+        mapaMundi.conectarCiudades(5, 6);
+        mapaMundi.conectarCiudades(6, 8);
         mapaMundi.conectarCiudades(8, 9);
+        mapaMundi.conectarCiudades(9, 10);
     }
 
     /**
@@ -200,6 +215,59 @@ public class PartidaGeneral extends Partida {
         }
     }
 
+
+    /**
+     * Genera una "fotografía" del estado actual de la partida, apta para
+     * persistencia en disco.
+     *
+     * pre:  ninguna.
+     * post: no modifica el estado de la partida; solo lo consulta.
+     *
+     * @return los datos de la partida actual, listos para ser guardados
+     */
+    public DatosGuardado generarDatosGuardado() {
+        int idCiudadActual = (ciudadActual != null)
+                ? ciudadActual.getId()
+                : GrafoCiudades.ID_CIUDAD_INICIAL;
+
+        return new DatosGuardado(
+                getJugador().getNombre(),
+                puntajeTotal,
+                idCiudadActual,
+                mapaMundi.obtenerIdsCompletadas(),
+                mapaMundi.obtenerIdsAccesibles());
+    }
+
+    /**
+     * Restaura el estado de la partida a partir de un DatosGuardado leído
+     * desde disco.
+     *
+     * pre:  datos != null
+     * post: - puntajeTotal pasa a ser datos.getPuntajeTotal().
+     *       - todas las ciudades cuyo id figura en
+     *         datos.getIdsCiudadesCompletadas() quedan marcadas como
+     *         completadas en mapaMundi (esto recalcula automáticamente la
+     *         accesibilidad del resto de las ciudades, vía
+     *         esCiudadAccesible()).
+     *       - ciudadActual pasa a apuntar al nodo cuyo id es
+     *         datos.getIdCiudadActual(), si existe en el grafo.
+     *
+     * @param datos estado previamente guardado de la partida
+     */
+    public void aplicarDatosGuardado(DatosGuardado datos) {
+        ValidacionesUtiles.esDistintoDeNull(datos, "datos");
+
+        this.puntajeTotal = datos.getPuntajeTotal();
+
+        for (int idCompletada : datos.getIdsCiudadesCompletadas()) {
+            mapaMundi.marcarCiudadCompletada(idCompletada);
+        }
+
+        NodoCiudad nodoActual = mapaMundi.obtenerCiudad(datos.getIdCiudadActual());
+        if (nodoActual != null) {
+            this.ciudadActual = nodoActual;
+        }
+    }
     // ── Interacción con ciudades ──────────────────────────────────────────────
 
     /**
@@ -259,6 +327,7 @@ public class PartidaGeneral extends Partida {
             if (puntajeCiudad > 0) {
                 nodo.setCompletada(true);
                 puntajeTotal += puntajeCiudad;
+                persistencia.GestorDeInicio.guardarSesion(this);
             }
 
             ciudadActual = null;

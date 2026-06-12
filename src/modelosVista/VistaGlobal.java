@@ -87,7 +87,7 @@ public class VistaGlobal extends Vista {
     	    {  7, 19, 35 },   // Ciudad 7
     	    {  8, 4, 39 },   // Torres de Hanoi
     	    {  9, 15, 47 },   // Ciudad 9
-    	    { 10,  6, 35 },   // Ciudad 10
+    	    { 10,  9, 30 },   // Ciudad 10
     	};
 
     // ── Colores de estado de ciudad ───────────────────────────────────────────
@@ -207,7 +207,7 @@ public class VistaGlobal extends Vista {
         g2.dispose();
     }
     private void cargarIconosCiudades() {
-        int[] ids = {1, 2, 4, 5, 8};
+        int[] ids = {1, 2,3, 4, 5,6,7, 8,9,10};
         for (int id : ids) {
             try {
                 BufferedImage img = ImageIO.read(
@@ -328,13 +328,13 @@ public class VistaGlobal extends Vista {
                 etiqueta    = "C" + id + " — PRÓXIMAMENTE";
             } else if (nodo.isCompletada()) {
                 colorEstado = COLOR_COMPLETADA;
-                etiqueta    = "C" + id + " ✓ " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             } else if (grafo.esCiudadAccesible(id)) {
                 colorEstado = COLOR_ACCESIBLE;
-                etiqueta    = "C" + id + " ▶ " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             } else {
                 colorEstado = COLOR_BLOQUEADA;
-                etiqueta    = "C" + id + " 🔒 " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             }
 
             // ── Ícono de ciudad ────────────────────────────────────────────
@@ -413,7 +413,7 @@ public class VistaGlobal extends Vista {
         // Puntaje
         g2.setFont(FONT_HUD);
         g2.setColor(new Color(255, 220, 60));
-        g2.drawString("AL-QUEST", px + 12, py + 22);
+        g2.drawString("AI-QUEST - Los Compiladores -", px + 12, py + 22);
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 13));
