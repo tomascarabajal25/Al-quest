@@ -40,7 +40,7 @@ public class GestorImagenes {
         int ancho = laberinto.getColumnas() * TAMANIO_CELDA;
         int alto = laberinto.getFilas() * TAMANIO_CELDA;
 
-        BufferedImage imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_RGB);
+        BufferedImage imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = imagen.createGraphics();
 
         for (int i = 0; i < laberinto.getFilas(); i++) {

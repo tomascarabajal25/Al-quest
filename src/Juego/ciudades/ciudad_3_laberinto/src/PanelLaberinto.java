@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 public class PanelLaberinto extends JPanel {
@@ -12,11 +13,16 @@ public class PanelLaberinto extends JPanel {
 
     private Laberinto laberinto;
 
+    private BacktrackingLaberinto backtracking;
+
     private GestorSprites gestorSprites;
 
-    public PanelLaberinto(Laberinto laberinto, GestorSprites gestorSprites) {
+    public PanelLaberinto(Laberinto laberinto,
+                        GestorSprites gestorSprites,
+                        BacktrackingLaberinto backtracking) {
         this.laberinto = laberinto;
         this.gestorSprites = gestorSprites;
+        this.backtracking = backtracking;
         int ancho = laberinto.getColumnas() * TAMANIO_CELDA;
         int alto = laberinto.getFilas() * TAMANIO_CELDA;
         setPreferredSize(new Dimension(ancho, alto));
@@ -40,6 +46,13 @@ public class PanelLaberinto extends JPanel {
 
         BufferedImage sprite = gestorSprites.obtenerSprite(celda.getEstadoCelda());
         g.drawImage(sprite, x, y, null);
+
+        Celda celdaActual = backtracking.getPila().obtener();
+        if (celdaActual != null
+            && celdaActual.getFila() == fila
+            && celdaActual.getColumna() == columna) {
+            g.drawImage(gestorSprites.getIconoJugador(), x, y, null);
+        }
     }
 
     public void setLaberinto(Laberinto laberinto) {

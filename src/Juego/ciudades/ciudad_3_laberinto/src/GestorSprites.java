@@ -15,6 +15,8 @@ public class GestorSprites {
 
     private String carpetaSprites;
 
+    private BufferedImage iconoJugador;
+
     private Map<EstadoCelda, BufferedImage> sprites;
 
     public GestorSprites(String carpetaSprites) throws IOException {
@@ -31,6 +33,7 @@ public class GestorSprites {
         sprites.put(EstadoCelda.SOLUCION,   cargarImagen("EnCamino.bmp"));
         sprites.put(EstadoCelda.INICIO,     cargarImagen("Inicio.bmp"));
         sprites.put(EstadoCelda.FIN,        cargarImagen("Fin.bmp"));
+        iconoJugador = cargarImagen("Jugador2.png");
     }
 
     private BufferedImage cargarImagen(String nombreArchivo) throws IOException {
@@ -50,7 +53,7 @@ public class GestorSprites {
         );
 
         BufferedImage resultado = new BufferedImage(
-            TAMANIO_CELDA, TAMANIO_CELDA, BufferedImage.TYPE_INT_RGB
+            TAMANIO_CELDA, TAMANIO_CELDA, BufferedImage.TYPE_INT_ARGB
         );
 
         Graphics2D g = resultado.createGraphics();
@@ -62,6 +65,13 @@ public class GestorSprites {
 
     public BufferedImage obtenerSprite(EstadoCelda estado) {
         return sprites.get(estado);
+    }
+
+    /**
+     * @return el icono del jugador 
+     */
+    public BufferedImage getIconoJugador() {
+        return iconoJugador;
     }
 
     public String getCarpetaSprites() {

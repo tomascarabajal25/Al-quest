@@ -64,7 +64,7 @@ public class ControladorLaberinto {
             GestorSprites gestorSprites = new GestorSprites(RUTA_SPRITES);
             backtracking = new BacktrackingLaberinto(laberinto);
             gestorImagenes =  new GestorImagenes(RUTA_IMAGENES, gestorSprites);
-            panelLaberinto = new PanelLaberinto(laberinto, gestorSprites);
+            panelLaberinto = new PanelLaberinto(laberinto, gestorSprites, backtracking);
             ventana = new VentanaLaberinto(panelLaberinto);
             return true;
         } catch (IOException e) {

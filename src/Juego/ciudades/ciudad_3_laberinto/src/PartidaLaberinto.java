@@ -23,7 +23,6 @@ public class PartidaLaberinto extends Partida {
         new ControladorLaberinto(this);
     }
 
-
     /**
      * 
      */
