@@ -255,6 +255,27 @@ public class Vista extends JPanel implements Runnable{
         jugadorVista.cambiarSkin(rutaSprites);
     }
 
+    /**
+     * Permite redibujar el mapa del juego
+     *
+     * PRE:
+     * -RutaMundo no debe ser nulo
+     * POST:
+     * -Redibuja el mapa de la vista del juego
+     *
+     * @param rutaMundo: nuevo mapa
+     */
+    public void cargarMapa(String rutaMundo) {
+        ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
+
+        this.objetos.clear();          // limpia objetos viejos
+        this.construccionesM.loadMap(rutaMundo);
+
+        this.adminObjt.setObjetos();   // reinyecta objetos del mapa
+
+        repaint();
+    }
+
 
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
