@@ -7,6 +7,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+/**
+ * Componente Swing que dibuja el estado actual del laberinto.
+ * Muestra los sprites de cada celda y el icono del jugador en la posicion actual.
+ * Se actualiza llamando a repaint() cada vez que el algoritmo avanza un paso.
+ */
 public class PanelLaberinto extends JPanel {
     
     private static final int TAMANIO_CELDA = 60;
@@ -40,6 +45,13 @@ public class PanelLaberinto extends JPanel {
         }
     }
 
+    /**
+     * Dibuja una celda individual con su sprite y el icono del jugador si corresponde.
+     * @param g       contexto grafico
+     * @param celda   celda a dibujar
+     * @param fila    fila de la celda en la grilla
+     * @param columna columna de la celda en la grilla
+     */
     private void dibujarCelda(Graphics g, Celda celda, int fila, int columna) {
         int x = columna * TAMANIO_CELDA;
         int y = fila * TAMANIO_CELDA;

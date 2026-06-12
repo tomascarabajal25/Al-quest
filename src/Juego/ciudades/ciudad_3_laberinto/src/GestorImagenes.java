@@ -6,6 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+/**
+ * Genera y guarda imagenes BMP del estado actual del laberinto en cada paso.
+ * Las imagenes se nombran secuencialmente y se guardan en la carpeta de salida.
+ */
 public class GestorImagenes {
     
     private static final int TAMANIO_CELDA = 60;
@@ -28,6 +32,11 @@ public class GestorImagenes {
         }
     }
 
+    /**
+     * Genera y guarda una imagen BMP del estado actual del laberinto.
+     * @param laberinto laberinto cuyo estado se quiere guardar
+     * @throws IOException si no se puede escribir el archivo
+     */
     public void guardarPaso(Laberinto laberinto) throws IOException {
         BufferedImage imagen = generarImagen(laberinto);
         numeroPaso++;
@@ -36,6 +45,11 @@ public class GestorImagenes {
         ImageIO.write(imagen, "BMP", archivo);
     }
 
+    /**
+     * Genera un BufferedImage con el estado actual del laberinto.
+     * @param laberinto laberinto a dibujar
+     * @return imagen generada
+     */
     private BufferedImage generarImagen(Laberinto laberinto) {
         int ancho = laberinto.getColumnas() * TAMANIO_CELDA;
         int alto = laberinto.getFilas() * TAMANIO_CELDA;

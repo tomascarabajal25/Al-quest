@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
+/**
+ * Carga y provee los sprites BMP correspondientes a cada estado de celda.
+ * Utiliza un Map para asociar cada EstadoCelda con su imagen.
+ */
 public class GestorSprites {
     
     private static final int TAMANIO_CELDA = 60;
@@ -25,6 +29,10 @@ public class GestorSprites {
         cargarSprites();
     }
 
+    /**
+     * Carga todos los sprites desde la carpeta indicada.
+     * @throws IOException si algun archivo no se puede leer
+     */
     private void cargarSprites() throws IOException {
         sprites.put(EstadoCelda.PARED,      cargarImagen("Pared.bmp"));
         sprites.put(EstadoCelda.LIBRE,      cargarImagen("Libre.bmp"));
@@ -36,6 +44,12 @@ public class GestorSprites {
         iconoJugador = cargarImagen("Jugador2.png");
     }
 
+    /**
+     * Carga una imagen desde disco y la escala al tamanio de celda.
+     * @param nombreArchivo nombre del archivo dentro de la carpeta de sprites
+     * @return imagen escalada lista para dibujar
+     * @throws IOException si el archivo no existe o no se puede leer
+     */
     private BufferedImage cargarImagen(String nombreArchivo) throws IOException {
         String ruta = carpetaSprites + File.separator + nombreArchivo;
         BufferedImage original = ImageIO.read(new File(ruta));
@@ -47,6 +61,11 @@ public class GestorSprites {
         return escalarImagen(original);
     }
 
+    /**
+     * Escala una imagen al tamanio de celda definido.
+     * @param original imagen original a escalar
+     * @return imagen escalada
+     */
     private BufferedImage escalarImagen(BufferedImage original) {
         Image escalada = original.getScaledInstance(
             TAMANIO_CELDA, TAMANIO_CELDA, Image.SCALE_SMOOTH
@@ -63,6 +82,11 @@ public class GestorSprites {
         return resultado;
     }
 
+    /**
+     * Retorna el sprite correspondiente a un estado de celda.
+     * @param estado estado de la celda
+     * @return imagen asociada a ese estado
+     */
     public BufferedImage obtenerSprite(EstadoCelda estado) {
         return sprites.get(estado);
     }

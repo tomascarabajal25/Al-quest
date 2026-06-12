@@ -9,6 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Ventana principal del modulo Laberinto.
+ * Contiene el panel de visualizacion, botones de control y etiquetas de estado.
+ * La logica es manejada por ControladorLaberinto.
+ */
 public class VentanaLaberinto extends JFrame {
     private PanelLaberinto panelLaberinto;
 
@@ -78,26 +83,38 @@ public class VentanaLaberinto extends JFrame {
         return panel;
     }
 
+    /** Muestra la ventana en pantalla. */
     public void mostrar() {
         setVisible(true);
     }
 
+    /** @return boton para iniciar la animacion */
     public JButton getBotonIniciar() {
         return botonIniciar;
     }
 
+    /** @return boton para pausar y reanudar la animacion */
     public JButton getBotonPausar() {
         return botonPausar;
     }
 
+    /** @return boton para resetear el laberinto */
     public JButton getBotonResetear() {
         return botonResetear;
     }
 
+    /**
+     * Actualiza el texto de la etiqueta de estado.
+     * @param estado texto a mostrar
+     */
     public void setLabelEstado(String estado) {
         labelEstado.setText("Estado: " + estado);
     }
 
+    /**
+     * Actualiza el texto de la etiqueta de paso.
+     * @param paso numero de paso actual
+     */
     public void setLabelPaso(int paso) {
         labelPaso.setText("Paso: " + paso);
     }

@@ -9,29 +9,32 @@ public class Celda {
     private int columna;
     private EstadoCelda estado;
 
-    /*
-    * Constructor de la celda
-    * Sin setters para fila y columna ya que estos no deben cambiar.
-    * Hay setter de estado de celda pues este cambiara durante su recorrido.
-    */
-    
+    /**
+     * Constructor de Celda.
+     * @param fila    fila en la grilla, base 0
+     * @param columna columna en la grilla, base 0
+     * @param estado  estado inicial de la celda
+     */
     public Celda(int fila, int columna, EstadoCelda estado) {
         this.fila = fila;
         this.columna = columna;
         setEstadoCelda(estado);
     }
 
-    // VERIFICADOR DE ESTADO
-
-    // true si la celda es una pared
+    /**
+     * Verificador de estado
+     * Indica si la celda es una pared infranqueable.
+     * @return true si el estado es PARED
+     */
     public boolean esPared() {
         return estado == EstadoCelda.PARED;
     }
 
-    /*
-    * Verifica que el estado de la celda este libre o forme parte de sus extremos.
-    * true si la celda no es pared
-    */
+    /**
+     * Indica si el algoritmo puede pasar por esta celda.
+     * Una celda es transitable si su estado es LIBRE, INICIO o FIN.
+     * @return true si la celda es transitable
+     */
     public boolean esTransitable() {
         return estado == EstadoCelda.LIBRE
         || estado == EstadoCelda.INICIO
@@ -40,26 +43,26 @@ public class Celda {
 
     // GETTERS
 
-    /* devuelve la fila de la celda */
-
+    /** @return la fila de esta celda en la grilla */
     public int getFila() {
         return fila;
     }
 
-    /* devuelve la columna de la celda */
-
+    /** @return la columna de esta celda en la grilla */
     public int getColumna() {
         return columna;
     }
 
-    /* devuelve el estado actual de la celda */
-
+    /** @return el estado actual de esta celda */
     public EstadoCelda getEstadoCelda() {
         return estado;
     }
 
     // SETTERS
-
+    /**
+     * Cambia el estado de la celda.
+     * @param estado nuevo estado a asignar
+     */
     public void setEstadoCelda(EstadoCelda estado) {
         this.estado = estado;
     }

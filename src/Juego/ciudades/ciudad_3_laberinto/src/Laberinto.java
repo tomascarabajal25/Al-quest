@@ -21,8 +21,8 @@ public class Laberinto {
     }
 
     /**
-     * Obtiene las celdas transitables para moverse en forma de cruz.
-     * Verifica las posiciones en cada direccion
+     * Obtiene las celdas transitables en forma de cruz.
+     * Verifica la validez de las posiciones en cada direccion
      */
     public List<Celda> obtenerCeldasTransitables(Celda celda) {
         List<Celda> vecinos = new ArrayList<>();

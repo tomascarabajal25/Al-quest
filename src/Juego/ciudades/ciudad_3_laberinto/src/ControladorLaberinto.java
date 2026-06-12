@@ -7,10 +7,18 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+/**
+ * Controlador del laberinto.
+ * Carga el laberinto y ejecuta toda su interactividad.
+ */
 public class ControladorLaberinto {
+
+    // Determina la ruta de acceso para el laberinto, los sprites, y la respresentacion de la partida
     private static final String RUTA_LABERINTO = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
     private static  final String RUTA_SPRITES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
     private static final String RUTA_IMAGENES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\partidas\\laberinto";
+
+    // Timer de intervalo entre acciones
     private static final int INTERVALO_TIMER = 300;
 
     private PartidaLaberinto partida;
@@ -28,7 +36,11 @@ public class ControladorLaberinto {
     private Timer timer;
 
     private boolean pausado;
-
+    
+    /**
+     * Constructor del TDA
+     * @return Se ejecuta si no se carga o se inicializa los componentes del laberinto
+     */
     public ControladorLaberinto(PartidaLaberinto partida) {
         this.partida = partida;
         pausado = false;
@@ -43,6 +55,10 @@ public class ControladorLaberinto {
         ventana.mostrar();
     }
 
+    /**
+     * Carga el laberinto ya dibujado
+     * @return true si se carga exitosamente
+     */
     private boolean cargarLaberinto() {
         try {
             CargadorLaberinto cargador = new CargadorLaberinto();
@@ -59,6 +75,10 @@ public class ControladorLaberinto {
         }
     }
 
+    /**
+     * Inicializa la logica interna y la seccion visual
+     * @return true si se incializa exitosamente
+     */
     private boolean inicializarComponentes() {
         try {
             GestorSprites gestorSprites = new GestorSprites(RUTA_SPRITES);
@@ -79,6 +99,9 @@ public class ControladorLaberinto {
         
     }
 
+    /**
+     * Introduce el funcionamiento del timer entre acciones
+     */
     private void configurarTimer() {
         timer = new Timer(INTERVALO_TIMER, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -86,6 +109,7 @@ public class ControladorLaberinto {
             }
         });
     }
+    
     /**
      * Ejecuta todos los pasos implicados al avanzar una casilla
      * Pinta las celdas al estado correspondiente (DESCARTADA, SOLUCION, EN_CAMINO)
@@ -155,7 +179,6 @@ public class ControladorLaberinto {
         });
     }
 
-    // Ejecuta el boton de inicio
     private void accionIniciar() {
         timer.start();
         ventana.setLabelEstado("En progreso...");
@@ -164,7 +187,6 @@ public class ControladorLaberinto {
         ventana.getBotonResetear().setEnabled(true);
     }
 
-    // Ejecuta el boton de pausa
     private void accionPausar() {
         if (pausado) {
             timer.start();
@@ -179,7 +201,6 @@ public class ControladorLaberinto {
         }
     }
 
-    // Ejecuta el boton de reinicio
     private void accionResetear() {
         timer.stop();
         pausado = false;

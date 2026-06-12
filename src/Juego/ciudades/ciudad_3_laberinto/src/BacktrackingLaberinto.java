@@ -4,6 +4,11 @@ import java.util.List;
 
 import estructuras.pilas.PilaBasica;
 
+/**
+ * Implementacion del algoritmo de backtracking con pila
+ * Resuelve el laberinto paso a paso, ejecutando una sola
+ * accion, permitiendo visualizar el proceso detenidamente.
+ */
 public class BacktrackingLaberinto {
     private Laberinto laberinto;
     private PilaBasica<Celda> pila;
@@ -24,6 +29,11 @@ public class BacktrackingLaberinto {
         pila.apilar(celdaInicio);
     }
 
+    /**
+     * Avanza un paso en la resolucion del laberinto.
+     * Debe llamarse repetidamente hasta obtener un resultado distinto de EN_PROGRESO.
+     * @return el resultado del paso actual
+     */
     public ResultadoPaso avanzarPaso() {
         if (terminado) {
             return resultado;
@@ -64,7 +74,11 @@ public class BacktrackingLaberinto {
 
         return ResultadoPaso.EN_PROGRESO;
     }
-    
+    /**
+     * Obtiene la primera celda a visitar
+     * @param celda recibe la celda actual como parametro
+     * @return la celda vecina
+     */
     private Celda obtenerPrimerVecino(Celda celda) {
         List<Celda> vecinos = laberinto.obtenerCeldasTransitables(celda);
         if (vecinos.isEmpty()) {
@@ -73,6 +87,12 @@ public class BacktrackingLaberinto {
         return vecinos.get(0);
     }
 
+    /**
+     * Busca si alguna celda adyacente es la casilla FIN
+     * para determinar si ya se llego a la solucion.
+     * @param celda
+     * @return true si la celda es adyacente.
+     */
     private boolean esAdyacenteAlFin(Celda celda) {
         List<Celda> vecinos = laberinto.obtenerCeldasTransitables(celda);
         for (Celda vecino : vecinos) {
@@ -101,19 +121,29 @@ public class BacktrackingLaberinto {
             }
             
         }
-
-        // Marcar tambien el FIN
-        //laberinto.getCeldaFin().setEstadoCelda(EstadoCelda.SOLUCION);
     }
 
+    /**
+     * Indica si el algoritmo termino, ya sea con solucion o sin ella.
+     * @return true si el algoritmo termino
+     */
     public boolean isTerminado() {
         return terminado;
     }
 
+    /**
+     * Retorna el resultado actual del algoritmo.
+     * @return EN_PROGRESO, SOLUCION_ENCONTRADA o SIN_SOLUCION
+     */
     public ResultadoPaso getResultado() {
         return resultado;
     }
 
+    /**
+     * Retorna la pila del camino actual.
+     * La cima de la pila es siempre la celda donde esta el jugador.
+     * @return pila con el camino actual
+     */
     public PilaBasica<Celda> getPila() {
         return pila;
     }
