@@ -1,4 +1,4 @@
-package ciudades.testsDeTorresDeHanoi;
+package tests.ciudades.testsDeTorresDeHanoi;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,11 +9,11 @@ import juego.ciudades.torresDeHanoi.Pila;
 
 public class PilaTest {
 
-    private Pila pila;
+    private Pila<String> pila;
 
     @BeforeEach
     public void setUp() {
-        pila = new Pila();
+        pila = new Pila<String>();
     }
 
     @Test

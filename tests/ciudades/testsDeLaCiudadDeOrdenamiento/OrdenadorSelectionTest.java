@@ -1,4 +1,4 @@
-package ciudades.testsDeLaCiudadDeOrdenamiento;
+package tests.ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ public class OrdenadorSelectionTest {
     public void setUp() {
         ordenador = new OrdenadorSelection<>("Metodo Seleccion");
         listaDesordenada = new ArrayList<>();
-        listaDesordenada.add(new Caja("Caja 3", 99));
-        listaDesordenada.add(new Caja("Caja 1", 11));
-        listaDesordenada.add(new Caja("Caja 2", 44));
+        listaDesordenada.add(new Caja("Caja 3", 99,false));
+        listaDesordenada.add(new Caja("Caja 1", 11,false));
+        listaDesordenada.add(new Caja("Caja 2", 44,false));
     }
 
     @Test
