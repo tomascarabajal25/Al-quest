@@ -68,7 +68,7 @@ public class PartidaDeRecoleccion extends Partida {
     @Override
     public void iniciar() {
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
-        this.vista = new Vista("/maps/world_recoleccion.txt", getJugador(), 24, 21, "/assets/jugador/boy", key);
+        this.vista = new Vista("/maps/recoleccion/world_recoleccion_1.txt", getJugador(), 24, 21, "/assets/jugador/boy", key);
 
         this.ventana = new JFrame("Ciudad de Recolección");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
