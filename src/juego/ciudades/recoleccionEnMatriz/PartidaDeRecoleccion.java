@@ -1,5 +1,6 @@
 package juego.ciudades.recoleccionEnMatriz;
 
+import juego.Constantes;
 import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
@@ -28,8 +29,9 @@ public class PartidaDeRecoleccion extends Partida {
      */
     public PartidaDeRecoleccion(String nombre, Jugador jugador) {
         super(nombre, jugador);
-        // Si manejás EstadoDePartida como en PartidaBusqueda, podrías agregar:
-        // setEstado(EstadoDePartida.Creado);
+
+        setJuego(Constantes.FILAS_MAPA, Constantes.COLUMNAS_MAPA, Constantes.NIVELES_MAPA, Constantes.CAPACIDAD_MAXIMA_MOCHILA, getJugador());
+
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -65,25 +67,6 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
     public void iniciar() {
-        // En caso de usar estados: setEstado(EstadoDePartida.Iniciado);
-
-        // 1. CONFIGURACIÓN DINÁMICA 
-        try {
-            int filas = pedirEnteroValido("Ingrese la cantidad de FILAS para la matriz:", 3, 20);
-            int columnas = pedirEnteroValido("Ingrese la cantidad de COLUMNAS para la matriz:", 3, 20);
-            int niveles = pedirEnteroValido("Ingrese la cantidad de NIVELES del mapa:", 1, 5);
-            int maximoMochila = pedirEnteroValido("Ingrese la capacidad MÁXIMA de la mochila:", 1, 10);
-
-            // 2. CONSTRUCCIÓN DEL MODELO
-            setJuego(filas, columnas, niveles, maximoMochila, getJugador());
-
-        } catch (SecurityException e) {
-            // Si el usuario cancela o cierra algún diálogo, abortamos la partida limpiamente sin romper nada
-            finalizar();
-            return;
-        }
-
-        // 3. INICIALIZACIÓN DE LA VISTA Y COMPONENTES
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
         this.vista = new Vista("/maps/world_recoleccion.txt", getJugador(), 24, 21, "/assets/jugador/boy", key);
 
@@ -99,7 +82,6 @@ public class PartidaDeRecoleccion extends Partida {
         vista.establecerMinijuego(minijuego);
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
-        // 4. ARRANQUE DEL BUCLE GRÁFICO
         vista.startGameThread();
     }
 

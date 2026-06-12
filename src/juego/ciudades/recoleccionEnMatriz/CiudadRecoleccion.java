@@ -162,31 +162,9 @@ public class CiudadRecoleccion {
      *   - Carta 3 (nivel 3, si existe): fila ≈ 25% del alto, col ≈ 25% del ancho
      */
     public void ubicarElementosEnMapa() {
-        // Nivel 1 siempre existe
-        modelos.Mapa nivel1 = this.mapa.getNivel(1);
-        int filas1 = nivel1.getAncho();
-        int cols1  = nivel1.getAlto();
-
-        // Carta 1 en zona inferior-derecha del nivel 1
-        int fila1 = Math.max(1, (int)(filas1 * 0.75));
-        int col1  = Math.max(1, (int)(cols1  * 0.75));
-        this.mapa.ocuparCelda(this.elementos.obtener(1), fila1, col1, 1);
-
-        // Carta 2 en el centro del nivel 2 (si el usuario pidió al menos 2 niveles)
-        if (this.mapa.getNiveles() >= 2) {
-            modelos.Mapa nivel2 = this.mapa.getNivel(2);
-            int fila2 = Math.max(1, nivel2.getAncho() / 2);
-            int col2  = Math.max(1, nivel2.getAlto()  / 2);
-            this.mapa.ocuparCelda(this.elementos.obtener(2), fila2, col2, 2);
-        }
-
-        // Carta 3 en zona superior-izquierda del nivel 3 (si existe)
-        if (this.mapa.getNiveles() >= 3) {
-            modelos.Mapa nivel3 = this.mapa.getNivel(3);
-            int fila3 = Math.max(1, (int)(nivel3.getAncho() * 0.25));
-            int col3  = Math.max(1, (int)(nivel3.getAlto()  * 0.25));
-            this.mapa.ocuparCelda(this.elementos.obtener(3), fila3, col3, 3);
-        }
+        this.mapa.ocuparCelda(this.elementos.obtener(1), 13, 15, 1);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 17, 30, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(3), 18, 4, 3);
     }
 
     /**
