@@ -1,5 +1,4 @@
-package tests.Ciudades.testsDeBatalla;
-
+package ciudades.testsCiudadDeBatalla;
 import static org.junit.jupiter.api.Assertions.*;
 
 import estructuras.cola.Cola;

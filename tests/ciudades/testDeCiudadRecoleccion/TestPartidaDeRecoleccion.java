@@ -1,4 +1,4 @@
-package tests.ciudades.testDeCiudadRecoleccion;
+package ciudades.testDeCiudadRecoleccion;
 
 import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import modelos.Jugador;

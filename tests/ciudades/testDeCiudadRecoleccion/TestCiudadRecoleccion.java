@@ -1,4 +1,4 @@
-package tests.ciudades.testDeCiudadRecoleccion;
+package ciudades.testDeCiudadRecoleccion;
 
 import juego.Constantes;
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;

@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
+package ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ public class OrdenadorSelectionTest {
         ordenador.ordenar(listaDesordenada);
 
         // Comprobamos si el Bug de dirección (Mayor a Menor) fue solucionado
-        assertEquals(11, listaDesordenada.get(0).getTamaño(), "El primero debe ser el menor");
-        assertEquals(44, listaDesordenada.get(1).getTamaño());
-        assertEquals(99, listaDesordenada.get(2).getTamaño());
+        assertEquals(11, listaDesordenada.get(0).getTamanio(), "El primero debe ser el menor");
+        assertEquals(44, listaDesordenada.get(1).getTamanio());
+        assertEquals(99, listaDesordenada.get(2).getTamanio());
     }
 
     @Test

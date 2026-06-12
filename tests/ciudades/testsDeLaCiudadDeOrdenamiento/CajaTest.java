@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
+package ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ public class CajaTest {
 	    public void testCajaHeredaCorrectamenteYGuardaTamaño() {
 	        Caja caja = new Caja("Caja Mediana", 50);
 	        assertEquals("Caja Mediana", caja.getNombre());
-	        assertEquals(50, caja.getTamaño());
+	        assertEquals(50, caja.getTamanio());
 	    }
 
 	    @Test

@@ -23,9 +23,9 @@ public class PasosYAdministradorTest {
         listaOriginal.set(0, new Caja("Modificada", 99, true));
 
         // La lista guardada en el paso NO debería haber cambiado
-        assertNotEquals(listaOriginal.get(0).getTamaño(), paso.getCopiasEnEstePaso().get(0).getTamaño(),
+        assertNotEquals(listaOriginal.get(0).getTamanio(), paso.getCopiasEnEstePaso().get(0).getTamanio(),
                 "El paso de ordenamiento debe almacenar una copia aislada de la lista");
-        assertEquals(10, paso.getCopiasEnEstePaso().get(0).getTamaño());
+        assertEquals(10, paso.getCopiasEnEstePaso().get(0).getTamanio());
     }
 
     @Test
