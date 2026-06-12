@@ -14,6 +14,7 @@ import juego.ciudades.ordenamientos.AdministradorDePasos;
 import juego.ciudades.ordenamientos.Caja;
 import juego.ciudades.ordenamientos.Ordenador;
 import juego.ciudades.ordenamientos.PasoOrdenamiento;
+import juego.configuracion.ConfiguracionDeOrdenamientos;
 import modelos.Minijuego;
 import modelosVista.JugadorVista;
 import modelosVista.Vista;
@@ -37,58 +38,45 @@ import utils.ValidacionesUtiles;
  *   · R                            → arranca/pausa la animación
  *   · Cada TICK_POR_PASO frames    → aplica el siguiente swap del historial
  *   · Al finalizar, marca cajas correctas y muestra victoria
- *
- * Pre-condición de creación:
- *   · Lista de CajaVista con posiciones ya asignadas en el mundo
- *   · Ordenador<Caja> configurado
- *   · Vista activa con jugadorVista inicializado
  */
 public class MinijuegoOrdenamiento implements Minijuego {
-	
-	private Runnable onVictoria;
 
-    // ── Configuración ──────────────────────────────────────────────────────
-    /** Frames entre cada paso del resolver automático */
-    private static final int TICK_POR_PASO = 45;
-    /** Radio en píxeles para detectar "cercanía" del jugador a una caja */
-    private static final int RADIO_INTERACCION = 60;
-    
-    private static final long DURACION_VICTORIA_MS = 3000;
-    
-
-    // ── Estado del minijuego ───────────────────────────────────────────────
+    // ── Estado ────────────────────────────────────────────────────────────────
     private enum Estado { ESPERANDO, MANUAL, RESOLVIENDO, FINALIZADO }
-
     private Estado estado = Estado.ESPERANDO;
 
-    // ── Datos ──────────────────────────────────────────────────────────────
-    private final List<CajaVista>           cajasVista;
-    private final Ordenador<Caja>           ordenador;
-    private final KeyHandlerOrdenamiento    keyOrd;
+    // ── Datos ─────────────────────────────────────────────────────────────────
+    private final List<CajaVista>        cajasVista;
+    private final Ordenador<Caja>        ordenador;
+    private final KeyHandlerOrdenamiento keyOrd;
 
-    /** Índice lógico de la caja seleccionada por el jugador (-1 = ninguna) */
+    /** Índice lógico de la caja seleccionada por el jugador (-1 = ninguna). */
     private int indiceCajaSeleccionada = -1;
 
-    // ── Resolver automático ────────────────────────────────────────────────
+    // ── Resolver automático ───────────────────────────────────────────────────
     private List<PasoOrdenamiento<Caja>> pasos;
-    private int indicePasoActual   = 0;
-    private int tickDesdeUltimoPaso = 0;
-    private boolean resolverPausado = false;
+    private int     indicePasoActual    = 0;
+    private int     tickDesdeUltimoPaso = 0;
+    private boolean resolverPausado     = false;
 
-    // ── HUD ───────────────────────────────────────────────────────────────
-    private static final Font FONT_HUD      = new Font("Monospaced", Font.BOLD,  11);
-    private static final Font FONT_TITULO   = new Font("Monospaced", Font.BOLD,  16);
-    private static final Font FONT_MENSAJE  = new Font("Monospaced", Font.PLAIN, 10);
+    // ── Victoria ──────────────────────────────────────────────────────────────
+    private Runnable onVictoria;
+    /** -1 indica que todavía no se registró el inicio de la pantalla de victoria. */
+    private long tiempoInicioVictoria = -1;
+
+    // ── HUD ───────────────────────────────────────────────────────────────────
+    private static final Font  FONT_HUD     = new Font("Monospaced", Font.BOLD,  11);
+    private static final Font  FONT_TITULO  = new Font("Monospaced", Font.BOLD,  16);
+    private static final Font  FONT_MENSAJE = new Font("Monospaced", Font.PLAIN, 10);
     private static final Color COLOR_HUD_BG = new Color(0, 0, 0, 160);
     private static final Color COLOR_HUD_FG = new Color(200, 230, 255);
     private static final Color COLOR_WARN   = new Color(255, 200,  50);
     private static final Color COLOR_OK     = new Color( 80, 220, 100);
 
-    private String mensajeEstado = "Acércate a una caja y presiona ESPACIO";
+    private String mensajeEstado      = "Acercate a una caja y presioná ESPACIO";
     private int    intercambiosManuales = 0;
-    /** Momento en que se detectó la victoria. -1 indica que todavía no ocurrió. */
-    private long tiempoInicioVictoria = -1;
-    // ── Constructor ────────────────────────────────────────────────────────
+
+    // ── Constructor ───────────────────────────────────────────────────────────
 
     /**
      * Pre:
@@ -101,7 +89,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
                                   Vista vista) {
         if (cajasVista == null || cajasVista.size() < 2)
             throw new IllegalArgumentException("Se necesitan al menos 2 cajas");
-        if (ordenador == null) throw new IllegalArgumentException("Ordenador no puede ser nulo");
+        if (ordenador == null)
+            throw new IllegalArgumentException("Ordenador no puede ser nulo");
 
         this.cajasVista = new ArrayList<>(cajasVista);
         this.ordenador  = ordenador;
@@ -113,19 +102,18 @@ public class MinijuegoOrdenamiento implements Minijuego {
         agregarCajasAlMundo(vista);
     }
 
-    // ── MinijuegoDesafio ───────────────────────────────────────────────────
+    // ── Loop principal ────────────────────────────────────────────────────────
 
     /**
-     * Post: actualiza lógica del minijuego según el estado actual
+     * Post: actualiza lógica del minijuego según el estado actual.
      */
+    @Override
     public void actualizar(JugadorVista jugador) {
         if (estado == Estado.FINALIZADO) {
             procesarFinalizacion();
             return;
         }
-        
 
-        // Animaciones de cada caja
         for (CajaVista cv : cajasVista) cv.actualizar();
 
         procesarEscape();
@@ -139,6 +127,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
                     activarResolver();
                 }
                 break;
+
             case RESOLVIENDO:
                 if (keyOrd.resolverPresionado) {
                     keyOrd.resolverPresionado = false;
@@ -150,46 +139,47 @@ public class MinijuegoOrdenamiento implements Minijuego {
                 }
                 if (!resolverPausado) avanzarPasoResolver();
                 break;
+
             default:
                 break;
         }
     }
 
     /**
-     * Post: una vez detectada la victoria, espera DURACION_VICTORIA_MS sin
-     *       bloquear el hilo y luego ejecuta el callback onVictoria una sola vez.
+     * Post: una vez detectada la victoria, espera DURACION_VICTORIA_MS sin bloquear
+     *       el hilo y luego ejecuta el callback onVictoria una sola vez.
      */
     private void procesarFinalizacion() {
         if (tiempoInicioVictoria == -1) {
             tiempoInicioVictoria = System.currentTimeMillis();
         }
-
-        long tiempoTranscurrido = System.currentTimeMillis() - tiempoInicioVictoria;
-
-        if (tiempoTranscurrido >= DURACION_VICTORIA_MS && onVictoria != null) {
+        long transcurrido = System.currentTimeMillis() - tiempoInicioVictoria;
+        if (transcurrido >= ConfiguracionDeOrdenamientos.DURACION_VICTORIA_MS
+                && onVictoria != null) {
             onVictoria.run();
-            onVictoria = null; 
+            onVictoria = null; // evita dispararlo más de una vez
         }
     }
 
-	/**
-     * Post: dibuja el HUD del minijuego (controles, estado, progreso)
+    // ── Dibujo ────────────────────────────────────────────────────────────────
+
+    /**
+     * Post: dibuja el HUD del minijuego (controles, estado, progreso).
      */
+    @Override
     public void draw(Graphics2D g2, JugadorVista jugador) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        dibujarHUD(g2, jugador);
-        dibujarIndicadorCercana(g2, jugador);
+        dibujarHUD(g2);
     }
 
-    // ── Lógica manual ─────────────────────────────────────────────────────
+    // ── Lógica manual ─────────────────────────────────────────────────────────
 
     private void procesarInteraccionManual(JugadorVista jugador) {
         int cercanaIdx = encontrarCajaCercana(jugador);
 
-        // Resaltar la caja más cercana (solo si no hay seleccionada)
         for (int i = 0; i < cajasVista.size(); i++) {
             CajaVista cv = cajasVista.get(i);
-            if (i == indiceCajaSeleccionada) continue; // no tocar la seleccionada
+            if (i == indiceCajaSeleccionada) continue;
             cv.setDestacada(i == cercanaIdx && indiceCajaSeleccionada == -1);
         }
 
@@ -203,19 +193,16 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
 
         if (indiceCajaSeleccionada == -1) {
-            // Primera selección
             indiceCajaSeleccionada = cercanaIdx;
             cajasVista.get(cercanaIdx).setSeleccionada(true);
             cajasVista.get(cercanaIdx).setDestacada(false);
             estado = Estado.MANUAL;
             mensajeEstado = "Caja \"" + cajasVista.get(cercanaIdx).getCaja().getNombre()
-                          + "\" seleccionada → ve a otra y presiona ESPACIO";
+                + "\" seleccionada → andá a otra y presioná ESPACIO";
         } else if (cercanaIdx == indiceCajaSeleccionada) {
-            // Segunda pulsación en la misma → deseleccionar
             desseleccionar();
             mensajeEstado = "Selección cancelada";
         } else {
-            // Intercambio
             intercambiarCajas(indiceCajaSeleccionada, cercanaIdx);
             intercambiosManuales++;
             mensajeEstado = "¡Intercambio! (" + intercambiosManuales + " movimientos)";
@@ -236,6 +223,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
     private void procesarEscape() {
         if (!keyOrd.escapePresionado) return;
         keyOrd.escapePresionado = false;
+
         if (estado == Estado.MANUAL) {
             desseleccionar();
             mensajeEstado = "Selección cancelada";
@@ -245,12 +233,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
     }
 
-    // ── Resolver automático ────────────────────────────────────────────────
+    // ── Resolver automático ───────────────────────────────────────────────────
 
-    /**
-     * Post: calcula todos los pasos del algoritmo sobre una copia del estado actual
-     *       y arranca la animación desde el inicio
-     */
     private void activarResolver() {
         prepararPasosResolver();
         indicePasoActual    = 0;
@@ -277,7 +261,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
 
     private void avanzarPasoResolver() {
         tickDesdeUltimoPaso++;
-        if (tickDesdeUltimoPaso < TICK_POR_PASO) return;
+        if (tickDesdeUltimoPaso < ConfiguracionDeOrdenamientos.TICK_POR_PASO) return;
         tickDesdeUltimoPaso = 0;
 
         if (indicePasoActual >= pasos.size()) {
@@ -294,17 +278,16 @@ public class MinijuegoOrdenamiento implements Minijuego {
         limpiarEstadosVisuales();
 
         if (i1 >= 0 && i2 >= 0 && i1 != i2) {
-            // Aplicar el swap en las cajas vista
             intercambiarCajas(i1, i2);
             cajasVista.get(i1).setDestacada(true);
             cajasVista.get(i2).setDestacada(true);
             mensajeEstado = "Paso " + indicePasoActual + "/" + pasos.size()
-                          + " — " + paso.getAccion()
-                          + " [" + cajasVista.get(i1).getCaja().getNombre()
-                          + " ↔ " + cajasVista.get(i2).getCaja().getNombre() + "]";
+                + " — " + paso.getAccion()
+                + " [" + cajasVista.get(i1).getCaja().getNombre()
+                + " ↔ " + cajasVista.get(i2).getCaja().getNombre() + "]";
         } else {
             mensajeEstado = "Paso " + indicePasoActual + "/" + pasos.size()
-                          + " — " + paso.getAccion();
+                + " — " + paso.getAccion();
         }
     }
 
@@ -316,7 +299,6 @@ public class MinijuegoOrdenamiento implements Minijuego {
     }
 
     private void verificarVictoriaManual() {
-        // Verifica si el orden actual coincide con el orden correcto (creciente por tamaño)
         for (int i = 0; i < cajasVista.size() - 1; i++) {
             if (cajasVista.get(i).getCaja().getTamanio()
                     > cajasVista.get(i + 1).getCaja().getTamanio()) return;
@@ -326,24 +308,16 @@ public class MinijuegoOrdenamiento implements Minijuego {
         mensajeEstado = "¡Ordenado manualmente en " + intercambiosManuales + " movimientos!";
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /**
-     * Post: calcula los pasos del algoritmo sobre el estado ACTUAL de las cajas
-     */
     private void prepararPasosResolver() {
         List<Caja> copiaActual = new ArrayList<>();
         for (CajaVista cv : cajasVista) copiaActual.add(cv.getCaja());
-
         AdministradorDePasos<Caja> admin = new AdministradorDePasos<>();
         ordenador.ordenar(copiaActual, admin);
         pasos = admin.getPasos();
     }
 
-    /**
-     * Post: intercambia las posiciones worldX/worldY y los índices lógicos
-     *       de las dos cajasVista indicadas
-     */
     private void intercambiarCajas(int i, int j) {
         CajaVista a = cajasVista.get(i);
         CajaVista b = cajasVista.get(j);
@@ -364,11 +338,13 @@ public class MinijuegoOrdenamiento implements Minijuego {
     }
 
     private int encontrarCajaCercana(JugadorVista jugador) {
-        int jCx = jugador.getWorldX() + jugador.getAreaSolida().x + jugador.getAreaSolida().width  / 2;
-        int jCy = jugador.getWorldY() + jugador.getAreaSolida().y + jugador.getAreaSolida().height / 2;
+        int jCx = jugador.getWorldX() + jugador.getAreaSolida().x
+                + jugador.getAreaSolida().width  / 2;
+        int jCy = jugador.getWorldY() + jugador.getAreaSolida().y
+                + jugador.getAreaSolida().height / 2;
 
         int    mejorIdx  = -1;
-        double mejorDist = RADIO_INTERACCION;
+        double mejorDist = ConfiguracionDeOrdenamientos.RADIO_INTERACCION;
 
         for (int i = 0; i < cajasVista.size(); i++) {
             CajaVista cv = cajasVista.get(i);
@@ -392,11 +368,13 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
     }
 
-    // ── HUD ───────────────────────────────────────────────────────────────
+    // ── HUD ───────────────────────────────────────────────────────────────────
 
-    private void dibujarHUD(Graphics2D g2, JugadorVista jugador) {
-        // Panel semitransparente en la esquina superior izquierda de la pantalla
-        int panelX = 10, panelY = 10, panelW = 500, panelH = 130;
+    private void dibujarHUD(Graphics2D g2) {
+        final int panelX = ConfiguracionDeOrdenamientos.HUD_X;
+        final int panelY = ConfiguracionDeOrdenamientos.HUD_Y;
+        final int panelW = ConfiguracionDeOrdenamientos.HUD_ANCHO;
+        final int panelH = ConfiguracionDeOrdenamientos.HUD_ALTO;
 
         Composite orig = g2.getComposite();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
@@ -404,7 +382,6 @@ public class MinijuegoOrdenamiento implements Minijuego {
         g2.fillRoundRect(panelX, panelY, panelW, panelH, 12, 12);
         g2.setComposite(orig);
 
-        // Borde
         g2.setColor(new Color(100, 150, 220));
         g2.setStroke(new BasicStroke(1.5f));
         g2.drawRoundRect(panelX, panelY, panelW, panelH, 12, 12);
@@ -413,25 +390,21 @@ public class MinijuegoOrdenamiento implements Minijuego {
         int tx = panelX + 12;
         int ty = panelY + 20;
 
-        // Título
         g2.setFont(FONT_TITULO);
         g2.setColor(COLOR_WARN);
         g2.drawString("⬡ Ciudad Ordenamientos — " + ordenador.getNombre(), tx, ty);
         ty += 18;
 
-        // Estado
         g2.setFont(FONT_HUD);
         g2.setColor(estado == Estado.FINALIZADO ? COLOR_OK : COLOR_HUD_FG);
         g2.drawString(mensajeEstado, tx, ty);
         ty += 16;
 
-        // Movimientos manuales
         g2.setFont(FONT_MENSAJE);
         g2.setColor(new Color(160, 190, 220));
         g2.drawString("Intercambios manuales: " + intercambiosManuales, tx, ty);
         ty += 14;
 
-        // Controles
         g2.setColor(new Color(130, 160, 200));
         if (estado != Estado.RESOLVIENDO) {
             g2.drawString("[ESPACIO] Seleccionar/Intercambiar   [R] Resolver auto   [ESC] Cancelar", tx, ty);
@@ -440,7 +413,6 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
         ty += 14;
 
-        // Barra de progreso del resolver
         if (estado == Estado.RESOLVIENDO && pasos != null && !pasos.isEmpty()) {
             dibujarBarraProgreso(g2, tx, ty, panelW - 24);
         }
@@ -449,15 +421,11 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
     }
 
-    /**
-     * Post: dibuja un panel central anunciando la victoria, mientras se espera
-     *       el tiempo de DURACION_VICTORIA_MS antes de cerrar la ciudad.
-     */
     private void dibujarMensajeVictoria(Graphics2D g2) {
-        int panelW = 420;
-        int panelH = 110;
-        int panelX = 140;
-        int panelY = 60;
+        final int panelX = ConfiguracionDeOrdenamientos.VICTORIA_PANEL_X;
+        final int panelY = ConfiguracionDeOrdenamientos.VICTORIA_PANEL_Y;
+        final int panelW = ConfiguracionDeOrdenamientos.VICTORIA_PANEL_ANCHO;
+        final int panelH = ConfiguracionDeOrdenamientos.VICTORIA_PANEL_ALTO;
 
         g2.setColor(new Color(0, 0, 0, 200));
         g2.fillRoundRect(panelX, panelY, panelW, panelH, 16, 16);
@@ -480,7 +448,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
         g2.drawString("Volviendo al mapa global...", panelX + 24, panelY + 86);
     }
 
-	private void dibujarBarraProgreso(Graphics2D g2, int x, int y, int ancho) {
+    private void dibujarBarraProgreso(Graphics2D g2, int x, int y, int ancho) {
         float progreso = (float) indicePasoActual / pasos.size();
         int barH = 8;
 
@@ -494,23 +462,14 @@ public class MinijuegoOrdenamiento implements Minijuego {
         g2.drawRoundRect(x, y, ancho, barH, 4, 4);
     }
 
-    private void dibujarIndicadorCercana(Graphics2D g2, JugadorVista jugador) {
-        if (estado == Estado.RESOLVIENDO || estado == Estado.FINALIZADO) return;
+    // ── Getters / setters ─────────────────────────────────────────────────────
 
-        int cercanaIdx = encontrarCajaCercana(jugador);
-        if (cercanaIdx == -1 || cercanaIdx == indiceCajaSeleccionada) return;
-
-        // La Vista no está disponible aquí directamente, pero CajaVista ya maneja el highlight
-        // Este método es un hook para efectos adicionales si se desea
-    }
-    
     /**
      * Pre:  callback no nulo
-     * Post: registra una acción a ejecutar cuando el jugador gane
+     * Post: registra una acción a ejecutar cuando el jugador gane.
      */
     public void setOnVictoria(Runnable callback) {
-    	ValidacionesUtiles.esDistintoDeNull(callback, "Callback no puede ser nulo");
-      	this.onVictoria = callback;
+        ValidacionesUtiles.esDistintoDeNull(callback, "Callback no puede ser nulo");
+        this.onVictoria = callback;
     }
-	
 }
