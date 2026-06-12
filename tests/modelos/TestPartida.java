@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 
-public class PartidaTest {
+public class TestPartida {
 
     private static class PartidaDummy extends Partida {
 

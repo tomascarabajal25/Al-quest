@@ -1,13 +1,11 @@
 package modelos;
 
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
-import modelos.Elemento;
-import modelos.Mochila;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MochilaTest {
+public class TestMochila {
 
     /**
      * Implementación mínima de Elemento

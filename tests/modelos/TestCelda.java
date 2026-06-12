@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CeldaTest<T> {
+public class TestCelda<T> {
     private Celda celda;
     private Celda celda2;
 
