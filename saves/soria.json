@@ -1,12 +1,18 @@
 {
   "nombreJugador": "soria",
-  "puntajeTotal": 24000,
-  "idCiudadActual": 1,
+  "puntajeTotal": 29200,
+  "idCiudadActual": 5,
   "idsCiudadesCompletadas": [
-    1
+    1,
+    2,
+    4,
+    5
   ],
   "idsCiudadesDesbloqueadas": [
     1,
-    2
+    2,
+    4,
+    5,
+    6
   ]
 }

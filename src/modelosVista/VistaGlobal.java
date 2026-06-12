@@ -328,13 +328,13 @@ public class VistaGlobal extends Vista {
                 etiqueta    = "C" + id + " — PRÓXIMAMENTE";
             } else if (nodo.isCompletada()) {
                 colorEstado = COLOR_COMPLETADA;
-                etiqueta    = "C" + id + " ✓ " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             } else if (grafo.esCiudadAccesible(id)) {
                 colorEstado = COLOR_ACCESIBLE;
-                etiqueta    = "C" + id + " ▶ " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             } else {
                 colorEstado = COLOR_BLOQUEADA;
-                etiqueta    = "C" + id + " 🔒 " + nodo.getNombre();
+                etiqueta    = "C" + id + " - " + nodo.getNombre();
             }
 
             // ── Ícono de ciudad ────────────────────────────────────────────

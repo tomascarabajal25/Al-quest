@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import juego.ciudades.ciudad5.ConfiguracionBusqueda;
 import modelosVista.JugadorVista;
 import modelosVista.ObjetoVista;
 import modelosVista.Vista;
@@ -16,11 +17,6 @@ import modelosVista.Vista;
  * Puerta física en el mapa del desafío.
  * Hereda de ObjetoVista → se registra en AdministradorDeObjetos
  * y la Vista la dibuja automáticamente junto al resto de objetos.
- *
- * Uso:
- *   PuertaDesafio puertaLista = new PuertaDesafio(18, 37, TipoPuerta.LISTA, tamaño);
- *   PuertaDesafio puertaArbol = new PuertaDesafio(29, 37, TipoPuerta.ARBOL, tamaño);
- *   vista.adminObjt.setObjetos(puertaLista, puertaArbol);
  */
 public class PuertaDesafio extends ObjetoVista {
 
@@ -38,50 +34,49 @@ public class PuertaDesafio extends ObjetoVista {
      * @param tamaño tamaño de tile en px (Vista.tamaño)
      */
     public PuertaDesafio(int col, int fila, TipoPuerta tipo, int tamaño) {
-        super(col * tamaño, fila * tamaño,
-              tipo == TipoPuerta.LISTA ? "PuertaLista" : "PuertaArbol",
-              false,   // sin colisión de mapa — la colisión la maneja MinijuegoDesafio
-              cargarSprite(tipo));   // imagen null → cargarImagenPuerta() la asigna abajo
+        super(
+            col * tamaño,
+            fila * tamaño,
+            tipo == TipoPuerta.LISTA ? "PuertaLista" : "PuertaArbol",
+            false,              // sin colisión de mapa; la maneja MinijuegoDesafio
+            cargarSprite(tipo)
+        );
 
         this.tipo   = tipo;
         this.tamaño = tamaño;
-        
     }
 
-    // ── Imagen ────────────────────────────────────────────────────────────
+    // ── Imagen ────────────────────────────────────────────────────────────────
 
     private static BufferedImage cargarSprite(TipoPuerta tipo) {
+        String ruta = tipo == TipoPuerta.LISTA
+            ? ConfiguracionBusqueda.SPRITE_PUERTA_LISTA
+            : ConfiguracionBusqueda.SPRITE_PUERTA_ARBOL;
         try {
-            String ruta = tipo == TipoPuerta.LISTA
-                ? "/assets/objetos/door.bmp"
-                : "/assets/objetos/door_iron.bmp";
-
-            return ImageIO.read(
-                PuertaDesafio.class.getResourceAsStream(ruta)
-            );
+            return ImageIO.read(PuertaDesafio.class.getResourceAsStream(ruta));
         } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Advertencia: no se pudo cargar sprite de puerta: " + ruta);
             return null;
         }
     }
 
-    // ── Draw ──────────────────────────────────────────────────────────────
+    // ── Draw ──────────────────────────────────────────────────────────────────
 
     /**
      * La Vista llama este método automáticamente a través de adminObjt.
-     * PuertaDesafio personaliza la apariencia según su estado.
      */
     @Override
     public void draw(Graphics2D g2, Vista vista) {
         if (!estaEnPantalla(vista)) {
-        	return;
+            return;
         }
 
         int screenX = getScreenX(vista);
         int screenY = getScreenY(vista);
+        int anchoVisual = tamaño * ConfiguracionBusqueda.PUERTA_ANCHO_TILES;
 
         if (getImagen() != null) {
-            g2.drawImage(getImagen(), screenX, screenY,
-                         tamaño * 3, tamaño, null);
+            g2.drawImage(getImagen(), screenX, screenY, anchoVisual, tamaño, null);
         } else {
             // Placeholder de color según estado
             Color color = switch (estado) {
@@ -93,7 +88,7 @@ public class PuertaDesafio extends ObjetoVista {
                                     : new Color(120, 80, 200, 180);
             };
             g2.setColor(color);
-            g2.fillRect(screenX, screenY, tamaño * 3, tamaño);
+            g2.fillRect(screenX, screenY, anchoVisual, tamaño);
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Arial", Font.BOLD, 14));
             String label = tipo == TipoPuerta.LISTA ? "← LISTA" : "ÁRBOL →";
@@ -101,14 +96,16 @@ public class PuertaDesafio extends ObjetoVista {
         }
     }
 
-    // ── Colisión ──────────────────────────────────────────────────────────
+    // ── Colisión ──────────────────────────────────────────────────────────────
 
     /**
-     * post: devuelve true si el jugador está cruzando esta puerta
+     * post: devuelve true si el jugador está cruzando esta puerta.
      */
     public boolean colisionaConJugador(JugadorVista jugador) {
-        Rectangle puertaRect  = new Rectangle(
-            getWorldX(), getWorldY(), tamaño * 3, tamaño);
+        Rectangle puertaRect = new Rectangle(
+            getWorldX(), getWorldY(),
+            tamaño * ConfiguracionBusqueda.PUERTA_ANCHO_TILES, tamaño
+        );
         Rectangle jugadorRect = new Rectangle(
             jugador.getWorldX() + jugador.getAreaSolida().x,
             jugador.getWorldY() + jugador.getAreaSolida().y,
@@ -118,9 +115,9 @@ public class PuertaDesafio extends ObjetoVista {
         return puertaRect.intersects(jugadorRect);
     }
 
-    // ── Getters / Setters ─────────────────────────────────────────────────
+    // ── Getters / setters ─────────────────────────────────────────────────────
 
-    public TipoPuerta   getTipo()              { return tipo; }
-    public EstadoPuerta getEstado()            { return estado; }
-    public void setEstado(EstadoPuerta estado) { this.estado = estado; }
+    public TipoPuerta   getTipo()                    { return tipo; }
+    public EstadoPuerta getEstado()                  { return estado; }
+    public void         setEstado(EstadoPuerta e)    { this.estado = e; }
 }

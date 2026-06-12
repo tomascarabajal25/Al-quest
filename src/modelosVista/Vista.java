@@ -37,9 +37,6 @@ public class Vista extends JPanel implements Runnable{
     //configuracion del mundo
     private final int columnasDelMundo=50;
     private final int filasDelMundo=50;
-    private final int anchoDeMundo = tamanio * columnasDelMundo;
-    private final int largoDeMundo = tamanio * filasDelMundo;
-
     protected ManejadorDeConstruccion construccionesM = null;
     protected KeyHandler keyhandler = null;
     private Thread hiloDelJuego = null;
