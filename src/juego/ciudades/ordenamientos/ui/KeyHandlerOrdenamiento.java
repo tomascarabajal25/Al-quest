@@ -1,4 +1,4 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

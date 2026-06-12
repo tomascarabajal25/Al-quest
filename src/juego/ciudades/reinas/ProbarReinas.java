@@ -1,16 +1,10 @@
-package Juego.ciudades.reinas;
-import Juego.ciudades.reinas.ui.VentanaPrincipal;
-import javax.swing.*;
+package juego.ciudades.reinas;
+import modelos.Jugador;
+
+
 
 public class ProbarReinas {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new VentanaPrincipal(() -> {
-
-                // acá se conectará con la siguiente ciudad cuando exista, es un print temporal
-                System.out.println("Ciudad completada");
-
-            });
-        });
-    }
-}
+        PartidaReinas partidaReinas=new PartidaReinas(new Jugador("hola"));
+        partidaReinas.iniciar();
+}}

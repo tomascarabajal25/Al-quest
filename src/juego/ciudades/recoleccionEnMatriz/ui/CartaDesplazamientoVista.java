@@ -1,7 +1,7 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
  
-import Juego.ciudades.recoleccionEnMatriz.CartaDesplazamiento;
-import utils.ValidacionesUtiles;
+import juego.ciudades.recoleccionEnMatriz.CartaDesplazamiento;
+
 
 public class CartaDesplazamientoVista extends CartaVista {
     //INTERFACES ----------------------------------------------------------------------------------------------

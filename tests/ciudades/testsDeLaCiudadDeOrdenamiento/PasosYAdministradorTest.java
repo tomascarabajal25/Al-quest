@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
+package ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
@@ -14,13 +14,13 @@ public class PasosYAdministradorTest {
     @Test
     public void testPasoOrdenamientoInmutabilidadCopia() {
         List<Caja> listaOriginal = new ArrayList<>();
-        listaOriginal.add(new Caja("Caja 1", 10));
-        listaOriginal.add(new Caja("Caja 2", 20));
+        listaOriginal.add(new Caja("Caja 1", 10, true));
+        listaOriginal.add(new Caja("Caja 2", 20, true));
 
         PasoOrdenamiento<Caja> paso = new PasoOrdenamiento<>(listaOriginal, 0, 1, "Paso de prueba");
 
         // Modificamos la lista original externamente
-        listaOriginal.set(0, new Caja("Modificada", 99));
+        listaOriginal.set(0, new Caja("Modificada", 99, true));
 
         // La lista guardada en el paso NO debería haber cambiado
         assertNotEquals(listaOriginal.get(0).getTamaño(), paso.getCopiasEnEstePaso().get(0).getTamaño(),
@@ -33,7 +33,7 @@ public class PasosYAdministradorTest {
         AdministradorDePasos<Caja> admin = new AdministradorDePasos<>();
         assertTrue(admin.getPasos().isEmpty());
 
-        List<Caja> lista = List.of(new Caja("A", 5));
+        List<Caja> lista = List.of(new Caja("A", 5, true));
         PasoOrdenamiento<Caja> paso = new PasoOrdenamiento<>(lista, -1, -1, "Inicio");
         
         admin.guardarPaso(paso);

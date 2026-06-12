@@ -23,9 +23,9 @@ public class OrdenadorBubleTest {
     public void setUp() {
         ordenador = new OrdenadorBubble<>("Metodo Burbuja");
         listaDesordenada = new ArrayList<>();
-        listaDesordenada.add(new Caja("Grande", 80));
-        listaDesordenada.add(new Caja("Chica", 20));
-        listaDesordenada.add(new Caja("Mediana", 50));
+        listaDesordenada.add(new Caja("Grande", 80, true));
+        listaDesordenada.add(new Caja("Chica", 20, true));
+        listaDesordenada.add(new Caja("Mediana", 50, true));
     }
 
     @Test

@@ -1,7 +1,6 @@
 package juego.ciudades.ordenamientos;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
-import modelos.Elemento;
+
 import modelos.Objeto;
 import utils.ValidacionesUtiles;
 
@@ -11,17 +10,18 @@ import utils.ValidacionesUtiles;
  */
 public class Caja extends Objeto implements Comparable<Caja>{
 	//ATRIBUTOS----------------------------------------------------------------------
-	private int tamaño;
+	private int tamanio;
 	//CONSTRUCTORES-----------------------------------------------------------------
 	/**
-	 * pre:
-	 * @param nombre diferente de null, almenos len de 2
-	 * @param tamaño mayor a 0
-	 * post: crea la caja con el tamaño y nombre ingresados
-	 */
-	public Caja(String nombre, int tamaño, boolean colision) {
-		super(nombre,colision);
-		this.setTamaño(tamaño);
+     * pre:
+     *
+     * @param nombre diferente de null, almenos len de 2
+     * @param tamanio mayor a 0
+     *               post: crea la caja con el tamaño y nombre ingresados
+     */
+	public Caja(String nombre, int tamanio,  boolean colision) {
+		super(nombre, colision);
+		this.setTamaño(tamanio);
 	}
 	
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
@@ -30,7 +30,7 @@ public class Caja extends Objeto implements Comparable<Caja>{
 	//METODOS GENERALES------------------------------------------------------------
 	@Override
     public int compareTo(Caja otra) {
-        return Integer.compare(this.tamaño, otra.getTamaño());
+        return Integer.compare(this.getTamanio(), otra.getTamanio());
     }
 	@Override
 	public boolean equals(Object obj) {
@@ -41,7 +41,7 @@ public class Caja extends Objeto implements Comparable<Caja>{
 		if (getClass() != obj.getClass())
 			return false;
 		Caja other = (Caja) obj;
-		return tamaño==other.getTamaño();
+		return this.tamanio==other.getTamanio();
 	}
 
    
@@ -50,19 +50,19 @@ public class Caja extends Objeto implements Comparable<Caja>{
 	 * devuelve el tamaño
 	 * @return
 	 */
-	public int getTamaño() {
-		return tamaño;
+	public int getTamanio() {
+		return this.tamanio;
 	}
 	
 	
 	//SETTERS SIMPLES---------------------------------------------------------------
 	/**
 	 * modifica el tamaño
-	 * @param tamaño, debe ser mayor a 0
+	 * @param tamanio, debe ser mayor a 0
 	 */
-	private void setTamaño(int tamaño) {
-		ValidacionesUtiles.validarMayorACero(tamaño, "El tamaño no puede ser menor a 0");
-		this.tamaño=tamaño;
+	private void setTamaño(int tamanio) {
+		ValidacionesUtiles.validarMayorACero(tamanio, "El tamaño no puede ser menor a 0");
+		this.tamanio=tamanio;
 	}
 	
 	

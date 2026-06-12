@@ -62,7 +62,7 @@ public class ciudadBusqueda {
     }
 
     /**
-     * Método unificado que se encarga ÚNICAMENTE de recorrer la matriz
+     * recorre la matriz
      * y extraer el contenido válido de las celdas.
      */
     private void recorrerYProcesarTexto(AccionPalabra accion, Mapa texto) {
@@ -74,13 +74,13 @@ public class ciudadBusqueda {
                 Celda<?> celda = texto.getCeldaConPosicion(i, j);
                 
                 if (celda != null && celda.getContenido() != null) {
-                	// 1. Convertimos a String puro
+                	//  Convertimos a String puro
                     String palabra = celda.getContenido().toString();
                     
-                    // 2. Limpiamos espacios invisibles y saltos de línea molestos
+                    // Limpiamos espacios invisibles y saltos de línea molestos
                     palabra = palabra.replaceAll("\\s+", "").trim();
                     
-                    // 3. Si no quedó vacío, lo mandamos a indexar
+                    // Si no quedó vacío, lo mandamos a indexar
                     if (!palabra.isEmpty() && !palabra.equals("-")) {
                         accion.ejecutar(palabra, i, j);
                     }
@@ -126,7 +126,7 @@ public class ciudadBusqueda {
 	}
 
 
-	// Agregar este método en ciudadBusqueda.java
+	
 	 
 	/**
 	 * post: devuelve la lista de strings indexados (sin posiciones)

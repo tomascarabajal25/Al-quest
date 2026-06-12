@@ -1,0 +1,9 @@
+nodo raiz hoja rama arbol lista
+ pila cola grafo vertice arista matriz
+vector arreglo hash tabla monticulo diccionario conjunto puntero
+ enlace clave valor
+ busqueda ordenamiento insercion 
+ eliminacion iteracion recursion burbuja seleccion rapido,
+ fusion recorrido profundidad 
+ anchura backtracking heuristica optimizacion,
+ colision particion pivote

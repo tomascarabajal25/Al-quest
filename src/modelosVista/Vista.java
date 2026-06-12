@@ -37,11 +37,8 @@ public class Vista extends JPanel implements Runnable{
     //configuracion del mundo
     private final int columnasDelMundo=50;
     private final int filasDelMundo=50;
-    private final int anchoDeMundo = tamanio * columnasDelMundo;
-    private final int largoDeMundo = tamanio * filasDelMundo;
-
     protected ManejadorDeConstruccion construccionesM = null;
-    private KeyHandler keyhandler = null;
+    protected KeyHandler keyhandler = null;
     private Thread hiloDelJuego = null;
     private AdministradorDeObjetos adminObjt = null;
     private ChequeadorDeColision chequeadorDeColision = null;
@@ -219,7 +216,7 @@ public class Vista extends JPanel implements Runnable{
             miniJuego.draw(g2, jugadorVista);
         }
 
-        g2.dispose();
+        
     }
 
     /**
@@ -309,6 +306,14 @@ public class Vista extends JPanel implements Runnable{
      */
     public AdministradorDeObjetos getAdminObjt(){
         return this.adminObjt;
+    }
+
+    /**
+     * Getter del atributo minijuegos
+     * @return: Devuelve del valor del atributo
+     */
+    public Minijuego getMinijuego(){
+        return this.miniJuego;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package Juego.ciudades.ciudad5.UI;
+package juego.ciudades.ciudad5.UI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -66,7 +66,7 @@ public class ZonaDesafio {
         // Texto indicador
         g2.setColor(Color.YELLOW);
         g2.setFont(new Font("Arial", Font.BOLD, 12));
-        g2.drawString("? DESAFÍO", screenX + 4, screenY + alto / 2);
+        g2.drawString("DESAFÍO", screenX + 4, screenY + alto / 2);
     }
 
     public boolean isActivada() {

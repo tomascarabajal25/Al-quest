@@ -1,4 +1,4 @@
-package Juego.ciudades.complejidad;
+package juego.ciudades.complejidad;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

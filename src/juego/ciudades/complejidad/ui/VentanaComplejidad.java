@@ -1,22 +1,26 @@
-package Juego.ciudades.complejidad.ui;
+package juego.ciudades.complejidad.ui;
 
-import Juego.ciudades.complejidad.CiudadComplejidad;
-import Juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import javax.swing.*;
+import juego.ciudades.complejidad.PartidaComplejidad;
 
+
+
+/**
+ * Ventana principal de la Ciudad Complejidad Algorítmica.
+ */
 public class VentanaComplejidad extends JFrame {
 
     private PanelComplejidad panel;
 
     /**
-     * @param victoriaListener callback que se ejecuta cuando el jugador resuelve correctamente
+     * @param partida Referencia a la partida real que inició este minijuego
      */
-    public VentanaComplejidad(VictoriaListener victoriaListener) {
+    public VentanaComplejidad(PartidaComplejidad partida) {
         super("Complejidad Algorítmica");
 
-        CiudadComplejidad ciudad = new CiudadComplejidad();
-        panel = new PanelComplejidad(ciudad, victoriaListener);
+        // CORRECCIÓN: Ya no creamos una nueva partida, usamos la que viene por parámetro
+        panel = new PanelComplejidad(partida.getCiudad(), () -> partida.ganar());
 
         JPanel contenedor = new JPanel(new BorderLayout());
         contenedor.add(panel, BorderLayout.CENTER);
@@ -24,7 +28,9 @@ public class VentanaComplejidad extends JFrame {
 
         add(contenedor);
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // CORRECCIÓN: Usar DISPOSE para liberar los recursos de esta ventana sin matar el juego principal
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -53,10 +59,8 @@ public class VentanaComplejidad extends JFrame {
             "T(n) = 3T(n/3) + 1"
         );
         instrucciones.setEditable(false);
-        instrucciones.setLineWrap(true);
-        instrucciones.setWrapStyleWord(true);
-        instrucciones.setOpaque(false);
-        instrucciones.setFont(new Font("Arial", Font.PLAIN, 13));
+        instrucciones.setBackground(panel.getBackground());
+        instrucciones.setFont(new Font("Arial", Font.PLAIN, 12));
         instrucciones.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(titulo);

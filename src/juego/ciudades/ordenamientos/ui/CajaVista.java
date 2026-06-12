@@ -1,14 +1,17 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.awt.Color;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
-import Juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Caja;
 import modelosVista.ObjetoVista;
 import modelosVista.Vista;
 
@@ -49,8 +52,9 @@ public class CajaVista extends ObjetoVista {
     private int tickParpadeo = 0;
 
     // ── Imagen de caja (opcional, si hay sprite) ──────────────────────────
-    private BufferedImage spriteCaja;
+    private static BufferedImage spriteCaja;
 
+    
     // ── Constructor ────────────────────────────────────────────────────────
 
     /**
@@ -61,12 +65,24 @@ public class CajaVista extends ObjetoVista {
      * @param indiceLogico  posición en el arreglo lógico
      */
     public CajaVista(Caja caja, int worldX, int worldY, int indiceLogico) {
-        super(worldX, worldY, caja.getNombre(), false, null);
+        super(worldX, worldY, caja.getNombre(), false, cargarSprite());
         this.caja         = caja;
         this.indiceLogico = indiceLogico;
         intentarCargarSprite();
     }
-
+    
+    private static BufferedImage cargarSprite() {
+        try {
+            return ImageIO.read(
+                CajaVista.class.getResourceAsStream("/assets/objetos/caja.bmp")
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+ 	
+    
     // ── Ciclo de juego ─────────────────────────────────────────────────────
 
     /**
@@ -98,9 +114,9 @@ public class CajaVista extends ObjetoVista {
         int sx      = getScreenX(vista);
         int sy      = getScreenY(vista);
 
-        // Altura proporcional: tamaño lógico / 50 * celda (máx = celda completa)
-        int altoMax  = tamaño - 4;
-        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamaño() * altoMax) / 50));
+        
+        int altoMax  = tamaño ;
+        int altoReal = Math.max(8, Math.min(altoMax, (caja.getTamanio() * altoMax) / 50)) *2;
         int yDibujo  = sy + (tamaño - altoReal);
 
         // ── Sombra ────────────────────────────────────────────────────────
@@ -109,7 +125,7 @@ public class CajaVista extends ObjetoVista {
 
         // ── Cuerpo de la caja ─────────────────────────────────────────────
         if (spriteCaja != null) {
-            g2.drawImage(spriteCaja, sx + 2, yDibujo, tamaño - 4, altoReal, null);
+            g2.drawImage(spriteCaja, sx + 2, yDibujo, tamaño , altoReal, null);
         } else {
             dibujarCajaVectorial(g2, sx, yDibujo, tamaño, altoReal);
         }
@@ -152,15 +168,14 @@ public class CajaVista extends ObjetoVista {
         g2.setFont(FONT_ETIQUETA);
         g2.setColor(COLOR_TEXTO);
         FontMetrics fm = g2.getFontMetrics();
-        String txt = caja.getNombre() + "\n" + caja.getTamaño();
-
+        
         // Nombre
         String linea1 = caja.getNombre();
         int x1 = sx + (tam - fm.stringWidth(linea1)) / 2;
         g2.drawString(linea1, x1, sy + tam - 14);
 
         // Tamaño
-        String linea2 = String.valueOf(caja.getTamaño());
+        String linea2 = String.valueOf(caja.getTamanio());
         int x2 = sx + (tam - fm.stringWidth(linea2)) / 2;
         g2.drawString(linea2, x2, sy + tam - 4);
     }

@@ -1,10 +1,10 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ciudades.ordenamientos.Caja;
-import Juego.ciudades.ordenamientos.Ordenador;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Ordenador;
 import modelosVista.Vista;
 
 /**
@@ -21,6 +21,8 @@ import modelosVista.Vista;
  * </pre>
  */
 public class FabricaMinijuegoOrdenamiento {
+	private static final int colInicio=17;
+	private static final int filaBase=23;
 
     private FabricaMinijuegoOrdenamiento() {}   // utilidad estática
 
@@ -40,9 +42,8 @@ public class FabricaMinijuegoOrdenamiento {
      */
     public static MinijuegoOrdenamiento crear(Vista vista,
                                                List<Caja> cajas,
-                                               Ordenador<Caja> ordenador,
-                                               int filaBase,
-                                               int colInicio) {
+                                               Ordenador<Caja> ordenador
+                                             ) {
         if (vista    == null) throw new IllegalArgumentException("Vista no puede ser nula");
         if (cajas    == null || cajas.size() < 2)
             throw new IllegalArgumentException("Se necesitan al menos 2 cajas");

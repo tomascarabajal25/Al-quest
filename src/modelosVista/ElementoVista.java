@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
 import utils.ValidacionesUtiles;
 

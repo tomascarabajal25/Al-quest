@@ -1,6 +1,6 @@
 package ciudades.testsDeCiudadReinas;
 
-import Juego.ciudades.reinas.Tablero;
+import juego.ciudades.reinas.Tablero;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

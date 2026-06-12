@@ -1,7 +1,7 @@
-package ciudades.testDeCiudadRecoleccion;
+package tests.ciudades.testDeCiudadRecoleccion;
 
-import Juego.ciudades.recoleccionEnMatriz.CartaDesplazamiento;
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CartaDesplazamiento;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Jugador;
 import org.junit.jupiter.api.Test;
 

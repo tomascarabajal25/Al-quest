@@ -1,4 +1,4 @@
-package Juego.ciudades.ciudad5.UI;
+package juego.ciudades.ciudad5.UI;
 
 /**
  * Estados del minijuego de búsqueda en Ciudad 5.

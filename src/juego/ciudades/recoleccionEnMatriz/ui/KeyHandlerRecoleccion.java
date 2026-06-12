@@ -1,4 +1,4 @@
-package Juego.ciudades.recoleccionEnMatriz.ui;
+package juego.ciudades.recoleccionEnMatriz.ui;
 
 import modelosVista.KeyHandler;
 import utils.ValidacionesUtiles;
@@ -165,10 +165,10 @@ public class KeyHandlerRecoleccion extends KeyHandler {
      * Setter del atributo cartaPresionada
      *
      * PRE:
-     * -Valor debe ser mayor a cero
+     * -Valor debe ser mayor o igual a cero
      */
     private void setCartaPresionada(int valor) {
-        ValidacionesUtiles.validarMayorACero(valor, "valor");
+        ValidacionesUtiles.validarMayorOIgualACero(valor, "valor");
         this.cartaPresionada = valor;
     }
 

@@ -1,4 +1,4 @@
-package Juego.ciudades.ordenamientos.ui;
+package juego.ciudades.ordenamientos.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -10,10 +10,10 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
 
-import Juego.ciudades.ordenamientos.AdministradorDePasos;
-import Juego.ciudades.ordenamientos.Caja;
-import Juego.ciudades.ordenamientos.Ordenador;
-import Juego.ciudades.ordenamientos.PasoOrdenamiento;
+import juego.ciudades.ordenamientos.AdministradorDePasos;
+import juego.ciudades.ordenamientos.Caja;
+import juego.ciudades.ordenamientos.Ordenador;
+import juego.ciudades.ordenamientos.PasoOrdenamiento;
 import modelos.Minijuego;
 import modelosVista.JugadorVista;
 import modelosVista.Vista;
@@ -52,6 +52,9 @@ public class MinijuegoOrdenamiento implements Minijuego {
     private static final int TICK_POR_PASO = 45;
     /** Radio en píxeles para detectar "cercanía" del jugador a una caja */
     private static final int RADIO_INTERACCION = 60;
+    
+    private static final long DURACION_VICTORIA_MS = 3000;
+    
 
     // ── Estado del minijuego ───────────────────────────────────────────────
     private enum Estado { ESPERANDO, MANUAL, RESOLVIENDO, FINALIZADO }
@@ -83,7 +86,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
 
     private String mensajeEstado = "Acércate a una caja y presiona ESPACIO";
     private int    intercambiosManuales = 0;
-
+    /** Momento en que se detectó la victoria. -1 indica que todavía no ocurrió. */
+    private long tiempoInicioVictoria = -1;
     // ── Constructor ────────────────────────────────────────────────────────
 
     /**
@@ -115,7 +119,11 @@ public class MinijuegoOrdenamiento implements Minijuego {
      * Post: actualiza lógica del minijuego según el estado actual
      */
     public void actualizar(JugadorVista jugador) {
-        if (estado == Estado.FINALIZADO) return;
+        if (estado == Estado.FINALIZADO) {
+            procesarFinalizacion();
+            return;
+        }
+        
 
         // Animaciones de cada caja
         for (CajaVista cv : cajasVista) cv.actualizar();
@@ -148,6 +156,23 @@ public class MinijuegoOrdenamiento implements Minijuego {
     }
 
     /**
+     * Post: una vez detectada la victoria, espera DURACION_VICTORIA_MS sin
+     *       bloquear el hilo y luego ejecuta el callback onVictoria una sola vez.
+     */
+    private void procesarFinalizacion() {
+        if (tiempoInicioVictoria == -1) {
+            tiempoInicioVictoria = System.currentTimeMillis();
+        }
+
+        long tiempoTranscurrido = System.currentTimeMillis() - tiempoInicioVictoria;
+
+        if (tiempoTranscurrido >= DURACION_VICTORIA_MS && onVictoria != null) {
+            onVictoria.run();
+            onVictoria = null; 
+        }
+    }
+
+	/**
      * Post: dibuja el HUD del minijuego (controles, estado, progreso)
      */
     public void draw(Graphics2D g2, JugadorVista jugador) {
@@ -240,8 +265,8 @@ public class MinijuegoOrdenamiento implements Minijuego {
     private void togglePausaResolver() {
         resolverPausado = !resolverPausado;
         mensajeEstado   = resolverPausado
-            ? "⏸ Pausado — R para continuar"
-            : "▶ Resolviendo — " + ordenador.getNombre();
+            ? "Pausado — R para continuar"
+            : "Resolviendo — " + ordenador.getNombre();
     }
 
     private void detenerResolver() {
@@ -284,27 +309,21 @@ public class MinijuegoOrdenamiento implements Minijuego {
     }
 
     private void finalizarResolver() {
-    	if (onVictoria != null) {
-    		onVictoria.run();
-    	}
         estado = Estado.FINALIZADO;
         limpiarEstadosVisuales();
         for (CajaVista cv : cajasVista) cv.setCorrecta(true);
-        mensajeEstado = "✓ Ordenamiento completado con " + ordenador.getNombre() + "!";
+        mensajeEstado = "Ordenamiento completado con " + ordenador.getNombre() + "!";
     }
 
     private void verificarVictoriaManual() {
         // Verifica si el orden actual coincide con el orden correcto (creciente por tamaño)
         for (int i = 0; i < cajasVista.size() - 1; i++) {
-            if (cajasVista.get(i).getCaja().getTamaño()
-                    > cajasVista.get(i + 1).getCaja().getTamaño()) return;
-        }
-        if (onVictoria != null) {
-        	onVictoria.run();
+            if (cajasVista.get(i).getCaja().getTamanio()
+                    > cajasVista.get(i + 1).getCaja().getTamanio()) return;
         }
         estado = Estado.FINALIZADO;
         for (CajaVista cv : cajasVista) cv.setCorrecta(true);
-        mensajeEstado = "✓ ¡Ordenado manualmente en " + intercambiosManuales + " movimientos!";
+        mensajeEstado = "¡Ordenado manualmente en " + intercambiosManuales + " movimientos!";
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────
@@ -377,7 +396,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
 
     private void dibujarHUD(Graphics2D g2, JugadorVista jugador) {
         // Panel semitransparente en la esquina superior izquierda de la pantalla
-        int panelX = 10, panelY = 10, panelW = 340, panelH = 130;
+        int panelX = 10, panelY = 10, panelW = 500, panelH = 130;
 
         Composite orig = g2.getComposite();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
@@ -425,9 +444,43 @@ public class MinijuegoOrdenamiento implements Minijuego {
         if (estado == Estado.RESOLVIENDO && pasos != null && !pasos.isEmpty()) {
             dibujarBarraProgreso(g2, tx, ty, panelW - 24);
         }
+        if (estado == Estado.FINALIZADO) {
+            dibujarMensajeVictoria(g2);
+        }
     }
 
-    private void dibujarBarraProgreso(Graphics2D g2, int x, int y, int ancho) {
+    /**
+     * Post: dibuja un panel central anunciando la victoria, mientras se espera
+     *       el tiempo de DURACION_VICTORIA_MS antes de cerrar la ciudad.
+     */
+    private void dibujarMensajeVictoria(Graphics2D g2) {
+        int panelW = 420;
+        int panelH = 110;
+        int panelX = 140;
+        int panelY = 60;
+
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(panelX, panelY, panelW, panelH, 16, 16);
+
+        g2.setColor(COLOR_OK);
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawRoundRect(panelX, panelY, panelW, panelH, 16, 16);
+        g2.setStroke(new BasicStroke(1f));
+
+        g2.setFont(FONT_TITULO);
+        g2.setColor(COLOR_OK);
+        g2.drawString("¡CIUDAD COMPLETADA!", panelX + 24, panelY + 36);
+
+        g2.setFont(FONT_HUD);
+        g2.setColor(COLOR_HUD_FG);
+        g2.drawString(mensajeEstado, panelX + 24, panelY + 60);
+
+        g2.setFont(FONT_MENSAJE);
+        g2.setColor(new Color(160, 190, 220));
+        g2.drawString("Volviendo al mapa global...", panelX + 24, panelY + 86);
+    }
+
+	private void dibujarBarraProgreso(Graphics2D g2, int x, int y, int ancho) {
         float progreso = (float) indicePasoActual / pasos.size();
         int barH = 8;
 

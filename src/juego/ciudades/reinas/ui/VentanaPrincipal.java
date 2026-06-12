@@ -1,7 +1,7 @@
-package Juego.ciudades.reinas.ui;
+package juego.ciudades.reinas.ui;
 
-import Juego.ciudades.reinas.PartidaReinas;
-import Juego.ciudades.reinas.VictoriaListener;
+import juego.ciudades.reinas.PartidaReinas;
+import juego.ciudades.reinas.VictoriaListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import modelos.Jugador;
 
 /**
  * Ventana principal del juego N-Reinas.
@@ -28,12 +27,21 @@ import modelos.Jugador;
 public class VentanaPrincipal extends JFrame{
 
 
-    private JPanel contenedor;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contenedor;
     private TableroPanel tableroPanel;
     private VictoriaListener victoriaListener;
+    private PartidaReinas partida;
 
-    public VentanaPrincipal (VictoriaListener victoriaListener) {
+    /**
+     * Constructor actualizado: Recibe la PartidaReinas y el callback de victoria.
+     */
+    public VentanaPrincipal(PartidaReinas partida, VictoriaListener victoriaListener) {
         super("N-Reinas");
+        this.partida = partida;
         this.victoriaListener = victoriaListener;
 
         contenedor = new JPanel(new BorderLayout());
@@ -41,11 +49,9 @@ public class VentanaPrincipal extends JFrame{
 
         mostrarSelectorInicial();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-        setVisible(true);
-
     }
     
     /**
@@ -55,14 +61,13 @@ public class VentanaPrincipal extends JFrame{
      * @param tamanio dimensión del nuevo tablero (N x N)
      */
     private void iniciarConTamanio(int tamanio) {
-        Jugador jugador = new Jugador("Jugador 1"); // por ahora hardcodeado
-        PartidaReinas partida = new PartidaReinas(jugador, tamanio);
-        partida.iniciar();
+    	partida.configurarModelo(tamanio);
 
         contenedor.removeAll();
 
         tableroPanel = new TableroPanel(partida.getCiudad(), tamanio, victoriaListener);
         contenedor.add(tableroPanel, BorderLayout.CENTER);
+        
         contenedor.add(crearPanelDerecho(tamanio), BorderLayout.EAST);
 
         pack();
