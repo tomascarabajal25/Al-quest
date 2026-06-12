@@ -1,8 +1,6 @@
-package juego;
+package juego.configuracion;
 
-import java.awt.*;
-
-public class  Constantes {
+public class ConfiguracionDeRecoleccion {
     // PARTIDA
     /** Puntos iniciales de la partida */
     public static final int PUNTOS_INICIALES_PARTIDA = 0;

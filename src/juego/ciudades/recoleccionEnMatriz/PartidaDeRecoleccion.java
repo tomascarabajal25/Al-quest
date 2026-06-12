@@ -1,6 +1,6 @@
 package juego.ciudades.recoleccionEnMatriz;
 
-import juego.Constantes;
+import juego.configuracion.ConfiguracionDeRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
@@ -31,7 +31,7 @@ public class PartidaDeRecoleccion extends Partida {
     public PartidaDeRecoleccion(String nombre, Jugador jugador) {
         super(nombre, jugador);
 
-        setJuego(Constantes.FILAS_MAPA, Constantes.COLUMNAS_MAPA, Constantes.NIVELES_MAPA, Constantes.CAPACIDAD_MAXIMA_MOCHILA, getJugador());
+        setJuego(ConfiguracionDeRecoleccion.FILAS_MAPA, ConfiguracionDeRecoleccion.COLUMNAS_MAPA, ConfiguracionDeRecoleccion.NIVELES_MAPA, ConfiguracionDeRecoleccion.CAPACIDAD_MAXIMA_MOCHILA, getJugador());
 
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------

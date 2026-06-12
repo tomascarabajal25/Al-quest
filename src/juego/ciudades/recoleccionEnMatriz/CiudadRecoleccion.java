@@ -3,7 +3,7 @@ package juego.ciudades.recoleccionEnMatriz;
 import modelos.*;
 import juego.ciudades.recoleccionEnMatriz.ui.CartaVista;
 import utils.ValidacionesUtiles;
-import juego.Constantes;
+import juego.configuracion.ConfiguracionDeRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.CartaDesplazamientoVista;
 import juego.ciudades.recoleccionEnMatriz.ui.CartaPuntosVista;
 import juego.ciudades.recoleccionEnMatriz.ui.CartaVisionVista;
@@ -59,9 +59,9 @@ public class CiudadRecoleccion {
         setJugador(jugador);
         setElementos(maximoMochila);
 
-        setDesplazamiento(Constantes.DESPLAZAMIENTO_INICIAL);
-        setVisibilidad(Constantes.VISIBILIDAD_INICIAL);
-        setPuntos(Constantes.PUNTOS_INICIALES_PARTIDA);
+        setDesplazamiento(ConfiguracionDeRecoleccion.DESPLAZAMIENTO_INICIAL);
+        setVisibilidad(ConfiguracionDeRecoleccion.VISIBILIDAD_INICIAL);
+        setPuntos(ConfiguracionDeRecoleccion.PUNTOS_INICIALES_PARTIDA);
         iniciar();
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
@@ -317,10 +317,10 @@ public class CiudadRecoleccion {
      */
     private void sumarPuntosCarta(int[] posicionJugador) {
         if (posicionJugador[2] == 1) {
-            sumarPuntosVision(Constantes.PUNTAJE_VISIBILIDAD);
+            sumarPuntosVision(ConfiguracionDeRecoleccion.PUNTAJE_VISIBILIDAD);
         }
         if (posicionJugador[2] == 2) {
-            sumarPuntosDesplazamiento(Constantes.PUNTAJE_DESPLAZAMIENTO);
+            sumarPuntosDesplazamiento(ConfiguracionDeRecoleccion.PUNTAJE_DESPLAZAMIENTO);
         }
     }
 
@@ -328,7 +328,7 @@ public class CiudadRecoleccion {
      * Aumentar la vision del jugador
      */
     public void aumentarVision() {
-        this.visibilidad += Constantes.CANTIDAD_AUMENTO_VISIBILIDAD;
+        this.visibilidad += ConfiguracionDeRecoleccion.CANTIDAD_AUMENTO_VISIBILIDAD;
     }
 
     /**
@@ -348,7 +348,7 @@ public class CiudadRecoleccion {
      * Aumentar el desplazamiento del jugador
      */
     public void aumentardesplazamiento() {
-        this.desplazamiento += Constantes.CANTIDAD_AUMENTO_DESPLAZAMIENTO;
+        this.desplazamiento += ConfiguracionDeRecoleccion.CANTIDAD_AUMENTO_DESPLAZAMIENTO;
     }
 
     /**
@@ -368,7 +368,7 @@ public class CiudadRecoleccion {
      * Multiplicar puntos
      */
     public void aumentarPuntos() {
-        setPuntos(this.puntos * Constantes.CANTIDAD_AUMENTO_PUNTOS);
+        setPuntos(this.puntos * ConfiguracionDeRecoleccion.CANTIDAD_AUMENTO_PUNTOS);
     }
 
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
