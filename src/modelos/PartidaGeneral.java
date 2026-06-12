@@ -3,6 +3,7 @@ package modelos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -253,7 +254,9 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
                 puntajeTotal,
                 idCiudadActual,
                 mapaMundi.obtenerIdsCompletadas(),
-                mapaMundi.obtenerIdsAccesibles());
+                mapaMundi.obtenerIdsAccesibles(),
+                skinActual,
+                new Vector<>(skinsDesbloqueadas));
     }
 
     /**
@@ -269,6 +272,10 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
      *         esCiudadAccesible()).
      *       - ciudadActual pasa a apuntar al nodo cuyo id es
      *         datos.getIdCiudadActual(), si existe en el grafo.
+     *       - skinsDesbloqueadas incorpora todas las rutas guardadas en
+     *         datos.getSkinsDesbloqueadas() (si el guardado las incluye).
+     *       - skinActual pasa a ser datos.getSkinActual() (si el guardado
+     *         lo incluye).
      *
      * @param datos estado previamente guardado de la partida
      */
@@ -284,6 +291,22 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
         NodoCiudad nodoActual = mapaMundi.obtenerCiudad(datos.getIdCiudadActual());
         if (nodoActual != null) {
             this.ciudadActual = nodoActual;
+        }
+
+        // Restaura las skins desbloqueadas (si el guardado es de una versión
+        // anterior sin este campo, Gson lo deja en null y se conserva el
+        // estado inicial: solo la skin por defecto desbloqueada).
+        if (datos.getSkinsDesbloqueadas() != null) {
+            for (String ruta : datos.getSkinsDesbloqueadas()) {
+                if (!this.skinsDesbloqueadas.contains(ruta)) {
+                    this.skinsDesbloqueadas.add(ruta);
+                }
+            }
+        }
+
+        // Restaura la skin equipada (si existe en el guardado).
+        if (datos.getSkinActual() != null) {
+            this.skinActual = datos.getSkinActual();
         }
     }
     // ── Interacción con ciudades ──────────────────────────────────────────────
@@ -366,6 +389,7 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
      * POST: puntajeTotal >= costo (y skin no fue comprada antes):
      *                      -puntajeTotal -= costo
      *                      -rutaSkin se agrega a skinsDesbloqueadas
+     *                      -se persiste la sesión (GestorDeInicio.guardarSesion)
      *                      -return true
      *      En otro caso, return false, no modifica nada.
      * 
@@ -379,6 +403,7 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
         } 
         puntajeTotal -=costo;
         skinsDesbloqueadas.add(rutaSkin);
+        persistencia.GestorDeInicio.guardarSesion(this);
         return true;
     }
 
@@ -427,11 +452,15 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
      * PRE: rutaSkin no puede ser null
      * POST: skinActual queda actualizado. El cambio visual lo aplica TiendaSkins
      *                                     justo despues de este setter
+     *       Se persiste la sesión (GestorDeInicio.guardarSesion) para que el
+     *       cambio de skin sobreviva aunque se cierre el juego sin completar
+     *       otra ciudad.
      * @param rutaSkin ruta base del skin a equipar
      */
 
     public void setSkinActual(String rutaSkin) {
         this.skinActual = rutaSkin;
+        persistencia.GestorDeInicio.guardarSesion(this);
     }
 
 }

@@ -1,5 +1,4 @@
 import modelos.PartidaGeneral;
-import modelos.Jugador;
 import persistencia.GestorDeInicio;
 
 public class Main {

@@ -21,6 +21,8 @@ import java.util.Vector;
  *   - idCiudadActual ∈ [1, GrafoCiudades.MAX_CIUDADES]
  *   - idsCiudadesCompletadas != null
  *   - idsCiudadesDesbloqueadas != null
+ *   - skinActual != null
+ *   - skinsDesbloqueadas != null
  */
 public class DatosGuardado {
 
@@ -49,6 +51,12 @@ public class DatosGuardado {
      */
     private Vector<Integer> idsCiudadesDesbloqueadas;
 
+    /** Ruta base de la skin actualmente equipada por el jugador. */
+    private String skinActual;
+
+    /** Rutas base de todas las skins que el jugador ya desbloqueó/compró. */
+    private Vector<String> skinsDesbloqueadas;
+
     // ── Constructor ───────────────────────────────────────────────────────────
 
     /**
@@ -62,19 +70,25 @@ public class DatosGuardado {
      * @param idCiudadActual           ciudad en la que está parado el jugador
      * @param idsCiudadesCompletadas   ids de ciudades completadas
      * @param idsCiudadesDesbloqueadas ids de ciudades actualmente accesibles
+     * @param skinActual               ruta base de la skin equipada
+     * @param skinsDesbloqueadas       rutas base de las skins desbloqueadas
      */
     public DatosGuardado(
             String nombreJugador,
             int puntajeTotal,
             int idCiudadActual,
             Vector<Integer> idsCiudadesCompletadas,
-            Vector<Integer> idsCiudadesDesbloqueadas) {
+            Vector<Integer> idsCiudadesDesbloqueadas,
+            String skinActual,
+            Vector<String> skinsDesbloqueadas) {
 
         this.nombreJugador             = nombreJugador;
         this.puntajeTotal               = puntajeTotal;
         this.idCiudadActual             = idCiudadActual;
         this.idsCiudadesCompletadas     = idsCiudadesCompletadas;
         this.idsCiudadesDesbloqueadas   = idsCiudadesDesbloqueadas;
+        this.skinActual                 = skinActual;
+        this.skinsDesbloqueadas         = skinsDesbloqueadas;
     }
 
     // ── Getters ───────────────────────────────────────────────────────────────
@@ -104,6 +118,16 @@ public class DatosGuardado {
         return idsCiudadesDesbloqueadas;
     }
 
+    /** @return ruta base de la skin equipada al momento de guardar. */
+    public String getSkinActual() {
+        return skinActual;
+    }
+
+    /** @return rutas base de las skins desbloqueadas al momento de guardar. */
+    public Vector<String> getSkinsDesbloqueadas() {
+        return skinsDesbloqueadas;
+    }
+
     // ── Object overrides ──────────────────────────────────────────────────────
 
     @Override
@@ -119,7 +143,9 @@ public class DatosGuardado {
                 && idCiudadActual == otro.idCiudadActual
                 && Objects.equals(nombreJugador, otro.nombreJugador)
                 && Objects.equals(idsCiudadesCompletadas, otro.idsCiudadesCompletadas)
-                && Objects.equals(idsCiudadesDesbloqueadas, otro.idsCiudadesDesbloqueadas);
+                && Objects.equals(idsCiudadesDesbloqueadas, otro.idsCiudadesDesbloqueadas)
+                && Objects.equals(skinActual, otro.skinActual)
+                && Objects.equals(skinsDesbloqueadas, otro.skinsDesbloqueadas);
     }
 
     @Override
@@ -129,7 +155,9 @@ public class DatosGuardado {
                 puntajeTotal,
                 idCiudadActual,
                 idsCiudadesCompletadas,
-                idsCiudadesDesbloqueadas);
+                idsCiudadesDesbloqueadas,
+                skinActual,
+                skinsDesbloqueadas);
     }
 
     @Override
@@ -140,6 +168,8 @@ public class DatosGuardado {
                 + ", idCiudadActual=" + idCiudadActual
                 + ", idsCiudadesCompletadas=" + idsCiudadesCompletadas
                 + ", idsCiudadesDesbloqueadas=" + idsCiudadesDesbloqueadas
+                + ", skinActual='" + skinActual + '\''
+                + ", skinsDesbloqueadas=" + skinsDesbloqueadas
                 + '}';
     }
 }

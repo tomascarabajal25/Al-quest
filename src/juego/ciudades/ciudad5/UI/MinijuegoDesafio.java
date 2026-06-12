@@ -194,12 +194,7 @@ public class MinijuegoDesafio implements Minijuego {
         g2.setColor(Color.YELLOW);
         g2.drawString("\"" + palabraActual + "\"", panelX + 16, panelY + 62);
 
-        // Tiempos medidos
-        g2.setFont(new Font("Arial", Font.PLAIN, 14));
-        g2.setColor(new Color(100, 180, 255));
-        g2.drawString("Lista:  " + tiempoLista + " ns", panelX + 16, panelY + 92);
-        g2.setColor(new Color(180, 130, 255));
-        g2.drawString("Árbol:  " + tiempoArbol + " ns", panelX + 16, panelY + 112);
+        
 
         // Instrucción
         g2.setFont(new Font("Arial", Font.ITALIC, 13));
@@ -212,9 +207,19 @@ public class MinijuegoDesafio implements Minijuego {
             if (ultimaRespuestaCorrecta) {
                 g2.setColor(new Color(0, 230, 0));
                 g2.drawString("¡Correcto!", panelX + 330, panelY + 62);
+                g2.setFont(new Font("Arial", Font.PLAIN, 14));
+                g2.setColor(new Color(100, 180, 255));
+                g2.drawString("Lista:  " + tiempoLista + " ns", panelX + 16, panelY + 92);
+                g2.setColor(new Color(180, 130, 255));
+                g2.drawString("Árbol:  " + tiempoArbol + " ns", panelX + 16, panelY + 112);
             } else {
                 g2.setColor(new Color(230, 50, 50));
                 g2.drawString("Incorrecto. Era: " + respuestaCorrecta, panelX + 270, panelY + 62);
+                g2.setFont(new Font("Arial", Font.PLAIN, 14));
+                g2.setColor(new Color(100, 180, 255));
+                g2.drawString("Lista:  " + tiempoLista + " ns", panelX + 16, panelY + 92);
+                g2.setColor(new Color(180, 130, 255));
+                g2.drawString("Árbol:  " + tiempoArbol + " ns", panelX + 16, panelY + 112);
             }
         }
 
