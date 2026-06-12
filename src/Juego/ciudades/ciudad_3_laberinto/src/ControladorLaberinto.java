@@ -14,9 +14,9 @@ import javax.swing.Timer;
 public class ControladorLaberinto {
 
     // Determina la ruta de acceso para el laberinto, los sprites, y la respresentacion de la partida
-    private static final String RUTA_LABERINTO = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
-    private static  final String RUTA_SPRITES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
-    private static final String RUTA_IMAGENES = "src\\Juego\\ciudades\\ciudad_3_laberinto\\partidas\\laberinto";
+    private static final String RUTA_LABERINTO = "src\\juego\\ciudades\\ciudad_3_laberinto\\resources\\laberinto.txt";
+    private static  final String RUTA_SPRITES = "src\\juego\\ciudades\\ciudad_3_laberinto\\resources\\Sprites";
+    private static final String RUTA_IMAGENES = "src\\juego\\ciudades\\ciudad_3_laberinto\\partidas\\laberinto";
 
     // Timer de intervalo entre acciones
     private static final int INTERVALO_TIMER = 300;
