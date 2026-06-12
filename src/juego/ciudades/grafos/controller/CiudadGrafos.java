@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class CiudadGrafos {
+    private final PartidaGrafos partidaGrafos;
     private final GrafoFlujo modelo;
     private final VentanaGrafos ventana;
     private Timer timerAutoPlay;
@@ -16,11 +17,16 @@ public class CiudadGrafos {
     private List<?> pasosActuales;
     private int pasoActual;
     private boolean esFlujo;
+    private boolean ciudadCompletada;
+    private final SimulacionChecker simulacion;
 
-    public CiudadGrafos() {
+    public CiudadGrafos(PartidaGrafos partidaGrafos) {
+        this.partidaGrafos = partidaGrafos;
         this.modelo = new GrafoFlujo();
         this.ventana = new VentanaGrafos();
         this.pasoActual = -1;
+        this.ciudadCompletada = false;
+        this.simulacion = new SimulacionChecker(() -> completarCiudad());
         configurarListeners();
     }
 
@@ -34,6 +40,7 @@ public class CiudadGrafos {
 
         entrada.getBtnAgregarVertice().addActionListener(e -> agregarVertice());
         entrada.getBtnAgregarArista().addActionListener(e -> agregarArista());
+        entrada.getBtnCargarLista().addActionListener(e -> cargarListaAdyacencia());
         entrada.getBtnLimpiar().addActionListener(e -> limpiarTodo());
 
         alg.getBtnFlujoMaximo().addActionListener(e -> resolverFlujo());
@@ -79,11 +86,70 @@ public class CiudadGrafos {
         ventana.getPanelGrafo().setModelo(modelo);
     }
 
+    private void cargarListaAdyacencia() {
+        String texto = ventana.getPanelEntrada().getListaAdyacencia();
+        if (texto.isEmpty()) return;
+
+        String[] lineas = texto.split("\n");
+        int errores = 0;
+        int aristasCargadas = 0;
+
+        for (String linea : lineas) {
+            String limpia = linea.trim();
+            if (limpia.isEmpty()) continue;
+
+            limpia = limpia.replace("[", "").replace("]", "");
+            String[] partes = limpia.split(",");
+
+            if (partes.length != 3) {
+                errores++;
+                continue;
+            }
+
+            String origen = partes[0].trim();
+            String destino = partes[1].trim();
+            int peso;
+
+            try {
+                peso = Integer.parseInt(partes[2].trim());
+            } catch (NumberFormatException e) {
+                errores++;
+                continue;
+            }
+
+            if (origen.isEmpty() || destino.isEmpty() || peso <= 0) {
+                errores++;
+                continue;
+            }
+
+            if (!modelo.getGrafo().existeVertice(origen)) {
+                modelo.agregarVertice(origen);
+            }
+            if (!modelo.getGrafo().existeVertice(destino)) {
+                modelo.agregarVertice(destino);
+            }
+
+            modelo.agregarArista(origen, destino, peso);
+            aristasCargadas++;
+        }
+
+        ventana.getPanelEntrada().actualizarCombos(modelo.getVertices());
+        ventana.getPanelGrafo().setModelo(modelo);
+        ventana.getPanelAlgoritmo().setEstado("Construyendo grafo (" + modelo.getVertices().size() + " vertices)");
+
+        if (errores > 0) {
+            JOptionPane.showMessageDialog(ventana,
+                    errores + " linea(s) con formato incorrecto.\nUsa: [origen, destino, peso]",
+                    "Error de formato", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     private void limpiarTodo() {
         detenerAutoPlay();
         modelo.reset();
         pasosActuales = null;
         pasoActual = -1;
+        simulacion.reset();
 
         ventana.getPanelEntrada().actualizarCombos(modelo.getVertices());
         ventana.getPanelEntrada().limpiarCampos();
@@ -131,7 +197,6 @@ public class CiudadGrafos {
         ventana.getPanelResultado().agregarLinea("Flujo maximo = " + resultado.getFlujoMaximo());
 
         ventana.getPanelEntrada().setEnabled(false);
-        ventana.getPanelAlgoritmo().setAlgoritmosHabilitados(false);
         ventana.getPanelAlgoritmo().setNavegacionHabilitada(true);
         ventana.getPanelAlgoritmo().setEstado("Flujo maximo resuelto - Navega los pasos");
     }
@@ -186,7 +251,6 @@ public class CiudadGrafos {
         }
 
         ventana.getPanelEntrada().setEnabled(false);
-        ventana.getPanelAlgoritmo().setAlgoritmosHabilitados(false);
         ventana.getPanelAlgoritmo().setNavegacionHabilitada(true);
         ventana.getPanelAlgoritmo().setEstado("Camino minimo resuelto - Navega los pasos");
     }
@@ -199,6 +263,11 @@ public class CiudadGrafos {
         }
         if (pasoActual == pasosActuales.size() - 1) {
             mostrarResultadoFinal();
+            if (esFlujo) {
+                simulacion.simularFlujo();
+            } else {
+                simulacion.simularCamino();
+            }
         }
     }
 
@@ -262,11 +331,21 @@ public class CiudadGrafos {
         timerAutoPlay.start();
     }
 
-    private void detenerAutoPlay() {
+    public void detenerAutoPlay() {
         if (timerAutoPlay != null && timerAutoPlay.isRunning()) {
             timerAutoPlay.stop();
         }
         ventana.getPanelAlgoritmo().setAutoPlayActivo(false);
+    }
+
+    private void completarCiudad() {
+        if (ciudadCompletada) return;
+        ciudadCompletada = true;
+        detenerAutoPlay();
+        JOptionPane.showMessageDialog(ventana,
+                "¡Completaste la Ciudad de Grafos!\nPuntaje: 200",
+                "Ciudad Completada", JOptionPane.INFORMATION_MESSAGE);
+        partidaGrafos.finalizar();
     }
 
     public GrafoFlujo getModelo() {

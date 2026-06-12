@@ -14,20 +14,20 @@ public class PartidaGrafos extends Partida {
     @Override
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
-        ciudadGrafos = new CiudadGrafos();
+        ciudadGrafos = new CiudadGrafos(this);
         ciudadGrafos.iniciar();
-
-        ciudadGrafos.getVentana().addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                finalizar();
-            }
-        });
     }
 
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
-        setPuntaje(100);
+        setPuntaje(200);
+        if (ciudadGrafos != null) {
+            ciudadGrafos.detenerAutoPlay();
+            if (ciudadGrafos.getVentana() != null) {
+                ciudadGrafos.getVentana().dispose();
+            }
+        }
+        notificarFinalizacion();
     }
 }

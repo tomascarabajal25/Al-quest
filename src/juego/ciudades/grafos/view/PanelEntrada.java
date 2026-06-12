@@ -10,18 +10,21 @@ public class PanelEntrada extends JPanel {
     private JTextField txtCapacidad;
     private JComboBox<String> cbFuente;
     private JComboBox<String> cbSumidero;
+    private JTextArea txtListaAdyacencia;
     private JButton btnAgregarVertice;
     private JButton btnAgregarArista;
+    private JButton btnCargarLista;
     private JButton btnLimpiar;
 
     public PanelEntrada() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Construccion del Grafo"));
-        setPreferredSize(new Dimension(250, 0));
 
         add(crearSeccionVertice());
         add(Box.createVerticalStrut(10));
         add(crearSeccionArista());
+        add(Box.createVerticalStrut(10));
+        add(crearSeccionListaAdyacencia());
         add(Box.createVerticalStrut(10));
         add(crearSeccionFuenteSumidero());
         add(Box.createVerticalStrut(10));
@@ -29,9 +32,9 @@ public class PanelEntrada extends JPanel {
     }
 
     private JPanel crearSeccionVertice() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new GridLayout(1, 3, 5, 0));
         panel.setBorder(BorderFactory.createTitledBorder("Vertice"));
-        txtVertice = new JTextField(6);
+        txtVertice = new JTextField();
         btnAgregarVertice = new JButton("+ Vertice");
         panel.add(new JLabel("Nombre:"));
         panel.add(txtVertice);
@@ -44,16 +47,16 @@ public class PanelEntrada extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createTitledBorder("Arista"));
 
-        JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        txtOrigen = new JTextField(4);
-        txtDestino = new JTextField(4);
+        JPanel fila1 = new JPanel(new GridLayout(1, 4, 5, 0));
+        txtOrigen = new JTextField();
+        txtDestino = new JTextField();
         fila1.add(new JLabel("Origen:"));
         fila1.add(txtOrigen);
         fila1.add(new JLabel("Destino:"));
         fila1.add(txtDestino);
 
-        JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        txtCapacidad = new JTextField(4);
+        JPanel fila2 = new JPanel(new GridLayout(1, 3, 5, 0));
+        txtCapacidad = new JTextField();
         btnAgregarArista = new JButton("+ Arista");
         fila2.add(new JLabel("Capacidad:"));
         fila2.add(txtCapacidad);
@@ -61,6 +64,27 @@ public class PanelEntrada extends JPanel {
 
         panel.add(fila1);
         panel.add(fila2);
+        return panel;
+    }
+
+    private JPanel crearSeccionListaAdyacencia() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Lista de Adyacencia"));
+
+        JLabel lblFormato = new JLabel("Formato: [origen, destino, peso]  (una arista por linea)");
+        lblFormato.setFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        txtListaAdyacencia = new JTextArea(3, 20);
+        txtListaAdyacencia.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        JScrollPane scrollLista = new JScrollPane(txtListaAdyacencia);
+
+        btnCargarLista = new JButton("Cargar Lista");
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBoton.add(btnCargarLista);
+
+        panel.add(lblFormato, BorderLayout.NORTH);
+        panel.add(scrollLista, BorderLayout.CENTER);
+        panel.add(panelBoton, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -72,11 +96,11 @@ public class PanelEntrada extends JPanel {
         cbFuente = new JComboBox<>();
         cbSumidero = new JComboBox<>();
 
-        JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel fila1 = new JPanel(new GridLayout(1, 2, 5, 0));
         fila1.add(new JLabel("Fuente:"));
         fila1.add(cbFuente);
 
-        JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel fila2 = new JPanel(new GridLayout(1, 2, 5, 0));
         fila2.add(new JLabel("Sumidero:"));
         fila2.add(cbSumidero);
 
@@ -112,6 +136,7 @@ public class PanelEntrada extends JPanel {
     public String getDestino() { return txtDestino.getText().trim(); }
     public String getFuente() { return (String) cbFuente.getSelectedItem(); }
     public String getSumidero() { return (String) cbSumidero.getSelectedItem(); }
+    public String getListaAdyacencia() { return txtListaAdyacencia.getText().trim(); }
 
     public int getCapacidad() {
         try {
@@ -123,6 +148,7 @@ public class PanelEntrada extends JPanel {
 
     public JButton getBtnAgregarVertice() { return btnAgregarVertice; }
     public JButton getBtnAgregarArista() { return btnAgregarArista; }
+    public JButton getBtnCargarLista() { return btnCargarLista; }
     public JButton getBtnLimpiar() { return btnLimpiar; }
 
     public void limpiarCampos() {
@@ -130,6 +156,7 @@ public class PanelEntrada extends JPanel {
         txtOrigen.setText("");
         txtDestino.setText("");
         txtCapacidad.setText("");
+        txtListaAdyacencia.setText("");
     }
 
     public void setEnabled(boolean enabled) {
@@ -137,10 +164,9 @@ public class PanelEntrada extends JPanel {
         txtOrigen.setEnabled(enabled);
         txtDestino.setEnabled(enabled);
         txtCapacidad.setEnabled(enabled);
-        cbFuente.setEnabled(enabled);
-        cbSumidero.setEnabled(enabled);
+        txtListaAdyacencia.setEnabled(enabled);
         btnAgregarVertice.setEnabled(enabled);
         btnAgregarArista.setEnabled(enabled);
-        btnLimpiar.setEnabled(enabled);
+        btnCargarLista.setEnabled(enabled);
     }
 }

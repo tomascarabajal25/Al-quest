@@ -12,7 +12,7 @@ public class VentanaGrafos extends JFrame {
     public VentanaGrafos() {
         setTitle("Ciudad 7 - Grafos y Flujo");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1100, 750);
+        setSize(1150, 750);
         setLocationRelativeTo(null);
 
         panelGrafo = new PanelGrafo();
@@ -21,9 +21,13 @@ public class VentanaGrafos extends JFrame {
         panelResultado = new PanelResultado();
 
         JPanel panelDerecho = new JPanel(new BorderLayout());
-        panelDerecho.setPreferredSize(new Dimension(280, 0));
+        panelDerecho.setPreferredSize(new Dimension(320, 0));
         panelDerecho.add(panelEntrada, BorderLayout.NORTH);
         panelDerecho.add(panelAlgoritmo, BorderLayout.CENTER);
+
+        JScrollPane scrollDerecho = new JScrollPane(panelDerecho);
+        scrollDerecho.setBorder(null);
+        scrollDerecho.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         JPanel panelCentral = new JPanel(new BorderLayout());
         panelCentral.add(panelGrafo, BorderLayout.CENTER);
@@ -31,7 +35,7 @@ public class VentanaGrafos extends JFrame {
 
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(panelCentral, BorderLayout.CENTER);
-        getContentPane().add(panelDerecho, BorderLayout.EAST);
+        getContentPane().add(scrollDerecho, BorderLayout.EAST);
     }
 
     public PanelGrafo getPanelGrafo() { return panelGrafo; }

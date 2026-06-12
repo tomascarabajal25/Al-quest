@@ -43,9 +43,9 @@ public class PanelAlgoritmo extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createTitledBorder("Dijkstra - Camino Minimo"));
 
-        JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        txtOrigenCamino = new JTextField(4);
-        txtDestinoCamino = new JTextField(4);
+        JPanel fila1 = new JPanel(new GridLayout(1, 4, 5, 0));
+        txtOrigenCamino = new JTextField();
+        txtDestinoCamino = new JTextField();
         fila1.add(new JLabel("Origen:"));
         fila1.add(txtOrigenCamino);
         fila1.add(new JLabel("Destino:"));
