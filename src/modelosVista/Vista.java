@@ -238,6 +238,24 @@ public class Vista extends JPanel implements Runnable{
         ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
         setMinijuego(minijuego);
     }
+
+
+    //Para manejo de skins
+    /**
+     * Cambia la skin del jugador en vivo delegando a jugadorVista
+     * 
+     * pre: rutaSprites distinto de null, los 8 bmp tienen que existir en el classpath
+     *                                    patron: {ruta}_{direccion}_{num}.bmp
+     * post: el jugador renderiza con los nuevos sprites (en el proximo frame)
+     * 
+     * @param rutaSprites ruta de la nueva skin
+     */
+    public void cambiarSkinJugador(String rutaSprites) {
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+        jugadorVista.cambiarSkin(rutaSprites);
+    }
+
+
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------

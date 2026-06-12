@@ -1,6 +1,9 @@
 package modelos;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JFrame;
 
 import javax.swing.SwingUtilities;
@@ -72,6 +75,15 @@ public class PartidaGeneral extends Partida {
 
     /** Puntaje acumulado a lo largo de todas las ciudades completadas. */
     private int puntajeTotal;
+
+    /**
+     * Ruta de la skin que esta equipada actualmente en el juego.
+     * Lista de skins que el jugador ya compro 
+     */
+    private String skinActual;
+    private final List<String> skinsDesbloqueadas;
+
+
  
     
     // ── Constructor ───────────────────────────────────────────────────────────
@@ -87,6 +99,12 @@ public class PartidaGeneral extends Partida {
         super("Al-Quest — Mapa Mundial", jugador);
         this.mapaMundi    = new GrafoCiudades();
         this.puntajeTotal = 0;
+
+        //Manejo de skins, personaje nace con skin base desbloqueada
+        this.skinActual = RUTA_SPRITE_JUGADOR;
+        this.skinsDesbloqueadas = new ArrayList<>();
+        this.skinsDesbloqueadas.add(RUTA_SPRITE_JUGADOR);
+
         construirGrafo();
     }
 
@@ -185,7 +203,7 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
         vistaGlobal = new VistaGlobal(
             RUTA_MAPA_GLOBAL,
             getJugador(),
-            RUTA_SPRITE_JUGADOR,
+            skinActual,
             this
         );
 
@@ -291,6 +309,10 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
 
         ciudadActual = nodo;
 
+        //Para gestion de skins, propago la skin equipada a la sub partida antes de iniciar
+        //Con esto se soluciona el bug que al entrar a la ciudad se me volvia a la skin default
+        nodo.getPartidaAsociada().setRutaSprites(skinActual);
+
         // Regla de Oro: gestión limpia de hilos antes de lanzar sub-partida
         vistaGlobal.detenerHilo();
         ventanaGlobal.setVisible(false);
@@ -336,16 +358,80 @@ NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
         });
     }
 
+
+    //GESTION DE SKINS
+    /**
+     * Comprar una skin, descuenta el costo del puntaje
+     * pre: rutaSkin no puede ser null, costo >= 0
+     * POST: puntajeTotal >= costo (y skin no fue comprada antes):
+     *                      -puntajeTotal -= costo
+     *                      -rutaSkin se agrega a skinsDesbloqueadas
+     *                      -return true
+     *      En otro caso, return false, no modifica nada.
+     * 
+     * @param rutaSkin ruta base de la skin a comprar
+     * @param costo se descuenta de puntaje
+     * @return retorna true si compro
+     */
+    public boolean comprarSkin(String rutaSkin, int costo) {
+        if ((puntajeTotal < costo) || (skinsDesbloqueadas.contains(rutaSkin))) {
+            return false;
+        } 
+        puntajeTotal -=costo;
+        skinsDesbloqueadas.add(rutaSkin);
+        return true;
+    }
+
  
     
     // ── Getters ───────────────────────────────────────────────────────────────
 
     /** @return el grafo del mundo (solo lectura desde la vista). */
-    public GrafoCiudades getMapaMundi()      { return mapaMundi;    }
+    public GrafoCiudades getMapaMundi() {
+        return mapaMundi;
+    }
 
     /** @return puntaje total acumulado. */
-    public int getPuntajeTotal()             { return puntajeTotal; }
+    public int getPuntajeTotal(){ 
+        return puntajeTotal;
+    }
 
     /** @return ciudad activa (null si el jugador está en el mapa global). */
-    public NodoCiudad getCiudadActual()      { return ciudadActual; }
+    public NodoCiudad getCiudadActual(){
+        return ciudadActual; 
+    }
+
+
+    //Gestion de skins
+    /**
+     * @return ruta de la skin equipada en el momento
+     */
+    public String getSkinActual(){
+        return skinActual;
+    }
+
+    /**
+     * @return lista de rutas de skins desbloqueadas
+     */
+    public List<String> getSkinsDesbloqueadas() {
+        return skinsDesbloqueadas;
+    }
+
+
+
+
+    //SETTERS
+    //Por ahora, solamente lo estamos usando para gestion de skins
+    /**
+     * Cambia la skin activa registrada en el modelo
+     * PRE: rutaSkin no puede ser null
+     * POST: skinActual queda actualizado. El cambio visual lo aplica TiendaSkins
+     *                                     justo despues de este setter
+     * @param rutaSkin ruta base del skin a equipar
+     */
+
+    public void setSkinActual(String rutaSkin) {
+        this.skinActual = rutaSkin;
+    }
+
 }
