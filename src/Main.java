@@ -1,13 +1,15 @@
-
-
-
-import modelos.Jugador;
 import modelos.PartidaGeneral;
+import persistencia.GestorDeInicio;
 
 public class Main {
     public static void main(String[] args) {
-        Jugador jugador = new Jugador("Héroe");
-        PartidaGeneral partida = new PartidaGeneral(jugador);
-        partida.iniciar();
+        PartidaGeneral partidaGeneral = GestorDeInicio.iniciarSesion();
+
+        if (partidaGeneral == null) {
+            // El usuario canceló el login: cerrar la aplicación.
+            return;
+        }
+
+        partidaGeneral.iniciar();
     }
 }

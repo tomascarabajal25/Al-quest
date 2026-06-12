@@ -67,7 +67,7 @@ public class PartidaDeRecoleccion extends Partida {
     public void iniciar() {
         // En caso de usar estados: setEstado(EstadoDePartida.Iniciado);
 
-        // 1. CONFIGURACIÓN DINÁMICA MEDIANTE INTERFAZ GRÁFICA (Robustez exigida por la cátedra)
+        // 1. CONFIGURACIÓN DINÁMICA 
         try {
             int filas = pedirEnteroValido("Ingrese la cantidad de FILAS para la matriz:", 3, 20);
             int columnas = pedirEnteroValido("Ingrese la cantidad de COLUMNAS para la matriz:", 3, 20);
