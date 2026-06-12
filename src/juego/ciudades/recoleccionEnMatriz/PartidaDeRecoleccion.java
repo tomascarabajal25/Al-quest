@@ -105,10 +105,13 @@ public class PartidaDeRecoleccion extends Partida {
 
     @Override
     public void finalizar() {
-        int puntos = juego.finalizar();
-        this.setPuntaje( puntos);
-        
-        
+        int puntos = 0;
+
+        if (juego != null) {
+            puntos = juego.finalizar();
+        }
+        this.setPuntaje(puntos);
+
         if (vista != null) {
             vista.detenerHilo();
         }
@@ -117,6 +120,7 @@ public class PartidaDeRecoleccion extends Partida {
             ventana.dispose();
             ventana = null;
         }
+
         notificarFinalizacion();
     }
     
