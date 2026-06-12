@@ -69,7 +69,7 @@ public class PartidaDeRecoleccion extends Partida {
     @Override
     public void iniciar() {this.ultimoNivel = juego.getNivelActual();
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
-        this.vista = new Vista(obtenerMapaPorNivel(this.juego.getNivelActual()), getJugador(), 24, 21, "/assets/jugador/boy", key);
+        this.vista = new Vista(obtenerMapaPorNivel(this.juego.getNivelActual()), getJugador(), 24, 21, getRutaSprites(), key);
 
         this.ventana = new JFrame("Ciudad de Recolección");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
