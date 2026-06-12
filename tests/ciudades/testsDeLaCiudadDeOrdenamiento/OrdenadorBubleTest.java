@@ -1,4 +1,4 @@
-package ciudades.testsDeLaCiudadDeOrdenamiento;
+package tests.ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package ciudades.testsDeLaCiudadDeOrdenamiento;
+package tests.ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -6,30 +6,34 @@ import org.junit.jupiter.api.Test;
 import juego.ciudades.ordenamientos.Caja;
 
 public class CajaTest {
-	    @Test
-	    public void testCajaHeredaCorrectamenteYGuardaTamaño() {
-	        Caja caja = new Caja("Caja Mediana", 50);
-	        assertEquals("Caja Mediana", caja.getNombre());
-	        assertEquals(50, caja.getTamanio());
-	    }
 
-	    @Test
-	    public void testCajaEqualsPorTamaño() {
-	        Caja caja1 = new Caja("Caja A", 30);
-	        Caja caja2 = new Caja("Caja B", 30);
-	        Caja caja3 = new Caja("Caja C", 10);
+    @Test
+    public void testCajaHeredaCorrectamenteYGuardaTamaño() {
+        // 🌟 Se añade el parámetro 'colision' (false) requerido por el constructor
+        Caja caja = new Caja("Caja Mediana", 50, false);
+        assertEquals("Caja Mediana", caja.getNombre());
+        assertEquals(50, caja.getTamanio());
+    }
 
-	        assertEquals(caja1, caja2, "Cajas con mismo tamaño deben ser iguales");
-	        assertNotEquals(caja1, caja3, "Cajas con distinto tamaño no deben ser iguales");
-	    }
+    @Test
+    public void testCajaEqualsPorTamaño() {
+        // 🌟 Se añade el parámetro 'colision' (false) a todas las instancias
+        Caja caja1 = new Caja("Caja A", 30, false);
+        Caja caja2 = new Caja("Caja B", 30, false);
+        Caja caja3 = new Caja("Caja C", 10, false);
 
-	    @Test
-	    public void testCajaCompareTo() {
-	        Caja chica = new Caja("Chica", 10);
-	        Caja grande = new Caja("Grande", 100);
+        assertEquals(caja1, caja2, "Cajas con mismo tamaño deben ser iguales");
+        assertNotEquals(caja1, caja3, "Cajas con distinto tamaño no deben ser iguales");
+    }
 
-	        assertTrue(chica.compareTo(grande) < 0, "Chica debe ser menor que Grande");
-	        assertTrue(grande.compareTo(chica) > 0, "Grande debe ser mayor que Chica");
-	        assertEquals(0, chica.compareTo(new Caja("Otra", 10)), "Mismo tamaño debe dar 0");
-	    }
-	}
+    @Test
+    public void testCajaCompareTo() {
+        // 🌟 Se añade el parámetro 'colision' (false) a todas las instancias
+        Caja chica = new Caja("Chica", 10, false);
+        Caja grande = new Caja("Grande", 100, false);
+
+        assertTrue(chica.compareTo(grande) < 0, "Chica debe ser menor que Grande");
+        assertTrue(grande.compareTo(chica) > 0, "Grande debe ser mayor que Chica");
+        assertEquals(0, chica.compareTo(new Caja("Otra", 10, false)), "Mismo tamaño debe dar 0");
+    }
+}

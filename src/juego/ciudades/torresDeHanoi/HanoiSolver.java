@@ -63,7 +63,7 @@ public class HanoiSolver<T> {
      * @param auxiliar       pila utilizada como apoyo intermedio
      * @param destino        pila hacia la que se mueven los discos
      */
-    protected void resolverHanoi(
+    public void resolverHanoi(
             int cantidadDiscos,
             Pila<T> origen,
             Pila<T> auxiliar,
