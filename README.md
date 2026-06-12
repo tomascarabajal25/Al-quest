@@ -1,12 +1,12 @@
 # Al-Quest
 
-Trabajo práctico N°2 Algoritmos y com.aiquest.estructuras de datos cátedra Schmidt 1C2026
+Trabajo práctico N°2 Algoritmos y estructuras de datos cátedra Schmidt 1C2026
 
 ## Descripción
 
-Al-Quest es un com.aiquest.juego de aventura y desafíos donde vas a recorrer un mundo compuesto por distintas ciudades, cada una con una prueba única que deberás superar para avanzar.
+Al-Quest es un juego de aventura y desafíos donde vas a recorrer un mundo compuesto por distintas ciudades, cada una con una prueba única que deberás superar para avanzar.
 
-A lo largo del com.aiquest.juego, podrás moverte entre ciudades conectadas entre sí, explorando el mapa y desbloqueando nuevos caminos a medida que completes los desafíos. Cada ciudad propone una mecánica diferente: desde resolver acertijos y laberintos, hasta enfrentarte a combates por turnos o poner a prueba tu lógica con distintos problemas.
+A lo largo del juego, podrás moverte entre ciudades conectadas entre sí, explorando el mapa y desbloqueando nuevos caminos a medida que completes los desafíos. Cada ciudad propone una mecánica diferente: desde resolver acertijos y laberintos, hasta enfrentarte a combates por turnos o poner a prueba tu lógica con distintos problemas.
 
 El objetivo es completar todas las ciudades, superar cada desafío y obtener el mayor puntaje posible. A medida que avances, los retos se vuelven más complejos y van a exigir estrategia, pensamiento lógico y toma de decisiones.
 
