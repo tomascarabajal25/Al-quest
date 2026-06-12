@@ -73,7 +73,7 @@ public class PartidaBusqueda extends Partida {
             getJugador(),
             ConfiguracionBusqueda.PANTALLA_ANCHO_TILES,
             ConfiguracionBusqueda.PANTALLA_ALTO_TILES,
-            ConfiguracionBusqueda.RUTA_SPRITES_JUGADOR
+            getRutaSprites()
         );
 
         this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.getTamanio());

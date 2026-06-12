@@ -104,7 +104,7 @@ public class PartidaHanoi extends Partida {
                 getJugador(),
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_COLUMNA,
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_FILA,
-                ConfiguracionDeHanoi.RUTA_SPRITE_JUGADOR);
+                getRutaSprites());
 
         // 4. Creación del controlador del minijuego pasándole la vista ya creada
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);

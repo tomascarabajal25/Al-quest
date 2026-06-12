@@ -1,6 +1,7 @@
 package juego.ciudades.recoleccionEnMatriz.ui;
 
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import modelosVista.JugadorVista;
 import modelos.Minijuego;
 import modelosVista.Vista;
@@ -18,6 +19,7 @@ public class MinijuegoRecoleccion implements Minijuego {
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private CiudadRecoleccion juego = null;
+    private PartidaDeRecoleccion partida = null;
     private KeyHandlerRecoleccion key = null;
     private Runnable onFinalizadoCallback = null;
     private JFrame ventana = null;
@@ -33,20 +35,23 @@ public class MinijuegoRecoleccion implements Minijuego {
      * Constructor del TDA MinijuegoRecoleccion
      *
      * PRE:
-     * -Juego, vista, key y ventana no deben ser nulo
+     * -Juego, partida, vista, key y ventana no deben ser nulo
      *
      * @param juego: Juego asocioado a la UI
+     * @param partida: Partida dle juego
      * @param vista: Vista general de la UI
      * @param key: Manejador de controles propios del juego
      * @param ventana: Vista propia del juego
      */
-    public MinijuegoRecoleccion(CiudadRecoleccion juego, Vista vista, KeyHandlerRecoleccion key, JFrame ventana) {
+    public MinijuegoRecoleccion(CiudadRecoleccion juego, PartidaDeRecoleccion partida, Vista vista, KeyHandlerRecoleccion key, JFrame ventana) {
         ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+        ValidacionesUtiles.esDistintoDeNull(partida, "partida");
         ValidacionesUtiles.esDistintoDeNull(vista, "vista");
         ValidacionesUtiles.esDistintoDeNull(key, "key");
         ValidacionesUtiles.esDistintoDeNull(ventana, "ventana");
 
         setJuego(juego);
+        setPartida(partida);
         setKey(key);
         setVentana(ventana);
         inyectarCartas(vista);
@@ -162,16 +167,16 @@ public class MinijuegoRecoleccion implements Minijuego {
             }
 
             javax.swing.SwingUtilities.invokeLater(() -> {javax.swing.JOptionPane.showMessageDialog(
-                    ventana,
-           "¡Ciudad completada!\nPuntos obtenidos: " + juego.getPuntos(),
-               "Fin del juego",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                        ventana,
+                "¡Ciudad completada!\nPuntos obtenidos: " + juego.getPuntos(),
+                    "Fin del juego",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE
             );
             
-            
-            }
-         );
+        }
+        );
       }
+      this.partida.actualizar();
     }
 
     /**
@@ -423,6 +428,19 @@ public class MinijuegoRecoleccion implements Minijuego {
     private void setJuego(CiudadRecoleccion juego){
         ValidacionesUtiles.esDistintoDeNull(juego, "juego");
         this.juego = juego;
+    }
+
+    /**
+     * Setter del atributo partida
+     *
+     * PRE:
+     * -Partida no debe ser nulo
+     *
+     * @param partida: Objeto juego nuevo
+     */
+    private void setPartida(PartidaDeRecoleccion partida){
+        ValidacionesUtiles.esDistintoDeNull(partida, "partida");
+        this.partida = partida;
     }
 
     /**
