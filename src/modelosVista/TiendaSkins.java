@@ -60,7 +60,7 @@ public class TiendaSkins extends JDialog {
         { "doggy",    0 },   // skin 4  (BMP listos)
         { "goblin",    0 },   // skin 5  (BMP listos)
         { "king",    0 },   // skin 6  (BMP listos)
-        { "knight",    0 },   // skin 7  (BMP listos)
+        { "knight",    80 },   // skin 7  (BMP listos)
         { "roman",    0 },   // skin 9  (BMP listos)
         { "soldier",   0 },   // skin 10 (BMP listos)
         { "goku", 1000000}, //skin 11 (BMP NO listos, agregar si se encuentran imagenes)

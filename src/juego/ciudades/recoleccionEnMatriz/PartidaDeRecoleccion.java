@@ -120,32 +120,7 @@ public class PartidaDeRecoleccion extends Partida {
         notificarFinalizacion();
     }
     
-    /**
-     * Solicita un número entero mediante JOptionPane y lo valida de forma robusta.
-     */
-    private int pedirEnteroValido(String mensaje, int min, int max) {
-        while (true) {
-            String input = JOptionPane.showInputDialog(null, mensaje + " (" + min + " - " + max + "):", 
-                    "Configuración de Recolección", JOptionPane.QUESTION_MESSAGE);
-            
-            // Si cancela o cierra la ventana, lanzamos excepción para abortar el 'iniciar()' limpiamente
-            if (input == null) {
-                throw new SecurityException("Configuración cancelada por el usuario.");
-            }
-
-            try {
-                int valor = Integer.parseInt(input.trim());
-                if (valor >= min && valor <= max) {
-                    return valor;
-                }
-                JOptionPane.showMessageDialog(null, "Por favor, ingrese un número entre " + min + " y " + max + ".", 
-                        "Valor fuera de rango", JOptionPane.WARNING_MESSAGE);
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Entrada inválida. Debe ingresar un número entero.", 
-                        "Error de formato", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+    
 
     /**
      * Devuelve el mapa correspondiente al nivel
