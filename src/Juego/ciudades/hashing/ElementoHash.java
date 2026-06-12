@@ -1,6 +1,6 @@
-package juego.ciudades.hashing;
+package hashing;
 
-import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
 
 /**
