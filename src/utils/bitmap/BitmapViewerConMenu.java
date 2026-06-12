@@ -56,6 +56,28 @@ public class BitmapViewerConMenu {
         new BitmapViewerConMenu(Arrays.asList(bitmaps), actions);
     }
 
+    public void setMenuActions(List<MenuAction> actions) {
+        final List<MenuAction> finalActions = (actions == null) ? List.of() : actions;
+        this.menuActions = finalActions;
+        if (menuPanel == null) return;
+        SwingUtilities.invokeLater(() -> {
+            menuPanel.removeAll();
+            for (MenuAction action : finalActions) {
+                JButton btn = new JButton(action.getLabel());
+                btn.addActionListener(e -> action.getRunnable().run());
+                menuPanel.add(btn);
+            }
+            menuPanel.revalidate();
+            menuPanel.repaint();
+        });
+    }
+
+    public void close() {
+        if (frame != null) {
+            frame.dispose();
+        }
+    }
+
     /**
      * Crea la UI
      */
@@ -101,7 +123,9 @@ public class BitmapViewerConMenu {
         Component[] comps = panel.getComponents();
         for (int i = 0; i < comps.length; i++) {
             if (comps[i] instanceof JLabel lbl) {
-                lbl.setIcon(new ImageIcon(bitmaps.get(i).getImage()));
+                synchronized (bitmaps.get(i)) {
+                    lbl.setIcon(new ImageIcon(bitmaps.get(i).getImage()));
+                }
             }
         }
     }

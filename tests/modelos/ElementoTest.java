@@ -1,6 +1,6 @@
 package modelos;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
 import org.junit.jupiter.api.Test;
 

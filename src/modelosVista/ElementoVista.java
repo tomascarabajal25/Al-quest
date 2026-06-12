@@ -6,64 +6,80 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import Juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
+import utils.ValidacionesUtiles;
 
-/**
- * Representación visual de un Elemento de dominio en el mapa 2D.
- * Hereda de EntidadVista → tiene worldX, worldY, areaSolida.
- * Contiene un Elemento → tiene lógica de efecto.
- *
- * Subclases concretas:
- *   CartaVisionVista, CartaPuntosVista, CartaDesplazamientoVista
- */
 public abstract class ElementoVista extends EntidadVista {
-
-    private final Elemento elemento;
-    private BufferedImage  imagen;
-    private boolean        recogido = false;
-
-    // Nivel del mapa al que pertenece — Vista solo lo dibuja en ese nivel
-    private final int nivel;
-
+    //INTERFACES ----------------------------------------------------------------------------------------------
+    //ENUMERADOS ----------------------------------------------------------------------------------------------
+    //CONSTANTES ----------------------------------------------------------------------------------------------
+    //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
+    //ATRIBUTOS -----------------------------------------------------------------------------------------------
+    private Elemento elemento = null;
+    private BufferedImage  imagen = null;
+    private boolean recogido;
+    private int nivel;
+    //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
+    //CONSTRUCTORES -------------------------------------------------------------------------------------------
     /**
-     * pre:  elemento no nulo, col y fila >= 0, tamaño > 0, nivel >= 1
-     * post: crea el elemento visual en la posición col/fila del nivel dado
+     * Constructor del TDA ElementoVista
      *
-     * @param elemento    modelo de dominio
-     * @param col         columna del mapa (base 0)
-     * @param fila        fila del mapa (base 0)
-     * @param nivel       nivel del mapa al que pertenece (base 1)
-     * @param tamaño      tamaño de tile en px
-     * @param rutaImagen  ruta al .bmp, null si la subclase la carga después
+     * PRE:
+     * -Elemento no debe ser nulo
+     * -Col , fila y nivel deben ser mayores o iguales a cero
+     * -Tamanio debe ser mayor a cero
+     *
+     * POST:
+     * -Crea el elemento visual en la posición col/fila del nivel dado
+     *
+     * @param elemento: Modelo de dominio
+     * @param col: Columna del mapa (base 0)
+     * @param fil: Fila del mapa (base 0)
+     * @param nivel: Nivel del mapa al que pertenece (base 1)
+     * @param tamanio: Tamaño de tile en px
+     * @param rutaImagen: Ruta al .bmp, null si la subclase la carga después
      */
-    public ElementoVista(Elemento elemento, int col, int fila,
-                         int nivel, int tamaño, String rutaImagen) {
+    public ElementoVista(Elemento elemento, int col, int fil, int nivel, int tamanio, String rutaImagen) {
         super(elemento.getNombre());
-        this.elemento = elemento;
-        this.nivel    = nivel;
 
-        setWorldX(col * tamaño);
-        setWorldY(fila * tamaño);
-        setAreaSolida(new Rectangle(0, 0, tamaño, tamaño));
+        ValidacionesUtiles.esDistintoDeNull(elemento, "elemento");
+        ValidacionesUtiles.validarMayorOIgualACero(col, "col");
+        ValidacionesUtiles.validarMayorOIgualACero(fil, "fil");
+        ValidacionesUtiles.validarMayorOIgualACero(nivel, "nivel");
+        ValidacionesUtiles.validarMayorACero(tamanio, "tamanio");
+        ValidacionesUtiles.esDistintoDeNull(rutaImagen, "rutaImagen");
 
-        if (rutaImagen != null) cargarImagen(rutaImagen);
+        setElemento(elemento);
+        setNivel(nivel);
+        setRecogido(false);
+
+        setWorldX(col * tamanio);
+        setWorldY(fil * tamanio);
+        setAreaSolida(new Rectangle(0, 0, tamanio, tamanio));
+
+        cargarImagen(rutaImagen);
     }
-
-    // ── Draw ──────────────────────────────────────────────────────────────
-
+    //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
+    //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
+    //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
+    //METODOS DE CLASE ----------------------------------------------------------------------------------------
+    //METODOS GENERALES ---------------------------------------------------------------------------------------
+    //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     /**
-     * Dibuja el elemento sin filtro de nivel.
-     * Usar en ciudades con un solo nivel.
+     * Dibuja el elemento sin filtro de nivel. Usar en ciudades con un solo nivel.
+     *
+     * PRE:
+     * -G2 y vista no deben ser nulos
      */
     public void draw(Graphics2D g2, Vista vista) {
-        if (recogido)               return;
-        if (!estaEnPantalla(vista)) return;
-        if (imagen == null)         return;
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
 
-        g2.drawImage(imagen,
-                getScreenX(vista), getScreenY(vista),
-                vista.tamaño, vista.tamaño, null);
+        if (recogido || !estaEnPantalla(vista) || imagen == null){
+            return;
+        }
+        g2.drawImage(imagen, getScreenX(vista), getScreenY(vista), vista.getTamanio(), vista.getTamanio(), null);
     }
 
     /**
@@ -71,89 +87,229 @@ public abstract class ElementoVista extends EntidadVista {
      * Usar en ciudades multinivel; las subclases pueden sobreescribir
      * para agregar lógica de visibilidad propia.
      *
-     * @param nivelActual nivel donde está el jugador ahora
+     * PRE:
+     * -G2 y vista no deben ser nulos
+     * -NivelActual debe ser mayor o igual a cero
+     *
+     * @param g2:
+     * @param vista:
+     * @param nivelActual nivel actual del jugador
      */
     public void draw(Graphics2D g2, Vista vista, int nivelActual) {
-        if (nivelActual != nivel) return;
-        draw(g2, vista); // delega al draw base si el nivel coincide
+        ValidacionesUtiles.esDistintoDeNull(g2, "g2");
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+        ValidacionesUtiles.validarMayorOIgualACero(nivelActual, "nivelActual");
+
+        if (nivelActual != nivel){
+            return;
+        };
+        draw(g2, vista);
     }
-
-    // ── Helpers de pantalla ───────────────────────────────────────────────
-
-    protected boolean estaEnPantalla(Vista vista) {
-        int jx = vista.jugadorVista.getWorldX();
-        int jy = vista.jugadorVista.getWorldY();
-        int sx = vista.jugadorVista.getScreenX();
-        int sy = vista.jugadorVista.getScreenY();
-
-        return getWorldX() + vista.tamaño > jx - sx &&
-               getWorldX() - vista.tamaño < jx + sx &&
-               getWorldY() + vista.tamaño > jy - sy &&
-               getWorldY() - vista.tamaño < jy + sy;
-    }
-
-    protected int getScreenX(Vista vista) {
-        return getWorldX() - vista.jugadorVista.getWorldX()
-                           + vista.jugadorVista.getScreenX();
-    }
-
-    protected int getScreenY(Vista vista) {
-        return getWorldY() - vista.jugadorVista.getWorldY()
-                           + vista.jugadorVista.getScreenY();
-    }
-
-    // ── Colisión con jugador ──────────────────────────────────────────────
 
     /**
-     * post: true si el jugador está pisando este elemento y en el mismo nivel
+     * Verifica que el elemento dado este en la pantalla
+     *
+     * PRE:
+     * -Elemento no debe ser nulo
+     *
+     * @param vista: vista donde se verifica si esta el elemento
+     * @return: True si el elemento esta en la vista, false si no
+     */
+    protected boolean estaEnPantalla(Vista vista) {
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+
+        int jx = vista.getJugadorVista().getWorldX();
+        int jy = vista.getJugadorVista().getWorldY();
+        int sx = vista.getJugadorVista().getScreenX();
+        int sy = vista.getJugadorVista().getScreenY();
+
+        return getWorldX() + vista.getTamanio() > jx - sx &&
+               getWorldX() - vista.getTamanio() < jx + sx &&
+               getWorldY() + vista.getTamanio() > jy - sy &&
+               getWorldY() - vista.getTamanio() < jy + sy;
+    }
+
+    /**
+     * Verifica si un elemento/entidad esta colisionando con el jugador
+     *
+     * PRE:
+     * -Jugador no debe ser nulo
+     * -Nivel actual debe ser mayor o igual a cero
+     *
+     * @return: true si el jugador está pisando este elemento y en el mismo nivel
      */
     public boolean colisionaConJugador(JugadorVista jugador, int nivelActual) {
-        if (recogido || nivelActual != nivel) return false;
+        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
+        ValidacionesUtiles.validarMayorOIgualACero(nivelActual, "nivelActual");
+
+        if (recogido || nivelActual != nivel) {
+            return false;
+        }
 
         Rectangle elemRect = new Rectangle(
-            getWorldX() + getAreaSolida().x,
-            getWorldY() + getAreaSolida().y,
-            getAreaSolida().width,
-            getAreaSolida().height
+                getWorldX() + getAreaSolida().x,
+                getWorldY() + getAreaSolida().y,
+                getAreaSolida().width,
+                getAreaSolida().height
         );
         Rectangle jugRect = new Rectangle(
-            jugador.getWorldX() + jugador.getAreaSolida().x,
-            jugador.getWorldY() + jugador.getAreaSolida().y,
-            jugador.getAreaSolida().width,
-            jugador.getAreaSolida().height
+                jugador.getWorldX() + jugador.getAreaSolida().x,
+                jugador.getWorldY() + jugador.getAreaSolida().y,
+                jugador.getAreaSolida().width,
+                jugador.getAreaSolida().height
         );
         return elemRect.intersects(jugRect);
     }
 
-    // ── Recoger ───────────────────────────────────────────────────────────
-
     /**
      * Aplica el efecto del elemento al receptor y lo marca como recogido.
-     * pre: receptor no nulo
+     *
+     * PRE:
+     * -Jugador no nulo
      */
     public void recoger(CiudadRecoleccion juego) {
-        if (!recogido) {
+        ValidacionesUtiles.esDistintoDeNull(juego, "juego");
+
+        if (!this.recogido) {
             elemento.aplicarEfecto(juego);
-            recogido = true;
+            this.recogido = true;
         }
     }
 
-    // ── Imagen ────────────────────────────────────────────────────────────
-
+    /**
+     *
+     * @param ruta
+     */
     protected void cargarImagen(String ruta) {
         try {
-            imagen = ImageIO.read(getClass().getResourceAsStream(ruta));
+            this.imagen = ImageIO.read(getClass().getResourceAsStream(ruta));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("No se pudo cargar imagen: " + ruta);
-            imagen = null;
+            this.imagen = null;
         }
     }
+    //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
+    //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
+    //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
+    //GETTERS COMPLEJOS ---------------------------------------------------------------------------------------
+    //GETTERS SIMPLES -----------------------------------------------------------------------------------------
+    /**
+     * Devuelve las posiciones en X de la vista
+     *
+     * PRE:
+     * -Vista no debe ser nulo
+     *
+     * @param vista: Vista de la que se obtienen las posiciones en x
+     * @return
+     */
+    protected int getScreenX(Vista vista) {
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
 
-    // ── Getters ───────────────────────────────────────────────────────────
+        return getWorldX() - vista.getJugadorVista().getWorldX() + vista.getJugadorVista().getScreenX();
+    }
 
-    public Elemento      getElemento()           { return elemento; }
-    public int           getNivel()               { return nivel; }
-    public boolean       isRecogido()             { return recogido; }
-    public BufferedImage getImagen()              { return imagen; }
-    protected void       setImagen(BufferedImage img) { this.imagen = img; }
+    /**
+     * Devuelve las posiciones en Y de la vista
+     *
+     * PRE:
+     * -Vista no debe ser nulo
+     *
+     * @param vista: Vista de la que se obtienen las posiciones en x
+     * @return
+     */
+    protected int getScreenY(Vista vista) {
+        ValidacionesUtiles.esDistintoDeNull(vista, "vista");
+
+        return getWorldY() - vista.getJugadorVista().getWorldY() + vista.getJugadorVista().getScreenY();
+    }
+
+    /**
+     * Getter del atributo elemento
+     * @return: valor del atributo elemento
+     */
+    public Elemento getElemento() {
+        return this.elemento;
+    }
+
+    /**
+     * Getter del atributo imagen
+     * @return: Devuelve la imagen guardada en el atributo
+     */
+    public BufferedImage getImagen(){
+        return this.imagen;
+    }
+
+    /**
+     * Getter del atributo recogido
+     * @return: Devuelve el estado del atributo recogido
+     */
+    public boolean isRecogido(){
+        return this.recogido;
+    }
+
+    /**
+     * Getter del atributo nivel
+     * @return: Devuelve el valor del atributo nivel
+     */
+    public int getNivel(){
+        return this.nivel;
+    }
+
+
+    //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
+    //SETTERS SIMPLES -----------------------------------------------------------------------------------------
+
+    /**
+     * Setter del atributo elemento
+     *
+     * PRE
+     * -Elemento no debe ser nulo
+     *
+     * @param elemento: elemento a guardar en el atributo
+     */
+    private void setElemento(Elemento elemento){
+        ValidacionesUtiles.esDistintoDeNull(elemento, "elemento");
+        this.elemento = elemento;
+    }
+
+    /**
+     * Setter del atributo imagen
+     *
+     * PRE:
+     * -Img no debe ser nulo
+     *
+     * @param img: imagen a setear en el atributo imagen
+     */
+    protected void setImagen(BufferedImage img){
+        ValidacionesUtiles.esDistintoDeNull(img, "img");
+        this.imagen = img;
+    }
+
+    /**
+     * Setter del atributo recogido
+     *
+     * PRE:
+     * -Recogido no debe ser nulo
+     *
+     * @param recogido
+     */
+    private void setRecogido(boolean recogido){
+        ValidacionesUtiles.esDistintoDeNull(recogido, "recogido");
+        this.recogido = recogido;
+    }
+
+    /**
+     * Setter del atributo nivel
+     *
+     * PRE:
+     * -Nivel debe ser mayor o igual a cero
+     *
+     * @param nivel: Nivel del jugador
+     */
+    private void setNivel(int nivel){
+        ValidacionesUtiles.validarMayorOIgualACero(nivel, "nivel");
+        this.nivel = nivel;
+    }
+
+
 }

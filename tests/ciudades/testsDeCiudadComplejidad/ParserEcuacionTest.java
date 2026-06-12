@@ -1,7 +1,7 @@
 package ciudades.testsDeCiudadComplejidad;
 
-import Juego.ciudades.complejidad.EcuacionRecurrencia;
-import Juego.ciudades.complejidad.ParserEcuacion;
+import juego.ciudades.complejidad.EcuacionRecurrencia;
+import juego.ciudades.complejidad.ParserEcuacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

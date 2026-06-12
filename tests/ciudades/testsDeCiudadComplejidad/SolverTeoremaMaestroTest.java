@@ -1,8 +1,8 @@
 package ciudades.testsDeCiudadComplejidad;
 
-import Juego.ciudades.complejidad.EcuacionRecurrencia;
-import Juego.ciudades.complejidad.PasoTeoremaMaestro;
-import Juego.ciudades.complejidad.SolverTeoremaMaestro;
+import juego.ciudades.complejidad.EcuacionRecurrencia;
+import juego.ciudades.complejidad.PasoTeoremaMaestro;
+import juego.ciudades.complejidad.SolverTeoremaMaestro;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
