@@ -1,7 +1,8 @@
-package hashing;
+package juego.ciudades.hashing;
 
-import recoleccionEnMatriz.CiudadRecoleccion;
+import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Elemento;
+
 
 /**
  * importo CiudadRecoleccion porque el contrato heredado de Elemento

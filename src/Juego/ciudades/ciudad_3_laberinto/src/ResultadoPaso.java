@@ -1,4 +1,4 @@
-package ciudad_3_laberinto.src;
+package juego.ciudades.ciudad_3_laberinto.src;
 
 public enum ResultadoPaso {
 

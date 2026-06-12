@@ -9,6 +9,7 @@ import juego.ciudades.ordenamientos.PartidaOrdenamientos;
 import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import juego.ciudades.reinas.PartidaReinas;
 import juego.ciudades.ciudad5.PartidaBusqueda;
+import juego.ciudades.ciudad_3_laberinto.src.PartidaLaberinto;
 import juego.ciudades.complejidad.PartidaComplejidad;
 import juego.ciudades.hashing.PartidaHashing;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
@@ -111,6 +112,9 @@ public class PartidaGeneral extends Partida {
         NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas", 
         		new PartidaReinas(jugador));
         
+        NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto", 
+        		new PartidaLaberinto(jugador));
+        
         NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
                 new PartidaOrdenamientos("Ordenamiento", jugador));
         
@@ -128,6 +132,7 @@ public class PartidaGeneral extends Partida {
         
         mapaMundi.agregarCiudad(ciudad1);
         mapaMundi.agregarCiudad(ciudad2);
+        mapaMundi.agregarCiudad(ciudad3);
         mapaMundi.agregarCiudad(ciudad4);
         mapaMundi.agregarCiudad(ciudad5);
         mapaMundi.agregarCiudad(ciudad6);
@@ -136,7 +141,8 @@ public class PartidaGeneral extends Partida {
 
         
         mapaMundi.conectarCiudades(1, 2);
-        mapaMundi.conectarCiudades(2, 4);
+        mapaMundi.conectarCiudades(2, 3);
+        mapaMundi.conectarCiudades(3, 4);
         mapaMundi.conectarCiudades(4, 5);
         mapaMundi.conectarCiudades(5, 6);
         mapaMundi.conectarCiudades(6, 8);

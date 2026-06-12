@@ -1,12 +1,14 @@
-package ciudad_3_laberinto.src;
+package juego.ciudades.ciudad_3_laberinto.src;
 
-import ordenamientos.EstadoDePartida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Partida;
 import modelos.Jugador;
 
 public class PartidaLaberinto extends Partida {
 
-    /**
+    private ControladorLaberinto controlador;
+
+	/**
      * Crea el constructor de partida
      * Este se ocupara de ejecutar y finalizar la ciudad laberinto dentro del juego
      */
@@ -20,7 +22,7 @@ public class PartidaLaberinto extends Partida {
     @Override
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
-        new ControladorLaberinto(this);
+        this.controlador =new ControladorLaberinto(this);
     }
 
     /**
@@ -29,6 +31,12 @@ public class PartidaLaberinto extends Partida {
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
+        
+        if (this.controlador != null) {
+            this.controlador.cerrarVentana();
+            this.controlador = null; 
+        }
+        notificarFinalizacion();
     }
 
     public void finalizar(int puntaje) {

@@ -1,4 +1,4 @@
-package ciudad_3_laberinto.src;
+package juego.ciudades.ciudad_3_laberinto.src;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -195,5 +195,14 @@ public class ControladorLaberinto {
         ventana.getBotonPausar().setEnabled(false);
         ventana.getBotonPausar().setText("Pausar");
         ventana.getBotonResetear().setEnabled(false);
+    }
+
+    /**
+     * Cierra la ventana gráfica liberando los recursos.
+     */
+    public void cerrarVentana() {
+        if (this.ventana != null) {
+            this.ventana.dispose();
+        }
     }
 }
