@@ -164,7 +164,7 @@ public class CiudadRecoleccion {
      */
     public void ubicarElementosEnMapa() {
         this.mapa.ocuparCelda(this.elementos.obtener(1), 5, 5, 1);
-        this.mapa.ocuparCelda(this.elementos.obtener(2), 45, 25, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 38, 25, 2);
         this.mapa.ocuparCelda(this.elementos.obtener(3), 19, 40, 3);
     }
 
