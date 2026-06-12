@@ -1,4 +1,4 @@
-package juego.ciudades.torresDeHanoi;
+package juego.configuracion;
 
 /**
  * TDA ConfiguracionDeHanoi — constantes de configuración de la ciudad de

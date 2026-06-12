@@ -6,10 +6,10 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import juego.ciudades.torresDeHanoi.CiudadHanoi;
-import juego.ciudades.torresDeHanoi.ConfiguracionDeHanoi;
 import juego.ciudades.torresDeHanoi.EstadoHanoi;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
 import juego.ciudades.torresDeHanoi.Pila;
+import juego.configuracion.ConfiguracionDeHanoi;
 import modelos.Jugador;
 import modelos.Minijuego;
 import modelosVista.JugadorVista;

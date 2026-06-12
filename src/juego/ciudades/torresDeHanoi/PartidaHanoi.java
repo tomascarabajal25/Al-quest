@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.torresDeHanoi.UI.MinijuegoHanoi;
+import juego.configuracion.ConfiguracionDeHanoi;
 import modelos.Jugador;
 import modelos.Partida;
 import modelosVista.Vista;

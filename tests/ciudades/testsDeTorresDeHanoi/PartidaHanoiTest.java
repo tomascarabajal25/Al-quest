@@ -3,8 +3,8 @@ package tests.ciudades.testsDeTorresDeHanoi;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import juego.ciudades.torresDeHanoi.ConfiguracionDeHanoi;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
+import juego.configuracion.ConfiguracionDeHanoi;
 import juego.ciudades.torresDeHanoi.CiudadHanoi;
 import modelos.Jugador;
 

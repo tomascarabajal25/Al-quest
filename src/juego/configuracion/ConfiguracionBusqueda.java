@@ -1,4 +1,4 @@
-package juego.ciudades.ciudad5;
+package juego.configuracion;
 
 /**
  * Constantes de configuración para la Ciudad de Búsqueda (Ciudad 5).

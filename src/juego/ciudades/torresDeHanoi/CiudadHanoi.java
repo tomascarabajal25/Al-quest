@@ -1,6 +1,8 @@
 package juego.ciudades.torresDeHanoi;
 
 import java.util.Objects;
+
+import juego.configuracion.ConfiguracionDeHanoi;
 import utils.ValidacionesUtiles;
 
 /**

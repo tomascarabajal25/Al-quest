@@ -6,10 +6,10 @@ import java.awt.Graphics2D;
 import java.util.List;
 import java.util.Random;
 
-import juego.ciudades.ciudad5.ConfiguracionBusqueda;
 import juego.ciudades.ciudad5.ciudadBusqueda;
 import juego.ciudades.ciudad5.UI.PuertaDesafio.EstadoPuerta;
 import juego.ciudades.ciudad5.UI.PuertaDesafio.TipoPuerta;
+import juego.configuracion.ConfiguracionBusqueda;
 import modelos.Minijuego;
 import modelos.Mapa;
 import modelosVista.JugadorVista;
