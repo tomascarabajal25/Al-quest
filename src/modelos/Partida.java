@@ -2,7 +2,10 @@ package modelos;
 
 import java.util.Objects;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import ordenamientos.EstadoDePartida;
+
+import ordenamientos.EstadoDePartida;
+
 import utils.ValidacionesUtiles;
 
 public abstract class Partida {
@@ -21,7 +24,6 @@ public abstract class Partida {
 		setPuntaje(0);
 		setEstado(EstadoDePartida.Creado);
 	}
-	//METODOS DE CLASES-------------------------------------------------------------
 	//METODOS GENERALES-------------------------------------------------------------
 	
 	@Override
