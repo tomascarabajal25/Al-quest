@@ -36,9 +36,9 @@ public class Constantes {
     // CONFIGURACIONES DE CIUDAD RECOLECCION
     // --- MAPA ---
     /** Filas del mapa */
-    public static final int FILAS_MAPA = 20;
+    public static final int FILAS_MAPA = 50;
     /** Columnas del mapa */
-    public static final int COLUMNAS_MAPA = 35;
+    public static final int COLUMNAS_MAPA = 50;
     /** Niveles del mapa */
     public static final int NIVELES_MAPA = 3;
     // --- JUGADOR

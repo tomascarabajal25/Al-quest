@@ -29,6 +29,7 @@ public class CiudadRecoleccion {
     private int desplazamiento;
     private int visibilidad;
     private int puntos;
+    private int nivelActual;
     private String ultimoMensaje = null;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -162,9 +163,9 @@ public class CiudadRecoleccion {
      *   - Carta 3 (nivel 3, si existe): fila ≈ 25% del alto, col ≈ 25% del ancho
      */
     public void ubicarElementosEnMapa() {
-        this.mapa.ocuparCelda(this.elementos.obtener(1), 13, 15, 1);
-        this.mapa.ocuparCelda(this.elementos.obtener(2), 17, 30, 2);
-        this.mapa.ocuparCelda(this.elementos.obtener(3), 18, 4, 3);
+        this.mapa.ocuparCelda(this.elementos.obtener(1), 5, 5, 1);
+        this.mapa.ocuparCelda(this.elementos.obtener(2), 45, 25, 2);
+        this.mapa.ocuparCelda(this.elementos.obtener(3), 19, 40, 3);
     }
 
     /**
@@ -175,6 +176,7 @@ public class CiudadRecoleccion {
      */
     public void ubicarJugadorEnMapa(int fila, int columna, int nivel) {
         ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+        this.nivelActual = nivel;
         this.mapa.ocuparCelda(this.jugador, fila, columna, nivel);
     }
 
@@ -215,6 +217,7 @@ public class CiudadRecoleccion {
         nuevaColumnaJugador = Math.max(1, Math.min(nuevaColumnaJugador, nivelActual.getAlto()));
 
         moverJugadorEnMapa(nuevaFilaJugador, nuevaColumnaJugador, posicionJugador[2]);
+        this.nivelActual = posicionJugador[2];
         verificarCartasVecinas();
     }
 
@@ -248,6 +251,22 @@ public class CiudadRecoleccion {
         ubicarJugadorEnMapa(fila, columna, nivel);
     }
 
+    /**
+     * Sube de nivel al jugador
+     */
+    private void avanzarNivel() {
+        if (this.nivelActual < this.mapa.getNiveles()) {
+            this.nivelActual++;
+
+            int[] spawn = getPosicionSpawnSiguienteNivel();
+            moverJugadorEnMapa(
+                    spawn[0],
+                    spawn[1],
+                    this.nivelActual
+            );
+        }
+    }
+
     public void recogerCarta() {
         if (this.cartaDisponible == null) return;
 
@@ -265,7 +284,7 @@ public class CiudadRecoleccion {
         validarMochila();
 
         if (posicionJugador[2] < this.mapa.getNiveles()) {
-            moverJugadorEnMapa(1, 1, posicionJugador[2] + 1);
+            avanzarNivel();
         }
 
         this.cartaDisponible = null;
@@ -370,7 +389,7 @@ public class CiudadRecoleccion {
                 Celda<?> celda = adyacentes.obtener(i).obtener(j);
                 if (celda != null && celda.getContenido() instanceof Elemento) {
                     this.cartaDisponible = (Elemento) celda.getContenido();
-                    return; // con encontrar una alcanza
+                    return;
                 }
             }
         }
@@ -511,6 +530,15 @@ public class CiudadRecoleccion {
      */
     public int[] getPosicionSpawnSiguienteNivel() {
         return new int[]{1, 1}; // fila, columna del spawn
+    }
+
+    /**
+     * Getter del atributo nivelActual
+     * @return: Devuelve el valor del atributo
+     * @return
+     */
+    public int getNivelActual() {
+        return this.nivelActual;
     }
 
 

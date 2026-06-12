@@ -17,6 +17,7 @@ public class PartidaDeRecoleccion extends Partida {
     private CiudadRecoleccion juego = null;
     private Vista vista;
     private JFrame ventana;
+    private int ultimoNivel;
 
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
@@ -66,9 +67,9 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
-    public void iniciar() {
+    public void iniciar() {this.ultimoNivel = juego.getNivelActual();
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
-        this.vista = new Vista("/maps/recoleccion/world_recoleccion_1.txt", getJugador(), 24, 21, "/assets/jugador/boy", key);
+        this.vista = new Vista(obtenerMapaPorNivel(this.juego.getNivelActual()), getJugador(), 24, 21, "/assets/jugador/boy", key);
 
         this.ventana = new JFrame("Ciudad de Recolección");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -78,11 +79,24 @@ public class PartidaDeRecoleccion extends Partida {
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
 
-        MinijuegoRecoleccion minijuego = new MinijuegoRecoleccion(juego, vista, key, ventana);
+        MinijuegoRecoleccion minijuego = new MinijuegoRecoleccion(juego, this, vista, key, ventana);
         vista.establecerMinijuego(minijuego);
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
         vista.startGameThread();
+    }
+
+    /**
+     * Actualiza la vista del juego
+     */
+    public void actualizar() {
+        int nivelActual = juego.getNivelActual();
+
+        if (nivelActual != ultimoNivel) {
+            ultimoNivel = nivelActual;
+
+            vista.cargarMapa(obtenerMapaPorNivel(nivelActual));
+        }
     }
 
     @Override
@@ -105,7 +119,6 @@ public class PartidaDeRecoleccion extends Partida {
 
         notificarFinalizacion();
     }
-    
     
     /**
      * Solicita un número entero mediante JOptionPane y lo valida de forma robusta.
@@ -132,6 +145,26 @@ public class PartidaDeRecoleccion extends Partida {
                         "Error de formato", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    /**
+     * Devuelve el mapa correspondiente al nivel
+     *
+     * PRE:
+     * -Nivel debe ser mayor a cero
+     *
+     * @param nivel
+     * @return
+     */
+    private String obtenerMapaPorNivel(int nivel) {
+        ValidacionesUtiles.validarMayorACero(nivel, "nivel");
+
+        return switch (nivel) {
+            case 1 -> "/maps/recoleccion/world_recoleccion_1.txt";
+            case 2 -> "/maps/recoleccion/world_recoleccion_2.txt";
+            case 3 -> "/maps/recoleccion/world_recoleccion_3.txt";
+            default -> "/maps/recoleccion/world_recoleccion_1.txt";
+        };
     }
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
