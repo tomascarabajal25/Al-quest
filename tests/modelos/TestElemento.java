@@ -1,12 +1,11 @@
 package modelos;
 
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
-import modelos.Elemento;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ElementoTest {
+class TestElemento {
 
     /**
      * Implementación mínima de Elemento

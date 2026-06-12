@@ -3,12 +3,9 @@ package modelos;
 import estructuras.vector.Vector;
 import org.junit.jupiter.api.Test;
 
-import modelos.Celda;
-import modelos.Mapa;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class MapaTest {
+class TestMapa {
 
     @Test
     void constructorMapaCorrecto() {

@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeTorresDeHanoi;
+package ciudades.testsDeTorresDeHanoi;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import juego.ciudades.torresDeHanoi.CiudadHanoi;
 import juego.ciudades.torresDeHanoi.PartidaDeHanoi;
-import modelos.Jugador; // Asegurate de importar tu clase Jugador correcta
+import modelos.Jugador;
 
 
 public class JuegoHanoiTest {
