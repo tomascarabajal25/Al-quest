@@ -31,7 +31,7 @@ public class GestorArchivosJSON {
     // ── Constantes ────────────────────────────────────────────────────────────
 
     /** Carpeta relativa donde se almacenan los archivos de guardado. */
-    private static final String CARPETA_GUARDADOS = "saves/";
+    private static final String CARPETA_GUARDADOS = obtenerCarpetaGuardados();
 
     /** Extensión usada para los archivos de guardado. */
     private static final String EXTENSION_GUARDADO = ".json";
@@ -50,7 +50,36 @@ public class GestorArchivosJSON {
     private GestorArchivosJSON() {
     }
 
-    // ── Métodos de clase ──────────────────────────────────────────────────────
+    /**
+     * Devuelve la ruta donde se creara la carpeta saves
+     * @return: String path
+     */
+    private static String obtenerCarpetaGuardados() {
+        try {
+            Path dirClases = Paths.get(
+                    GestorArchivosJSON.class
+                            .getProtectionDomain()
+                            .getCodeSource()
+                            .getLocation()
+                            .toURI()
+            );
+
+            // Sube hasta encontrar un directorio que CONTENGA la carpeta "Al-quest"
+            Path actual = dirClases;
+            while (actual != null) {
+                Path candidato = actual.resolve("Al-quest/saves");
+                if (Files.exists(candidato) || Files.exists(actual.resolve("Al-quest"))) {
+                    return candidato.toString() + "/";
+                }
+                actual = actual.getParent();
+            }
+
+        } catch (Exception e) {
+            System.out.println("No se pudo determinar la ruta de guardado: " + e.getMessage());
+        }
+
+        return "saves/";
+    }
 
     /**
      * Guarda el estado de la partida en un archivo JSON.
