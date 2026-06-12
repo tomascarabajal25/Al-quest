@@ -168,7 +168,10 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
     }
 
     // --- Métodos que no pediste explícitamente pero exige List<T> ---
-    @Override public boolean contains(Object o) { return indexOf(o) >= 0; }
+    @Override public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+    
     @Override public int indexOf(Object o) {
         int i = 0;
         for (T elem : this) {
@@ -177,6 +180,7 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
         }
         return -1;
     }
+
     @Override public int lastIndexOf(Object o) {
         int i = tamanio - 1;
         NodoDoblementeEnlazado<T> actual = ultimo;
@@ -187,23 +191,65 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
         }
         return -1;
     }
-    @Override public Object[] toArray() { Object[] arr = new Object[tamanio]; int i=0; for(T e: this) arr[i++] = e; return arr; }
+
+    @Override public Object[] toArray() {
+        Object[] arr = new Object[tamanio];
+        int i=0; for(T e: this) arr[i++] = e; return arr;
+    }
+
     @Override @SuppressWarnings("unchecked")
     public <E> E[] toArray(E[] a) {
         if (a.length < tamanio) a = (E[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), tamanio);
         int i=0; for(T e: this) a[i++] = (E)e;
         if (a.length > tamanio) a[tamanio] = null;
+
         return a;
     }
-    @Override public boolean addAll(Collection<? extends T> c) { boolean mod=false; for(T e: c) {add(e); mod=true;} return mod; }
-    @Override public boolean addAll(int index, Collection<? extends T> c) { int i=index; boolean mod=false; for(T e:c){ add(i++,e); mod=true;} return mod; }
-    @Override public boolean removeAll(Collection<?> c) { boolean mod=false; for(Object o:c) while(remove(o)) mod=true; return mod; }
-    @Override public boolean retainAll(Collection<?> c) { boolean mod=false; Iterator<T> it=iterator(); while(it.hasNext()){ if(!c.contains(it.next())){it.remove(); mod=true;}} return mod; }
+
+    @Override public boolean addAll(Collection<? extends T> c) {
+        boolean mod=false;
+        for(T e: c) {add(e); mod=true;}
+        return mod;
+    }
+
+    @Override public boolean addAll(int index, Collection<? extends T> c) {
+        int i=index;
+        boolean mod=false;
+        for(T e:c){
+            add(i++,e);
+            mod=true;
+        }
+        return mod;
+    }
+
+    @Override public boolean removeAll(Collection<?> c) {
+        boolean mod=false;
+        for(Object o:c)
+            while(remove(o)) mod=true;
+
+        return mod;
+    }
+
+    @Override public boolean retainAll(Collection<?> c) {
+        boolean mod=false;
+        Iterator<T> it=iterator();
+
+        while(it.hasNext()){
+            if(!c.contains(it.next())){
+                it.remove(); mod=true;}
+            }
+
+            return mod;
+        }
+
     @Override public List<T> subList(int fromIndex, int toIndex) { 
         if(fromIndex<0||toIndex>tamanio||fromIndex>toIndex) throw new IndexOutOfBoundsException();
         ListaDoblementeEnlazada<T> sub = new ListaDoblementeEnlazada<>();
         NodoDoblementeEnlazado<T> actual = getNode(fromIndex);
-        for(int i=fromIndex;i<toIndex;i++){ sub.add(actual.getDato()); actual=actual.getSiguiente(); }
+        for(int i=fromIndex;i<toIndex;i++){
+            sub.add(actual.getDato());
+            actual=actual.getSiguiente();
+        }
         return sub;
     }
 
@@ -233,7 +279,9 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
                 return dato;
             }
 
-            public boolean hasPrevious() { return (actual != null && actual.getAnterior() != null) || (actual == null && ultimo != null); }
+            public boolean hasPrevious() {
+                return (actual != null && actual.getAnterior() != null) || (actual == null && ultimo != null);
+            }
 
             public T previous() {
                 if (!hasPrevious()) throw new NoSuchElementException();
@@ -248,8 +296,13 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
                 return actual.getDato();
             }
 
-            public int nextIndex() { return index; }
-            public int previousIndex() { return index - 1; }
+            public int nextIndex() {
+                return index;
+            }
+
+            public int previousIndex() {
+                return index - 1;
+            }
 
             public void remove() {
                 if (ultimoRetornado == null) throw new IllegalStateException();
@@ -282,14 +335,17 @@ public class ListaDoblementeEnlazada<T> implements List<T> {
 
 	    if (primero == null) { // lista vacía
 	        primero = ultimo = nuevo;
+
 	    } else if (cmp.compareTo(primero.getDato()) <= 0) { // insertar al inicio
 	        nuevo.setSiguiente(primero);
 	        primero.setAnterior(nuevo);
 	        primero = nuevo;
+
 	    } else if (cmp.compareTo(ultimo.getDato()) >= 0) { // insertar al final
 	        ultimo.setSiguiente(nuevo);
 	        nuevo.setAnterior(ultimo);
 	        ultimo = nuevo;
+
 	    } else { // insertar en el medio
 	        NodoDoblementeEnlazado<T> actual = primero;
 	        while (actual != null && cmp.compareTo(actual.getDato()) > 0) {
