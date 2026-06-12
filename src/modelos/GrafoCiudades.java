@@ -124,13 +124,20 @@ public class GrafoCiudades {
             return false; // ciudad inexistente → inaccesible
         }
 
+        // si la ciudad es la unica en el juego, es jugable
+        // ya verificamos que esta en la lista de nodos
+        if (nodos.size() == 1) {
+            return true;
+        }
+
         // Recorrer todos los nodos y buscar alguno completado que apunte a candidata
         for (NodoCiudad nodo : nodos.values()) {
             if (nodo.isCompletada() && nodo.getAdyacentes().contains(candidata)) {
                 return true;
             }
         }
-        return false;
+
+	    return false;
     }
 
     /**

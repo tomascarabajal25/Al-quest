@@ -132,6 +132,20 @@ public class ManagerBatallaTest {
 	}
 
 	@Test
+	public void testGenerarEnemigosNoTiposRepetidos() {
+		for (int d = 1; d <= 3; d++) {
+			for (int i = 0; i < 50; i++) {
+				List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(d);
+				java.util.Set<TipoEnemigo> tiposVistos = new java.util.HashSet<>();
+				for (Enemigo e : enemigos) {
+					assertTrue(tiposVistos.add(e.getTipo()),
+							"Tipo repetido: " + e.getTipo() + " en dificultad " + d);
+				}
+			}
+		}
+	}
+
+	@Test
 	public void testGenerarEnemigosTodosVivosAlInicio() {
 		for (int d = 1; d <= 3; d++) {
 			List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(d);

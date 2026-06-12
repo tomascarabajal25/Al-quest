@@ -1,8 +1,8 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 public class Duende extends Enemy {
 	public Duende() {
-		super("DUENDE", 70, 30, 25, 85, "/com/aiquest/juego/ciudades/batalla/view/sprites/duende.png");
+		super("DUENDE", 70, 30, 25, 85, "/juego/ciudades/batalla/view/sprites/duende.png");
 	}
 
 	@Override

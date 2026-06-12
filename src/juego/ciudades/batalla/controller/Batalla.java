@@ -20,6 +20,9 @@ public class Batalla {
 		this.dificultad = dificultad;
 	}
 
+	private static final long ACTION_DELAY_MS = 900;
+	private static final long TURN_END_DELAY_MS = 600;
+
 	public boolean empezar() {
 		Combatiente heroe = turnos.peek();
 
@@ -28,18 +31,12 @@ public class Batalla {
 				heroe.estaVivo() &&
 				!enemigos.isEmpty()
 		) {
-			System.out.println("Comenzando batalla " + heroe);
 			Combatiente actual = turnos.remove();
-			System.out.println("Actualizando batalla " + actual);
 
 			if (!actual.estaVivo()) {
-				System.out.println("Eliminando de batalla " + actual);
 				enemigos.remove(actual);
 				continue;
 			}
-
-			System.out.println("Mostrando estado de " + actual);
-			ui.actualizarEstado("Turno de " + actual.getNombre(), actual);
 
 			Pila<Accion> acciones;
 			try {
@@ -51,11 +48,50 @@ public class Batalla {
 				break;
 			}
 
-			if (acciones != null) { ManagerBatalla.ejecutarAcciones(acciones); }
+			if (acciones != null && !acciones.isEmpty()) {
+				List<Accion> lista = new java.util.ArrayList<>();
+				while (!acciones.isEmpty()) {
+					lista.add(acciones.pop());
+				}
+
+				for (int i = 0; i < lista.size(); i++) {
+					Accion a = lista.get(i);
+					a.ejecutar();
+
+					String msg;
+					if (a instanceof juego.ciudades.batalla.model.acciones.Atacar) {
+						msg = a.getCombatiente().getNombre() + " atacó a " + a.getObjetivo().getNombre() + "!";
+					} else {
+						msg = a.getCombatiente().getNombre() + " usó " + a.getTipo().name().toLowerCase() + "!";
+					}
+
+					ui.actualizarEstado(msg, actual);
+
+					enemigos.removeIf(e -> !e.estaVivo());
+
+					try {
+						Thread.sleep(ACTION_DELAY_MS);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						break;
+					}
+				}
+			} else {
+				ui.actualizarEstado(null, actual);
+			}
+
+			enemigos.removeIf(e -> !e.estaVivo());
+
+			if (!enemigos.isEmpty() && heroe.estaVivo()) {
+				try {
+					Thread.sleep(TURN_END_DELAY_MS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					break;
+				}
+			}
 
 			turnos.offer(actual);
-
-			ui.actualizarEstado(null, actual);
 		}
 		return heroe != null && heroe.estaVivo();
 	}

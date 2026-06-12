@@ -1,9 +1,9 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 public class Ninja extends Enemy {
 	public Ninja() {
 		// Name, HP, Atk, Def, Spd, SpritePath
-		super("NINJA", 80, 45, 20, 95, "/com/aiquest/juego/ciudades/batalla/view/sprites/ninja.png");
+		super("NINJA", 80, 45, 20, 95, "/juego/ciudades/batalla/view/sprites/ninja.png");
 	}
 
 	@Override

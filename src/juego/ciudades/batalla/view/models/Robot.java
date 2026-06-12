@@ -1,10 +1,10 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 public class Robot extends Enemy {
 	private boolean isCharged = false;
 
 	public Robot() {
-		super("ROBOT", 120, 50, 60, 35, "/com/aiquest/juego/ciudades/batalla/view/sprites/robot.png");
+		super("ROBOT", 120, 50, 60, 35, "/juego/ciudades/batalla/view/sprites/robot.png");
 	}
 
 	@Override

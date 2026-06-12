@@ -1,4 +1,4 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 import java.util.Random;
 
@@ -6,7 +6,7 @@ public class Bufon extends Enemy {
 	private Random random = new Random();
 
 	public Bufon() {
-		super("BUFON", 95, 40, 35, 75, "/com/aiquest/juego/ciudades/batalla/view/sprites/bufon.png");
+		super("BUFON", 95, 40, 35, 75, "/juego/ciudades/batalla/view/sprites/bufon.png");
 	}
 
 	@Override

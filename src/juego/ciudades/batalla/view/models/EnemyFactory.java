@@ -1,7 +1,6 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 import juego.ciudades.batalla.model.Enemigo;
-import juego.ciudades.batalla.model.TipoEnemigo;
 
 public class EnemyFactory {
 

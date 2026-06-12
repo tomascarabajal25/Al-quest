@@ -1,4 +1,4 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -43,11 +43,10 @@ public abstract class Enemy {
 	}
 
 	// Nearest-neighbor scaling rendering for sharp pixel art
-	public void draw(Graphics2D g2d, int x, int y, int scale) {
+	public void draw(Graphics2D g2d, int x, int y, int size) {
 		if (sprite != null) {
 			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-			int scaledSize = 64 * scale;
-			g2d.drawImage(sprite, x, y, scaledSize, scaledSize, null);
+			g2d.drawImage(sprite, x, y, size, size, null);
 		}
 	}
 

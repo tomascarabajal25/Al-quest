@@ -1,10 +1,10 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 public class Caballero extends Enemy {
 	private boolean ironDefenseActive = false;
 
 	public Caballero() {
-		super("CABALLERO", 160, 35, 80, 25, "/com/aiquest/juego/ciudades/batalla/view/sprites/caballero.png");
+		super("CABALLERO", 160, 35, 80, 25, "/juego/ciudades/batalla/view/sprites/caballero.png");
 	}
 
 	@Override

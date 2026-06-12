@@ -1,46 +1,63 @@
 package juego.ciudades.batalla.controller;
 
-import estructuras.cola.Cola;
+import modelos.Partida;
+import modelos.Jugador;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.view.BatallaUI;
+import estructuras.cola.Cola;
 
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-public class CiudadBatalla {
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(CiudadBatalla::run);
+public class PartidaBatalla extends Partida {
+
+	private BatallaUI ui;
+	private boolean victoria;
+
+	public PartidaBatalla(String nombre, Jugador jugador) {
+		super(nombre, jugador);
 	}
 
-	private static void run() {
+	@Override
+	public void iniciar() {
+		setEstado(EstadoDePartida.Iniciado);
+
 		final int dificultad = pedirDificultad();
-		if (dificultad < 1) return;
+		if (dificultad < 1) {
+			finalizar();
+			return;
+		}
 
 		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
-		Heroe heroe = new Heroe("Heroe", 100, 40, 5, ninguna);
+		Heroe heroe = Heroe.desdeJugador(getJugador(), 100, 40, 5, ninguna);
 		final List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(dificultad);
 		Cola<Combatiente> turnos = new Cola<>();
 		turnos.add(heroe);
-		if (enemigos != null) { turnos.addAll(enemigos); }
+		if (enemigos != null) {
+			turnos.addAll(enemigos);
+		}
 
-		final BatallaUI ui = new BatallaUI(heroe, enemigos);
+		ui = new BatallaUI(heroe, enemigos);
 
 		new Thread(() -> {
-			boolean victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
-			SwingUtilities.invokeLater(() -> {
-				ui.cerrar();
-				JOptionPane.showMessageDialog(
-						null,
-						victoria ? "Victoria!" : "Derrota...",
-						"Ciudad Batalla",
-						victoria ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE
-				);
-			});
+			victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
+			SwingUtilities.invokeLater(this::finalizar);
 		}, "batalla-game-loop").start();
 	}
 
-	private static int pedirDificultad() {
+	@Override
+	public void finalizar() {
+		setPuntaje(victoria ? 100 : 0);
+		if (ui != null) {
+			ui.cerrar();
+		}
+		setEstado(EstadoDePartida.Creado);
+		notificarFinalizacion();
+	}
+
+	private int pedirDificultad() {
 		Object seleccion = JOptionPane.showInputDialog(
 				null,
 				"Elija la dificultad:",

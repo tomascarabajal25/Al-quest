@@ -1,8 +1,8 @@
-package juego.ciudades.batalla.view.models.enemies;
+package juego.ciudades.batalla.view.models;
 
 public class Samurai extends Enemy {
 	public Samurai() {
-		super("SAMURAI", 110, 55, 45, 60, "/com/aiquest/juego/ciudades/batalla/view/sprites/samurai.png");
+		super("SAMURAI", 110, 55, 45, 60, "/juego/ciudades/batalla/view/sprites/samurai.png");
 	}
 
 	@Override

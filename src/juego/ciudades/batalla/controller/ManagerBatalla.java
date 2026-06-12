@@ -5,6 +5,8 @@ import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.model.acciones.Atacar;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -18,11 +20,6 @@ public class ManagerBatalla {
 	}
 
 	public static List<Enemigo> generarEnemigos(int dificultad) {
-		// generar enemigos segun dificultad:
-		//    - 1 Facil -----> 1 enemigo debilucho (sin habilidad especial)
-		//    - 2 Media -----> 3 enemigos normales (con habilidades especiales)
-		//    - 3 Dificil ---> 5 enemigos chetados (con habilidades especiales)
-
 		Random rand = new Random();
 		List<Enemigo> lista = new ListaSimplementeEnlazada<>();
 
@@ -60,10 +57,12 @@ public class ManagerBatalla {
 		};
 		HabilidadEspecial[] habilidades = {danioBonus, veneno, roboDeVida};
 
-		TipoEnemigo[] tipos = TipoEnemigo.values();
+		List<TipoEnemigo> tiposDisponibles = new ArrayList<>();
+		Collections.addAll(tiposDisponibles, TipoEnemigo.values());
+		Collections.shuffle(tiposDisponibles, rand);
 
 		for (int i = 0; i < cantidad; i++) {
-			TipoEnemigo tipo = tipos[rand.nextInt(tipos.length)];
+			TipoEnemigo tipo = tiposDisponibles.get(i);
 			String nombre = "" + tipo;
 
 			int vida = rand.nextInt(rango[1] - rango[0] + 1) + rango[0];

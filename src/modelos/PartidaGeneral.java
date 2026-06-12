@@ -5,12 +5,12 @@ import javax.swing.JFrame;
 
 import javax.swing.SwingUtilities;
 
-import juego.ciudades.ordenamientos.PartidaOrdenamientos;
-import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import juego.ciudades.reinas.PartidaReinas;
 import juego.ciudades.ciudad5.PartidaBusqueda;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
-
+import juego.ciudades.ordenamientos.PartidaOrdenamientos;
+import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
+import juego.ciudades.batalla.controller.PartidaBatalla;
 
 import modelosVista.VistaGlobal;
 import juego.ciudades.ordenamientos.EstadoDePartida;
@@ -104,32 +104,38 @@ public class PartidaGeneral extends Partida {
         Jugador jugador = getJugador();
 
         NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
-                new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
-        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas", 
+            new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
+
+        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
         		new PartidaReinas(jugador));
-        
+
         NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
-                new PartidaOrdenamientos("Ordenamiento", jugador));
+            new PartidaOrdenamientos("Ordenamiento", jugador));
+
         NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
-                new PartidaBusqueda("Búsqueda", jugador));
-        
+            new PartidaBusqueda("Búsqueda", jugador));
+
         NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
-                new PartidaHanoi("Torres de Hanoi", jugador));
-        //NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas", 
-        //		new partida);
+            new PartidaHanoi("Torres de Hanoi", jugador));
+
+        NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas",
+            new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador));
+
         //NodoCiudad ciudad10= crearNodo(10, "Ciudad De Complejidad",
         //		new );
+
         mapaMundi.agregarCiudad(ciudad1);
         mapaMundi.agregarCiudad(ciudad2);
         mapaMundi.agregarCiudad(ciudad4);
         mapaMundi.agregarCiudad(ciudad5);
         mapaMundi.agregarCiudad(ciudad8);
+        mapaMundi.agregarCiudad(ciudad9);
 
-        
         mapaMundi.conectarCiudades(1, 2);
         mapaMundi.conectarCiudades(2, 4);
         mapaMundi.conectarCiudades(4, 5);
         mapaMundi.conectarCiudades(5, 8);
+        mapaMundi.conectarCiudades(8, 9);
     }
 
     /**
