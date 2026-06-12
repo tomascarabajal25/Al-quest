@@ -170,7 +170,7 @@ public class PartidaOrdenamientos extends Partida {
                 getJugador(),
                 COL_INICIO,
                 FILA_BASE,
-                "/assets/jugador/boy");
+                getRutaSprites());
 
         // 3. Construir y registrar el controlador del minijuego en el mundo
         this.minijuego = FabricaMinijuegoOrdenamiento.crear(

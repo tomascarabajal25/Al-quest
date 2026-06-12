@@ -85,6 +85,7 @@ public class PartidaHanoi extends Partida {
         ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya está iniciada");
         setEstado(EstadoDePartida.Iniciado);
 
+        // 1. PEDIR LA DIFICULTAD AL JUGADOR
         Integer discosElegidos = pedirCantidadDeDiscos();
 
         if (discosElegidos == null) {
@@ -94,17 +95,21 @@ public class PartidaHanoi extends Partida {
 
         this.cantidadDiscos = discosElegidos;
 
+        // 2. Creación del motor lógico con la cantidad de discos elegida
         this.juego = new CiudadHanoi(cantidadDiscos);
 
+        // 3. Creación de la infraestructura de vista (Mundo 3 de Hanoi)
         this.vista = new Vista(
                 ConfiguracionDeHanoi.RUTA_MAPA,
                 getJugador(),
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_COLUMNA,
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_FILA,
-                ConfiguracionDeHanoi.RUTA_SPRITE_JUGADOR);
+                getRutaSprites());
 
+        // 4. Creación del controlador del minijuego pasándole la vista ya creada
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
 
+        // 5. Inyecciones y vinculaciones de comportamiento
         vista.establecerMinijuego(minijuego);
 
         // KeyListener para capturar el control de teclas del puzzle (1/2/3/R/ESC)
@@ -118,8 +123,10 @@ public class PartidaHanoi extends Partida {
             }
         });
 
+        // Configuración del callback para que el minijuego avise al terminar
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
+        // 6. Despliegue de la interfaz gráfica
         ventana = new JFrame();
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventana.setResizable(false);
@@ -129,8 +136,10 @@ public class PartidaHanoi extends Partida {
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
 
+        // Asegura que la ventana tome el foco del teclado inmediatamente
         vista.requestFocusInWindow();
 
+        // 7. Arranca el bucle principal de renderizado (60 FPS)
         vista.startGameThread();
     }
 
@@ -151,6 +160,8 @@ public class PartidaHanoi extends Partida {
         setEstado(EstadoDePartida.Creado);
         setPuntaje(calcularPuntaje());
 
+        // Si el jugador canceló el diálogo de dificultad, vista y ventana
+        // nunca se crearon: validamos antes de usarlas.
         if (vista != null) {
             vista.detenerHilo();
         }
@@ -228,7 +239,7 @@ public class PartidaHanoi extends Partida {
      *
      * @return puntaje final de la partida
      */
-    public int calcularPuntaje() {
+    private int calcularPuntaje() {
         if (juego == null || !juego.haGanado()) {
             return 0;
         }

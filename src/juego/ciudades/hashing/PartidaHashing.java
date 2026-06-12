@@ -98,7 +98,7 @@ public class PartidaHashing extends Partida {
         }
         cargarPosicionesSlots(cantidadSlots);
 
-        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, RUTA_SPRITES));
+        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, getRutaSprites()));
 
         this.ciudad = new CiudadHashing(cantidadSlots);
 
