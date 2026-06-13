@@ -10,20 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestHashTable {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private HashTable<String, Integer> tabla;
 
     @BeforeEach
     public void setUp() {
         tabla = new HashTable<>(11); // primo para minimizar colisiones
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_tabla_nueva_tiene_cero_elementos() {
@@ -52,10 +44,6 @@ public class TestHashTable {
         assertThrows(IllegalArgumentException.class, () -> new HashTable<>(-5));
     }
 
-    // =========================================================================
-    // CALCULAR INDICE
-    // =========================================================================
-
     @Test
     public void calcularIndice_retorna_valor_en_rango_valido() {
         int idx = tabla.calcularIndice("clave");
@@ -79,10 +67,6 @@ public class TestHashTable {
         int idx = t.calcularIndice(Integer.MIN_VALUE);
         assertTrue(idx >= 0);
     }
-
-    // =========================================================================
-    // INSERTAR
-    // =========================================================================
 
     @Test
     public void insertar_agrega_elemento_y_incrementa_contador() {
@@ -126,10 +110,6 @@ public class TestHashTable {
         assertEquals(2, slot.size());
     }
 
-    // =========================================================================
-    // BUSCAR
-    // =========================================================================
-
     @Test
     public void buscar_clave_existente_retorna_valor_correcto() {
         tabla.insertar("clave", 42);
@@ -162,10 +142,6 @@ public class TestHashTable {
         assertEquals(20, pequeña.buscar("y"));
     }
 
-    // =========================================================================
-    // CONTIENE
-    // =========================================================================
-
     @Test
     public void contiene_retorna_true_si_clave_existe() {
         tabla.insertar("presente", 5);
@@ -191,10 +167,6 @@ public class TestHashTable {
         assertTrue(pequeña.contiene("y"));
     }
 
-    // =========================================================================
-    // GET SLOT
-    // =========================================================================
-
     @Test
     public void getSlot_indice_valido_retorna_la_lista() {
         tabla.insertar("a", 1);
@@ -214,10 +186,6 @@ public class TestHashTable {
         assertThrows(IllegalArgumentException.class, () -> tabla.getSlot(tabla.getCantidadSlots()));
     }
 
-    // =========================================================================
-    // GET CANTIDAD SLOTS / GET CANTIDAD ELEMENTOS
-    // =========================================================================
-
     @Test
     public void getCantidadSlots_retorna_el_valor_del_constructor() {
         HashTable<String, String> t = new HashTable<>(7);
@@ -236,10 +204,6 @@ public class TestHashTable {
         tabla.insertar("a", 3);
         assertEquals(1, tabla.getCantidadElementos());
     }
-
-    // =========================================================================
-    // ENTRADA HASH (clase interna)
-    // =========================================================================
 
     @Test
     public void entradaHash_getClave_retorna_clave_correcta() {

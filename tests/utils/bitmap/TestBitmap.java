@@ -21,10 +21,6 @@ class TestBitmap {
         bitmap = new Bitmap(ANCHO, ALTO);
     }
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarAnchoCorrectamente() {
         assertEquals(ANCHO, bitmap.getWidth());
@@ -66,10 +62,6 @@ class TestBitmap {
         assertThrows(RuntimeException.class, () -> new Bitmap(50, -1));
     }
 
-    // ─────────────────────────────────────────────
-    // drawPixel
-    // ─────────────────────────────────────────────
-
     @Test
     void drawPixel_debeEstablecerColorCorrectamente() {
         bitmap.drawPixel(10, 10, Color.RED);
@@ -96,10 +88,6 @@ class TestBitmap {
     void drawPixel_yFueraDeRango_debeLanzarExcepcion() {
         assertThrows(RuntimeException.class, () -> bitmap.drawPixel(5, ALTO + 1, Color.RED));
     }
-
-    // ─────────────────────────────────────────────
-    // drawLine
-    // ─────────────────────────────────────────────
 
     @Test
     void drawLine_horizontal_debePintarPixelesIntermedios() {
@@ -129,10 +117,6 @@ class TestBitmap {
         assertThrows(RuntimeException.class, () -> bitmap.drawLine(0, 0, 10, 10, null));
     }
 
-    // ─────────────────────────────────────────────
-    // drawRectangle
-    // ─────────────────────────────────────────────
-
     @Test
     void drawRectangle_debePintarLasCuatroEsquinas() {
         bitmap.drawRectangle(10, 10, 20, 20, Color.WHITE);
@@ -147,10 +131,6 @@ class TestBitmap {
         assertThrows(RuntimeException.class, () -> bitmap.drawRectangle(5, 5, 10, 10, null));
     }
 
-    // ─────────────────────────────────────────────
-    // drawCircle
-    // ─────────────────────────────────────────────
-
     @Test
     void drawCircle_debePintarPuntosEnElEje() {
         // El punto más a la derecha del círculo debe estar pintado
@@ -163,10 +143,6 @@ class TestBitmap {
     void drawCircle_colorNull_debeLanzarExcepcion() {
         assertThrows(RuntimeException.class, () -> bitmap.drawCircle(50, 50, 10, null));
     }
-
-    // ─────────────────────────────────────────────
-    // rellenar
-    // ─────────────────────────────────────────────
 
     @Test
     void rellenar_debePintarTodosLosPixeles() {
@@ -186,10 +162,6 @@ class TestBitmap {
         assertEquals(Color.BLACK.getRGB(), bitmap.getImage().getRGB(5, 5));
     }
 
-    // ─────────────────────────────────────────────
-    // pasteBitmap
-    // ─────────────────────────────────────────────
-
     @Test
     void pasteBitmap_debeCopirarPixelesEnPosicionCorrecta() {
         Bitmap otro = new Bitmap(10, 10);
@@ -200,10 +172,6 @@ class TestBitmap {
         assertEquals(Color.MAGENTA.getRGB(), bitmap.getImage().getRGB(5, 5));
         assertEquals(Color.MAGENTA.getRGB(), bitmap.getImage().getRGB(14, 14));
     }
-
-    // ─────────────────────────────────────────────
-    // saveToFile / loadFromFile
-    // ─────────────────────────────────────────────
 
     @Test
     void saveToFile_debeCrearArchivoEnDisco(@TempDir Path tempDir) throws IOException {
@@ -242,10 +210,6 @@ class TestBitmap {
         assertEquals(Color.RED.getRGB(), cargado.getImage().getRGB(0, 0));
     }
 
-    // ─────────────────────────────────────────────
-    // drawText
-    // ─────────────────────────────────────────────
-
     @Test
     void drawText_noDebeLanzarExcepcion() {
         Font fuente = new Font("Arial", Font.PLAIN, 12);
@@ -264,10 +228,6 @@ class TestBitmap {
         assertThrows(RuntimeException.class,
             () -> bitmap.drawText("Hola", 5, 20, fuente, null, Color.BLACK));
     }
-
-    // ─────────────────────────────────────────────
-    // dibujarTablero
-    // ─────────────────────────────────────────────
 
     @Test
     void dibujarTablero_noDebeLanzarExcepcion() {

@@ -1,7 +1,7 @@
 package ciudades.testsDeCiudadLaberinto;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import juego.ciudades.ciudad_3_laberinto.src.*;
 
@@ -27,7 +27,7 @@ public class CargadorLaberintoTest {
     }
 
     /** Verifica que se lanza excepcion si el archivo no existe */
-    @Test(expected = IOException.class)
+    @Test
     public void testArchivoInexistente() throws IOException {
         CargadorLaberinto cargador = new CargadorLaberinto();
         cargador.cargar("ruta/inexistente.txt");

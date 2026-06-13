@@ -5,55 +5,29 @@ import utils.bitmap.BitmapViewerConMenu.MenuAction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TDA Test para BitmapViewerConMenu.
- *
- * Cubre:
- *   - Constructor con lista de bitmaps válida (con y sin acciones)
- *   - showBitmaps (factory sin menú)
- *   - showBitmapsWithMenu (factory con acciones)
- *   - setMenuActions: reemplazo, lista vacía y null
- *   - MenuAction: getLabel / getRunnable / ejecución del runnable
- *   - close(): cierra el frame sin excepción
- *   - Precondiciones: bitmaps null o lista vacía deben lanzar excepción
- */
 public class TestBitmapViewerConMenu {
-
-    // ------------------------------------------------------------------ //
-    //  Helpers
-    // ------------------------------------------------------------------ //
-
-    /** Crea un Bitmap de N×N píxeles negro (válido para instanciar el viewer). */
     private static Bitmap crearBitmapValido(int lado) {
         // Se asume que Bitmap expone un constructor Bitmap(int ancho, int alto)
         // o similar; ajustar según la firma real de la clase.
         return new Bitmap(lado, lado);
     }
 
-    /** Imprime resultado de un caso de prueba. */
     private static void reportar(String nombre, boolean ok) {
         System.out.println((ok ? "[OK]  " : "[FAIL]") + " " + nombre);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: MenuAction
-    // ------------------------------------------------------------------ //
-
-    /** getLabel devuelve la etiqueta con la que fue creada la acción. */
     private static void testMenuActionGetLabel() {
         MenuAction accion = new MenuAction("Exportar", () -> {});
         reportar("MenuAction.getLabel devuelve la etiqueta correcta",
                 "Exportar".equals(accion.getLabel()));
     }
 
-    /** getRunnable devuelve un Runnable no null. */
     private static void testMenuActionGetRunnableNoNull() {
         MenuAction accion = new MenuAction("Acción", () -> {});
         reportar("MenuAction.getRunnable no es null",
                 accion.getRunnable() != null);
     }
 
-    /** El Runnable asociado a MenuAction se ejecuta sin excepción. */
     private static void testMenuActionRunnableEjecuta() {
         boolean[] ejecutado = {false};
         MenuAction accion = new MenuAction("Click", () -> ejecutado[0] = true);
@@ -62,11 +36,6 @@ public class TestBitmapViewerConMenu {
                 ejecutado[0]);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: Constructor directo
-    // ------------------------------------------------------------------ //
-
-    /** El constructor acepta una lista de bitmaps válida sin menú (null en acciones). */
     private static void testConstructorBitmapsValidosSinAcciones() {
         boolean ok = false;
         try {
@@ -81,7 +50,6 @@ public class TestBitmapViewerConMenu {
         reportar("Constructor: bitmaps válidos, acciones null → sin excepción", ok);
     }
 
-    /** El constructor acepta una lista de bitmaps válida con acciones. */
     private static void testConstructorBitmapsValidosConAcciones() {
         boolean ok = false;
         try {
@@ -96,7 +64,6 @@ public class TestBitmapViewerConMenu {
         reportar("Constructor: bitmaps válidos con acciones → sin excepción", ok);
     }
 
-    /** El constructor debe lanzar excepción si la lista de bitmaps es null. */
     private static void testConstructorBitmapsNull() {
         boolean lanzó = false;
         try {
@@ -107,7 +74,6 @@ public class TestBitmapViewerConMenu {
         reportar("Constructor: bitmaps null → lanza excepción", lanzó);
     }
 
-    /** El constructor debe lanzar excepción si la lista de bitmaps está vacía. */
     private static void testConstructorBitmapsVacio() {
         boolean lanzó = false;
         try {
@@ -118,11 +84,6 @@ public class TestBitmapViewerConMenu {
         reportar("Constructor: lista de bitmaps vacía → lanza excepción", lanzó);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: showBitmaps (factory sin menú)
-    // ------------------------------------------------------------------ //
-
-    /** showBitmaps crea el viewer sin acciones y sin excepción. */
     private static void testShowBitmaps() {
         boolean ok = false;
         try {
@@ -135,7 +96,6 @@ public class TestBitmapViewerConMenu {
         reportar("showBitmaps: crea viewer sin acciones → sin excepción", ok);
     }
 
-    /** showBitmaps acepta múltiples bitmaps. */
     private static void testShowBitmapsMultiples() {
         boolean ok = false;
         try {
@@ -150,11 +110,6 @@ public class TestBitmapViewerConMenu {
         reportar("showBitmaps: múltiples bitmaps → sin excepción", ok);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: showBitmapsWithMenu (factory con menú)
-    // ------------------------------------------------------------------ //
-
-    /** showBitmapsWithMenu crea el viewer con acciones y sin excepción. */
     private static void testShowBitmapsWithMenu() {
         boolean ok = false;
         try {
@@ -171,7 +126,6 @@ public class TestBitmapViewerConMenu {
         reportar("showBitmapsWithMenu: acciones + bitmap → sin excepción", ok);
     }
 
-    /** showBitmapsWithMenu acepta lista de acciones vacía. */
     private static void testShowBitmapsWithMenuAccionesVacias() {
         boolean ok = false;
         try {
@@ -184,11 +138,6 @@ public class TestBitmapViewerConMenu {
         reportar("showBitmapsWithMenu: lista de acciones vacía → sin excepción", ok);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: setMenuActions
-    // ------------------------------------------------------------------ //
-
-    /** setMenuActions reemplaza las acciones existentes sin excepción. */
     private static void testSetMenuActionsReemplaza() {
         boolean ok = false;
         try {
@@ -210,7 +159,6 @@ public class TestBitmapViewerConMenu {
         reportar("setMenuActions: reemplaza acciones existentes → sin excepción", ok);
     }
 
-    /** setMenuActions con lista vacía elimina todos los botones sin excepción. */
     private static void testSetMenuActionsListaVacia() {
         boolean ok = false;
         try {
@@ -228,7 +176,6 @@ public class TestBitmapViewerConMenu {
         reportar("setMenuActions: lista vacía → sin excepción", ok);
     }
 
-    /** setMenuActions con null es equivalente a lista vacía y no lanza excepción. */
     private static void testSetMenuActionsNull() {
         boolean ok = false;
         try {
@@ -243,11 +190,6 @@ public class TestBitmapViewerConMenu {
         reportar("setMenuActions: null → sin excepción (equivale a lista vacía)", ok);
     }
 
-    // ------------------------------------------------------------------ //
-    //  Test: close
-    // ------------------------------------------------------------------ //
-
-    /** close() no lanza excepción cuando el frame fue creado. */
     private static void testCloseNoLanzaExcepcion() {
         boolean ok = false;
         try {
@@ -261,7 +203,6 @@ public class TestBitmapViewerConMenu {
         reportar("close(): cierra el frame sin excepción", ok);
     }
 
-    /** close() puede llamarse varias veces sin excepción (idempotencia). */
     private static void testCloseIdempotente() {
         boolean ok = false;
         try {
@@ -275,10 +216,6 @@ public class TestBitmapViewerConMenu {
         }
         reportar("close(): llamada múltiple → sin excepción (idempotente)", ok);
     }
-
-    // ------------------------------------------------------------------ //
-    //  Punto de entrada
-    // ------------------------------------------------------------------ //
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("=== Tests BitmapViewerConMenu ===\n");

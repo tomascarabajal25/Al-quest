@@ -13,10 +13,6 @@ class TestArbolBinario {
         arbol = new ArbolBinario(3); // grado mínimo t=3 → max 5 claves por nodo
     }
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_raizDebeSerNull() {
         assertNull(arbol.raiz);
@@ -26,10 +22,6 @@ class TestArbolBinario {
     void constructor_debeAsignarGradoCorrectamente() {
         assertEquals(3, arbol.grado);
     }
-
-    // ─────────────────────────────────────────────
-    // Insertar: árbol vacío
-    // ─────────────────────────────────────────────
 
     @Test
     void insertar_enArbolVacio_raizNoDebeSerNull() {
@@ -50,10 +42,6 @@ class TestArbolBinario {
         assertEquals(10, arbol.raiz.claves[0]);
     }
 
-    // ─────────────────────────────────────────────
-    // Insertar: múltiples claves sin split
-    // ─────────────────────────────────────────────
-
     @Test
     void insertar_variasClavesSinLlenarNodo_gradoCorrecto() {
         arbol.insertar(10);
@@ -72,10 +60,6 @@ class TestArbolBinario {
         assertEquals(10, arbol.raiz.claves[1]);
         assertEquals(20, arbol.raiz.claves[2]);
     }
-
-    // ─────────────────────────────────────────────
-    // Insertar: split (nodo lleno → crecimiento en altura)
-    // ─────────────────────────────────────────────
 
     @Test
     void insertar_alLlenarNodo_siguienteClaveForzaSplit() {
@@ -109,10 +93,6 @@ class TestArbolBinario {
         assertTrue(arbol.raiz.hijos[0].hoja);
         assertTrue(arbol.raiz.hijos[1].hoja);
     }
-
-    // ─────────────────────────────────────────────
-    // Propiedades estructurales del árbol B
-    // ─────────────────────────────────────────────
 
     @Test
     void propiedades_todosLosNodosDebenTenerALoSumoMaxClaves() {
@@ -155,10 +135,6 @@ class TestArbolBinario {
         verificarCantidadHijos(arbol.raiz);
     }
 
-    // ─────────────────────────────────────────────
-    // Insertar: orden inverso
-    // ─────────────────────────────────────────────
-
     @Test
     void insertar_enOrdenDecreciente_estructuraSigueSiendoValida() {
         for (int clave = 20; clave >= 1; clave--) {
@@ -168,10 +144,6 @@ class TestArbolBinario {
         verificarMaxClaves(arbol.raiz);
     }
 
-    // ─────────────────────────────────────────────
-    // Insertar: clave duplicada
-    // ─────────────────────────────────────────────
-
     @Test
     void insertar_claveDuplicada_noRompeEstructura() {
         arbol.insertar(10);
@@ -179,10 +151,6 @@ class TestArbolBinario {
         // El árbol no debe lanzar excepción y la estructura sigue siendo válida
         verificarOrden(arbol.raiz);
     }
-
-    // ─────────────────────────────────────────────
-    // Helpers de verificación estructural
-    // ─────────────────────────────────────────────
 
     private void verificarMaxClaves(NodoB nodo) {
         if (nodo == null) return;

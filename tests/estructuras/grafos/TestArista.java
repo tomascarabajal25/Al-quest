@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestArista {
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarPesoCorrectamente() {
         Vertice<String, Integer> destino = new Vertice<>("B");
@@ -52,20 +48,12 @@ class TestArista {
         assertNull(arista.getPeso());
     }
 
-    // ─────────────────────────────────────────────
-    // getPeso
-    // ─────────────────────────────────────────────
-
     @Test
     void getPeso_conTipoString_debeRetornarCorrectamente() {
         Vertice<Integer, String> destino = new Vertice<>(1);
         Arista<Integer, String> arista = new Arista<>("alto", destino);
         assertEquals("alto", arista.getPeso());
     }
-
-    // ─────────────────────────────────────────────
-    // getDestino
-    // ─────────────────────────────────────────────
 
     @Test
     void getDestino_debeRetornarElMismoObjeto() {
@@ -80,10 +68,6 @@ class TestArista {
         Arista<String, Integer> arista = new Arista<>(7, destino);
         assertEquals("Z", arista.getDestino().getValor());
     }
-
-    // ─────────────────────────────────────────────
-    // toString
-    // ─────────────────────────────────────────────
 
     @Test
     void toString_debeContenerElValorDelDestino() {

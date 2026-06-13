@@ -17,18 +17,10 @@ class TestGrafo {
         grafo = new Grafo<>();
     }
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_getVerticesDebeEstarVacio() {
         assertTrue(grafo.getVertices().isEmpty());
     }
-
-    // ─────────────────────────────────────────────
-    // agregarVertice / existeVertice / getVertice
-    // ─────────────────────────────────────────────
 
     @Test
     void agregarVertice_debeAgregarloCorrectamente() {
@@ -60,10 +52,6 @@ class TestGrafo {
         assertThrows(NoSuchElementException.class, () -> grafo.getVertice("Z"));
     }
 
-    // ─────────────────────────────────────────────
-    // agregarArista / getAdyacentes
-    // ─────────────────────────────────────────────
-
     @Test
     void agregarArista_debeCrearAdyacenciaCorrectamente() {
         grafo.agregarVertice("A");
@@ -90,10 +78,6 @@ class TestGrafo {
         grafo.agregarVertice("A");
         assertTrue(grafo.getAdyacentes("A").isEmpty());
     }
-
-    // ─────────────────────────────────────────────
-    // build (factory estático)
-    // ─────────────────────────────────────────────
 
     @Test
     void build_debeCrearVerticesCorrectamente() {
@@ -127,10 +111,6 @@ class TestGrafo {
         assertTrue(g.existeVertice("X"));
         assertTrue(g.existeVertice("Y"));
     }
-
-    // ─────────────────────────────────────────────
-    // recorridoAnchura (BFS)
-    // ─────────────────────────────────────────────
 
     @Test
     void recorridoAnchura_grafoLineal_debeVisitarEnOrden() {
@@ -166,10 +146,6 @@ class TestGrafo {
         assertTrue(resultado.contains("C"));
     }
 
-    // ─────────────────────────────────────────────
-    // recorridoProfundidad (DFS)
-    // ─────────────────────────────────────────────
-
     @Test
     void recorridoProfundidad_grafoLineal_debeVisitarEnOrden() {
         grafo.agregarVertice("A");
@@ -203,10 +179,6 @@ class TestGrafo {
         // Sin repetidos
         assertEquals(resultado.size(), resultado.stream().distinct().count());
     }
-
-    // ─────────────────────────────────────────────
-    // tieneCiclo
-    // ─────────────────────────────────────────────
 
     @Test
     void tieneCiclo_grafoSinCiclo_debeRetornarFalse() {
@@ -244,9 +216,6 @@ class TestGrafo {
         assertFalse(grafo.tieneCiclo());
     }
 
-    // ─────────────────────────────────────────────
-    // caminoMinimoBFS
-    // ─────────────────────────────────────────────
 
     @Test
     void caminoMinimoBFS_caminoExistente_debeRetornarCaminoCorrecto() {
@@ -290,10 +259,6 @@ class TestGrafo {
         List<String> camino = grafo.caminoMinimoBFS("A", "C");
         assertEquals(List.of("A", "C"), camino);
     }
-
-    // ─────────────────────────────────────────────
-    // dijkstra
-    // ─────────────────────────────────────────────
 
     @Test
     void dijkstra_caminoSimple_debeRetornarCaminoCorrecto() {
@@ -339,10 +304,6 @@ class TestGrafo {
         assertThrows(IllegalArgumentException.class, () -> grafo.dijkstra("A", "B"));
     }
 
-    // ─────────────────────────────────────────────
-    // recorridoTopologicoDFS
-    // ─────────────────────────────────────────────
-
     @Test
     void recorridoTopologicoDFS_grafoDag_cadaNodoAntesQueSusSucesores() {
         grafo.agregarVertice("A");
@@ -365,10 +326,6 @@ class TestGrafo {
 
         assertThrows(IllegalStateException.class, () -> grafo.recorridoTopologicoDFS());
     }
-
-    // ─────────────────────────────────────────────
-    // recorridoTopologicoBFS (Kahn)
-    // ─────────────────────────────────────────────
 
     @Test
     void recorridoTopologicoBFS_grafoDag_cadaNodoAntesQueSusSucesores() {
@@ -393,9 +350,6 @@ class TestGrafo {
         assertThrows(IllegalStateException.class, () -> grafo.recorridoTopologicoBFS());
     }
 
-    // ─────────────────────────────────────────────
-    // getPuntosArticulacion
-    // ─────────────────────────────────────────────
 
     @Test
     void getPuntosArticulacion_grafoPuente_debeDetectarPuntoMedio() {
@@ -426,10 +380,6 @@ class TestGrafo {
         Set<String> pa = grafo.getPuntosArticulacion();
         assertTrue(pa.isEmpty());
     }
-
-    // ─────────────────────────────────────────────
-    // getComponentesFuertementeConexas (Kosaraju)
-    // ─────────────────────────────────────────────
 
     @Test
     void getComponentesFuertementeConexas_cadaNodoEsSuPropiaSCC() {

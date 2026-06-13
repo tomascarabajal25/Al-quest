@@ -17,10 +17,6 @@ class TestColaConPrioridad {
         cola = new ColaConPrioridad<>(5);
     }
 
-    // ──────────────────────────────────────────────
-    // Constructor
-    // ──────────────────────────────────────────────
-
     @Test
     void constructorConMaxPrioridadValidoCreaColaVacia() {
         ColaConPrioridad<Integer> c = new ColaConPrioridad<>(3);
@@ -43,10 +39,6 @@ class TestColaConPrioridad {
         ColaConPrioridad<String> c = new ColaConPrioridad<>(1);
         assertTrue(c.isEmpty());
     }
-
-    // ──────────────────────────────────────────────
-    // isEmpty() y size()
-    // ──────────────────────────────────────────────
 
     @Test
     void colaRecienCreadaEstaVacia() {
@@ -86,10 +78,6 @@ class TestColaConPrioridad {
         assertEquals(0, cola.size());
     }
 
-    // ──────────────────────────────────────────────
-    // enqueue()
-    // ──────────────────────────────────────────────
-
     @Test
     void enqueueConPrioridadCeroEsValido() {
         assertDoesNotThrow(() -> cola.enqueue("alta", 0));
@@ -122,10 +110,6 @@ class TestColaConPrioridad {
         assertDoesNotThrow(() -> cola.enqueue(null, 0));
         assertEquals(1, cola.size());
     }
-
-    // ──────────────────────────────────────────────
-    // dequeue() — orden por prioridad
-    // ──────────────────────────────────────────────
 
     @Test
     void dequeueEnColaVaciaLanzaExcepcion() {
@@ -207,9 +191,6 @@ class TestColaConPrioridad {
         assertEquals("B", cola.dequeue());
     }
 
-    // ──────────────────────────────────────────────
-    // peek()
-    // ──────────────────────────────────────────────
 
     @Test
     void peekEnColaVaciaLanzaExcepcion() {
@@ -249,9 +230,6 @@ class TestColaConPrioridad {
         assertEquals(1, cola.size());
     }
 
-    // ──────────────────────────────────────────────
-    // Propiedades de invariante
-    // ──────────────────────────────────────────────
 
     @Test
     void vaciarPorDequeueDejaColaVacia() {

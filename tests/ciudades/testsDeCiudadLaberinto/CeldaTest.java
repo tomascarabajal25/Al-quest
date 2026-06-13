@@ -2,9 +2,9 @@ package ciudades.testsDeCiudadLaberinto;
 
 import juego.ciudades.ciudad_3_laberinto.src.Celda;
 import juego.ciudades.ciudad_3_laberinto.src.EstadoCelda;
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -19,7 +19,7 @@ public class CeldaTest {
     /**
      * Inicializa las celdas de prueba antes de cada test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         celdaLibre  = new Celda(1, 1, EstadoCelda.LIBRE);
         celdaPared  = new Celda(0, 0, EstadoCelda.PARED);

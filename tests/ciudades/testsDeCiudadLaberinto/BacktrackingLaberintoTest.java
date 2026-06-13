@@ -1,8 +1,8 @@
 package ciudades.testsDeCiudadLaberinto;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import juego.ciudades.ciudad_3_laberinto.src.*;
 
 /**
@@ -19,7 +19,7 @@ public class BacktrackingLaberintoTest {
      * I . F                       I # F
      * # # #                       # # #
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         // Con solucion
         Celda[][] conSolucion = new Celda[3][3];

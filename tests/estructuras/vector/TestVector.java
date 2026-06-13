@@ -10,10 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestVector {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private Vector<Integer> vectorInt;
     private Vector<String>  vectorStr;
 
@@ -22,10 +18,6 @@ public class TestVector {
         vectorInt = new Vector<>(5, 0);
         vectorStr = new Vector<>(3, null);
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_longitud_valida_crea_vector_con_dato_inicial() {
@@ -53,10 +45,6 @@ public class TestVector {
         assertThrows(RuntimeException.class, () -> new Vector<>(-5, 0));
     }
 
-    // =========================================================================
-    // CONSTRUCTOR COPIA
-    // =========================================================================
-
     @Test
     public void constructorCopia_genera_vector_igual_al_original() {
         vectorInt.agregar(1, 10);
@@ -72,10 +60,6 @@ public class TestVector {
         copia.agregar(1, 99);
         assertNotEquals(vectorInt, copia);
     }
-
-    // =========================================================================
-    // AGREGAR (posicion, dato)
-    // =========================================================================
 
     @Test
     public void agregar_posicion_dato_guarda_correctamente() {
@@ -105,10 +89,6 @@ public class TestVector {
         assertThrows(RuntimeException.class, () -> vectorInt.agregar(6, 1));
     }
 
-    // =========================================================================
-    // AGREGAR (dato) – auto-posicion + redimensionado
-    // =========================================================================
-
     @Test
     public void agregar_dato_devuelve_posicion_correcta() {
         int pos = vectorInt.agregar(55);
@@ -134,10 +114,6 @@ public class TestVector {
         assertTrue(pequeño.getLongitud() >= 3);
     }
 
-    // =========================================================================
-    // OBTENER
-    // =========================================================================
-
     @Test
     public void obtener_posicion_valida_retorna_dato() {
         vectorInt.agregar(2, 99);
@@ -159,10 +135,6 @@ public class TestVector {
         assertThrows(RuntimeException.class, () -> vectorInt.obtener(6));
     }
 
-    // =========================================================================
-    // REMOVER (posicion)
-    // =========================================================================
-
     @Test
     public void remover_posicion_valida_restaura_dato_inicial() throws Exception {
         vectorInt.agregar(3, 55);
@@ -175,10 +147,6 @@ public class TestVector {
         assertThrows(Exception.class, () -> vectorInt.remover(0));
         assertThrows(Exception.class, () -> vectorInt.remover(6));
     }
-
-    // =========================================================================
-    // REMOVE (dato) – todas las apariciones
-    // =========================================================================
 
     @Test
     public void remove_dato_elimina_todas_las_apariciones() {
@@ -195,10 +163,6 @@ public class TestVector {
     public void remove_dato_null_lanza_excepcion() {
         assertThrows(RuntimeException.class, () -> vectorInt.remove(null));
     }
-
-    // =========================================================================
-    // REMOVE FIRST (dato) – solo la primera aparicion
-    // =========================================================================
 
     @Test
     public void removeFirst_elimina_solo_primera_aparicion() {
@@ -217,10 +181,6 @@ public class TestVector {
         assertThrows(RuntimeException.class, () -> vectorInt.removeFirst(null));
     }
 
-    // =========================================================================
-    // CONTAINS
-    // =========================================================================
-
     @Test
     public void contains_retorna_true_si_dato_presente() {
         vectorInt.agregar(1, 42);
@@ -236,10 +196,6 @@ public class TestVector {
     public void contains_dato_null_lanza_excepcion() {
         assertThrows(RuntimeException.class, () -> vectorInt.contains(null));
     }
-
-    // =========================================================================
-    // GET CANTIDAD DE DATOS
-    // =========================================================================
 
     @Test
     public void getCantidadDeDatos_vector_vacio_retorna_cero() {
@@ -261,10 +217,6 @@ public class TestVector {
         assertEquals(1, vectorInt.getCantidadDeDatos());
     }
 
-    // =========================================================================
-    // GET LONGITUD
-    // =========================================================================
-
     @Test
     public void getLongitud_retorna_longitud_inicial() {
         assertEquals(5, vectorInt.getLongitud());
@@ -278,10 +230,6 @@ public class TestVector {
         v.agregar(3); // fuerza redimensionado
         assertTrue(v.getLongitud() > 2);
     }
-
-    // =========================================================================
-    // EQUALS
-    // =========================================================================
 
     @Test
     public void equals_vectores_iguales_retorna_true() {
@@ -317,10 +265,6 @@ public class TestVector {
         assertNotEquals(null, vectorInt);
     }
 
-    // =========================================================================
-    // HASHCODE
-    // =========================================================================
-
     @Test
     public void hashCode_vectores_iguales_tienen_mismo_hash() {
         Vector<Integer> v1 = new Vector<>(3, 0);
@@ -328,10 +272,6 @@ public class TestVector {
         v1.agregar(2, 7); v2.agregar(2, 7);
         assertEquals(v1.hashCode(), v2.hashCode());
     }
-
-    // =========================================================================
-    // TO STRING
-    // =========================================================================
 
     @Test
     public void toString_formato_correcto() {
@@ -347,10 +287,6 @@ public class TestVector {
         Vector<Integer> v = new Vector<>(2, 0);
         assertEquals("[0, 0]", v.toString());
     }
-
-    // =========================================================================
-    // ITERATOR
-    // =========================================================================
 
     @Test
     public void iterator_recorre_todos_los_elementos() {

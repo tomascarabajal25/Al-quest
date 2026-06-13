@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestNodoAVL {
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarValorCorrectamente() {
         NodoAVL<Integer> nodo = new NodoAVL<>(10);
@@ -45,10 +41,6 @@ class TestNodoAVL {
         assertNull(nodo.getValor());
     }
 
-    // ─────────────────────────────────────────────
-    // getAltura / setAltura
-    // ─────────────────────────────────────────────
-
     @Test
     void setAltura_debeActualizarAltura() {
         NodoAVL<Integer> nodo = new NodoAVL<>(10);
@@ -70,10 +62,6 @@ class TestNodoAVL {
         nodo.setAltura(-1);
         assertEquals(-1, nodo.getAltura());
     }
-
-    // ─────────────────────────────────────────────
-    // Herencia de NodoDeArbol: setters y getters
-    // ─────────────────────────────────────────────
 
     @Test
     void setValor_debeActualizarElValor() {
@@ -114,10 +102,6 @@ class TestNodoAVL {
         assertNull(padre.getDerecho());
     }
 
-    // ─────────────────────────────────────────────
-    // Herencia de NodoDeArbol: tieneHijos / tieneUnHijo
-    // ─────────────────────────────────────────────
-
     @Test
     void tieneHijos_sinHijos_debeRetornarFalse() {
         NodoAVL<Integer> nodo = new NodoAVL<>(10);
@@ -146,10 +130,6 @@ class TestNodoAVL {
         nodo.setDerecho(new NodoAVL<>(15));
         assertFalse(nodo.tieneUnHijo());
     }
-
-    // ─────────────────────────────────────────────
-    // Herencia: NodoAVL es instancia de NodoDeArbol
-    // ─────────────────────────────────────────────
 
     @Test
     void nodoAVL_debeSerInstanciaDeNodoDeArbol() {

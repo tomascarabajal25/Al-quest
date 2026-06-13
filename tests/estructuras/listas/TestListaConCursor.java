@@ -7,20 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestListaConCursor {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private ListaConCursor<Integer> lista;
 
     @BeforeEach
     public void setUp() {
         lista = new ListaConCursor<>();
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_lista_nueva_esta_vacia() {
@@ -37,10 +29,6 @@ public class TestListaConCursor {
         assertNull(lista.getCursor());
     }
 
-    // =========================================================================
-    // ESTA VACIA
-    // =========================================================================
-
     @Test
     public void estaVacia_retorna_false_despues_de_agregar() throws Exception {
         lista.agregar(1);
@@ -53,10 +41,6 @@ public class TestListaConCursor {
         lista.remover(1);
         assertTrue(lista.estaVacia());
     }
-
-    // =========================================================================
-    // AGREGAR (elemento) — al final
-    // =========================================================================
 
     @Test
     public void agregar_elemento_agrega_al_final() throws Exception {
@@ -77,10 +61,6 @@ public class TestListaConCursor {
         lista.agregar(42);
         assertEquals(42, lista.obtener(1));
     }
-
-    // =========================================================================
-    // AGREGAR (posicion, elemento)
-    // =========================================================================
 
     @Test
     public void agregar_posicion_uno_inserta_al_inicio() throws Exception {
@@ -117,10 +97,6 @@ public class TestListaConCursor {
         lista.agregar(1);
         assertThrows(Exception.class, () -> lista.agregar(3, 99));
     }
-
-    // =========================================================================
-    // REMOVER (posicion)
-    // =========================================================================
 
     @Test
     public void remover_posicion_uno_elimina_el_primero() throws Exception {
@@ -174,10 +150,6 @@ public class TestListaConCursor {
         assertNull(lista.getCursor());
     }
 
-    // =========================================================================
-    // REMOVER (valor)
-    // =========================================================================
-
     @Test
     public void remover_valor_existente_lo_elimina() throws Exception {
         lista.agregar(1);
@@ -204,10 +176,6 @@ public class TestListaConCursor {
         assertThrows(Exception.class, () -> lista.remover((Integer) 99));
     }
 
-    // =========================================================================
-    // OBTENER
-    // =========================================================================
-
     @Test
     public void obtener_posicion_valida_retorna_dato_correcto() throws Exception {
         lista.agregar(10);
@@ -226,10 +194,6 @@ public class TestListaConCursor {
         assertThrows(Exception.class, () -> lista.obtener(2));
     }
 
-    // =========================================================================
-    // CAMBIAR
-    // =========================================================================
-
     @Test
     public void cambiar_reemplaza_el_elemento_en_la_posicion() throws Exception {
         lista.agregar(1);
@@ -244,10 +208,6 @@ public class TestListaConCursor {
         assertThrows(Exception.class, () -> lista.cambiar(99, 0));
         assertThrows(Exception.class, () -> lista.cambiar(99, 2));
     }
-
-    // =========================================================================
-    // CURSOR (iniciarCursor / avanzarCursor / obtenerCursor / getCursor)
-    // =========================================================================
 
     @Test
     public void cursor_recorre_todos_los_elementos_en_orden() throws Exception {
@@ -293,10 +253,6 @@ public class TestListaConCursor {
         assertEquals(lista.obtenerCursor(), lista.getCursor());
     }
 
-    // =========================================================================
-    // EXISTE
-    // =========================================================================
-
     @Test
     public void existe_retorna_true_si_el_valor_esta_en_la_lista() throws Exception {
         lista.agregar(7);
@@ -314,9 +270,6 @@ public class TestListaConCursor {
         assertFalse(lista.existe(1));
     }
 
-    // =========================================================================
-    // CONTAR OCURRENCIAS
-    // =========================================================================
 
     @Test
     public void contarOcurrencias_sin_apariciones_retorna_cero() throws Exception {
@@ -344,10 +297,6 @@ public class TestListaConCursor {
     public void contarOcurrencias_lista_vacia_retorna_cero() {
         assertEquals(0, lista.contarOcurrencias(5));
     }
-
-    // =========================================================================
-    // CONTIENE (y variantes S3 / S4)
-    // =========================================================================
 
     @Test
     public void contiene_retorna_true_si_existe() throws Exception {
@@ -388,9 +337,6 @@ public class TestListaConCursor {
         assertThrows(Exception.class, () -> lista.contieneS4(null));
     }
 
-    // =========================================================================
-    // GET LONGITUD
-    // =========================================================================
 
     @Test
     public void getLongitud_crece_con_cada_agregar() throws Exception {

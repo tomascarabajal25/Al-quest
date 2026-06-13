@@ -240,13 +240,13 @@ public class PartidaHanoi extends Partida {
      *
      * @return puntaje final de la partida
      */
-    private int calcularPuntaje() {
-        if (juego == null || !juego.haGanado()) {
+    public int calcularPuntaje() {
+        if (this.juego == null || !this.juego.haGanado()) {
             return 0;
         }
 
-        int multiplicadorPorDificultad = juego.getObjetivo();
-        int puntajeBase = juego.esPerfecto()
+        int multiplicadorPorDificultad = this.juego.getObjetivo();
+        int puntajeBase = this.juego.esPerfecto()
                 ? ConfiguracionDeHanoi.PUNTAJE_BASE_PERFECTO
                 : ConfiguracionDeHanoi.PUNTAJE_BASE_IMPERFECTO;
 

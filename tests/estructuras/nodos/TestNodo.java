@@ -7,19 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestNodo {
 
-    // -------------------------------------------------------------------------
-    // Subclase concreta mínima para poder instanciar Nodo (es abstracta)
-    // -------------------------------------------------------------------------
-
     private static class NodoConcreto<T> extends Nodo<T> {
         NodoConcreto(T dato) {
             super(dato);
         }
     }
-
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
 
     private Nodo<Integer> nodoInt;
     private Nodo<String>  nodoStr;
@@ -31,10 +23,6 @@ public class TestNodo {
         nodoStr  = new NodoConcreto<>("hola");
         nodoNull = new NodoConcreto<>(null);
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_guarda_el_dato_correctamente() {
@@ -51,10 +39,6 @@ public class TestNodo {
         assertNull(nodoNull.getDato());
     }
 
-    // =========================================================================
-    // GET DATO
-    // =========================================================================
-
     @Test
     public void getDato_retorna_el_valor_almacenado() {
         assertEquals(42, nodoInt.getDato());
@@ -64,10 +48,6 @@ public class TestNodo {
     public void getDato_retorna_null_si_dato_es_null() {
         assertNull(nodoNull.getDato());
     }
-
-    // =========================================================================
-    // SET DATO
-    // =========================================================================
 
     @Test
     public void setDato_actualiza_el_valor() {
@@ -92,10 +72,6 @@ public class TestNodo {
         nodoNull.setDato(7);
         assertEquals(7, nodoNull.getDato());
     }
-
-    // =========================================================================
-    // TIENE DATO
-    // =========================================================================
 
     @Test
     public void tieneDato_retorna_true_con_dato_no_null() {

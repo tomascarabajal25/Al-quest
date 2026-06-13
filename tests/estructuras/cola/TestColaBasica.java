@@ -16,10 +16,6 @@ class TestColaBasica {
         cola = new ColaBasica<>();
     }
 
-    // ──────────────────────────────────────────────
-    // estaVacia() y contarElementos()
-    // ──────────────────────────────────────────────
-
     @Test
     void colaNuevaEstaVacia() {
         assertTrue(cola.estaVacia());
@@ -55,10 +51,6 @@ class TestColaBasica {
         assertEquals(2, cola.contarElementos());
     }
 
-    // ──────────────────────────────────────────────
-    // acolar(T)
-    // ──────────────────────────────────────────────
-
     @Test
     void acolarUnSoloElemento() {
         cola.acolar(42);
@@ -82,10 +74,6 @@ class TestColaBasica {
         assertEquals(2, cola.desacolar());
         assertEquals(3, cola.desacolar());
     }
-
-    // ──────────────────────────────────────────────
-    // acolar(List<T>)
-    // ──────────────────────────────────────────────
 
     @Test
     void acolarListaEncolaEnOrden() {
@@ -113,10 +101,6 @@ class TestColaBasica {
         assertEquals(3, cola.desacolar());
     }
 
-    // ──────────────────────────────────────────────
-    // acolarAll(List<T>)
-    // ──────────────────────────────────────────────
-
     @Test
     void acolarAllEncolaEnOrden() {
         cola.acolarAll(List.of(7, 8, 9));
@@ -143,10 +127,6 @@ class TestColaBasica {
             assertEquals(cola.desacolar(), cola2.desacolar());
         }
     }
-
-    // ──────────────────────────────────────────────
-    // desacolar()
-    // ──────────────────────────────────────────────
 
     @Test
     void desacolarEnColaVaciaRetornaNull() {
@@ -199,10 +179,6 @@ class TestColaBasica {
         assertEquals(3, cola.desacolar());
     }
 
-    // ──────────────────────────────────────────────
-    // obtener()
-    // ──────────────────────────────────────────────
-
     @Test
     void obtenerEnColaVaciaRetornaNull() {
         assertNull(cola.obtener());
@@ -233,9 +209,6 @@ class TestColaBasica {
         assertEquals(vistoPorObtener, eliminadoPorDesacolar);
     }
 
-    // ──────────────────────────────────────────────
-    // Semántica FIFO — propiedades de orden
-    // ──────────────────────────────────────────────
 
     @Test
     void encolarYDesacolarListaCompletaPreservaOrden() {

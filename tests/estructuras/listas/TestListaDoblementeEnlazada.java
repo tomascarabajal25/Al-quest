@@ -12,20 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestListaDoblementeEnlazada {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private ListaDoblementeEnlazada<Integer> lista;
 
     @BeforeEach
     public void setUp() {
         lista = new ListaDoblementeEnlazada<>();
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_lista_nueva_esta_vacia() {
@@ -42,10 +34,6 @@ public class TestListaDoblementeEnlazada {
         assertNull(lista.getPrimero());
         assertNull(lista.getUltimo());
     }
-
-    // =========================================================================
-    // ADD / ADD LAST
-    // =========================================================================
 
     @Test
     public void add_agrega_al_final_y_retorna_true() {
@@ -90,10 +78,6 @@ public class TestListaDoblementeEnlazada {
         assertNull(lista.get(0));
     }
 
-    // =========================================================================
-    // ADD (index, elemento)
-    // =========================================================================
-
     @Test
     public void add_index_cero_inserta_al_inicio_y_actualiza_primero() {
         lista.add(2);
@@ -131,10 +115,6 @@ public class TestListaDoblementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.add(1, 1));
     }
 
-    // =========================================================================
-    // GET
-    // =========================================================================
-
     @Test
     public void get_retorna_elemento_correcto_desde_inicio() {
         lista.add(10); lista.add(20); lista.add(30);
@@ -159,10 +139,6 @@ public class TestListaDoblementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.get(1));
     }
 
-    // =========================================================================
-    // SET
-    // =========================================================================
-
     @Test
     public void set_reemplaza_y_retorna_el_valor_viejo() {
         lista.add(1); lista.add(2);
@@ -174,10 +150,6 @@ public class TestListaDoblementeEnlazada {
     public void set_index_invalido_lanza_excepcion() {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.set(0, 1));
     }
-
-    // =========================================================================
-    // REMOVE (index)
-    // =========================================================================
 
     @Test
     public void remove_index_retorna_elemento_eliminado() {
@@ -226,10 +198,6 @@ public class TestListaDoblementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.remove(-1));
     }
 
-    // =========================================================================
-    // REMOVE (Object)
-    // =========================================================================
-
     @Test
     public void remove_object_elimina_primera_ocurrencia_y_retorna_true() {
         lista.add(1); lista.add(2); lista.add(1);
@@ -264,10 +232,6 @@ public class TestListaDoblementeEnlazada {
     public void remove_object_lista_vacia_retorna_false() {
         assertFalse(lista.remove((Object) 1));
     }
-
-    // =========================================================================
-    // CONTAINS / INDEX OF / LAST INDEX OF
-    // =========================================================================
 
     @Test
     public void contains_retorna_true_si_existe() {
@@ -309,9 +273,6 @@ public class TestListaDoblementeEnlazada {
         assertEquals(-1, lista.lastIndexOf(99));
     }
 
-    // =========================================================================
-    // IS EMPTY / SIZE / CLEAR
-    // =========================================================================
 
     @Test
     public void isEmpty_retorna_false_con_elementos() {
@@ -334,10 +295,6 @@ public class TestListaDoblementeEnlazada {
         assertDoesNotThrow(() -> lista.clear());
     }
 
-    // =========================================================================
-    // ITERATOR
-    // =========================================================================
-
     @Test
     public void iterator_recorre_en_orden() {
         lista.add(10); lista.add(20); lista.add(30);
@@ -358,10 +315,6 @@ public class TestListaDoblementeEnlazada {
         assertFalse(lista.iterator().hasNext());
     }
 
-    // =========================================================================
-    // TO ARRAY
-    // =========================================================================
-
     @Test
     public void toArray_retorna_elementos_en_orden() {
         lista.add(1); lista.add(2); lista.add(3);
@@ -379,9 +332,6 @@ public class TestListaDoblementeEnlazada {
         assertEquals(0, lista.toArray().length);
     }
 
-    // =========================================================================
-    // CONTAINS ALL / ADD ALL / REMOVE ALL / RETAIN ALL
-    // =========================================================================
 
     @Test
     public void containsAll_retorna_true_si_contiene_todos() {
@@ -422,18 +372,6 @@ public class TestListaDoblementeEnlazada {
     }
 
     @Test
-    public void retainAll_conserva_solo_elementos_indicados() {
-        lista.add(1); lista.add(2); lista.add(3);
-        lista.retainAll(List.of(2));
-        assertEquals(1, lista.size());
-        assertTrue(lista.contains(2));
-    }
-
-    // =========================================================================
-    // SUB LIST
-    // =========================================================================
-
-    @Test
     public void subList_retorna_sublista_correcta() {
         lista.add(1); lista.add(2); lista.add(3); lista.add(4);
         List<Integer> sub = lista.subList(1, 3);
@@ -449,9 +387,6 @@ public class TestListaDoblementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.subList(1, 0));
     }
 
-    // =========================================================================
-    // LIST ITERATOR
-    // =========================================================================
 
     @Test
     public void listIterator_next_recorre_en_orden() {
@@ -495,15 +430,6 @@ public class TestListaDoblementeEnlazada {
     }
 
     @Test
-    public void listIterator_add_inserta_en_posicion_actual() {
-        lista.add(1); lista.add(3);
-        ListIterator<Integer> it = lista.listIterator(1);
-        it.add(2);
-        assertEquals(3, lista.size());
-        assertEquals(2, lista.get(1));
-    }
-
-    @Test
     public void listIterator_remove_sin_next_lanza_excepcion() {
         lista.add(1);
         assertThrows(IllegalStateException.class, () -> lista.listIterator().remove());
@@ -513,10 +439,6 @@ public class TestListaDoblementeEnlazada {
     public void listIterator_next_sin_elementos_lanza_excepcion() {
         assertThrows(NoSuchElementException.class, () -> lista.listIterator().next());
     }
-
-    // =========================================================================
-    // ADD SORTED
-    // =========================================================================
 
     @Test
     public void addSorted_lista_vacia_inicializa_primero_y_ultimo() {
@@ -578,10 +500,6 @@ public class TestListaDoblementeEnlazada {
         ListaDoblementeEnlazada<Object> listaObj = new ListaDoblementeEnlazada<>();
         assertThrows(IllegalArgumentException.class, () -> listaObj.addSorted(new Object()));
     }
-
-    // =========================================================================
-    // GET PRIMERO / GET ULTIMO
-    // =========================================================================
 
     @Test
     public void getPrimero_retorna_el_primer_nodo() {

@@ -1,170 +1,141 @@
 package modelos;
 
-/**
- * TDA Test para Objeto.
- *
- * Objeto extiende Entidad (abstracta), por lo que es directamente instanciable.
- *
- * Cubre:
- *   - Constructor: nombre y colisión almacenados correctamente
- *   - getColision: true y false según lo pasado al constructor
- *   - Herencia de Entidad: getNombre, toString, equals, hashCode
- *   - Precondición heredada: nombre null (según ValidacionesUtiles en Entidad)
- */
-public class TestObjeto {
+import org.junit.jupiter.api.Test;
 
-    // ------------------------------------------------------------------ //
-    //  Helper de reporte
-    // ------------------------------------------------------------------ //
+import static org.junit.jupiter.api.Assertions.*;
 
-    private static void reportar(String nombre, boolean ok) {
-        System.out.println((ok ? "[OK]  " : "[FAIL]") + " " + nombre);
+class TestObjeto {
+
+    @Test
+    void constructorValido() {
+
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertEquals("Pared", objeto.getNombre());
+        assertTrue(objeto.getColision());
     }
 
-    // ================================================================== //
-    //  Tests: Constructor / getColision
-    // ================================================================== //
+    @Test
+    void constructorSinColision() {
 
-    /** Constructor con colision=true: getColision devuelve true. */
-    private static void testConstructorColisionTrue() {
-        Objeto obj = new Objeto("Espada", true);
-        reportar("Constructor: colision=true → getColision devuelve true",
-                obj.getColision());
+        Objeto objeto = new Objeto("Suelo", false);
+
+        assertEquals("Suelo", objeto.getNombre());
+        assertFalse(objeto.getColision());
     }
 
-    /** Constructor con colision=false: getColision devuelve false. */
-    private static void testConstructorColisionFalse() {
-        Objeto obj = new Objeto("Fantasma", false);
-        reportar("Constructor: colision=false → getColision devuelve false",
-                !obj.getColision());
+    @Test
+    void constructorNombreNull() {
+
+        assertThrows(RuntimeException.class, () -> {
+            new Objeto(null, true);
+        });
     }
 
-    /** El nombre queda accesible a través de getNombre (heredado de Entidad). */
-    private static void testConstructorNombreHeredado() {
-        Objeto obj = new Objeto("Escudo", false);
-        reportar("Constructor: nombre accesible via getNombre (herencia)",
-                "Escudo".equals(obj.getNombre()));
+    @Test
+    void equalsMismoObjeto() {
+
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertEquals(objeto, objeto);
     }
 
-    // ================================================================== //
-    //  Tests: Herencia de Entidad — toString
-    // ================================================================== //
+    @Test
+    void equalsObjetosIguales() {
 
-    /** toString sigue el formato definido en Entidad: "Entidad [nombre=X]". */
-    private static void testToStringFormatoEntidad() {
-        Objeto obj = new Objeto("Poción", true);
-        String esperado = "Entidad [nombre=Poción]";
-        reportar("toString: hereda formato de Entidad 'Entidad [nombre=X]'",
-                esperado.equals(obj.toString()));
+        Objeto objeto1 = new Objeto("Pared", true);
+        Objeto objeto2 = new Objeto("Pared", false);
+
+        assertEquals(objeto1, objeto2);
     }
 
-    // ================================================================== //
-    //  Tests: Herencia de Entidad — equals
-    // ================================================================== //
+    @Test
+    void equalsObjetosDistintos() {
 
-    /** Dos objetos con el mismo nombre son iguales (igualdad por nombre heredada). */
-    private static void testEqualsIgualNombre() {
-        Objeto o1 = new Objeto("Llave", true);
-        Objeto o2 = new Objeto("Llave", false); // distinta colisión, mismo nombre
-        reportar("equals: mismo nombre (distinta colisión) → true",
-                o1.equals(o2));
+        Objeto objeto1 = new Objeto("Pared", true);
+        Objeto objeto2 = new Objeto("Suelo", true);
+
+        assertNotEquals(objeto1, objeto2);
     }
 
-    /** Dos objetos con distinto nombre no son iguales. */
-    private static void testEqualsDistintoNombre() {
-        Objeto o1 = new Objeto("Llave", true);
-        Objeto o2 = new Objeto("Cofre", true);
-        reportar("equals: distinto nombre → false",
-                !o1.equals(o2));
+    @Test
+    void equalsConNull() {
+
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertNotEquals(null, objeto);
     }
 
-    /** Un objeto no es igual a null. */
-    private static void testEqualsConNull() {
-        Objeto obj = new Objeto("Mapa", false);
-        reportar("equals: comparación con null → false",
-                !obj.equals(null));
+    @Test
+    void equalsConOtroTipo() {
+
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertFalse(objeto.equals("Pared"));
+        assertFalse(objeto.equals(42));
     }
 
-    /** Reflexividad: un objeto es igual a sí mismo. */
-    private static void testEqualsReflexivo() {
-        Objeto obj = new Objeto("Antorcha", true);
-        reportar("equals: reflexividad (obj.equals(obj))",
-                obj.equals(obj));
+    @Test
+    void hashCodeIguales() {
+
+        Objeto objeto1 = new Objeto("Pared", true);
+        Objeto objeto2 = new Objeto("Pared", false);
+
+        assertEquals(
+                objeto1.hashCode(),
+                objeto2.hashCode()
+        );
     }
 
-    /** Un objeto no es igual a una instancia de otra clase con el mismo nombre. */
-    private static void testEqualsClaseDistinta() {
-        Objeto obj = new Objeto("Roca", false);
-        reportar("equals: clase distinta → false",
-                !obj.equals("Roca"));
+    @Test
+    void hashCodeDistintos() {
+
+        Objeto objeto1 = new Objeto("Pared", true);
+        Objeto objeto2 = new Objeto("Suelo", true);
+
+        assertNotEquals(
+                objeto1.hashCode(),
+                objeto2.hashCode()
+        );
     }
 
-    // ================================================================== //
-    //  Tests: Herencia de Entidad — hashCode
-    // ================================================================== //
+    @Test
+    void hashCodeConsistencia() {
 
-    /** Dos objetos con el mismo nombre tienen el mismo hashCode. */
-    private static void testHashCodeMismoNombre() {
-        Objeto o1 = new Objeto("Gema", true);
-        Objeto o2 = new Objeto("Gema", false);
-        reportar("hashCode: mismo nombre → mismo hashCode",
-                o1.hashCode() == o2.hashCode());
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertEquals(objeto.hashCode(), objeto.hashCode());
     }
 
-    /** El hashCode es consistente entre llamadas sucesivas. */
-    private static void testHashCodeConsistente() {
-        Objeto obj = new Objeto("Pergamino", false);
-        reportar("hashCode: consistente entre llamadas sucesivas",
-                obj.hashCode() == obj.hashCode());
+    @Test
+    void toStringContieneNombre() {
+
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertTrue(objeto.toString().contains("Pared"));
     }
 
-    // ================================================================== //
-    //  Tests: Precondición — nombre null
-    // ================================================================== //
+    @Test
+    void getNombreValido() {
 
-    /**
-     * El constructor debe lanzar excepción si el nombre es null
-     * (precondición validada por Entidad vía ValidacionesUtiles).
-     */
-    private static void testConstructorNombreNullLanzaExcepcion() {
-        boolean lanzó = false;
-        try {
-            new Objeto(null, false);
-        } catch (Exception e) {
-            lanzó = true;
-        }
-        reportar("Constructor: nombre null → lanza excepción", lanzó);
+        Objeto objeto = new Objeto("Pared", true);
+
+        assertEquals("Pared", objeto.getNombre());
     }
 
-    // ================================================================== //
-    //  Punto de entrada
-    // ================================================================== //
+    @Test
+    void getColisionVerdadero() {
 
-    public static void main(String[] args) {
-        System.out.println("=== Tests Objeto ===\n");
+        Objeto objeto = new Objeto("Pared", true);
 
-        System.out.println("-- Constructor / getColision --");
-        testConstructorColisionTrue();
-        testConstructorColisionFalse();
-        testConstructorNombreHeredado();
+        assertTrue(objeto.getColision());
+    }
 
-        System.out.println("\n-- toString (herencia Entidad) --");
-        testToStringFormatoEntidad();
+    @Test
+    void getColisionFalso() {
 
-        System.out.println("\n-- equals (herencia Entidad) --");
-        testEqualsIgualNombre();
-        testEqualsDistintoNombre();
-        testEqualsConNull();
-        testEqualsReflexivo();
-        testEqualsClaseDistinta();
+        Objeto objeto = new Objeto("Suelo", false);
 
-        System.out.println("\n-- hashCode (herencia Entidad) --");
-        testHashCodeMismoNombre();
-        testHashCodeConsistente();
-
-        System.out.println("\n-- Precondición: nombre null --");
-        testConstructorNombreNullLanzaExcepcion();
-
-        System.out.println("\n=== Fin de tests ===");
+        assertFalse(objeto.getColision());
     }
 }

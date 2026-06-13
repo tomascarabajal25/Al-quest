@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestUtils {
 
-    // ─────────────────────────────────────────────
-    // sleep
-    // ─────────────────────────────────────────────
-
     @Test
     void sleep_ceroMilisegundos_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> Utils.sleep(0));

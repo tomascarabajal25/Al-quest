@@ -17,10 +17,6 @@ class TestCola {
         cola = new Cola<>();
     }
 
-    // ──────────────────────────────────────────────
-    // isEmpty() y size()
-    // ──────────────────────────────────────────────
-
     @Test
     void colaNuevaEstaVacia() {
         assertTrue(cola.isEmpty());
@@ -55,10 +51,6 @@ class TestCola {
         assertEquals(2, cola.size());
     }
 
-    // ──────────────────────────────────────────────
-    // offer() y add()
-    // ──────────────────────────────────────────────
-
     @Test
     void offerRetornaSiempreTrue() {
         assertTrue(cola.offer(10));
@@ -88,10 +80,6 @@ class TestCola {
         cola.offer(5);
         assertEquals(2, cola.size());
     }
-
-    // ──────────────────────────────────────────────
-    // poll() — FIFO
-    // ──────────────────────────────────────────────
 
     @Test
     void pollEnColaVaciaRetornaNull() {
@@ -133,10 +121,6 @@ class TestCola {
         assertNull(cola.poll());
     }
 
-    // ──────────────────────────────────────────────
-    // remove() — lanza excepción si vacía
-    // ──────────────────────────────────────────────
-
     @Test
     void removeEnColaVaciaLanzaExcepcion() {
         assertThrows(NoSuchElementException.class, () -> cola.remove());
@@ -160,10 +144,6 @@ class TestCola {
         assertEquals(30, cola.remove());
     }
 
-    // ──────────────────────────────────────────────
-    // peek() — sin eliminar, null si vacía
-    // ──────────────────────────────────────────────
-
     @Test
     void peekEnColaVaciaRetornaNull() {
         assertNull(cola.peek());
@@ -186,10 +166,6 @@ class TestCola {
         assertEquals(2, cola.poll());
     }
 
-    // ──────────────────────────────────────────────
-    // element() — lanza excepción si vacía
-    // ──────────────────────────────────────────────
-
     @Test
     void elementEnColaVaciaLanzaExcepcion() {
         assertThrows(NoSuchElementException.class, () -> cola.element());
@@ -202,10 +178,6 @@ class TestCola {
         assertEquals(55, cola.element());
         assertEquals(2, cola.size());
     }
-
-    // ──────────────────────────────────────────────
-    // contains()
-    // ──────────────────────────────────────────────
 
     @Test
     void containsRetornaFalseEnColaVacia() {
@@ -230,10 +202,6 @@ class TestCola {
         cola.offer(null);
         assertTrue(cola.contains(null));
     }
-
-    // ──────────────────────────────────────────────
-    // remove(Object) — elimina por valor
-    // ──────────────────────────────────────────────
 
     @Test
     void removeObjectRetornaFalseEnColaVacia() {
@@ -279,10 +247,6 @@ class TestCola {
         assertFalse(cola.remove((Object) 99));
     }
 
-    // ──────────────────────────────────────────────
-    // clear()
-    // ──────────────────────────────────────────────
-
     @Test
     void clearDejaColaVacia() {
         cola.offer(1);
@@ -306,10 +270,6 @@ class TestCola {
         assertEquals(2, cola.peek());
     }
 
-    // ──────────────────────────────────────────────
-    // containsAll()
-    // ──────────────────────────────────────────────
-
     @Test
     void containsAllRetornaTrueSiTodosPresentes() {
         cola.offer(1);
@@ -330,10 +290,6 @@ class TestCola {
         cola.offer(1);
         assertTrue(cola.containsAll(List.of()));
     }
-
-    // ──────────────────────────────────────────────
-    // addAll()
-    // ──────────────────────────────────────────────
 
     @Test
     void addAllEncolaTodosLosElementos() {
@@ -359,10 +315,6 @@ class TestCola {
         assertFalse(cola.addAll(List.of()));
     }
 
-    // ──────────────────────────────────────────────
-    // removeAll()
-    // ──────────────────────────────────────────────
-
     @Test
     void removeAllEliminaTodosLosElementosIndicados() {
         cola.addAll(List.of(1, 2, 3, 2, 1));
@@ -383,10 +335,6 @@ class TestCola {
         assertFalse(cola.removeAll(List.of()));
         assertEquals(3, cola.size());
     }
-
-    // ──────────────────────────────────────────────
-    // retainAll()
-    // ──────────────────────────────────────────────
 
     @Test
     void retainAllConservaInterseccion() {
@@ -411,10 +359,6 @@ class TestCola {
         assertTrue(cola.isEmpty());
     }
 
-    // ──────────────────────────────────────────────
-    // iterator()
-    // ──────────────────────────────────────────────
-
     @Test
     void iteratorDeColaVaciaNoTieneNext() {
         assertFalse(cola.iterator().hasNext());
@@ -438,10 +382,6 @@ class TestCola {
         assertEquals(3, cola.size());
     }
 
-    // ──────────────────────────────────────────────
-    // toArray()
-    // ──────────────────────────────────────────────
-
     @Test
     void toArrayDeColaVaciaEsArrayVacio() {
         assertEquals(0, cola.toArray().length);
@@ -461,9 +401,6 @@ class TestCola {
         assertArrayEquals(new Integer[]{7, 8, 9}, arr);
     }
 
-    // ──────────────────────────────────────────────
-    // Semántica FIFO — propiedades de orden
-    // ──────────────────────────────────────────────
 
     @Test
     void intercalacionDeEncolarYDescolaMantieneFIFO() {

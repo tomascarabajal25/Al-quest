@@ -1,5 +1,6 @@
 package estructuras.conjunto;
 
+import estructuras.conjuntos.ConjuntoBasico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +16,6 @@ class TestConjuntoBasico {
     void setUp() {
         conjunto = new ConjuntoBasico<>();
     }
-
-    // ──────────────────────────────────────────────
-    // esVacio() y tamaño()
-    // ──────────────────────────────────────────────
 
     @Test
     void conjuntoNuevoEstaVacio() {
@@ -45,10 +42,6 @@ class TestConjuntoBasico {
         conjunto.agregar(30);
         assertEquals(3, conjunto.tamaño());
     }
-
-    // ──────────────────────────────────────────────
-    // agregar()
-    // ──────────────────────────────────────────────
 
     @Test
     void agregarRetornaTrueCuandoElementoEsNuevo() {
@@ -90,10 +83,6 @@ class TestConjuntoBasico {
         assertEquals(1, conjunto.tamaño());
     }
 
-    // ──────────────────────────────────────────────
-    // contiene()
-    // ──────────────────────────────────────────────
-
     @Test
     void contieneRetornaFalseEnConjuntoVacio() {
         assertFalse(conjunto.contiene(1));
@@ -116,10 +105,6 @@ class TestConjuntoBasico {
         conjunto.agregar(null);
         assertTrue(conjunto.contiene(null));
     }
-
-    // ──────────────────────────────────────────────
-    // quitar()
-    // ──────────────────────────────────────────────
 
     @Test
     void quitarRetornaFalseEnConjuntoVacio() {
@@ -159,10 +144,6 @@ class TestConjuntoBasico {
         assertFalse(conjunto.quitar(5));
     }
 
-    // ──────────────────────────────────────────────
-    // vaciar()
-    // ──────────────────────────────────────────────
-
     @Test
     void vaciarDejaElConjuntoVacio() {
         conjunto.agregar(1);
@@ -186,9 +167,6 @@ class TestConjuntoBasico {
         assertEquals(1, conjunto.tamaño());
     }
 
-    // ──────────────────────────────────────────────
-    // elementos()
-    // ──────────────────────────────────────────────
 
     @Test
     void elementosDeConjuntoVacioEsColeccionVacia() {
@@ -214,10 +192,6 @@ class TestConjuntoBasico {
         assertTrue(elems.contains(10));
         assertTrue(elems.contains(20));
     }
-
-    // ──────────────────────────────────────────────
-    // union()
-    // ──────────────────────────────────────────────
 
     @Test
     void unionConConjuntoVacioEsElMismo() {
@@ -295,10 +269,6 @@ class TestConjuntoBasico {
         }
     }
 
-    // ──────────────────────────────────────────────
-    // interseccion()
-    // ──────────────────────────────────────────────
-
     @Test
     void interseccionConConjuntoVacioEsVacia() {
         conjunto.agregar(1);
@@ -370,10 +340,6 @@ class TestConjuntoBasico {
             assertTrue(ba.contiene(e));
         }
     }
-
-    // ──────────────────────────────────────────────
-    // diferencia()
-    // ──────────────────────────────────────────────
 
     @Test
     void diferenciaConConjuntoVacioEsElMismo() {
@@ -451,10 +417,6 @@ class TestConjuntoBasico {
         assertEquals(2, conjunto.tamaño());
         assertEquals(1, otro.tamaño());
     }
-
-    // ──────────────────────────────────────────────
-    // Propiedades algebraicas combinadas
-    // ──────────────────────────────────────────────
 
     @Test
     void unionConInterseccionCumpleAbsorcion() {

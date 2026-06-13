@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestSistemaUtiles {
 
-    // ─────────────────────────────────────────────
-    // esperar
-    // ─────────────────────────────────────────────
-
     @Test
     void esperar_ceroMilisegundos_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> SistemaUtiles.esperar(0));
@@ -28,10 +24,6 @@ class TestSistemaUtiles {
         // ValidacionesUtiles.validarMayorOIgualACero debe rechazarlo
         assertThrows(Exception.class, () -> SistemaUtiles.esperar(-1));
     }
-
-    // ─────────────────────────────────────────────
-    // generarRutaAbsoluta
-    // ─────────────────────────────────────────────
 
     @Test
     void generarRutaAbsoluta_debeRetornarStringNoNulo() {

@@ -9,20 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPilaBasica {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private PilaBasica<Integer> pila;
 
     @BeforeEach
     public void setUp() {
         pila = new PilaBasica<>();
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_pila_nueva_esta_vacia() {
@@ -39,10 +31,6 @@ public class TestPilaBasica {
         assertNull(pila.obtener());
     }
 
-    // =========================================================================
-    // ESTA VACIA
-    // =========================================================================
-
     @Test
     public void estaVacia_retorna_false_despues_de_apilar() {
         pila.apilar(1);
@@ -55,10 +43,6 @@ public class TestPilaBasica {
         pila.desapilar();
         assertTrue(pila.estaVacia());
     }
-
-    // =========================================================================
-    // APILAR (elemento)
-    // =========================================================================
 
     @Test
     public void apilar_un_elemento_queda_en_el_tope() {
@@ -88,10 +72,6 @@ public class TestPilaBasica {
         assertNull(p.obtener());
     }
 
-    // =========================================================================
-    // APILAR (lista)
-    // =========================================================================
-
     @Test
     public void apilar_lista_agrega_todos_los_elementos() {
         pila.apilar(List.of(1, 2, 3));
@@ -120,10 +100,6 @@ public class TestPilaBasica {
         assertEquals(1, pila.contarElementos());
         assertEquals(1, pila.obtener());
     }
-
-    // =========================================================================
-    // DESAPILAR
-    // =========================================================================
 
     @Test
     public void desapilar_retorna_elemento_del_tope() {
@@ -175,10 +151,6 @@ public class TestPilaBasica {
         assertEquals(0, pila.contarElementos());
     }
 
-    // =========================================================================
-    // OBTENER
-    // =========================================================================
-
     @Test
     public void obtener_retorna_tope_sin_remover() {
         pila.apilar(7);
@@ -208,10 +180,6 @@ public class TestPilaBasica {
         pila.desapilar();
         assertEquals(1, pila.obtener());
     }
-
-    // =========================================================================
-    // CONTAR ELEMENTOS
-    // =========================================================================
 
     @Test
     public void contarElementos_pila_vacia_es_cero() {

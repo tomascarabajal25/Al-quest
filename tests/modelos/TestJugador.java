@@ -19,6 +19,13 @@ public class TestJugador {
     }
 
     @Test
+    public void testConstructorNombreNull(){
+        assertThrows(RuntimeException.class, () -> {
+            new Jugador(null);
+        });
+    }
+
+    @Test
     public void testEquals(){
         Jugador jugador2 = new Jugador("Jugador");
         assertTrue(jugador.equals(jugador2));
@@ -31,13 +38,46 @@ public class TestJugador {
     }
 
     @Test
+    public void testEqualsConNull(){
+        assertFalse(jugador.equals(null));
+    }
+
+    @Test
+    public void testEqualsConOtroTipo(){
+        assertFalse(jugador.equals("Jugador"));
+        assertFalse(jugador.equals(42));
+    }
+
+    @Test
+    public void testEqualsMismaInstancia(){
+        assertTrue(jugador.equals(jugador));
+    }
+
+    @Test
     public void testHashCode(){
         Jugador jugador2 = new Jugador("Jugador");
         assertEquals(jugador.hashCode(), jugador2.hashCode());
     }
 
     @Test
+    public void testHashCodeDistintos(){
+        Jugador jugador2 = new Jugador("Jugador2");
+        assertNotEquals(jugador.hashCode(), jugador2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeConsistencia(){
+        assertEquals(jugador.hashCode(), jugador.hashCode());
+    }
+
+    @Test
     public void testToString(){
+        String esperado = "Jugador{nombre='Jugador'}";
+        assertEquals(esperado, jugador.toString());
+    }
+
+    @Test
+    public void testToStringContieneNombre(){
         assertTrue(jugador.toString().contains("Jugador"));
     }
 

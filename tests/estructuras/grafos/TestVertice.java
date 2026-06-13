@@ -8,10 +8,6 @@ import java.util.Set;
 
 class TestVertice {
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarValorCorrectamente() {
         Vertice<String, Integer> v = new Vertice<>("A");
@@ -35,10 +31,6 @@ class TestVertice {
         Vertice<String, Integer> v = new Vertice<>(null);
         assertNull(v.getValor());
     }
-
-    // ─────────────────────────────────────────────
-    // agregarArista / getAdyacencias
-    // ─────────────────────────────────────────────
 
     @Test
     void agregarArista_debeAumentarTamañoDeAdyacencias() {
@@ -92,10 +84,6 @@ class TestVertice {
         assertTrue(destino.getAdyacencias().isEmpty());
     }
 
-    // ─────────────────────────────────────────────
-    // equals
-    // ─────────────────────────────────────────────
-
     @Test
     void equals_mismaReferencia_debeRetornarTrue() {
         Vertice<String, Integer> v = new Vertice<>("A");
@@ -137,10 +125,6 @@ class TestVertice {
         assertEquals(v1, v2);
     }
 
-    // ─────────────────────────────────────────────
-    // hashCode
-    // ─────────────────────────────────────────────
-
     @Test
     void hashCode_mismoValor_debeTenerMismoHashCode() {
         Vertice<String, Integer> v1 = new Vertice<>("A");
@@ -170,10 +154,6 @@ class TestVertice {
         assertTrue(set.contains(v1));
         assertTrue(set.contains(v3));
     }
-
-    // ─────────────────────────────────────────────
-    // toString
-    // ─────────────────────────────────────────────
 
     @Test
     void toString_debeContenerElValor() {

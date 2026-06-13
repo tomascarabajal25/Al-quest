@@ -1,4 +1,4 @@
-package tests.ciudades.testsDeTorresDeHanoi;
+package ciudades.testsDeTorresDeHanoi;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

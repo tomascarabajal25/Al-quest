@@ -40,6 +40,16 @@ class TestMapa {
     }
 
     @Test
+    void constructorAnchoCero() {
+        assertThrows(RuntimeException.class, () -> {new Mapa(0, 2);});
+    }
+
+    @Test
+    void constructorAltoCero() {
+        assertThrows(RuntimeException.class, () -> {new Mapa(2, 0);});
+    }
+
+    @Test
     void ocuparCeldaCorrectamente() {
         Mapa mapa = new Mapa(3, 3);
         mapa.ocuparCelda("Hola", 1, 1);
@@ -114,6 +124,33 @@ class TestMapa {
     }
 
     @Test
+    void getPosicionCeldaConContenidoExistente() {
+        Mapa mapa = new Mapa(3, 3);
+        mapa.ocuparCelda("Hola", 2, 3);
+
+        int[] posicion = mapa.getPosicionCeldaConContenido("Hola");
+
+        assertNotNull(posicion);
+        assertEquals(2, posicion[0]);
+        assertEquals(3, posicion[1]);
+    }
+
+    @Test
+    void getPosicionCeldaConContenidoInexistente() {
+        Mapa mapa = new Mapa(3, 3);
+
+        int[] posicion = mapa.getPosicionCeldaConContenido("NoExiste");
+
+        assertNull(posicion);
+    }
+
+    @Test
+    void getPosicionCeldaConContenidoNull() {
+        Mapa mapa = new Mapa(3, 3);
+        assertThrows(RuntimeException.class, () -> {mapa.getPosicionCeldaConContenido(null);});
+    }
+
+    @Test
     void validarFueraDeRangoCorrecto() {
         Mapa mapa = new Mapa(3, 3);
         assertDoesNotThrow(() -> {mapa.validarFueraDeRango(1, 1);});
@@ -123,6 +160,12 @@ class TestMapa {
     void validarFueraDeRangoIncorrecto() {
         Mapa mapa = new Mapa(3, 3);
         assertThrows(RuntimeException.class, () -> {mapa.validarFueraDeRango(100, 100);});
+    }
+
+    @Test
+    void equalsMismaInstancia() {
+        Mapa mapa = new Mapa(2, 2);
+        assertEquals(mapa, mapa);
     }
 
     @Test
@@ -170,8 +213,31 @@ class TestMapa {
         mapa1.ocuparCelda("A", 1, 1);
         mapa2.ocuparCelda("A", 1, 1);
 
-        assertEquals(mapa1.hashCode(), mapa2.hashCode()
-        );
+        assertEquals(mapa1.hashCode(), mapa2.hashCode());
+    }
+
+    @Test
+    void hashCodeMapasDistintos() {
+
+        Mapa mapa1 = new Mapa(2, 2);
+        Mapa mapa2 = new Mapa(2, 2);
+
+        mapa1.ocuparCelda("A", 1, 1);
+        mapa2.ocuparCelda("B", 1, 1);
+
+        assertNotEquals(mapa1.hashCode(), mapa2.hashCode());
+    }
+
+    @Test
+    void hashCodeConsistencia() {
+        Mapa mapa = new Mapa(2, 2);
+        assertEquals(mapa.hashCode(), mapa.hashCode());
+    }
+
+    @Test
+    void toStringContieneAtributos() {
+        Mapa mapa = new Mapa(2, 2);
+        assertTrue(mapa.toString().contains("celdas"));
     }
 
     @Test
@@ -182,9 +248,7 @@ class TestMapa {
         Vector<Vector<Celda<?>>> vecinos = mapa.getCeldasVecinasRespectoPosicion(3, 3, 1);
 
         assertEquals(3, vecinos.getLongitud());
-
-        assertEquals(3, vecinos.obtener(1).getLongitud()
-        );
+        assertEquals(3, vecinos.obtener(1).getLongitud());
     }
 
     @Test
@@ -195,8 +259,18 @@ class TestMapa {
         Vector<Vector<Celda<?>>> vecinos = mapa.getCeldasVecinasRespectoPosicion(1, 1, 1);
 
         assertEquals(3, vecinos.getLongitud());
-
         assertEquals(3, vecinos.obtener(1).getLongitud());
+    }
+
+    @Test
+    void getVecinosBordeTienenNulos() {
+
+        Mapa mapa = new Mapa(5, 5);
+
+        // Desde la esquina (1,1) con cant=1, las posiciones fuera del mapa deben ser null
+        Vector<Vector<Celda<?>>> vecinos = mapa.getCeldasVecinasRespectoPosicion(1, 1, 1);
+
+        assertNull(vecinos.obtener(1).obtener(1));
     }
 
     @Test

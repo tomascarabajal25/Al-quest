@@ -1,5 +1,6 @@
 package estructuras.conjunto;
 
+import estructuras.conjuntos.Conjunto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,10 +18,6 @@ class TestConjunto {
         conjunto = new Conjunto<>();
     }
 
-    // ──────────────────────────────────────────────
-    // size() e isEmpty()
-    // ──────────────────────────────────────────────
-
     @Test
     void conjuntoNuevoEstaVacio() {
         assertTrue(conjunto.isEmpty());
@@ -33,10 +30,6 @@ class TestConjunto {
         assertFalse(conjunto.isEmpty());
         assertEquals(1, conjunto.size());
     }
-
-    // ──────────────────────────────────────────────
-    // add()
-    // ──────────────────────────────────────────────
 
     @Test
     void addRetornaTrueCuandoElementoNoExiste() {
@@ -73,10 +66,6 @@ class TestConjunto {
         assertEquals(1, conjunto.size());
     }
 
-    // ──────────────────────────────────────────────
-    // contains()
-    // ──────────────────────────────────────────────
-
     @Test
     void containsRetornaFalseEnConjuntoVacio() {
         assertFalse(conjunto.contains(1));
@@ -93,10 +82,6 @@ class TestConjunto {
         conjunto.add(1);
         assertFalse(conjunto.contains(99));
     }
-
-    // ──────────────────────────────────────────────
-    // remove()
-    // ──────────────────────────────────────────────
 
     @Test
     void removeRetornaFalseEnConjuntoVacio() {
@@ -129,10 +114,6 @@ class TestConjunto {
         assertEquals(2, conjunto.size());
     }
 
-    // ──────────────────────────────────────────────
-    // containsAll()
-    // ──────────────────────────────────────────────
-
     @Test
     void containsAllRetornaTrueSiTodosPresentes() {
         conjunto.add(1);
@@ -153,10 +134,6 @@ class TestConjunto {
         conjunto.add(1);
         assertTrue(conjunto.containsAll(List.of()));
     }
-
-    // ──────────────────────────────────────────────
-    // addAll()
-    // ──────────────────────────────────────────────
 
     @Test
     void addAllAgregaElementosNuevos() {
@@ -189,10 +166,6 @@ class TestConjunto {
         assertEquals(1, conjunto.size());
     }
 
-    // ──────────────────────────────────────────────
-    // removeAll()
-    // ──────────────────────────────────────────────
-
     @Test
     void removeAllEliminaLosElementosIndicados() {
         conjunto.addAll(List.of(1, 2, 3, 4));
@@ -213,10 +186,6 @@ class TestConjunto {
         assertFalse(conjunto.removeAll(List.of()));
         assertEquals(3, conjunto.size());
     }
-
-    // ──────────────────────────────────────────────
-    // retainAll()
-    // ──────────────────────────────────────────────
 
     @Test
     void retainAllConservaInterseccion() {
@@ -246,10 +215,6 @@ class TestConjunto {
         assertFalse(conjunto.retainAll(List.of(1, 2, 3)));
     }
 
-    // ──────────────────────────────────────────────
-    // clear()
-    // ──────────────────────────────────────────────
-
     @Test
     void clearDejaElConjuntoVacio() {
         conjunto.addAll(List.of(1, 2, 3));
@@ -262,10 +227,6 @@ class TestConjunto {
     void clearSobreConjuntoVacioNoProduce_excepcion() {
         assertDoesNotThrow(() -> conjunto.clear());
     }
-
-    // ──────────────────────────────────────────────
-    // iterator()
-    // ──────────────────────────────────────────────
 
     @Test
     void iteratorDeConjuntoVacioNoTieneNext() {
@@ -291,10 +252,6 @@ class TestConjunto {
         }
     }
 
-    // ──────────────────────────────────────────────
-    // toArray()
-    // ──────────────────────────────────────────────
-
     @Test
     void toArrayDeConjuntoVacioEsArrayVacio() {
         assertEquals(0, conjunto.toArray().length);
@@ -315,10 +272,6 @@ class TestConjunto {
         assertEquals(3, arr.length);
         assertTrue(conjunto.containsAll(Arrays.asList(arr)));
     }
-
-    // ──────────────────────────────────────────────
-    // Propiedades de conjunto (semántica matemática)
-    // ──────────────────────────────────────────────
 
     @Test
     void dosConjuntosConMismosElementosTienenIgualSize() {

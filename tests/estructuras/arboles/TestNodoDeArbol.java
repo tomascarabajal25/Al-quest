@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestNodoDeArbol {
 
-    // ─────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarValorCorrectamente() {
         NodoDeArbol<Integer> nodo = new NodoDeArbol<>(10);
@@ -38,10 +34,6 @@ class TestNodoDeArbol {
         NodoDeArbol<Integer> nodo = new NodoDeArbol<>(null);
         assertNull(nodo.getValor());
     }
-
-    // ─────────────────────────────────────────────
-    // Getters y Setters
-    // ─────────────────────────────────────────────
 
     @Test
     void setValor_debeActualizarElValor() {
@@ -82,10 +74,6 @@ class TestNodoDeArbol {
         assertNull(padre.getDerecho());
     }
 
-    // ─────────────────────────────────────────────
-    // tieneHijos()
-    // ─────────────────────────────────────────────
-
     @Test
     void tieneHijos_sinHijos_debeRetornarFalse() {
         NodoDeArbol<Integer> nodo = new NodoDeArbol<>(10);
@@ -114,10 +102,6 @@ class TestNodoDeArbol {
         assertTrue(nodo.tieneHijos());
     }
 
-    // ─────────────────────────────────────────────
-    // tieneUnHijo()
-    // ─────────────────────────────────────────────
-
     @Test
     void tieneUnHijo_sinHijos_debeRetornarFalse() {
         NodoDeArbol<Integer> nodo = new NodoDeArbol<>(10);
@@ -145,10 +129,6 @@ class TestNodoDeArbol {
         nodo.setDerecho(new NodoDeArbol<>(15));
         assertFalse(nodo.tieneUnHijo());
     }
-
-    // ─────────────────────────────────────────────
-    // Consistencia entre tieneHijos() y tieneUnHijo()
-    // ─────────────────────────────────────────────
 
     @Test
     void consistencia_sinHijos_ambosFalse() {

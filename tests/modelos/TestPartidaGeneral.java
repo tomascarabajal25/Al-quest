@@ -1,271 +1,237 @@
 package modelos;
 
-/**
- * TDA Test para PartidaGeneral.
- *
- * PartidaGeneral depende de Swing (JFrame, SwingUtilities), GrafoCiudades,
- * NodoCiudad y sub-partidas concretas. Para aislar la lógica pura del
- * orquestador se definen stubs mínimos al final del archivo.
- *
- * Estrategia:
- *   - Los tests que solo ejercen lógica de modelo (puntaje, grafo, callbacks)
- *     NO llaman a iniciar() ni a finalizar(), evitando la creación de ventanas.
- *   - Se accede al estado interno a través de los getters públicos.
- *
- * Cubre:
- *   - Constructor: estado inicial (puntajeTotal=0, ciudadActual=null, grafo construido)
- *   - getMapaMundi / getPuntajeTotal / getCiudadActual
- *   - alTerminarCiudad: puntaje > 0 → completada + acumulación
- *   - alTerminarCiudad: puntaje = 0 → no completada, no acumula
- *   - alTerminarCiudad: acumulación de múltiples ciudades
- *   - alTerminarCiudad: id inexistente → sin excepción
- *   - Herencia de Partida: getNombre, getJugador
- */
+import static org.junit.jupiter.api.Assertions.*;
+
+import juego.ciudades.ordenamientos.EstadoDePartida;
+import org.junit.jupiter.api.Test;
+
 public class TestPartidaGeneral {
 
-    // ------------------------------------------------------------------ //
-    //  Stubs
-    // ------------------------------------------------------------------ //
+    @Test
+    public void constructorValido() {
 
-    /** Jugador mínimo para construir PartidaGeneral. */
-    private static Jugador jugadorStub() {
-        // Ajustar según el constructor real de Jugador.
-        return new Jugador("TestPlayer");
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertEquals("Al-Quest — Mapa Mundial", partida.getNombre());
+        assertEquals(jugador, partida.getJugador());
+        assertEquals(0, partida.getPuntajeTotal());
+        assertEquals(EstadoDePartida.Creado, partida.getEstado());
     }
 
-    // ------------------------------------------------------------------ //
-    //  Helper de reporte
-    // ------------------------------------------------------------------ //
+    @Test
+    public void constructorJugadorNuloLanzaExcepcion() {
 
-    private static void reportar(String nombre, boolean ok) {
-        System.out.println((ok ? "[OK]  " : "[FAIL]") + " " + nombre);
+        assertThrows(RuntimeException.class, () -> {
+            new PartidaGeneral(null);
+        });
     }
 
-    // ------------------------------------------------------------------ //
-    //  Helper: crea una PartidaGeneral sin abrir ventanas.
-    //  iniciar() NO se llama — solo se construye el objeto.
-    // ------------------------------------------------------------------ //
+    @Test
+    public void constructorInicializaSkinPorDefecto() {
 
-    private static PartidaGeneral crear() {
-        return new PartidaGeneral(jugadorStub());
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertNotNull(partida.getSkinActual());
+        assertTrue(partida.getSkinActual().contains("boy"));
     }
 
-    // ================================================================== //
-    //  Tests: Constructor / estado inicial
-    // ================================================================== //
+    @Test
+    public void constructorInicializaSkinsDesbloqueadas() {
 
-    /** puntajeTotal arranca en 0. */
-    private static void testConstructorPuntajeInicialCero() {
-        PartidaGeneral pg = crear();
-        reportar("Constructor: puntajeTotal inicial es 0",
-                pg.getPuntajeTotal() == 0);
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertNotNull(partida.getSkinsDesbloqueadas());
+        assertFalse(partida.getSkinsDesbloqueadas().isEmpty());
+        assertTrue(partida.getSkinsDesbloqueadas().contains(partida.getSkinActual()));
     }
 
-    /** ciudadActual arranca en null (jugador en mapa global). */
-    private static void testConstructorCiudadActualNull() {
-        PartidaGeneral pg = crear();
-        reportar("Constructor: ciudadActual inicial es null",
-                pg.getCiudadActual() == null);
+    @Test
+    public void constructorCiudadActualEsNull() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertNull(partida.getCiudadActual());
     }
 
-    /** mapaMundi no es null después de construir. */
-    private static void testConstructorMapaMundiNoNull() {
-        PartidaGeneral pg = crear();
-        reportar("Constructor: mapaMundi no es null",
-                pg.getMapaMundi() != null);
+    @Test
+    public void constructorMapaMundiNoEsNull() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertNotNull(partida.getMapaMundi());
     }
 
-    /** El grafo tiene las ciudades activas declaradas en construirGrafo(). */
-    private static void testConstructorGrafoTieneCiudadesActivas() {
-        PartidaGeneral pg = crear();
-        GrafoCiudades grafo = pg.getMapaMundi();
-        // Ciudades activas según construirGrafo: 1, 2, 4, 5, 8, 10
-        boolean todas =
-                grafo.obtenerCiudad(1)  != null &&
-                grafo.obtenerCiudad(2)  != null &&
-                grafo.obtenerCiudad(4)  != null &&
-                grafo.obtenerCiudad(5)  != null &&
-                grafo.obtenerCiudad(8)  != null &&
-                grafo.obtenerCiudad(10) != null;
-        reportar("Constructor: grafo contiene las 6 ciudades activas (1,2,4,5,8,10)",
-                todas);
+    @Test
+    public void partidaRecienCreadaNoEstaIniciada() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertFalse(partida.estaIniciada());
     }
 
-    /** Las ciudades no activas no están en el grafo. */
-    private static void testConstructorGrafoNoCiudadesInactivas() {
-        PartidaGeneral pg = crear();
-        GrafoCiudades grafo = pg.getMapaMundi();
-        boolean ninguna =
-                grafo.obtenerCiudad(3)  == null &&
-                grafo.obtenerCiudad(6)  == null &&
-                grafo.obtenerCiudad(7)  == null &&
-                grafo.obtenerCiudad(9)  == null;
-        reportar("Constructor: grafo no contiene ciudades inactivas (3,6,7,9)",
-                ninguna);
+    @Test
+    public void comprarSkinConPuntajeInsuficiente() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        boolean resultado = partida.comprarSkin("/assets/jugador/girl", 100);
+
+        assertFalse(resultado);
+        assertFalse(partida.getSkinsDesbloqueadas().contains("/assets/jugador/girl"));
     }
 
-    /** Las conexiones dirigidas del grafo están configuradas correctamente. */
-    private static void testConstructorConexionesDirigidas() {
-        PartidaGeneral pg = crear();
-        GrafoCiudades grafo = pg.getMapaMundi();
+    @Test
+    public void comprarSkinNulaLanzaExcepcion() {
 
-        // Topología: 1→2→4→5→8→10
-        // Para verificar accesibilidad: completar el predecesor activa al sucesor.
-        grafo.obtenerCiudad(1).setCompletada(true);
-        boolean c2_accesible  = grafo.esCiudadAccesible(2);
+        Jugador jugador = new Jugador("Tomas");
 
-        grafo.obtenerCiudad(2).setCompletada(true);
-        boolean c4_accesible  = grafo.esCiudadAccesible(4);
+        PartidaGeneral partida = new PartidaGeneral(jugador);
 
-        reportar("Constructor: conexiones 1→2→4 configuradas correctamente",
-                c2_accesible && c4_accesible);
+        assertThrows(RuntimeException.class, () -> {
+            partida.comprarSkin(null, 50);
+        });
     }
 
-    /** El nombre de la partida es "Al-Quest — Mapa Mundial". */
-    private static void testConstructorNombrePartida() {
-        PartidaGeneral pg = crear();
-        reportar("Constructor: nombre es 'Al-Quest — Mapa Mundial'",
-                "Al-Quest — Mapa Mundial".equals(pg.getNombre()));
+    @Test
+    public void comprarSkinCostoNegativoLanzaExcepcion() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertThrows(RuntimeException.class, () -> {
+            partida.comprarSkin("/assets/jugador/girl", -1);
+        });
     }
 
-    /** getJugador devuelve el jugador pasado al constructor. */
-    private static void testConstructorGetJugador() {
-        Jugador j = jugadorStub();
-        PartidaGeneral pg = new PartidaGeneral(j);
-        reportar("Constructor: getJugador devuelve el jugador correcto",
-                pg.getJugador() == j);
+    @Test
+    public void comprarSkinCostoCeroEsValido() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        boolean resultado = partida.comprarSkin("/assets/jugador/girl", 0);
+
+        assertTrue(resultado);
+        assertTrue(partida.getSkinsDesbloqueadas().contains("/assets/jugador/girl"));
     }
 
-    // ================================================================== //
-    //  Tests: alTerminarCiudad
-    // ================================================================== //
+    @Test
+    public void toStringContieneAtributos() {
 
-    /**
-     * Cuando puntaje > 0: el nodo queda marcado completada=true
-     * y puntajeTotal acumula el puntaje.
-     */
-    private static void testAlTerminarCiudadPuntajePositivo() throws InterruptedException {
-        PartidaGeneral pg = crear();
-        NodoCiudad nodo = pg.getMapaMundi().obtenerCiudad(1);
+        Jugador jugador = new Jugador("Tomas");
 
-        // Simulamos que la sub-partida arrojó puntaje 50
-        nodo.getPartidaAsociada().setPuntaje(50);
+        PartidaGeneral partida = new PartidaGeneral(jugador);
 
-        pg.alTerminarCiudad(1);
-
-        // alTerminarCiudad usa invokeLater; esperamos que el EDT procese el evento.
-        Thread.sleep(200);
-
-        reportar("alTerminarCiudad (puntaje>0): nodo marcado como completada",
-                nodo.isCompletada());
-        reportar("alTerminarCiudad (puntaje>0): puntajeTotal acumula el puntaje",
-                pg.getPuntajeTotal() == 50);
+        assertTrue(partida.toString().contains("Al-Quest"));
+        assertTrue(partida.toString().contains("Tomas"));
     }
 
-    /**
-     * Cuando puntaje = 0: el nodo NO queda marcado y puntajeTotal no cambia.
-     */
-    private static void testAlTerminarCiudadPuntajeCero() throws InterruptedException {
-        PartidaGeneral pg = crear();
-        NodoCiudad nodo = pg.getMapaMundi().obtenerCiudad(1);
+    @Test
+    public void equalsMismaInstancia() {
 
-        nodo.getPartidaAsociada().setPuntaje(0);
+        Jugador jugador = new Jugador("Tomas");
 
-        pg.alTerminarCiudad(1);
-        Thread.sleep(200);
+        PartidaGeneral partida = new PartidaGeneral(jugador);
 
-        reportar("alTerminarCiudad (puntaje=0): nodo NO queda completada",
-                !nodo.isCompletada());
-        reportar("alTerminarCiudad (puntaje=0): puntajeTotal sigue en 0",
-                pg.getPuntajeTotal() == 0);
+        assertEquals(partida, partida);
     }
 
-    /**
-     * Acumulación de múltiples ciudades completadas con éxito.
-     */
-    private static void testAlTerminarCiudadAcumulaMultiples() throws InterruptedException {
-        PartidaGeneral pg = crear();
+    @Test
+    public void equalsPartidasIguales() {
 
-        pg.getMapaMundi().obtenerCiudad(1).getPartidaAsociada().setPuntaje(30);
-        pg.getMapaMundi().obtenerCiudad(2).getPartidaAsociada().setPuntaje(70);
+        Jugador jugador = new Jugador("Tomas");
 
-        pg.alTerminarCiudad(1);
-        pg.alTerminarCiudad(2);
-        Thread.sleep(300);
+        PartidaGeneral partida1 = new PartidaGeneral(jugador);
+        PartidaGeneral partida2 = new PartidaGeneral(jugador);
 
-        reportar("alTerminarCiudad: acumula puntaje de múltiples ciudades (30+70=100)",
-                pg.getPuntajeTotal() == 100);
+        assertEquals(partida1, partida2);
     }
 
-    /**
-     * alTerminarCiudad con un id inexistente no lanza excepción.
-     */
-    private static void testAlTerminarCiudadIdInexistente() throws InterruptedException {
-        PartidaGeneral pg = crear();
-        boolean ok = false;
-        try {
-            pg.alTerminarCiudad(99);
-            Thread.sleep(200);
-            ok = true;
-        } catch (Exception e) {
-            System.out.println("  excepción inesperada: " + e.getMessage());
-        }
-        reportar("alTerminarCiudad: id inexistente → sin excepción", ok);
+    @Test
+    public void equalsPartidasDistintos() {
+
+        Jugador jugador1 = new Jugador("Tomas");
+        Jugador jugador2 = new Jugador("Juan");
+
+        PartidaGeneral partida1 = new PartidaGeneral(jugador1);
+        PartidaGeneral partida2 = new PartidaGeneral(jugador2);
+
+        assertNotEquals(partida1, partida2);
     }
 
-    /**
-     * Después de alTerminarCiudad, ciudadActual vuelve a null.
-     */
-    private static void testAlTerminarCiudadResetaCiudadActual() throws InterruptedException {
-        PartidaGeneral pg = crear();
-        pg.getMapaMundi().obtenerCiudad(1).getPartidaAsociada().setPuntaje(10);
+    @Test
+    public void equalsConNull() {
 
-        pg.alTerminarCiudad(1);
-        Thread.sleep(200);
+        Jugador jugador = new Jugador("Tomas");
 
-        reportar("alTerminarCiudad: ciudadActual vuelve a null",
-                pg.getCiudadActual() == null);
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertNotEquals(null, partida);
     }
 
-    // ================================================================== //
-    //  Tests: getPuntajeTotal
-    // ================================================================== //
+    @Test
+    public void equalsConOtroTipo() {
 
-    /** getPuntajeTotal devuelve 0 si no se completó ninguna ciudad. */
-    private static void testGetPuntajeTotalInicial() {
-        PartidaGeneral pg = crear();
-        reportar("getPuntajeTotal: 0 si no se completó ninguna ciudad",
-                pg.getPuntajeTotal() == 0);
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertFalse(partida.equals("Al-Quest"));
+        assertFalse(partida.equals(42));
     }
 
-    // ================================================================== //
-    //  Punto de entrada
-    // ================================================================== //
+    @Test
+    public void hashCodeIguales() {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("=== Tests PartidaGeneral ===\n");
+        Jugador jugador = new Jugador("Tomas");
 
-        System.out.println("-- Constructor / estado inicial --");
-        testConstructorPuntajeInicialCero();
-        testConstructorCiudadActualNull();
-        testConstructorMapaMundiNoNull();
-        testConstructorGrafoTieneCiudadesActivas();
-        testConstructorGrafoNoCiudadesInactivas();
-        testConstructorConexionesDirigidas();
-        testConstructorNombrePartida();
-        testConstructorGetJugador();
+        PartidaGeneral partida1 = new PartidaGeneral(jugador);
+        PartidaGeneral partida2 = new PartidaGeneral(jugador);
 
-        System.out.println("\n-- alTerminarCiudad --");
-        testAlTerminarCiudadPuntajePositivo();
-        testAlTerminarCiudadPuntajeCero();
-        testAlTerminarCiudadAcumulaMultiples();
-        testAlTerminarCiudadIdInexistente();
-        testAlTerminarCiudadResetaCiudadActual();
+        assertEquals(
+                partida1.hashCode(),
+                partida2.hashCode()
+        );
+    }
 
-        System.out.println("\n-- getPuntajeTotal --");
-        testGetPuntajeTotalInicial();
+    @Test
+    public void hashCodeDistintos() {
 
-        System.out.println("\n=== Fin de tests ===");
-        System.exit(0);
+        Jugador jugador1 = new Jugador("Tomas");
+        Jugador jugador2 = new Jugador("Juan");
+
+        PartidaGeneral partida1 = new PartidaGeneral(jugador1);
+        PartidaGeneral partida2 = new PartidaGeneral(jugador2);
+
+        assertNotEquals(
+                partida1.hashCode(),
+                partida2.hashCode()
+        );
+    }
+
+    @Test
+    public void hashCodeConsistencia() {
+
+        Jugador jugador = new Jugador("Tomas");
+
+        PartidaGeneral partida = new PartidaGeneral(jugador);
+
+        assertEquals(partida.hashCode(), partida.hashCode());
     }
 }

@@ -24,10 +24,6 @@ class TestTeclado {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // inicializar / finalizar
-    // ─────────────────────────────────────────────
-
     @Test
     void inicializar_debeCrearElScanner() {
         simularEntrada("");
@@ -39,10 +35,6 @@ class TestTeclado {
         simularEntrada("");
         assertDoesNotThrow(() -> Teclado.finalizar());
     }
-
-    // ─────────────────────────────────────────────
-    // leerTexto
-    // ─────────────────────────────────────────────
 
     @Test
     void leerTexto_debeRetornarLineaCompleta() {
@@ -68,10 +60,6 @@ class TestTeclado {
         assertEquals("primera", Teclado.leerTexto());
     }
 
-    // ─────────────────────────────────────────────
-    // leerCaracter
-    // ─────────────────────────────────────────────
-
     @Test
     void leerCaracter_debeRetornarPrimerCaracter() {
         simularEntrada("A\n");
@@ -95,10 +83,6 @@ class TestTeclado {
         simularEntrada("");
         assertThrows(NoSuchElementException.class, () -> Teclado.leerCaracter());
     }
-
-    // ─────────────────────────────────────────────
-    // leerEntero
-    // ─────────────────────────────────────────────
 
     @Test
     void leerEntero_valorPositivo_debeRetornarCorrectamente() {

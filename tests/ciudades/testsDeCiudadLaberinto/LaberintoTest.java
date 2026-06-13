@@ -1,8 +1,9 @@
 package ciudades.testsDeCiudadLaberinto;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import juego.ciudades.ciudad_3_laberinto.src.*;
 
@@ -19,7 +20,7 @@ public class LaberintoTest {
      * I . F
      * # # #
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         Celda[][] grilla = new Celda[3][3];
         grilla[0][0] = new Celda(0, 0, EstadoCelda.PARED);

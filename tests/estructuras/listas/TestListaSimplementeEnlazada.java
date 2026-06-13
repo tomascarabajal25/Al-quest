@@ -12,20 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestListaSimplementeEnlazada {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private ListaSimplementeEnlazada<Integer> lista;
 
     @BeforeEach
     public void setUp() {
         lista = new ListaSimplementeEnlazada<>();
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_lista_nueva_esta_vacia() {
@@ -36,10 +28,6 @@ public class TestListaSimplementeEnlazada {
     public void constructor_lista_nueva_size_es_cero() {
         assertEquals(0, lista.size());
     }
-
-    // =========================================================================
-    // ADD / ADD LAST
-    // =========================================================================
 
     @Test
     public void add_agrega_al_final_y_retorna_true() {
@@ -77,10 +65,6 @@ public class TestListaSimplementeEnlazada {
         assertNull(lista.get(0));
     }
 
-    // =========================================================================
-    // ADD (index, elemento)
-    // =========================================================================
-
     @Test
     public void add_index_cero_inserta_al_inicio() {
         lista.add(2);
@@ -116,10 +100,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.add(1, 1));
     }
 
-    // =========================================================================
-    // GET
-    // =========================================================================
-
     @Test
     public void get_retorna_elemento_correcto() {
         lista.add(10);
@@ -139,10 +119,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.get(1));
     }
 
-    // =========================================================================
-    // SET
-    // =========================================================================
-
     @Test
     public void set_reemplaza_elemento_y_retorna_el_viejo() {
         lista.add(1);
@@ -155,10 +131,6 @@ public class TestListaSimplementeEnlazada {
     public void set_index_invalido_lanza_excepcion() {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.set(0, 1));
     }
-
-    // =========================================================================
-    // REMOVE (index)
-    // =========================================================================
 
     @Test
     public void remove_index_retorna_elemento_eliminado() {
@@ -198,10 +170,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.remove(-1));
     }
 
-    // =========================================================================
-    // REMOVE (Object)
-    // =========================================================================
-
     @Test
     public void remove_object_elimina_primera_ocurrencia_y_retorna_true() {
         lista.add(1);
@@ -222,10 +190,6 @@ public class TestListaSimplementeEnlazada {
     public void remove_object_lista_vacia_retorna_false() {
         assertFalse(lista.remove((Object) 1));
     }
-
-    // =========================================================================
-    // CONTAINS / INDEX OF / LAST INDEX OF
-    // =========================================================================
 
     @Test
     public void contains_retorna_true_si_existe() {
@@ -271,10 +235,6 @@ public class TestListaSimplementeEnlazada {
         assertEquals(-1, lista.lastIndexOf(99));
     }
 
-    // =========================================================================
-    // IS EMPTY / SIZE / CLEAR
-    // =========================================================================
-
     @Test
     public void isEmpty_retorna_false_con_elementos() {
         lista.add(1);
@@ -295,9 +255,6 @@ public class TestListaSimplementeEnlazada {
         assertDoesNotThrow(() -> lista.clear());
     }
 
-    // =========================================================================
-    // CURSOR (iniciarCursor / avanzarCursor / obtenerCursor)
-    // =========================================================================
 
     @Test
     public void cursor_recorre_todos_los_elementos_en_orden() {
@@ -334,10 +291,6 @@ public class TestListaSimplementeEnlazada {
         lista.avanzarCursor();
         assertEquals(1, lista.obtenerCursor());
     }
-
-    // =========================================================================
-    // EQUALS / HASHCODE / TO STRING
-    // =========================================================================
 
     @Test
     public void equals_listas_iguales_retorna_true() {
@@ -393,10 +346,6 @@ public class TestListaSimplementeEnlazada {
         assertEquals("[]", lista.toString());
     }
 
-    // =========================================================================
-    // ITERATOR
-    // =========================================================================
-
     @Test
     public void iterator_recorre_elementos_en_orden() {
         lista.add(10); lista.add(20); lista.add(30);
@@ -429,10 +378,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IllegalStateException.class, it::remove);
     }
 
-    // =========================================================================
-    // TO ARRAY
-    // =========================================================================
-
     @Test
     public void toArray_retorna_elementos_en_orden() {
         lista.add(1); lista.add(2); lista.add(3);
@@ -450,10 +395,6 @@ public class TestListaSimplementeEnlazada {
     public void toArray_lista_vacia_retorna_arreglo_vacio() {
         assertEquals(0, lista.toArray().length);
     }
-
-    // =========================================================================
-    // CONTAINS ALL / ADD ALL / REMOVE ALL / RETAIN ALL
-    // =========================================================================
 
     @Test
     public void containsAll_retorna_true_si_contiene_todos() {
@@ -499,10 +440,6 @@ public class TestListaSimplementeEnlazada {
         assertTrue(lista.contains(2));
     }
 
-    // =========================================================================
-    // SUB LIST
-    // =========================================================================
-
     @Test
     public void subList_retorna_sublista_correcta() {
         lista.add(1); lista.add(2); lista.add(3); lista.add(4);
@@ -518,10 +455,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.subList(-1, 1));
         assertThrows(IndexOutOfBoundsException.class, () -> lista.subList(1, 0));
     }
-
-    // =========================================================================
-    // LIST ITERATOR
-    // =========================================================================
 
     @Test
     public void listIterator_next_y_previous_navegan_correctamente() {
@@ -575,10 +508,6 @@ public class TestListaSimplementeEnlazada {
         assertThrows(IndexOutOfBoundsException.class, () -> lista.listIterator(-1));
         assertThrows(IndexOutOfBoundsException.class, () -> lista.listIterator(1));
     }
-
-    // =========================================================================
-    // ADD SORTED
-    // =========================================================================
 
     @Test
     public void addSorted_lista_vacia_inserta_correctamente() {

@@ -159,6 +159,21 @@ public class TestMochila {
     }
 
     @Test
+    public void testGetElementos() {
+
+        Mochila mochila = new Mochila(3);
+
+        Elemento espada = new ElementoMock("Espada");
+        Elemento arco   = new ElementoMock("Arco");
+
+        mochila.agregarElemento(espada);
+        mochila.agregarElemento(arco);
+
+        assertNotNull(mochila.getElementos());
+        assertEquals(2, mochila.getElementos().size());
+    }
+
+    @Test
     public void testGetElementoPorNombreExistente() {
 
         Mochila mochila = new Mochila(3);
@@ -188,6 +203,43 @@ public class TestMochila {
     }
 
     @Test
+    public void testGetElementoPorPosicionValido() {
+
+        Mochila mochila = new Mochila(3);
+
+        Elemento espada = new ElementoMock("Espada");
+        Elemento arco   = new ElementoMock("Arco");
+
+        mochila.agregarElemento(espada);
+        mochila.agregarElemento(arco);
+
+        assertEquals(espada, mochila.getElementoPorPosicion(1));
+        assertEquals(arco,   mochila.getElementoPorPosicion(2));
+    }
+
+    @Test
+    public void testGetElementoPorPosicionInvalido() {
+
+        Mochila mochila = new Mochila(3);
+
+        assertThrows(RuntimeException.class, () -> {
+            mochila.getElementoPorPosicion(0);
+        });
+
+        assertThrows(RuntimeException.class, () -> {
+            mochila.getElementoPorPosicion(-1);
+        });
+    }
+
+    @Test
+    public void testEqualsMismaInstancia() {
+
+        Mochila mochila = new Mochila(3);
+
+        assertEquals(mochila, mochila);
+    }
+
+    @Test
     public void testEquals() {
 
         Mochila mochila1 = new Mochila(3);
@@ -200,6 +252,38 @@ public class TestMochila {
         mochila2.agregarElemento(espada);
 
         assertEquals(mochila1, mochila2);
+    }
+
+    @Test
+    public void testNotEquals() {
+
+        Mochila mochila1 = new Mochila(3);
+        Mochila mochila2 = new Mochila(3);
+
+        mochila1.agregarElemento(
+                new ElementoMock("Espada"));
+
+        mochila2.agregarElemento(
+                new ElementoMock("Arco"));
+
+        assertNotEquals(mochila1, mochila2);
+    }
+
+    @Test
+    public void testEqualsConNull() {
+
+        Mochila mochila = new Mochila(3);
+
+        assertNotEquals(null, mochila);
+    }
+
+    @Test
+    public void testEqualsConOtroTipo() {
+
+        Mochila mochila = new Mochila(3);
+
+        assertFalse(mochila.equals("Mochila"));
+        assertFalse(mochila.equals(42));
     }
 
     @Test
@@ -221,6 +305,35 @@ public class TestMochila {
     }
 
     @Test
+    public void testHashCodeDistintos() {
+
+        Mochila mochila1 = new Mochila(3);
+        Mochila mochila2 = new Mochila(3);
+
+        mochila1.agregarElemento(
+                new ElementoMock("Espada"));
+
+        mochila2.agregarElemento(
+                new ElementoMock("Arco"));
+
+        assertNotEquals(
+                mochila1.hashCode(),
+                mochila2.hashCode()
+        );
+    }
+
+    @Test
+    public void testHashCodeConsistencia() {
+
+        Mochila mochila = new Mochila(3);
+
+        assertEquals(
+                mochila.hashCode(),
+                mochila.hashCode()
+        );
+    }
+
+    @Test
     public void testToString() {
 
         Mochila mochila = new Mochila(3);
@@ -232,6 +345,10 @@ public class TestMochila {
 
         assertTrue(
                 mochila.toString().contains("Mochila")
+        );
+
+        assertTrue(
+                mochila.toString().contains("elementos")
         );
     }
 }

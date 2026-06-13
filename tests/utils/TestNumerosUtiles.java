@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestNumerosUtiles {
 
-    // ─────────────────────────────────────────────
-    // toInt
-    // ─────────────────────────────────────────────
-
     @Test
     void toInt_valorPositivo_debeRetornarParteEntera() {
         assertEquals(3, NumerosUtiles.toInt(3.9));
@@ -39,10 +35,6 @@ class TestNumerosUtiles {
     void toInt_valorNull_debeLanzarExcepcion() {
         assertThrows(NullPointerException.class, () -> NumerosUtiles.toInt(null));
     }
-
-    // ─────────────────────────────────────────────
-    // limitarRango
-    // ─────────────────────────────────────────────
 
     @Test
     void limitarRango_valorDentroDelRango_debeRetornarMismoValor() {

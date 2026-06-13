@@ -7,10 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestNodoSimplementeEnlazado {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private NodoSimplementeEnlazado<Integer> nodoInt;
     private NodoSimplementeEnlazado<String>  nodoStr;
     private NodoSimplementeEnlazado<Integer> nodoNull;
@@ -21,10 +17,6 @@ public class TestNodoSimplementeEnlazado {
         nodoStr  = new NodoSimplementeEnlazado<>("hola");
         nodoNull = new NodoSimplementeEnlazado<>(null);
     }
-
-    // =========================================================================
-    // CONSTRUCTOR  (hereda Nodo)
-    // =========================================================================
 
     @Test
     public void constructor_guarda_el_dato_correctamente() {
@@ -46,10 +38,6 @@ public class TestNodoSimplementeEnlazado {
         assertNull(nodoInt.getSiguiente());
     }
 
-    // =========================================================================
-    // TIENE SIGUIENTE
-    // =========================================================================
-
     @Test
     public void tieneSiguiente_retorna_false_recien_creado() {
         assertFalse(nodoInt.tieneSiguiente());
@@ -67,10 +55,6 @@ public class TestNodoSimplementeEnlazado {
         nodoInt.setSiguiente(null);
         assertFalse(nodoInt.tieneSiguiente());
     }
-
-    // =========================================================================
-    // GET SIGUIENTE
-    // =========================================================================
 
     @Test
     public void getSiguiente_retorna_null_sin_enlace() {
@@ -90,9 +74,6 @@ public class TestNodoSimplementeEnlazado {
         assertEquals(55, nodoInt.getSiguiente().getDato());
     }
 
-    // =========================================================================
-    // SET SIGUIENTE
-    // =========================================================================
 
     @Test
     public void setSiguiente_enlaza_correctamente() {
@@ -117,10 +98,6 @@ public class TestNodoSimplementeEnlazado {
         assertSame(segundo, nodoInt.getSiguiente());
     }
 
-    // =========================================================================
-    // CADENA DE NODOS
-    // =========================================================================
-
     @Test
     public void cadena_tres_nodos_navegacion_correcta() {
         NodoSimplementeEnlazado<Integer> n1 = new NodoSimplementeEnlazado<>(1);
@@ -141,10 +118,6 @@ public class TestNodoSimplementeEnlazado {
         n1.setSiguiente(n2);
         assertFalse(n2.tieneSiguiente());
     }
-
-    // =========================================================================
-    // HERENCIA: métodos de Nodo
-    // =========================================================================
 
     @Test
     public void getDato_herencia_retorna_valor_correcto() {

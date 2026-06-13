@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestNodoB {
 
-    // ─────────────────────────────────────────────
-    // Constructor: gradoMinimo
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_debeAsignarGradoMinimo() {
         NodoB nodo = new NodoB(3, true);
@@ -20,10 +16,6 @@ class TestNodoB {
         NodoB nodo = new NodoB(2, true);
         assertEquals(2, nodo.gradoMinimo);
     }
-
-    // ─────────────────────────────────────────────
-    // Constructor: tamaño de arrays según t
-    // ─────────────────────────────────────────────
 
     @Test
     void constructor_conT3_clavesDebeTener5Posiciones() {
@@ -61,10 +53,6 @@ class TestNodoB {
         assertEquals(2, nodo.hijos.length); // 2*1 = 2
     }
 
-    // ─────────────────────────────────────────────
-    // Constructor: grado inicial
-    // ─────────────────────────────────────────────
-
     @Test
     void constructor_gradoDebeInicializarEnCero() {
         NodoB nodo = new NodoB(3, true);
@@ -76,10 +64,6 @@ class TestNodoB {
         NodoB nodo = new NodoB(3, false);
         assertEquals(0, nodo.grado);
     }
-
-    // ─────────────────────────────────────────────
-    // Constructor: campo hoja
-    // ─────────────────────────────────────────────
 
     @Test
     void constructor_conHojaTrue_debeSerHoja() {
@@ -93,9 +77,6 @@ class TestNodoB {
         assertFalse(nodo.hoja);
     }
 
-    // ─────────────────────────────────────────────
-    // Estado inicial de los arrays
-    // ─────────────────────────────────────────────
 
     @Test
     void constructor_hijosDebenInicializarseEnNull() {
@@ -112,10 +93,6 @@ class TestNodoB {
             assertEquals(0, clave);
         }
     }
-
-    // ─────────────────────────────────────────────
-    // Modificación manual de campos (NodoB es pasivo)
-    // ─────────────────────────────────────────────
 
     @Test
     void asignarClave_debeReflejarseEnElArray() {

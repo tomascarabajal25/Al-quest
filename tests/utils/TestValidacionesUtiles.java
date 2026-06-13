@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestValidacionesUtiles {
 
-    // ─────────────────────────────────────────────
-    // validarMayorACero
-    // ─────────────────────────────────────────────
-
     @Test
     void validarMayorACero_valorPositivo_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarMayorACero(1.0, "valor"));
@@ -31,10 +27,6 @@ class TestValidacionesUtiles {
         assertTrue(ex.getMessage().contains("precio"));
     }
 
-    // ─────────────────────────────────────────────
-    // validarMayorAUno
-    // ─────────────────────────────────────────────
-
     @Test
     void validarMayorAUno_valorMayorAUno_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarMayorAUno(2.0, "valor"));
@@ -55,9 +47,6 @@ class TestValidacionesUtiles {
         assertThrows(RuntimeException.class, () -> ValidacionesUtiles.validarMayorAUno(-3, "valor"));
     }
 
-    // ─────────────────────────────────────────────
-    // validarMayorOIgualACero
-    // ─────────────────────────────────────────────
 
     @Test
     void validarMayorOIgualACero_cero_noDebeLanzarExcepcion() {
@@ -73,10 +62,6 @@ class TestValidacionesUtiles {
     void validarMayorOIgualACero_valorNegativo_debeLanzarExcepcion() {
         assertThrows(RuntimeException.class, () -> ValidacionesUtiles.validarMayorOIgualACero(-1, "valor"));
     }
-
-    // ─────────────────────────────────────────────
-    // validarLongitudDeTexto
-    // ─────────────────────────────────────────────
 
     @Test
     void validarLongitudDeTexto_dentroDelRango_noDebeLanzarExcepcion() {
@@ -122,10 +107,6 @@ class TestValidacionesUtiles {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarLongitudDeTexto("texto muy largo sin limite", 1, null, "nombre"));
     }
 
-    // ─────────────────────────────────────────────
-    // validarCaracteresAlfabeticos
-    // ─────────────────────────────────────────────
-
     @Test
     void validarCaracteresAlfabeticos_soloLetras_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarCaracteresAlfabeticos("Hola", "nombre"));
@@ -154,10 +135,6 @@ class TestValidacionesUtiles {
             () -> ValidacionesUtiles.validarCaracteresAlfabeticos("", "nombre"));
     }
 
-    // ─────────────────────────────────────────────
-    // validarFalso
-    // ─────────────────────────────────────────────
-
     @Test
     void validarFalso_conFalse_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarFalso(false, "error"));
@@ -175,10 +152,6 @@ class TestValidacionesUtiles {
         assertEquals("condicion invalida", ex.getMessage());
     }
 
-    // ─────────────────────────────────────────────
-    // validarVerdadero
-    // ─────────────────────────────────────────────
-
     @Test
     void validarVerdadero_conTrue_noDebeLanzarExcepcion() {
         assertDoesNotThrow(() -> ValidacionesUtiles.validarVerdadero(true, "error"));
@@ -188,10 +161,6 @@ class TestValidacionesUtiles {
     void validarVerdadero_conFalse_debeLanzarExcepcion() {
         assertThrows(RuntimeException.class, () -> ValidacionesUtiles.validarVerdadero(false, "error"));
     }
-
-    // ─────────────────────────────────────────────
-    // esDistintoDeNull
-    // ─────────────────────────────────────────────
 
     @Test
     void esDistintoDeNull_objetoNoNulo_noDebeLanzarExcepcion() {
@@ -209,10 +178,6 @@ class TestValidacionesUtiles {
             () -> ValidacionesUtiles.esDistintoDeNull(null, "usuario"));
         assertTrue(ex.getMessage().contains("usuario"));
     }
-
-    // ─────────────────────────────────────────────
-    // validarRangoDeEnum
-    // ─────────────────────────────────────────────
 
     enum Color { ROJO, VERDE, AZUL }
 
@@ -232,10 +197,6 @@ class TestValidacionesUtiles {
         assertThrows(RuntimeException.class,
             () -> ValidacionesUtiles.validarRangoDeEnum(null, Color.ROJO));
     }
-
-    // ─────────────────────────────────────────────
-    // validarRangoNumerico
-    // ─────────────────────────────────────────────
 
     @Test
     void validarRangoNumerico_valorDentroDelRango_noDebeLanzarExcepcion() {
@@ -263,10 +224,6 @@ class TestValidacionesUtiles {
         assertThrows(RuntimeException.class,
             () -> ValidacionesUtiles.validarRangoNumerico(11, 1, 10, "valor"));
     }
-
-    // ─────────────────────────────────────────────
-    // validarRango (double)
-    // ─────────────────────────────────────────────
 
     @Test
     void validarRango_valorDentroDelRango_noDebeLanzarExcepcion() {

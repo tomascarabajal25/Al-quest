@@ -7,10 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestNodoDoblementeEnlazado {
 
-    // -------------------------------------------------------------------------
-    // FIXTURES
-    // -------------------------------------------------------------------------
-
     private NodoDoblementeEnlazado<Integer> nodoInt;
     private NodoDoblementeEnlazado<String>  nodoStr;
     private NodoDoblementeEnlazado<Integer> nodoNull;
@@ -21,10 +17,6 @@ public class TestNodoDoblementeEnlazado {
         nodoStr  = new NodoDoblementeEnlazado<>("hola");
         nodoNull = new NodoDoblementeEnlazado<>(null);
     }
-
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
 
     @Test
     public void constructor_guarda_el_dato_correctamente() {
@@ -50,10 +42,6 @@ public class TestNodoDoblementeEnlazado {
     public void constructor_anterior_es_null_al_crear() {
         assertNull(nodoInt.getAnterior());
     }
-
-    // =========================================================================
-    // GET ANTERIOR / SET ANTERIOR
-    // =========================================================================
 
     @Test
     public void getAnterior_retorna_null_sin_enlace() {
@@ -90,10 +78,6 @@ public class TestNodoDoblementeEnlazado {
         assertEquals(99, nodoInt.getAnterior().getDato());
     }
 
-    // =========================================================================
-    // GET SIGUIENTE (override con cast a NodoDoblementeEnlazado)
-    // =========================================================================
-
     @Test
     public void getSiguiente_retorna_null_sin_enlace() {
         assertNull(nodoInt.getSiguiente());
@@ -112,10 +96,6 @@ public class TestNodoDoblementeEnlazado {
         nodoInt.setSiguiente(new NodoDoblementeEnlazado<>(77));
         assertEquals(77, nodoInt.getSiguiente().getDato());
     }
-
-    // =========================================================================
-    // CADENA DOBLEMENTE ENLAZADA
-    // =========================================================================
 
     @Test
     public void cadena_tres_nodos_navegacion_hacia_adelante() {
@@ -164,10 +144,6 @@ public class TestNodoDoblementeEnlazado {
         assertSame(n1, n2.getAnterior());
         assertSame(n2, n1.getSiguiente());
     }
-
-    // =========================================================================
-    // HERENCIA: métodos de NodoSimplementeEnlazado y Nodo
-    // =========================================================================
 
     @Test
     public void tieneSiguiente_herencia_false_sin_enlace() {

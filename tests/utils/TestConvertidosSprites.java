@@ -11,16 +11,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
 
-/**
- * Tests para convertidosSprites.
- *
- * NOTA: escribirBmp32 es privado, por lo que se accede vía reflexión.
- * Si en algún momento el método se hace package-private o public,
- * los tests se simplifican eliminando la reflexión.
- */
 class TestConvertidosSprites {
 
-    // Helper: invoca el método privado escribirBmp32 via reflexión
     private void invocarEscribirBmp32(BufferedImage img, File destino) throws Exception {
         Method metodo = convertidosSprites.class.getDeclaredMethod("escribirBmp32", BufferedImage.class, File.class);
         metodo.setAccessible(true);
@@ -37,10 +29,6 @@ class TestConvertidosSprites {
         }
         return img;
     }
-
-    // ─────────────────────────────────────────────
-    // Archivo generado: existencia y tamaño
-    // ─────────────────────────────────────────────
 
     @Test
     void escribirBmp32_debeCrearElArchivo(@TempDir Path tempDir) throws Exception {
@@ -64,10 +52,6 @@ class TestConvertidosSprites {
         long esperado = 14L + 108L + (long) w * h * 4;
         assertEquals(esperado, destino.length());
     }
-
-    // ─────────────────────────────────────────────
-    // Cabecera BMP: firma y offset
-    // ─────────────────────────────────────────────
 
     @Test
     void escribirBmp32_archivoComienzaConFirmaBM(@TempDir Path tempDir) throws Exception {
@@ -112,10 +96,6 @@ class TestConvertidosSprites {
         assertEquals(32, bpp);
     }
 
-    // ─────────────────────────────────────────────
-    // Canal alfa: preservación de transparencia
-    // ─────────────────────────────────────────────
-
     @Test
     void escribirBmp32_pixelTransparente_alfaEsCero(@TempDir Path tempDir) throws Exception {
         // Pixel completamente transparente: alfa = 0x00
@@ -141,10 +121,6 @@ class TestConvertidosSprites {
         assertEquals(0xFF, bytes[122 + 3] & 0xFF);
     }
 
-    // ─────────────────────────────────────────────
-    // Orden de canales: BGRA en memoria
-    // ─────────────────────────────────────────────
-
     @Test
     void escribirBmp32_ordenBgraEsCorrecto(@TempDir Path tempDir) throws Exception {
         // Color ARGB: A=FF, R=11, G=22, B=33
@@ -159,10 +135,6 @@ class TestConvertidosSprites {
         assertEquals(0x11, bytes[pixelOffset + 2] & 0xFF); // R
         assertEquals(0xFF, bytes[pixelOffset + 3] & 0xFF); // A
     }
-
-    // ─────────────────────────────────────────────
-    // Dimensiones distintas
-    // ─────────────────────────────────────────────
 
     @Test
     void escribirBmp32_imagen1x1_generaArchivoCorrecto(@TempDir Path tempDir) throws Exception {
