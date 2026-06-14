@@ -1,20 +1,19 @@
 package modelosVista;
 
+import java.awt.event.KeyEvent;
+
 import utils.ValidacionesUtiles;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-public class KeyHandler implements KeyListener {
+
+public class KeyhandlerGlobal extends KeyHandler {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private boolean upPressed = false;
-    private boolean downPressed = false;
-    private boolean leftPressed = false;
-    private boolean rightPressed = false;
-    public boolean enterPresionado = false;
+    private boolean tiendaPressed = false;
+    private boolean reiniciarPressed = false;
+    
 
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -48,25 +47,15 @@ public class KeyHandler implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        ValidacionesUtiles.esDistintoDeNull(e, "e");
+    	super.keyPressed(e);
 
         int code = e.getKeyCode();
 
-		if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) 
-			upPressed = true;
+		if (code == KeyEvent.VK_X) 
+			reiniciarPressed = true;
 		
-		if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) 
-			downPressed = true;
-		
-		if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) 
-			leftPressed = true;
-		
-		if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) 
-			rightPressed = true;
-		if (code == KeyEvent.VK_ENTER) {
-			enterPresionado = true;
-		}
-
+		if (code == KeyEvent.VK_T ) 
+			tiendaPressed = true;
     }
 
     /**
@@ -79,34 +68,25 @@ public class KeyHandler implements KeyListener {
      */
     @Override
     public void keyReleased(KeyEvent e) {
-        ValidacionesUtiles.esDistintoDeNull(e, "e");
+    	super.keyReleased(e);
 
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) 
-			upPressed = false;
-		
-		if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) 
-			downPressed = false;
-		
-		if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) 
-			leftPressed = false;
-		
-		if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) 
-			rightPressed = false;
-		if (code == KeyEvent.VK_ENTER) {
-			enterPresionado = false;
-		}
+        
 
+		if (code == KeyEvent.VK_X) 
+			reiniciarPressed = false;
+		
+		if (code == KeyEvent.VK_T ) 
+			tiendaPressed = false;
     }
-    
-    //post: reinicia todos los estados
+   
+    @Override
     public void reset() {
-        this.upPressed = false;
-        this.downPressed = false;
-        this.leftPressed = false;
-        this.rightPressed = false;
-        this.enterPresionado = false;
+    	super.reset();
+    	this.reiniciarPressed=false;
+    	this.tiendaPressed=false;
     }
+
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
@@ -116,69 +96,38 @@ public class KeyHandler implements KeyListener {
     //GETTERS SIMPLES -----------------------------------------------------------------------------------------
 
     /**
-     * Getter del atributo upPressed
+     * Getter del atributo tiendaPressed
      * @return: Estado del atributo
      */
-    public boolean getUpPressed() {
-        return this.upPressed;
+    public boolean getTiendaPressed() {
+        return this.tiendaPressed;
     }
 
     /**
-     * Getter del atributo downPressed
+     * Getter del atributo reiniciarPressed
      * @return: Estado del atributo
      */
-    public boolean getDownPressed() {
-        return this.downPressed;
-    }
-
-    /**
-     * Getter del atributo leftPressed
-     * @return: Estado del atributo
-     */
-    public boolean getLeftPressed() {
-        return this.leftPressed;
-    }
-
-    /**
-     * Getter del atributo rightPressed
-     * @return: Estado del atributo
-     */
-    public boolean getRightPressed() {
-        return this.rightPressed;
+    public boolean getReiniciarPressed() {
+        return this.reiniciarPressed;
     }
 
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
 
+    
     /**
-     * Setter de atributo upPressed
-     * @param upPressed: nuevo estado del atributp
-     */
-    public void setUpPressed(boolean upPressed) {
-        this.upPressed = upPressed;
-    }
-
-    /**
-     * Setter de atributo downPressed
-     * @param downPressed: nuevo estado del atributp
-     */
-    public void setDownPressed(boolean downPressed) {
-        this.downPressed = downPressed;
-    }
-
-    /**
-     * Setter de atributo leftPressed
+     * Setter de atributo tiendaPressed
      * @param leftPressed: nuevo estado del atributp
      */
-    public void setLeftPressed(boolean leftPressed) {
-        this.leftPressed = leftPressed;
+    public void setTiendaPressed(boolean tiendaPressed) {
+        this.tiendaPressed = tiendaPressed;
     }
 
     /**
-     * Setter de atributo rightPressed
+     * Setter de atributo reiniciarPressed
      * @param rightPressed: nuevo estado del atributp
      */
-    public void setRightPressed(boolean rightPressed) {
-        this.rightPressed = rightPressed;
+    public void setReiniciarPressed(boolean reiniciarPressed) {
+        this.reiniciarPressed = reiniciarPressed;
     }
 }

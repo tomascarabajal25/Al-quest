@@ -117,9 +117,9 @@ public class Vista extends JPanel implements Runnable{
         this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyhandler);   // ← usa el key inyectado
+        this.addKeyListener(this.keyhandler);   // ← usa el key inyectado
         this.setFocusable(true);
-        setJugadorVista(jugador, key, spawnCol, spawnFil, rutaSprites);
+        setJugadorVista(jugador, this.keyhandler, spawnCol, spawnFil, rutaSprites);
         this.construccionesM.loadMap(rutaMundo);
 
         setUpJuego();

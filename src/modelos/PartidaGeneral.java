@@ -2,12 +2,14 @@ package modelos;
 
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 
 import javax.swing.SwingUtilities;
+
 
 import juego.ciudades.reinas.PartidaReinas;
 import juego.ciudades.ciudad5.PartidaBusqueda;
@@ -21,7 +23,6 @@ import utils.ValidacionesUtiles;
 import juego.ciudades.ordenamientos.PartidaOrdenamientos;
 import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import juego.ciudades.batalla.controller.PartidaBatalla;
-
 import modelosVista.VistaGlobal;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 
@@ -355,6 +356,10 @@ public class PartidaGeneral extends Partida {
         persistencia.GestorDeInicio.guardarSesion(this);
         return true;
     }
+    public void reiniciar() {
+		mapaMundi.reiniciarTodasLasCiudades();
+		persistencia.GestorDeInicio.guardarSesion(this);
+	}
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
@@ -365,6 +370,14 @@ public class PartidaGeneral extends Partida {
      * @return el grafo del mundo (solo lectura desde la vista). */
     public GrafoCiudades getMapaMundi() {
         return mapaMundi;
+    }
+    
+    /**
+     * post:devuelve si todas las ciudades fueron completadas
+     * @return
+     */
+    public boolean estaTerminado() {
+    	return mapaMundi.obtenerIdsCompletadas().size()==mapaMundi.getNodos().size();
     }
 
     /**
@@ -414,5 +427,6 @@ public class PartidaGeneral extends Partida {
         this.skinActual = rutaSkin;
         persistencia.GestorDeInicio.guardarSesion(this);
     }
+	
 
 }

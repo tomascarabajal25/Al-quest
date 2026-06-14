@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +20,7 @@ import modelos.GrafoCiudades;
 import modelos.Jugador;
 import modelos.NodoCiudad;
 import modelos.PartidaGeneral;
+import utils.ValidacionesUtiles;
 
 /**
  * VistaGlobal — capa de presentación del mapa mundial de Al-Quest.
@@ -127,9 +126,11 @@ public class VistaGlobal extends Vista {
     //Gestion de SKINS
     //Cooldown para la tecla T de la tienda de SKINS
     private boolean teclaTiendaConsumed = false;
-
-    //Estado de la tecla T
-    private boolean teclaTPresionada = false;
+    
+    private boolean teclaReiniciarConsumed = false;
+    
+    
+    
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
@@ -155,31 +156,16 @@ public class VistaGlobal extends Vista {
                        PartidaGeneral partidaGeneral) {
 
         // Delega la inicialización base (tiles, jugadorVista, keyhandler, etc.)
-        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites);
-
+        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites,new KeyhandlerGlobal());
+        ValidacionesUtiles.esDistintoDeNull(partidaGeneral, "la partida no puede ser nula");
         this.partidaGeneral = partidaGeneral;
         System.out.println(partidaGeneral.getMapaMundi().getNodos().size());
 
         cargarIconosCiudades();
 
-        //Gestion de SKINS
-        //Tienda Skins
-        //KeyAdapter propio para detectar T sin modificar KeyHandler
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_T) {
-                    teclaTPresionada = true;
-                }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_T) {
-                    teclaTPresionada = false;
-                }
-            }
-        }
-        );
+        
+        
+        
 
     }
 
@@ -211,22 +197,84 @@ public class VistaGlobal extends Vista {
             teclaEnterConsumed = true;
             procesarEntradaCiudad(ciudadCercanaId);
         }
-
-        //Gestion de SKINS
-        //Detectar T para Tienda de Skins
-        if (!teclaTPresionada) {
-            teclaTiendaConsumed = false;
+        //casteo el keyhandler al q tiene la vista global
+        KeyhandlerGlobal khGlobal = (KeyhandlerGlobal) this.keyhandler;
+        if (!khGlobal.getTiendaPressed()) {
+        	teclaTiendaConsumed = false;
         }
-
-        if (teclaTPresionada && !teclaTiendaConsumed) {
+        
+        if (khGlobal.getTiendaPressed() && !teclaTiendaConsumed) {
             teclaTiendaConsumed = true;
             abrirTienda();
         }
+        
+        // reiniciar las ciudades en caso de apretar la x y tener todas las ciudades completadas
+     
+        
+		if (!khGlobal.getReiniciarPressed()) {
+            teclaReiniciarConsumed  = false; 
+        }
+       
+        if (khGlobal.getReiniciarPressed() && !teclaReiniciarConsumed) {
+            teclaReiniciarConsumed = true; // Consumimos el pulso
+            evaluarYReiniciarJuego();
+        }
+       
     }
 
-    // ── Renderizado ───────────────────────────────────────────────────────────
 
     /**
+     * Evalúa si se cumplen los requisitos para reiniciar y procesa los cuadros
+     * de diálogo informativos y de confirmación utilizando JOptionPane.
+     */
+    private void evaluarYReiniciarJuego() {
+        // Pausamos momentáneamente el hilo del juego para evitar que el jugador se mueva de fondo
+        detenerHilo();
+
+        SwingUtilities.invokeLater(() -> {
+            // 1. Validar si realmente completó todo el mapa mundi
+            if (!partidaGeneral.estaTerminado()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No podés reiniciar el mapa todavía.\nEs necesario completar las 10 ciudades primero.",
+                    "Progreso Insuficiente",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+            } else {
+                // 2. Si está terminado, pedir confirmación explícita
+                int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás seguro de que querés reiniciar el juego?\nSe borrará todo tu progreso de ciudades superadas.",
+                    "Confirmar Reinicio de Partida",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+                );
+
+                // 3. Si responde que SÍ, ejecutamos el reinicio en el modelo
+                if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                    partidaGeneral.getMapaMundi().reiniciarTodasLasCiudades();
+                    // Forzamos un guardado instantáneo para persistir el mapa vacío en disco
+                    persistencia.GestorDeInicio.guardarSesion(partidaGeneral);
+                    
+                    javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "¡El mapa mundial ha sido reiniciado con éxito!\nBuena suerte en tu nueva aventura.",
+                        "Partida Reiniciada",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            }
+
+            // Al cerrar los cuadros de diálogo, limpiamos los estados del teclado y reanudamos el bucle
+            if (this.keyhandler != null) {
+                ((KeyhandlerGlobal) this.keyhandler).reset();
+            }
+            teclaReiniciarConsumed = true;
+            startGameThread();
+        });
+    }
+
+	/**
      * Renderiza el mapa, los tiles, el jugador y el HUD propio de VistaGlobal.
      *
      * PRE:  El grafo de ciudades está inicializado en partidaGeneral.
@@ -274,12 +322,34 @@ public class VistaGlobal extends Vista {
      *           la skin del jugador posiblemente cambio
      */
     private void abrirTienda() {
-        detenerHilo();
+        detenerHilo(); 
+        
         SwingUtilities.invokeLater(() -> {
             TiendaSkins tienda = new TiendaSkins(partidaGeneral, this);
-            tienda.setVisible(true); // bloquea hasta que el usuario cierra el dialogo
-            startGameThread();       // reanuda el loop
+            tienda.setVisible(true); 
+            
+            // AL CERRAR LA TIENDA:
+            // Reseteamos el manejador de eventos usando polimorfismo.
+            // Si es un KeyhandlerGlobal, llamará a su reset() específico (apagando la T y flechas).
+            if (this.keyhandler != null) {
+                if (this.keyhandler instanceof KeyhandlerGlobal) {
+                    ((KeyhandlerGlobal) this.keyhandler).reset();
+                } else {
+                    this.keyhandler.reset();
+                }
+            }
+            
+            teclaTiendaConsumed = true; 
+            teclaEnterConsumed = false; 
+            
+            startGameThread(); 
         });
+    }
+    
+    public void reiniciarCiudades() {
+    	if (partidaGeneral.estaTerminado()) {
+    		partidaGeneral.reiniciar();
+    	}
     }
 
 
@@ -458,7 +528,7 @@ public class VistaGlobal extends Vista {
      * POST: renderiza el HUD; no modifica estado del modelo.
      */
     private void dibujarHUD(Graphics2D g2) {
-        int px = 10, py = 10, pw = 340, ph = 56;
+        int px = 10, py = 10, pw = 420, ph = 56;
 
         // Fondo semitransparente
         Composite orig = g2.getComposite();
@@ -471,7 +541,10 @@ public class VistaGlobal extends Vista {
         g2.setStroke(new BasicStroke(1.5f));
         g2.drawRoundRect(px, py, pw, ph, 12, 12);
         g2.setStroke(new BasicStroke(1f));
-
+        
+        
+        
+        
         // Puntaje
         g2.setFont(FONT_HUD);
         g2.setColor(new Color(255, 220, 60));
@@ -479,8 +552,10 @@ public class VistaGlobal extends Vista {
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 13));
-        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() + "    |    [T] Tienda de Skins", px + 12, py + 40);
-
+        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() +
+        		"    |    [T] Tienda de Skins    |    [X] Reiniciar Mapa ", px + 12, py + 40);
+        
+        
         // Ciudad cercana
         if (ciudadCercanaId != -1) {
             NodoCiudad nodo = partidaGeneral.getMapaMundi().obtenerCiudad(ciudadCercanaId);

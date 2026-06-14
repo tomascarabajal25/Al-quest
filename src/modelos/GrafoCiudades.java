@@ -176,6 +176,17 @@ public class GrafoCiudades {
          nodo.setCompletada(true);
      }
     }
+    
+    /**
+     * post: recorre todas las ciudades registradas en el grafo y las
+     * marca como NO completadas (reinicia su estado a false).
+     */
+    public void reiniciarTodasLasCiudades() {
+        for (NodoCiudad nodo : nodos.values()) {
+            nodo.setCompletada(false);
+        }
+    }
+    
 
     /**
     * post: devuelve los ids de todas las ciudades marcadas como completadas.
