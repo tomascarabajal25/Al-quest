@@ -1,4 +1,4 @@
-package tests.Ciudades.testsDeLaCiudadDeOrdenamiento;
+package tests.ciudades.testsDeLaCiudadDeOrdenamiento;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,9 +32,9 @@ public class OrdenadorBubleTest {
     public void testOrdenamientoEstandarAscendente() {
         ordenador.ordenar(listaDesordenada);
         
-        assertEquals(20, listaDesordenada.get(0).getTamaño());
-        assertEquals(50, listaDesordenada.get(1).getTamaño());
-        assertEquals(80, listaDesordenada.get(2).getTamaño());
+        assertEquals(20, listaDesordenada.get(0).getTamanio());
+        assertEquals(50, listaDesordenada.get(1).getTamanio());
+        assertEquals(80, listaDesordenada.get(2).getTamanio());
     }
 
     @Test

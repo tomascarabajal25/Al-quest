@@ -98,6 +98,15 @@ public class KeyHandler implements KeyListener {
 		}
 
     }
+    
+    //post: reinicia todos los estados
+    public void reset() {
+        this.upPressed = false;
+        this.downPressed = false;
+        this.leftPressed = false;
+        this.rightPressed = false;
+        this.enterPresionado = false;
+    }
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------

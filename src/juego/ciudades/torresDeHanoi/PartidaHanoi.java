@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.torresDeHanoi.UI.MinijuegoHanoi;
+import juego.configuracion.ConfiguracionDeHanoi;
 import modelos.Jugador;
 import modelos.Partida;
 import modelosVista.Vista;
@@ -104,7 +105,7 @@ public class PartidaHanoi extends Partida {
                 getJugador(),
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_COLUMNA,
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_FILA,
-                ConfiguracionDeHanoi.RUTA_SPRITE_JUGADOR);
+                getRutaSprites());
 
         // 4. Creación del controlador del minijuego pasándole la vista ya creada
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
@@ -239,13 +240,13 @@ public class PartidaHanoi extends Partida {
      *
      * @return puntaje final de la partida
      */
-    private int calcularPuntaje() {
-        if (juego == null || !juego.haGanado()) {
+    public int calcularPuntaje() {
+        if (this.juego == null || !this.juego.haGanado()) {
             return 0;
         }
 
-        int multiplicadorPorDificultad = juego.getObjetivo();
-        int puntajeBase = juego.esPerfecto()
+        int multiplicadorPorDificultad = this.juego.getObjetivo();
+        int puntajeBase = this.juego.esPerfecto()
                 ? ConfiguracionDeHanoi.PUNTAJE_BASE_PERFECTO
                 : ConfiguracionDeHanoi.PUNTAJE_BASE_IMPERFECTO;
 

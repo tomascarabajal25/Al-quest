@@ -117,9 +117,9 @@ public class Vista extends JPanel implements Runnable{
         this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyhandler);   // ← usa el key inyectado
+        this.addKeyListener(this.keyhandler);   // ← usa el key inyectado
         this.setFocusable(true);
-        setJugadorVista(jugador, key, spawnCol, spawnFil, rutaSprites);
+        setJugadorVista(jugador, this.keyhandler, spawnCol, spawnFil, rutaSprites);
         this.construccionesM.loadMap(rutaMundo);
 
         setUpJuego();
@@ -238,6 +238,45 @@ public class Vista extends JPanel implements Runnable{
         ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
         setMinijuego(minijuego);
     }
+
+
+    //Para manejo de skins
+    /**
+     * Cambia la skin del jugador en vivo delegando a jugadorVista
+     * 
+     * pre: rutaSprites distinto de null, los 8 bmp tienen que existir en el classpath
+     *                                    patron: {ruta}_{direccion}_{num}.bmp
+     * post: el jugador renderiza con los nuevos sprites (en el proximo frame)
+     * 
+     * @param rutaSprites ruta de la nueva skin
+     */
+    public void cambiarSkinJugador(String rutaSprites) {
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+        jugadorVista.cambiarSkin(rutaSprites);
+    }
+
+    /**
+     * Permite redibujar el mapa del juego
+     *
+     * PRE:
+     * -RutaMundo no debe ser nulo
+     * POST:
+     * -Redibuja el mapa de la vista del juego
+     *
+     * @param rutaMundo: nuevo mapa
+     */
+    public void cargarMapa(String rutaMundo) {
+        ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
+
+        this.objetos.clear();          // limpia objetos viejos
+        this.construccionesM.loadMap(rutaMundo);
+
+        this.adminObjt.setObjetos();   // reinyecta objetos del mapa
+
+        repaint();
+    }
+
+
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------

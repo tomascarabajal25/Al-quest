@@ -1,4 +1,4 @@
-package tests.ciudades.testDeCiudadRecoleccion;
+package ciudades.testDeCiudadRecoleccion;
 
 import juego.ciudades.recoleccionEnMatriz.CartaPuntos;
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;

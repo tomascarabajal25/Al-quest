@@ -1,6 +1,6 @@
-package tests.ciudades.testDeCiudadRecoleccion;
+package ciudades.testDeCiudadRecoleccion;
 
-import juego.Constantes;
+import juego.configuracion.ConfiguracionDeRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.CiudadRecoleccion;
 import modelos.Jugador;
 import org.junit.jupiter.api.Test;
@@ -50,9 +50,9 @@ public class TestCiudadRecoleccion {
         Jugador jugador = new Jugador("Tomas");
         CiudadRecoleccion ciudad = new CiudadRecoleccion(40, 40, 3, 10, jugador);
 
-        assertEquals(Constantes.DESPLAZAMIENTO_INICIAL, ciudad.getDesplazamiento());
-        assertEquals(Constantes.VISIBILIDAD_INICIAL, ciudad.getVisibilidad());
-        assertEquals(Constantes.PUNTOS_INICIALES_PARTIDA, ciudad.getPuntos());
+        assertEquals(ConfiguracionDeRecoleccion.DESPLAZAMIENTO_INICIAL, ciudad.getDesplazamiento());
+        assertEquals(ConfiguracionDeRecoleccion.VISIBILIDAD_INICIAL, ciudad.getVisibilidad());
+        assertEquals(ConfiguracionDeRecoleccion.PUNTOS_INICIALES_PARTIDA, ciudad.getPuntos());
         assertFalse(ciudad.estaFinalizado());
     }
 
@@ -97,7 +97,7 @@ public class TestCiudadRecoleccion {
         CiudadRecoleccion ciudad = new CiudadRecoleccion(40, 40, 3, 10, jugador);
         int visibilidadInicial = ciudad.getVisibilidad();
         ciudad.aumentarVision();
-        assertEquals(visibilidadInicial + Constantes.CANTIDAD_AUMENTO_VISIBILIDAD, ciudad.getVisibilidad());
+        assertEquals(visibilidadInicial + ConfiguracionDeRecoleccion.CANTIDAD_AUMENTO_VISIBILIDAD, ciudad.getVisibilidad());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class TestCiudadRecoleccion {
         CiudadRecoleccion ciudad = new CiudadRecoleccion(40, 40, 3, 10, jugador);
         int desplazamientoInicial = ciudad.getDesplazamiento();
         ciudad.aumentardesplazamiento();
-        assertEquals(desplazamientoInicial + Constantes.CANTIDAD_AUMENTO_DESPLAZAMIENTO, ciudad.getDesplazamiento());
+        assertEquals(desplazamientoInicial + ConfiguracionDeRecoleccion.CANTIDAD_AUMENTO_DESPLAZAMIENTO, ciudad.getDesplazamiento());
     }
 
     @Test

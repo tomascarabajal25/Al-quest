@@ -1,5 +1,4 @@
 import modelos.PartidaGeneral;
-import modelos.Jugador;
 import persistencia.GestorDeInicio;
 
 public class Main {
@@ -7,7 +6,6 @@ public class Main {
         PartidaGeneral partidaGeneral = GestorDeInicio.iniciarSesion();
 
         if (partidaGeneral == null) {
-            // El usuario canceló el login: cerrar la aplicación.
             return;
         }
 

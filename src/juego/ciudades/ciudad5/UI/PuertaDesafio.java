@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import juego.ciudades.ciudad5.ConfiguracionBusqueda;
+import juego.configuracion.ConfiguracionBusqueda;
 import modelosVista.JugadorVista;
 import modelosVista.ObjetoVista;
 import modelosVista.Vista;

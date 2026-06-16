@@ -598,6 +598,10 @@ public class Grafo<T, U> {
      * @return Una lista de valores (el camino) o una lista vacía si no hay camino.
      */
     public List<T> dijkstra(T valorInicio, T valorFin) {
+        return dijkstra(valorInicio, valorFin, null);
+    }
+
+    public List<T> dijkstra(T valorInicio, T valorFin, ObservadorDijkstra<T> observador) {
         Vertice<T, U> inicio = getVertice(valorInicio);
         Vertice<T, U> fin = getVertice(valorFin);
 
@@ -625,12 +629,18 @@ public class Grafo<T, U> {
             Vertice<T, U> u = parActual.vertice;
             double distActual = parActual.distancia;
 
-            // Si ya procesamos un camino más corto a 'u', ignoramos este
             if (distActual > distancias.get(u)) {
                 continue;
             }
-            
-            // Optimización: si llegamos al destino, paramos
+
+            if (observador != null) {
+                Map<T, Double> distanciasPorValor = new HashMap<>();
+                for (Map.Entry<Vertice<T, U>, Double> entry : distancias.entrySet()) {
+                    distanciasPorValor.put(entry.getKey().getValor(), entry.getValue());
+                }
+                observador.onVerticeExtraido(u.getValor(), distanciasPorValor);
+            }
+
             if (u.equals(fin)) {
                 encontrado = true;
                 break;
@@ -638,10 +648,9 @@ public class Grafo<T, U> {
 
             for (Arista<T, U> arista : u.getAdyacencias()) {
                 Vertice<T, U> v = arista.getDestino();
-                
-                // ¡IMPORTANTE! Forzamos el peso 'U' a ser un número.
+
                 double peso = ((Number) arista.getPeso()).doubleValue();
-                
+
                 if (peso < 0) {
                      throw new IllegalArgumentException("Dijkstra no funciona con pesos negativos.");
                 }
@@ -649,10 +658,13 @@ public class Grafo<T, U> {
                 double nuevaDist = distancias.get(u) + peso;
 
                 if (nuevaDist < distancias.get(v)) {
-                    // Encontramos un camino más corto hacia 'v'
                     distancias.put(v, nuevaDist);
                     predecesores.put(v, u);
                     pq.add(new ParDijkstra(v, nuevaDist));
+
+                    if (observador != null) {
+                        observador.onAristaRelajada(u.getValor(), v.getValor(), nuevaDist);
+                    }
                 }
             }
         }

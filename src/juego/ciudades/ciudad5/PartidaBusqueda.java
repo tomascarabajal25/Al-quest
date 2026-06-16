@@ -10,6 +10,7 @@ import java.util.List;
 
 import juego.ciudades.ciudad5.UI.MinijuegoDesafio;
 import juego.ciudades.ordenamientos.EstadoDePartida;
+import juego.configuracion.ConfiguracionBusqueda;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;
@@ -21,6 +22,9 @@ public class PartidaBusqueda extends Partida {
     private JFrame           ventana;
     private MinijuegoDesafio minijuego;
 
+    /** Se pone en true únicamente desde el callback de victoria, antes de llamar finalizar(). */
+    private boolean gano = false;
+
     /**
      * pre:  nombre y jugador no nulos.
      * post: el TDA se crea listo para ser configurado dinámicamente en iniciar().
@@ -30,10 +34,6 @@ public class PartidaBusqueda extends Partida {
         setEstado(EstadoDePartida.Creado);
     }
 
-    /**
-     * post: permite seleccionar un archivo, genera el Mapa de palabras estructurado,
-     *       inicializa la interfaz gráfica y arranca el bucle a 60 FPS.
-     */
     @Override
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
@@ -48,7 +48,6 @@ public class PartidaBusqueda extends Partida {
             ConfiguracionBusqueda.ARCHIVOS_DISPONIBLES[0]
         );
 
-        // Si el usuario cancela o cierra el diálogo, se aborta limpiamente
         if (archivoElegido == null) {
             finalizar();
             return;
@@ -67,23 +66,25 @@ public class PartidaBusqueda extends Partida {
             return;
         }
 
-        // Inicialización de la Vista y presentación
         this.vista = new Vista(
             ConfiguracionBusqueda.RUTA_MAPA_MUNDO,
             getJugador(),
             ConfiguracionBusqueda.PANTALLA_ANCHO_TILES,
             ConfiguracionBusqueda.PANTALLA_ALTO_TILES,
-            ConfiguracionBusqueda.RUTA_SPRITES_JUGADOR
+            getRutaSprites()
         );
 
         this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.getTamanio());
         vista.establecerMinijuego(minijuego);
         vista.getAdminObjt().setObjetos(minijuego.getPuertaLista(), minijuego.getPuertaArbol());
 
-        // Callback para cierre automático al ganar/perder
-        minijuego.setOnFinalizadoCallback(this::finalizar);
+        // El flag gano se activa ANTES de llamar a finalizar, garantizando
+        // que calcularPuntaje() no dependa del estado mutable del minijuego.
+        minijuego.setOnFinalizadoCallback(() -> {
+            gano = true;
+            finalizar();
+        });
 
-        // Creación y apertura de la ventana
         ventana = new JFrame("Ciudad de Búsqueda");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventana.setResizable(false);
@@ -112,18 +113,9 @@ public class PartidaBusqueda extends Partida {
     }
 
     private int calcularPuntaje() {
-        return (minijuego != null && minijuego.isGanado())
-            ? ConfiguracionBusqueda.PUNTOS_VICTORIA
-            : 0;
+        return gano ? ConfiguracionBusqueda.PUNTOS_VICTORIA : 0;
     }
 
-    /**
-     * Carga un Mapa desde un archivo de texto plano.
-     * Cada línea es una fila; las palabras se separan por espacios.
-     *
-     * pre:  rutaArchivo no nula, el archivo existe y es legible
-     * post: devuelve un Mapa con las palabras del archivo, o null si hubo error
-     */
     private static Mapa cargarDesdeArchivo(String rutaArchivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 
@@ -151,16 +143,11 @@ public class PartidaBusqueda extends Partida {
                 for (int j = 0; j < fila.length; j++) {
                     String palabra = fila[j].trim();
                     if (!palabra.isEmpty() && !palabra.equals("-")) {
-                        int col = j + 1;
-                        int row = i + 1;
-                        mapa.ocuparCelda(palabra, col, row);
-                        System.out.println("Cargado (" + col + "," + row + ") -> " + palabra);
+                        mapa.ocuparCelda(palabra, j + 1, i + 1);
                     }
                 }
             }
 
-            System.out.println("Archivo cargado: " + maxColumnas
-                + " col x " + filas.size() + " filas.");
             return mapa;
 
         } catch (IOException e) {

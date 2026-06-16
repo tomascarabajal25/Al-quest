@@ -140,6 +140,24 @@ public class JugadorVista extends EntidadVista {
         }
     }
 
+    //Gestion de SKINS
+    /**
+     * cambia la skin del jugador en el momento, recarga los 8 bmp desde otra ruta
+     * 
+     * PRE: rutaSprites distinto de null, los archivos deben existir como los busca
+     *                                    el programa en el classpath
+     * POST: las imagenes del jugador se actualizan, cambio en el proximo frame,
+     *       con esto no es necesario reiniciar el hilo
+     * 
+     * @param rutaSprites ruta base de la nueva skin
+     */
+    public void cambiarSkin(String rutaSprites) {
+        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
+        getImagenesDelJugador(rutaSprites);
+    }
+
+
+
     /**
      * Dibuja al jugador en la UI
      *

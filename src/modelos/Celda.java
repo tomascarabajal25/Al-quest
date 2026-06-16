@@ -1,6 +1,8 @@
 package modelos;
 
 
+import utils.ValidacionesUtiles;
+
 import java.util.Objects;
 
 public class Celda<T> {
@@ -10,8 +12,6 @@ public class Celda<T> {
     /**
      * Constructor del TDA Celda
      *
-     * PRE:
-     * -El contenido no debe ser null
      * POST:
      * -Se crea una instancia de Celda con contenido
      *
@@ -57,6 +57,9 @@ public class Celda<T> {
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
     /**
      * Setter del parametro contenido
+     *
+     * PRE:
+     * -Contenido no debe ser nulo
      *
      * POST:
      * -Establece el valor del parametro contenido

@@ -35,11 +35,13 @@ public class FordFulkerson {
         return false;
     }
 
-    // Implementación del algoritmo de Ford-Fulkerson
     public static int fordFulkerson(int[][] graph, int source, int sink) {
+        return fordFulkerson(graph, source, sink, null);
+    }
+
+    public static int fordFulkerson(int[][] graph, int source, int sink, ObservadorFlujo observador) {
         int numVertices = graph.length;
 
-        // Crear el grafo residual
         int[][] residualGraph = new int[numVertices][numVertices];
         for (int u = 0; u < numVertices; u++) {
             for (int v = 0; v < numVertices; v++) {
@@ -47,32 +49,50 @@ public class FordFulkerson {
             }
         }
 
-        // Array para guardar el camino aumentante
+        int[][] flujo = new int[numVertices][numVertices];
         int[] parent = new int[numVertices];
+        int maxFlow = 0;
 
-        int maxFlow = 0; // Inicializamos el flujo máximo en 0
-
-        // Mientras exista un camino aumentante
         while (dfs(residualGraph, source, sink, parent)) {
-            // Determinar la capacidad mínima en el camino aumentante
             int pathFlow = Integer.MAX_VALUE;
             for (int v = sink; v != source; v = parent[v]) {
                 int u = parent[v];
                 pathFlow = Math.min(pathFlow, residualGraph[u][v]);
             }
 
-            // Actualizar las capacidades residuales
             for (int v = sink; v != source; v = parent[v]) {
                 int u = parent[v];
-                residualGraph[u][v] -= pathFlow; // Reducimos en la dirección original
-                residualGraph[v][u] += pathFlow; // Aumentamos en la dirección opuesta
+                residualGraph[u][v] -= pathFlow;
+                residualGraph[v][u] += pathFlow;
+                flujo[u][v] += pathFlow;
+                flujo[v][u] -= pathFlow;
             }
 
-            // Añadir el flujo de este camino al flujo máximo
             maxFlow += pathFlow;
+
+            if (observador != null) {
+                int[] camino = reconstruirCamino(parent, source, sink);
+                if (!observador.onCaminoAumentante(camino, pathFlow, flujo)) {
+                    break;
+                }
+            }
         }
 
         return maxFlow;
+    }
+
+    private static int[] reconstruirCamino(int[] parent, int source, int sink) {
+        int longitud = 0;
+        for (int v = sink; v != source; v = parent[v]) {
+            longitud++;
+        }
+        int[] camino = new int[longitud + 1];
+        camino[0] = source;
+        int idx = 1;
+        for (int v = sink; v != source; v = parent[v]) {
+            camino[idx++] = v;
+        }
+        return camino;
     }
 
     public static void main(String[] args) {

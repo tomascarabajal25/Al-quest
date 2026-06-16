@@ -72,6 +72,10 @@ public class Pila<T> {
 	public Nodo<T> getCabeza() {
 		return cabeza;
 	}
+	
+	public boolean isEmpty() {
+		return cabeza==null;
+	}
 //SETTERS SIMPLES---------------------------------------------------------------
 	/*
 	 *post: cambia la cantidad de nodos
