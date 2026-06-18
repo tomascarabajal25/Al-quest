@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.model.acciones.Atacar;
+import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class AtacarTest {
 
@@ -126,5 +127,85 @@ public class AtacarTest {
 		Atacar atacar = new Atacar(h, e);
 		atacar.ejecutar();
 		assertEquals(79, e.getVida());
+	}
+
+	@Test
+	public void testAtacarContraDefensorReduceDanioAMitad() {
+		heroe.setEstado(new Defendiendo(enemigo));
+		Atacar atacar = new Atacar(heroe, enemigo);
+		atacar.ejecutar();
+		int danioBase = heroe.getFuerza() - enemigo.getArmadura();
+		int danioReducido = Math.max(1, danioBase / 2);
+		assertEquals(80 - danioReducido, enemigo.getVida());
+	}
+
+	@Test
+	public void testAtacarContraDefensorConArmaduraCero() {
+		Enemigo sinArmadura = new Enemigo("SINARM", TipoEnemigo.DUENDE, 80, 10, 0, habilidadNinguna);
+		sinArmadura.setEstado(new Defendiendo(sinArmadura));
+		Atacar atacar = new Atacar(heroe, sinArmadura);
+		atacar.ejecutar();
+		int danioBase = heroe.getFuerza() - sinArmadura.getArmadura();
+		int danioReducido = Math.max(1, danioBase / 2);
+		assertEquals(80 - danioReducido, sinArmadura.getVida());
+	}
+
+	@Test
+	public void testAtacarContraDefensorNoBajaDanioBajoCero() {
+		Heroe debil = new Heroe("DEBIL", 100, 5, 0, habilidadNinguna);
+		Enemigo tanque = new Enemigo("TANQUE", TipoEnemigo.CABALLERO, 200, 10, 100, habilidadNinguna);
+		tanque.setEstado(new Defendiendo(tanque));
+		Atacar atacar = new Atacar(debil, tanque);
+		atacar.ejecutar();
+		assertEquals(199, tanque.getVida());
+	}
+
+	@Test
+	public void testAtacarContraDefensorConsumeEstado() {
+		enemigo.setEstado(new Defendiendo(enemigo));
+		Atacar atacar = new Atacar(heroe, enemigo);
+		atacar.ejecutar();
+		// After usado() decrements turnosRestantes from 1 to 0,
+		// the state survives until the next aplicarEstados() tick
+		// which removes it via terminado() == true
+		assertNotNull(enemigo.getEstados().get(EstadoCombatiente.DEFENDIENDO));
+		assertEquals(0, enemigo.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes());
+	}
+
+	@Test
+	public void testAtacarContraDefensorSegundoAtaqueSinReduccion() {
+		enemigo.setEstado(new Defendiendo(enemigo));
+		Atacar atacar = new Atacar(heroe, enemigo);
+		atacar.ejecutar();
+		// Need to tick once to remove the consumed state from the map
+		juego.ciudades.batalla.controller.ManagerBatalla.aplicarEstados(enemigo);
+		atacar.ejecutar();
+		int danioBase = heroe.getFuerza() - enemigo.getArmadura();
+		int danioReducido = Math.max(1, danioBase / 2);
+		assertEquals(80 - danioReducido - danioBase, enemigo.getVida());
+		assertFalse(enemigo.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+	}
+
+	@Test
+	public void testAtacarContraDefensorDobleDefensaUnAtaque() {
+		enemigo.setEstado(new Defendiendo(enemigo));
+		enemigo.setEstado(new Defendiendo(enemigo));
+		Atacar atacar = new Atacar(heroe, enemigo);
+		atacar.ejecutar();
+		int danioBase = heroe.getFuerza() - enemigo.getArmadura();
+		int danioReducido = Math.max(1, danioBase / 2);
+		assertEquals(80 - danioReducido, enemigo.getVida());
+	}
+
+	@Test
+	public void testAtacarContraDefensorEstadoRemovidoDespuesDeTick() {
+		enemigo.setEstado(new Defendiendo(enemigo));
+		Atacar atacar = new Atacar(heroe, enemigo);
+		atacar.ejecutar();
+		// State still in map with turnos=0
+		assertTrue(enemigo.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+		// After aplicarEstados tick, terminado() is true, state removed
+		juego.ciudades.batalla.controller.ManagerBatalla.aplicarEstados(enemigo);
+		assertFalse(enemigo.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
 	}
 }

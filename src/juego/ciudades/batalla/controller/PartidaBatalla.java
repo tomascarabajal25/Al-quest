@@ -31,7 +31,7 @@ public class PartidaBatalla extends Partida {
 		}
 
 		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
-		Heroe heroe = Heroe.desdeJugador(getJugador(), 100, 40, 5, ninguna);
+		Heroe heroe = Heroe.desdeJugador(getJugador(), 10, 40, 5, ninguna);
 		final List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(dificultad);
 		Cola<Combatiente> turnos = new Cola<>();
 		turnos.add(heroe);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import juego.ciudades.batalla.model.*;
+import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class CombatienteTest {
 
@@ -118,5 +119,39 @@ public class CombatienteTest {
 	@Test
 	public void testHeroeEsCombatiente() {
 		assertTrue(heroe instanceof Combatiente);
+	}
+
+	@Test
+	public void testSetEstadoAgregaNuevoEstado() {
+		heroe.setEstado(new Defendiendo(heroe));
+		assertTrue(heroe.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+	}
+
+	@Test
+	public void testSetEstadoApilaExistente() {
+		heroe.setEstado(new Defendiendo(heroe));
+		int turnosAntes = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		heroe.setEstado(new Defendiendo(heroe));
+		int turnosDespues = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		assertEquals(turnosAntes + 1, turnosDespues);
+		assertEquals(1, heroe.getEstados().size());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsTrue() {
+		heroe.setEstado(new Defendiendo(heroe));
+		assertTrue(heroe.estaDefendiendo());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsFalse() {
+		assertFalse(heroe.estaDefendiendo());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsFalseDespuesDeConsumo() {
+		heroe.setEstado(new Defendiendo(heroe));
+		heroe.getEstados().remove(EstadoCombatiente.DEFENDIENDO);
+		assertFalse(heroe.estaDefendiendo());
 	}
 }

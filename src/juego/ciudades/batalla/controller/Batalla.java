@@ -4,6 +4,9 @@ import estructuras.cola.Cola;
 import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.view.*;
+import juego.ciudades.batalla.view.accion.ActionUi;
+import juego.ciudades.batalla.view.animacion.Animacion;
+import juego.ciudades.batalla.view.animacion.GlowAnimacion;
 
 import java.util.List;
 
@@ -20,7 +23,6 @@ public class Batalla {
 		this.dificultad = dificultad;
 	}
 
-	private static final long ACTION_DELAY_MS = 900;
 	private static final long TURN_END_DELAY_MS = 600;
 
 	public boolean empezar() {
@@ -38,43 +40,55 @@ public class Batalla {
 				continue;
 			}
 
-			Pila<Accion> acciones;
-			try {
-				acciones = (actual instanceof Heroe)
-						? ui.solicitarAcciones(dificultad)
-						: ManagerBatalla.elegirAccionEnemigo((Enemigo) actual, heroe);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				break;
+			List<ManagerBatalla.EstadoAplicado> estadoDescs = ManagerBatalla.aplicarEstados(actual);
+			for (ManagerBatalla.EstadoAplicado ea : estadoDescs) {
+				ui.actualizarEstado(ea.getDescripcion(), actual);
+				Animacion glow = new GlowAnimacion(ea.getColor());
+				ui.registrarAnimacion(glow);
+				while (!glow.terminada()) {
+					try { Thread.sleep(16); } catch (InterruptedException e) { break; }
+				}
 			}
 
-			if (acciones != null && !acciones.isEmpty()) {
-				List<Accion> lista = new java.util.ArrayList<>();
-				while (!acciones.isEmpty()) {
-					lista.add(acciones.pop());
-				}
+			Pila<Accion> acciones = new Pila<>();
 
-				for (int i = 0; i < lista.size(); i++) {
-					Accion a = lista.get(i);
+			if (actual instanceof Heroe) {
+				try {
+					for (int i = 0; i < dificultad; i++) {
+						ui.mostrarIndicadorAccion(i + 1);
+						ui.mostrarMenuPrincipal();
+						Accion accion = ui.solicitarAccion();
+						ui.setEstadoMenu(null);
+						if (accion == null) break; // PASAR
+						acciones.push(accion);
+					}
+					ui.setEstadoMenu(null);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					break;
+				}
+			} else {
+				acciones = ManagerBatalla.elegirAccionEnemigo((Enemigo) actual, heroe);
+				ui.setEstadoMenu(null);
+			}
+
+			if (!acciones.isEmpty()) {
+				for (Accion a : acciones) {
 					a.ejecutar();
 
-					String msg;
-					if (a instanceof juego.ciudades.batalla.model.acciones.Atacar) {
-						msg = a.getCombatiente().getNombre() + " atacó a " + a.getObjetivo().getNombre() + "!";
-					} else {
-						msg = a.getCombatiente().getNombre() + " usó " + a.getTipo().name().toLowerCase() + "!";
-					}
-
+					ActionUi actionUi = a.getUi();
+					String msg = actionUi.getMensaje();
 					ui.actualizarEstado(msg, actual);
 
-					enemigos.removeIf(e -> !e.estaVivo());
+					try { Thread.sleep(16); } catch (InterruptedException e) { break; }
 
-					try {
-						Thread.sleep(ACTION_DELAY_MS);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						break;
+					Animacion anim = actionUi.crearAnimacion(a.getCombatiente(), a.getObjetivo());
+					ui.registrarAnimacion(anim);
+					while (!anim.terminada()) {
+						try { Thread.sleep(16); } catch (InterruptedException e) { break; }
 					}
+
+					enemigos.removeIf(e -> !e.estaVivo());
 				}
 			} else {
 				ui.actualizarEstado(null, actual);

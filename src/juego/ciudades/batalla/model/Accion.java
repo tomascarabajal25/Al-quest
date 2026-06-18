@@ -1,9 +1,11 @@
 package juego.ciudades.batalla.model;
 
+import juego.ciudades.batalla.view.accion.ActionUi;
+
 public abstract class Accion {
-	private Combatiente combatiente;
-	private Combatiente objetivo;
-	private TipoAccion tipo;
+	protected Combatiente combatiente;
+	protected Combatiente objetivo;
+	protected TipoAccion tipo;
 
 	public Accion(Combatiente jugador, Combatiente objetivo, TipoAccion tipo) {
 		this.combatiente = jugador;
@@ -22,4 +24,6 @@ public abstract class Accion {
 	}
 
 	public abstract void ejecutar();
+
+	public abstract ActionUi getUi();
 }

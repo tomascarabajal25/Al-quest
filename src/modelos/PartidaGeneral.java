@@ -77,56 +77,56 @@ public class PartidaGeneral extends Partida {
     private void construirGrafo() {
         Jugador jugador = getJugador();
 
-        NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
-                new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
-
-        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
-                new PartidaReinas(jugador));
-
-        NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
-                new PartidaLaberinto(jugador));
-
-        NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
-                new PartidaOrdenamientos("Ordenamiento", jugador));
-
-        NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
-                new PartidaBusqueda("Búsqueda", jugador));
-
-        NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
-                new PartidaHashing("Hash", jugador));
-
-        NodoCiudad ciudad7 = crearNodo(7, "Ciudad de Grafos",
-                new PartidaGrafos("Grafos", jugador));
-
-        NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
-                new PartidaHanoi("Torres de Hanoi", jugador));
+//        NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
+//                new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
+//
+//        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
+//                new PartidaReinas(jugador));
+//
+//        NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
+//                new PartidaLaberinto(jugador));
+//
+//        NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
+//                new PartidaOrdenamientos("Ordenamiento", jugador));
+//
+//        NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
+//                new PartidaBusqueda("Búsqueda", jugador));
+//
+//        NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
+//                new PartidaHashing("Hash", jugador));
+//
+//        NodoCiudad ciudad7 = crearNodo(7, "Ciudad de Grafos",
+//                new PartidaGrafos("Grafos", jugador));
+//
+//        NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
+//                new PartidaHanoi("Torres de Hanoi", jugador));
 
         NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas",
                 new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador));
+//
+//        NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
+//                new PartidaComplejidad(jugador));
 
-        NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
-                new PartidaComplejidad(jugador));
-
-        mapaMundi.agregarCiudad(ciudad1);
-        mapaMundi.agregarCiudad(ciudad2);
-        mapaMundi.agregarCiudad(ciudad3);
-        mapaMundi.agregarCiudad(ciudad4);
-        mapaMundi.agregarCiudad(ciudad5);
-        mapaMundi.agregarCiudad(ciudad6);
-        mapaMundi.agregarCiudad(ciudad7);
-        mapaMundi.agregarCiudad(ciudad8);
+//        mapaMundi.agregarCiudad(ciudad1);
+//        mapaMundi.agregarCiudad(ciudad2);
+//        mapaMundi.agregarCiudad(ciudad3);
+//        mapaMundi.agregarCiudad(ciudad4);
+//        mapaMundi.agregarCiudad(ciudad5);
+//        mapaMundi.agregarCiudad(ciudad6);
+//        mapaMundi.agregarCiudad(ciudad7);
+//        mapaMundi.agregarCiudad(ciudad8);
         mapaMundi.agregarCiudad(ciudad9);
-        mapaMundi.agregarCiudad(ciudad10);
-
-        mapaMundi.conectarCiudades(1, 2);
-        mapaMundi.conectarCiudades(2, 3);
-        mapaMundi.conectarCiudades(3, 4);
-        mapaMundi.conectarCiudades(4, 5);
-        mapaMundi.conectarCiudades(5, 6);
-        mapaMundi.conectarCiudades(6, 7);
-        mapaMundi.conectarCiudades(7, 8);
-        mapaMundi.conectarCiudades(8, 9);
-        mapaMundi.conectarCiudades(9, 10);
+//        mapaMundi.agregarCiudad(ciudad10);
+//
+//        mapaMundi.conectarCiudades(1, 2);
+//        mapaMundi.conectarCiudades(2, 3);
+//        mapaMundi.conectarCiudades(3, 4);
+//        mapaMundi.conectarCiudades(4, 5);
+//        mapaMundi.conectarCiudades(5, 6);
+//        mapaMundi.conectarCiudades(6, 7);
+//        mapaMundi.conectarCiudades(7, 8);
+//        mapaMundi.conectarCiudades(8, 9);
+//        mapaMundi.conectarCiudades(9, 10);
     }
 
     /**

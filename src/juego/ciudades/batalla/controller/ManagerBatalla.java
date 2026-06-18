@@ -1,14 +1,13 @@
 package juego.ciudades.batalla.controller;
 
+import estructuras.cola.Cola;
 import estructuras.listas.ListaSimplementeEnlazada;
 import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.model.acciones.Atacar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.awt.Color;
+import java.util.*;
 
 public class ManagerBatalla {
 
@@ -88,5 +87,43 @@ public class ManagerBatalla {
 		Pila<Accion> acciones = new Pila<>();
 		acciones.push(new Atacar(enemigo, heroe));
 		return acciones;
+	}
+
+	public static List<EstadoAplicado> aplicarEstados(Combatiente combatiente) {
+		Map<EstadoCombatiente, EstadoActivo> estados = combatiente.getEstados();
+		List<EstadoAplicado> resultados = new ArrayList<>();
+		if (estados.isEmpty()) {
+			return resultados;
+		}
+
+		List<EstadoCombatiente> terminados = new ArrayList<>();
+		estados.values().forEach(e -> {
+			e.aplicar();
+			e.usado();
+			String desc = e.getUi().getDescripcion(e);
+			if (desc != null && !desc.isEmpty()) {
+				resultados.add(new EstadoAplicado(desc, e.getUi().getBadgeColor()));
+			}
+			if (e.terminado()) {
+				terminados.add(e.getEstado());
+			}
+		});
+		for (EstadoCombatiente estado : terminados) {
+			estados.remove(estado);
+		}
+		return resultados;
+	}
+
+	public static class EstadoAplicado {
+		private final String descripcion;
+		private final Color color;
+
+		public EstadoAplicado(String descripcion, Color color) {
+			this.descripcion = descripcion;
+			this.color = color;
+		}
+
+		public String getDescripcion() { return descripcion; }
+		public Color getColor() { return color; }
 	}
 }
