@@ -7,6 +7,7 @@ import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -306,7 +307,10 @@ public class VistaGlobal extends Vista {
                         getClass().getResourceAsStream("/assets/ciudades/ciudad_" + id + ".bmp")
                     )
                 );
-                iconosCiudad.put(id, img);
+                // FILTRO: Si tu imagen guardada tiene fondo blanco, usa Color.WHITE. Si tiene fondo negro, usa Color.BLACK.
+                BufferedImage imgFiltrada = filtrarColorTransparente(img, Color.BLACK);
+                
+                iconosCiudad.put(id, imgFiltrada);
             } catch (Exception e) {
                 System.out.println("No se encontró ícono para ciudad " + id);
             }
@@ -620,6 +624,32 @@ public class VistaGlobal extends Vista {
         g2.setColor(Color.WHITE);
         g2.drawString(mensajeFlotante, msgX, msgY);
         g2.setComposite(orig);
+    }
+    /**
+     * Toma una BufferedImage y transforma un color específico (por ejemplo, Blanco o Negro) en transparente.
+     */
+    private BufferedImage filtrarColorTransparente(BufferedImage entrada, final Color colorClave) {
+        java.awt.image.RGBImageFilter filtro = new java.awt.image.RGBImageFilter() {
+            public final int targetRGB = colorClave.getRGB() | 0xFF000000;
+
+            @Override
+            public final int filterRGB(int x, int y, int rgb) {
+                if ((rgb | 0xFF000000) == targetRGB) {
+                    return 0x00FFFFFF & rgb; // Hace el píxel 100% transparente
+                }
+                return rgb;
+            }
+        };
+
+        java.awt.image.ImageProducer ip = new java.awt.image.FilteredImageSource(entrada.getSource(), filtro);
+        Image imgAux = java.awt.Toolkit.getDefaultToolkit().createImage(ip);
+
+        BufferedImage salida = new BufferedImage(entrada.getWidth(), entrada.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = salida.createGraphics();
+        g2.drawImage(imgAux, 0, 0, null);
+        g2.dispose();
+
+        return salida;
     }
 
     // ── Getters de soporte ────────────────────────────────────────────────────
