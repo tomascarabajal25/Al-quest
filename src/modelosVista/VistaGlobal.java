@@ -20,6 +20,7 @@ import modelos.GrafoCiudades;
 import modelos.Jugador;
 import modelos.NodoCiudad;
 import modelos.PartidaGeneral;
+import modelos.Sonido;
 import utils.ValidacionesUtiles;
 
 /**
@@ -153,10 +154,11 @@ public class VistaGlobal extends Vista {
     public VistaGlobal(String rutaMapa,
                        Jugador jugador,
                        String rutaSprites,
-                       PartidaGeneral partidaGeneral) {
+                       PartidaGeneral partidaGeneral,
+                       Sonido sonido) {
 
         // Delega la inicialización base (tiles, jugadorVista, keyhandler, etc.)
-        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites,new KeyhandlerGlobal());
+        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites, new KeyhandlerGlobal(), sonido);
         ValidacionesUtiles.esDistintoDeNull(partidaGeneral, "la partida no puede ser nula");
         this.partidaGeneral = partidaGeneral;
         System.out.println(partidaGeneral.getMapaMundi().getNodos().size());

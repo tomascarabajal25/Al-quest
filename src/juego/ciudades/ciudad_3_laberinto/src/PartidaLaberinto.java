@@ -23,6 +23,9 @@ public class PartidaLaberinto extends Partida {
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
         this.controlador =new ControladorLaberinto(this);
+        if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.LABERINTO);
+        }
     }
 
     /**
@@ -35,6 +38,10 @@ public class PartidaLaberinto extends Partida {
         if (this.controlador != null) {
             this.controlador.cerrarVentana();
             this.controlador = null; 
+        }
+        if (this.sonido != null) {
+            this.sonido.stopMusica();
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
         }
         notificarFinalizacion();
     }

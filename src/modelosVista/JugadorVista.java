@@ -24,6 +24,7 @@ public class JugadorVista extends EntidadVista {
     private final int screenX;
     private final int screenY;
     private int nivelActual;
+    private String sonidoPaso= juego.configuracion.ConstantesSonido.PASO1;
 
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -35,19 +36,16 @@ public class JugadorVista extends EntidadVista {
         ValidacionesUtiles.esDistintoDeNull(vista, "vista");
         ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
 
-        setJugador(jugador) ;
+        setJugador(jugador);
         setVista(vista);
         setKey(key);
 
-        this.cartas = new ArrayList<>();
-        this.screenX=vistaDelJuego.getAnchoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
-        this.screenY=vistaDelJuego.getLargoDePantalla()/2 -(vistaDelJuego.getTamanio()/2);
-
-        setWorldX(spawnCol * vistaDelJuego.getTamanio());
-        setWorldY(spawnFila * vistaDelJuego.getTamanio());
+        int[] pantalla = inicializarColeccionesYPosicion(spawnCol, spawnFila);
+        this.screenX = pantalla[0];
+        this.screenY = pantalla[1];
 
         setAreaSolida(new Rectangle(8, 16, 32, 32));
-        setDireccion(Direccion.ABAJO);;
+        setDireccion(Direccion.ABAJO);
 
         getImagenesDelJugador(rutaSprites);
     }
@@ -62,19 +60,33 @@ public class JugadorVista extends EntidadVista {
      * Actualiza el estado del jugador
      */
     public void actualizar() {
+        manejarMovimientoYAnimacion();
+    }
+
+    // METODOS PRIVADOS AUXILIARES -----
+    /**
+     * Inicializa colecciones y posiciones del jugador en pantalla/world.
+     */
+    private int[] inicializarColeccionesYPosicion(int spawnCol, int spawnFila) {
+        this.cartas = new ArrayList<>();
+        int sx = vistaDelJuego.getAnchoDePantalla() / 2 - (vistaDelJuego.getTamanio() / 2);
+        int sy = vistaDelJuego.getLargoDePantalla() / 2 - (vistaDelJuego.getTamanio() / 2);
+
+        setWorldX(spawnCol * vistaDelJuego.getTamanio());
+        setWorldY(spawnFila * vistaDelJuego.getTamanio());
+        return new int[]{sx, sy};
+    }
+
+    /**
+     * Maneja el control del jugador, la detección de colisiones y la animación
+     * de los sprites (incluye reproducción de efectos de paso).
+     */
+    private void manejarMovimientoYAnimacion() {
         if(this.keyHa.getUpPressed() || this.keyHa.getDownPressed() || this.keyHa.getLeftPressed() || this.keyHa.getRightPressed()) {
-            if(this.keyHa.getUpPressed()) {
-                setDireccion(Direccion.ARRIBA);
-            }
-            if(this.keyHa.getDownPressed()) {
-                setDireccion(Direccion.ABAJO);
-            }
-            if(this.keyHa.getLeftPressed()) {
-                setDireccion(Direccion.IZQUIERDA);
-            }
-            if(this.keyHa.getRightPressed()) {
-                setDireccion(Direccion.DERECHA);
-            }
+            if(this.keyHa.getUpPressed()) setDireccion(Direccion.ARRIBA);
+            if(this.keyHa.getDownPressed()) setDireccion(Direccion.ABAJO);
+            if(this.keyHa.getLeftPressed()) setDireccion(Direccion.IZQUIERDA);
+            if(this.keyHa.getRightPressed()) setDireccion(Direccion.DERECHA);
 
             setColisionOn(false);
             this.vistaDelJuego.getChequeadorDeColision().chequearConstruccion(this);
@@ -82,36 +94,41 @@ public class JugadorVista extends EntidadVista {
 
             if(!isColisionOn()) {
                 switch (getDireccion()) {
-                    case ARRIBA: {
-                        setWorldY(getWorldY()-getVelocidad());
+                    case ARRIBA:
+                        setWorldY(getWorldY() - getVelocidad());
                         break;
-                    }
-                    case ABAJO: {
-                        setWorldY(getWorldY()+getVelocidad());
+                    case ABAJO:
+                        setWorldY(getWorldY() + getVelocidad());
                         break;
-                    }
-                    case IZQUIERDA: {
-                        setWorldX(getWorldX()-getVelocidad());
+                    case IZQUIERDA:
+                        setWorldX(getWorldX() - getVelocidad());
                         break;
-                    }
-                    case DERECHA: {
-                        setWorldX(getWorldX()+getVelocidad());
+                    case DERECHA:
+                        setWorldX(getWorldX() + getVelocidad());
                         break;
-                    }
                 }
-            }
 
-            setSpriteCounter(getSpriteCounter()+1);
-            if(getSpriteCounter() >12) {
-                if(getSpriteNum() == 1) {
-                    setSpriteNum(2);;
-                }
-                else {
-                    setSpriteNum(1);
-                }
-                setSpriteCounter(0);
+                actualizarSpriteCounter();
             }
         }
+    }
+    public void actualizarSpriteCounter() {
+    	setSpriteCounter(getSpriteCounter() + 1);
+        if(getSpriteCounter() > 12) {
+            if(getSpriteNum() == 1) {
+                setSpriteNum(2);
+                // sonido del paso
+                this.vistaDelJuego.playEfecto(sonidoPaso);
+            } else {
+                setSpriteNum(1);
+                // cambio el sonido del paso
+                sonidoPaso = sonidoPaso.equals(juego.configuracion.ConstantesSonido.PASO1)
+                        ? juego.configuracion.ConstantesSonido.PASO2
+                        : juego.configuracion.ConstantesSonido.PASO1;
+            }
+            setSpriteCounter(0);
+ 	
+            }
     }
 
     /**

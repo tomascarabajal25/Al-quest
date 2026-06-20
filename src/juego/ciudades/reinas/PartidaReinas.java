@@ -37,6 +37,9 @@ public class PartidaReinas extends Partida {
         });
 
         this.ventana.setVisible(true);
+        if(sonido != null) {
+			sonido.playMusica(juego.configuracion.ConstantesSonido.REINAS);
+		}
     }
 
     /**
@@ -62,6 +65,11 @@ public class PartidaReinas extends Partida {
             this.ventana = null;
         }
         
+        if(sonido != null) {
+        	sonido.stopMusica();
+        	sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+        }
+
         notificarFinalizacion();
     }
 

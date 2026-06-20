@@ -17,6 +17,7 @@ import juego.ciudades.ciudad_3_laberinto.src.PartidaLaberinto;
 import juego.ciudades.complejidad.PartidaComplejidad;
 import juego.ciudades.hashing.PartidaHashing;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
+import juego.configuracion.ConstantesSonido;
 import juego.ciudades.grafos.controller.PartidaGrafos;
 import persistencia.DatosGuardado;
 import utils.ValidacionesUtiles;
@@ -35,6 +36,7 @@ public class PartidaGeneral extends Partida {
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private final GrafoCiudades mapaMundi;
+    private final Sonido sonido;
     private NodoCiudad ciudadActual;
     private JFrame ventanaGlobal;
     private VistaGlobal vistaGlobal;
@@ -54,13 +56,57 @@ public class PartidaGeneral extends Partida {
         super("Al-Quest — Mapa Mundial", jugador);
         this.mapaMundi    = new GrafoCiudades();
         this.puntajeTotal = 0;
+        // Instancia y precarga de sonidos compartidos
+        this.sonido = new Sonido();
+        registrarSonidosPorDefecto();
 
         //Manejo de skins, personaje nace con skin base desbloqueada
         this.skinActual = RUTA_SPRITE_JUGADOR;
         this.skinsDesbloqueadas = new ArrayList<>();
         this.skinsDesbloqueadas.add(RUTA_SPRITE_JUGADOR);
 
+        // Modularizar la construcción del grafo
         construirGrafo();
+    }
+
+    // METODOS PRIVADOS AUXILIARES -----
+    /**
+     * Registra en la instancia `sonido` las rutas por defecto usadas en el juego.
+     * Se separa del constructor para mejorar legibilidad y facilitar pruebas.
+     */
+    private void registrarSonidosPorDefecto() {
+        // Registrar pista global (el usuario agregará los .wav más tarde)
+        this.sonido.agregarSonido(ConstantesSonido.GLOBAL_AVENTURA, ConstantesSonido.RUTA_GLOBAL_AVENTURA);
+        // Registrar pistas por ciudad (rutas por defecto, el usuario podrá reemplazarlas)
+        this.sonido.agregarSonido(ConstantesSonido.HANOI, ConstantesSonido.RUTA_HANOI);
+        this.sonido.agregarSonido(ConstantesSonido.RECOLECCION, ConstantesSonido.RUTA_RECOLECCION);
+        this.sonido.agregarSonido(ConstantesSonido.REINAS, ConstantesSonido.RUTA_REINAS);
+        this.sonido.agregarSonido(ConstantesSonido.LABERINTO, ConstantesSonido.RUTA_LABERINTO);
+        this.sonido.agregarSonido(ConstantesSonido.ORDENAMIENTO, ConstantesSonido.RUTA_ORDENAMIENTO);
+        this.sonido.agregarSonido(ConstantesSonido.BUSQUEDA, ConstantesSonido.RUTA_BUSQUEDA);
+        this.sonido.agregarSonido(ConstantesSonido.HASHING, ConstantesSonido.RUTA_HASHING);
+        this.sonido.agregarSonido(ConstantesSonido.GRAFOS, ConstantesSonido.RUTA_GRAFOS);
+        this.sonido.agregarSonido(ConstantesSonido.BATALLA, ConstantesSonido.RUTA_BATALLA);
+        this.sonido.agregarSonido(ConstantesSonido.COMPLEJIDAD, ConstantesSonido.RUTA_COMPLEJIDAD);
+        // Efecto de proximidad a agua
+        this.sonido.agregarSonido(ConstantesSonido.AGUA, ConstantesSonido.RUTA_AGUA);
+        // sonido de los pasos
+        this.sonido.agregarSonido(ConstantesSonido.PASO1, ConstantesSonido.RUTA_PASO1);
+        this.sonido.agregarSonido(ConstantesSonido.PASO2, ConstantesSonido.RUTA_PASO2);
+    }
+
+    /**
+     * Crea y configura la ventana principal que contiene la vista global.
+     * Extraído de iniciar() para mantener la responsabilidad única.
+     */
+    private void inicializarVentanaGlobal() {
+        ventanaGlobal = new JFrame("Al-Quest");
+        ventanaGlobal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventanaGlobal.setResizable(false);
+        ventanaGlobal.add(vistaGlobal);
+        ventanaGlobal.pack();
+        ventanaGlobal.setLocationRelativeTo(null);
+        ventanaGlobal.setVisible(true);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -147,6 +193,8 @@ public class PartidaGeneral extends Partida {
         ValidacionesUtiles.esDistintoDeNull(partida, "partida");
 
         NodoCiudad nodo = new NodoCiudad(id, nombre, partida);
+        // Inyectar la instancia de sonido compartida en la partida
+        partida.setSonido(this.sonido);
         partida.setOnFinalizadoCallback(() -> alTerminarCiudad(id));
         return nodo;
     }
@@ -162,18 +210,17 @@ public class PartidaGeneral extends Partida {
                 RUTA_MAPA_GLOBAL,
                 getJugador(),
                 skinActual,
-                this
+                this,
+                this.sonido
         );
 
-        ventanaGlobal = new JFrame("Al-Quest");
-        ventanaGlobal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventanaGlobal.setResizable(false);
-        ventanaGlobal.add(vistaGlobal);
-        ventanaGlobal.pack();
-        ventanaGlobal.setLocationRelativeTo(null);
-        ventanaGlobal.setVisible(true);
+        inicializarVentanaGlobal();
 
         vistaGlobal.startGameThread();
+        // Reproducir música global del mapa
+        if (this.sonido != null) {
+            this.sonido.playMusica(ConstantesSonido.GLOBAL_AVENTURA);
+        }
     }
 
     /**
@@ -232,33 +279,44 @@ public class PartidaGeneral extends Partida {
 
         this.puntajeTotal = datos.getPuntajeTotal();
 
-        for (int idCompletada : datos.getIdsCiudadesCompletadas()) {
-            mapaMundi.marcarCiudadCompletada(idCompletada);
-        }
+        guardarCiudadesCompletadas(datos.getIdsCiudadesCompletadas());
 
         NodoCiudad nodoActual = mapaMundi.obtenerCiudad(datos.getIdCiudadActual());
         if (nodoActual != null) {
             this.ciudadActual = nodoActual;
         }
 
-        // Restaura las skins desbloqueadas (si el guardado es de una versión
-        // anterior sin este campo, Gson lo deja en null y se conserva el
-        // estado inicial: solo la skin por defecto desbloqueada).
         if (datos.getSkinsDesbloqueadas() != null) {
-            for (String ruta : datos.getSkinsDesbloqueadas()) {
-                if (!this.skinsDesbloqueadas.contains(ruta)) {
-                    this.skinsDesbloqueadas.add(ruta);
-                }
-            }
+            restaurarSkinsDesbloqueadas(datos.getSkinsDesbloqueadas());
         }
 
-        // Restaura la skin equipada (si existe en el guardado).
-        if (datos.getSkinActual() != null) {
-            this.skinActual = datos.getSkinActual();
+        
+        restaurarSkinActual(datos.getSkinActual());
+    }
+    
+    private void restaurarSkinActual(String skinActual2) {
+        if (skinActual2 != null) {
+            this.skinActual = skinActual2;
         }
     }
+    
+    //aplica las ciudades completadas en el mapaMundi a partir de sus ids
+    private void guardarCiudadesCompletadas(Vector<Integer> idsCiudadesCompletadas) {
+    	for (int idCompletada : idsCiudadesCompletadas) {
+            mapaMundi.marcarCiudadCompletada(idCompletada);
+        }
+	}
+    
+    // Agrega a la lista de skins desbloqueadas las rutas de las skins que estaban guardadas en el guardado.
+	private void restaurarSkinsDesbloqueadas(Vector<String> rutas) {
+    	for (String ruta : rutas) {
+            if (!this.skinsDesbloqueadas.contains(ruta)) {
+                this.skinsDesbloqueadas.add(ruta);
+            }
+        }
+	}
 
-    /**
+	/**
      * Activa el minijuego de la ciudad a la que el jugador entra
      *
      * PRE:
@@ -284,6 +342,9 @@ public class PartidaGeneral extends Partida {
 
         vistaGlobal.detenerHilo();
         ventanaGlobal.setVisible(false);
+
+        // Detener la música global antes de entrar a la ciudad para evitar solapamientos.
+        if (this.sonido != null) this.sonido.stopMusica();
 
         nodo.getPartidaAsociada().iniciar();
     }

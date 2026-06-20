@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class PartidaDeRecoleccion extends Partida {
 	//ATRIBUTOS -----------------------------------------------------------------------------------------------
-    private CiudadRecoleccion juego = null;
+    private CiudadRecoleccion juegoRecoleccion = null;
     private Vista vista;
     private JFrame ventana;
     private int ultimoNivel;
@@ -49,27 +49,27 @@ public class PartidaDeRecoleccion extends Partida {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PartidaDeRecoleccion that = (PartidaDeRecoleccion) o;
-        return Objects.equals(juego, that.juego);
+        return Objects.equals(juegoRecoleccion, that.juegoRecoleccion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), juego);
+        return Objects.hash(super.hashCode(), juegoRecoleccion);
     }
 
     @Override
     public String toString() {
         return "PartidaDeRecoleccion{" +
-                "juego=" + juego +
+                "juego=" + juegoRecoleccion +
                 '}';
     }
 
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
-    public void iniciar() {this.ultimoNivel = juego.getNivelActual();
+    public void iniciar() {this.ultimoNivel = juegoRecoleccion.getNivelActual();
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
-        this.vista = new Vista(obtenerMapaPorNivel(this.juego.getNivelActual()), getJugador(), 24, 21, getRutaSprites(), key);
+        this.vista = new Vista(obtenerMapaPorNivel(this.juegoRecoleccion.getNivelActual()), getJugador(), 24, 21, getRutaSprites(), key, this.sonido);
 
         this.ventana = new JFrame("Ciudad de Recolección");
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -79,18 +79,21 @@ public class PartidaDeRecoleccion extends Partida {
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
 
-        MinijuegoRecoleccion minijuego = new MinijuegoRecoleccion(juego, this, vista, key, ventana);
+        MinijuegoRecoleccion minijuego = new MinijuegoRecoleccion(juegoRecoleccion, this, vista, key, ventana);
         vista.establecerMinijuego(minijuego);
         minijuego.setOnFinalizadoCallback(this::finalizar);
 
         vista.startGameThread();
+         if (this.sonido != null) {
+		 	 this.sonido.playMusica(juego.configuracion.ConstantesSonido.RECOLECCION);			
+		  }
     }
 
     /**
      * Actualiza la vista del juego
      */
     public void actualizar() {
-        int nivelActual = juego.getNivelActual();
+        int nivelActual = juegoRecoleccion.getNivelActual();
 
         if (nivelActual != ultimoNivel) {
             ultimoNivel = nivelActual;
@@ -103,8 +106,8 @@ public class PartidaDeRecoleccion extends Partida {
     public void finalizar() {
         int puntos = 0;
 
-        if (juego != null) {
-            puntos = juego.finalizar();
+        if (juegoRecoleccion != null) {
+            puntos = juegoRecoleccion.finalizar();
         }
         this.setPuntaje(puntos);
 
@@ -115,6 +118,10 @@ public class PartidaDeRecoleccion extends Partida {
         if (ventana != null) {
             ventana.dispose();
             ventana = null;
+        }
+        if (this.sonido != null) {
+        	this.sonido.stopMusica();
+        	this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
         }
 
         notificarFinalizacion();
@@ -152,7 +159,7 @@ public class PartidaDeRecoleccion extends Partida {
      * @return: Devuelve el atributo juego
      */
     public CiudadRecoleccion getJuego() {
-        return this.juego;
+        return this.juegoRecoleccion;
     }
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
@@ -172,7 +179,7 @@ public class PartidaDeRecoleccion extends Partida {
         ValidacionesUtiles.validarMayorACero(maximoMochila, "maximoMochila");
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
 
-        this.juego = new CiudadRecoleccion(filas, columnas, niveles, maximoMochila, jugador);
+        this.juegoRecoleccion = new CiudadRecoleccion(filas, columnas, niveles, maximoMochila, jugador);
     }
 
 }

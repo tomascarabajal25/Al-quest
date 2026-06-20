@@ -25,6 +25,9 @@ public class PartidaComplejidad extends Partida {
         SwingUtilities.invokeLater(() -> {
             this.ventana = new VentanaComplejidad(this); 
         });
+         if (this.sonido != null) {
+			this.sonido.playMusica(juego.configuracion.ConstantesSonido.COMPLEJIDAD);
+		}
     }
 
     @Override
@@ -35,7 +38,11 @@ public class PartidaComplejidad extends Partida {
             this.ventana.dispose();
             this.ventana = null;
         }
-
+        if (this.sonido != null) {
+			this.sonido.stopMusica();
+			this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		}
+        
         notificarFinalizacion(); 
     }
 

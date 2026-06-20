@@ -14,6 +14,8 @@ public abstract class Partida {
 	private EstadoDePartida estado;
 	// NUEVO ATRIBUTO PARA EL CALLBACK------------------------------------------------
 	private Runnable onFinalizadoCallback;
+	// Sonido inyectable (compartido entre Partidas)
+	protected Sonido sonido;
 	/**
 	 * nuevo atributo para manejo de skins, por defecto boy
 	 */
@@ -89,6 +91,22 @@ public abstract class Partida {
 	 */
 	public void setOnFinalizadoCallback(Runnable callback) {
 		this.onFinalizadoCallback = callback;
+	}
+
+	/**
+	 * Inyecta la instancia de Sonido a esta partida (puede ser compartida).
+	 * PRE: sonido no debe ser nulo.
+	 */
+	public void setSonido(Sonido sonido) {
+		ValidacionesUtiles.esDistintoDeNull(sonido, "sonido");
+		this.sonido = sonido;
+	}
+
+	/**
+	 * Devuelve la instancia de Sonido asociada a esta partida (puede ser null).
+	 */
+	public Sonido getSonido() {
+		return this.sonido;
 	}
 
 	/**

@@ -71,7 +71,8 @@ public class PartidaBusqueda extends Partida {
             getJugador(),
             ConfiguracionBusqueda.PANTALLA_ANCHO_TILES,
             ConfiguracionBusqueda.PANTALLA_ALTO_TILES,
-            getRutaSprites()
+            getRutaSprites(),
+            this.sonido
         );
 
         this.minijuego = new MinijuegoDesafio(mapaDePalabras, vista.getTamanio());
@@ -94,6 +95,9 @@ public class PartidaBusqueda extends Partida {
         ventana.setVisible(true);
 
         vista.startGameThread();
+        if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.BUSQUEDA);
+        }
     }
 
     @Override
@@ -108,8 +112,13 @@ public class PartidaBusqueda extends Partida {
             ventana.dispose();
             ventana = null;
         }
+        if (this.sonido != null) {
+			this.sonido.stopMusica();
+			this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		}
 
         notificarFinalizacion();
+        
     }
 
     private int calcularPuntaje() {

@@ -119,7 +119,8 @@ public class PartidaOrdenamientos extends Partida {
             getJugador(),
             ConfiguracionDeOrdenamientos.COL_INICIO,
             ConfiguracionDeOrdenamientos.FILA_BASE,
-            getRutaSprites()
+            getRutaSprites(),
+            this.sonido
         );
 
         this.minijuego = FabricaMinijuegoOrdenamiento.crear(
@@ -143,6 +144,9 @@ public class PartidaOrdenamientos extends Partida {
 
         vista.requestFocusInWindow();
         vista.startGameThread();
+         if (this.sonido != null) {
+        	 this.sonido.playMusica(juego.configuracion.ConstantesSonido.ORDENAMIENTO);
+         }
     }
 
     /**
@@ -169,6 +173,10 @@ public class PartidaOrdenamientos extends Partida {
             ventana = null;
         }
 
+         if (this.sonido != null) {
+		 	this.sonido.stopMusica();
+		 	this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		 }
         notificarFinalizacion();
     }
 

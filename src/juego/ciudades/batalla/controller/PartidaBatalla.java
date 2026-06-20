@@ -45,6 +45,9 @@ public class PartidaBatalla extends Partida {
 			victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
 			SwingUtilities.invokeLater(this::finalizar);
 		}, "batalla-game-loop").start();
+		if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.BATALLA);
+        }
 	}
 
 	@Override
@@ -54,6 +57,10 @@ public class PartidaBatalla extends Partida {
 			ui.cerrar();
 		}
 		setEstado(EstadoDePartida.Creado);
+		if (this.sonido != null) {
+            this.sonido.stopMusica();
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+        }
 		notificarFinalizacion();
 	}
 

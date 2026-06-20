@@ -33,7 +33,6 @@ public class PartidaHashing extends Partida {
     private static final int FILA_SPAWN = 48;
     private static final int COL_SPAWN  = 1;
     private static final String RUTA_MAPA = "/maps/world_hashing.txt";
-    private static final String RUTA_SPRITES = "/assets/jugador/boy";
 
     // ATRIBUTOS
     private CiudadHashing ciudad;
@@ -98,7 +97,7 @@ public class PartidaHashing extends Partida {
         }
         cargarPosicionesSlots(cantidadSlots);
 
-        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, getRutaSprites()));
+        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, getRutaSprites(), this.sonido));
 
         this.ciudad = new CiudadHashing(cantidadSlots);
 
@@ -124,6 +123,9 @@ public class PartidaHashing extends Partida {
 
         // Arranca el bucle del juego (run -> actualizar -> repaint a 60 fps)
         vista.startGameThread();
+         if (this.sonido != null) {
+        	 this.sonido.playMusica(juego.configuracion.ConstantesSonido.HASHING);			
+         }
     }
 
 
@@ -185,7 +187,11 @@ public class PartidaHashing extends Partida {
         ventana.dispose();
         ventana = null;
         }
-        
+
+         if (this.sonido != null) {
+			 this.sonido.stopMusica();
+			 this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		 }
         notificarFinalizacion();
     }
 

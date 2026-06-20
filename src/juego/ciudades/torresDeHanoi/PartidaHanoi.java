@@ -37,7 +37,7 @@ public class PartidaHanoi extends Partida {
     // ATRIBUTOS
 
     /** Motor lógico del puzzle. Es null hasta que el jugador elige la dificultad. */
-    private CiudadHanoi juego;
+    private CiudadHanoi juegoHanoi;
 
     /** Cantidad de discos elegida para esta partida. */
     private int cantidadDiscos;
@@ -97,7 +97,7 @@ public class PartidaHanoi extends Partida {
         this.cantidadDiscos = discosElegidos;
 
         // 2. Creación del motor lógico con la cantidad de discos elegida
-        this.juego = new CiudadHanoi(cantidadDiscos);
+        this.juegoHanoi = new CiudadHanoi(cantidadDiscos);
 
         // 3. Creación de la infraestructura de vista (Mundo 3 de Hanoi)
         this.vista = new Vista(
@@ -105,7 +105,8 @@ public class PartidaHanoi extends Partida {
                 getJugador(),
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_COLUMNA,
                 ConfiguracionDeHanoi.SPAWN_JUGADOR_FILA,
-                getRutaSprites());
+                getRutaSprites(),
+                this.sonido);
 
         // 4. Creación del controlador del minijuego pasándole la vista ya creada
         this.minijuego = new MinijuegoHanoi(getJugador(), vista.getTamanio(), this);
@@ -142,6 +143,10 @@ public class PartidaHanoi extends Partida {
 
         // 7. Arranca el bucle principal de renderizado (60 FPS)
         vista.startGameThread();
+        // Reproducir música de la ciudad si la instancia de sonido fue inyectada
+        if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.HANOI);
+        }
     }
 
     /**
@@ -170,6 +175,12 @@ public class PartidaHanoi extends Partida {
         if (ventana != null) {
             ventana.dispose();
             ventana = null;
+        }
+
+        // Restaurar música global al volver al mapa
+        if (this.sonido != null) {
+            this.sonido.stopMusica();
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
         }
 
         notificarFinalizacion();
@@ -241,12 +252,12 @@ public class PartidaHanoi extends Partida {
      * @return puntaje final de la partida
      */
     public int calcularPuntaje() {
-        if (this.juego == null || !this.juego.haGanado()) {
+        if (this.juegoHanoi == null || !this.juegoHanoi.haGanado()) {
             return 0;
         }
 
-        int multiplicadorPorDificultad = this.juego.getObjetivo();
-        int puntajeBase = this.juego.esPerfecto()
+        int multiplicadorPorDificultad = this.juegoHanoi.getObjetivo();
+        int puntajeBase = this.juegoHanoi.esPerfecto()
                 ? ConfiguracionDeHanoi.PUNTAJE_BASE_PERFECTO
                 : ConfiguracionDeHanoi.PUNTAJE_BASE_IMPERFECTO;
 
@@ -265,7 +276,7 @@ public class PartidaHanoi extends Partida {
      * @return motor lógico de Torres de Hanoi
      */
     public CiudadHanoi getJuego() {
-        return juego;
+        return juegoHanoi;
     }
 
     /** @return cantidad de discos elegida para esta partida */
@@ -277,14 +288,14 @@ public class PartidaHanoi extends Partida {
 
     @Override
     public String toString() {
-        return "PartidaHanoi [cantidadDiscos=" + cantidadDiscos + ", juego=" + juego + "]";
+        return "PartidaHanoi [cantidadDiscos=" + cantidadDiscos + ", juego=" + juegoHanoi + "]";
     }
 
     @Override
     public int hashCode() {
         final int numeroPrimo = 31;
         int resultado = super.hashCode();
-        resultado = numeroPrimo * resultado + Objects.hash(cantidadDiscos, juego);
+        resultado = numeroPrimo * resultado + Objects.hash(cantidadDiscos, juegoHanoi);
         return resultado;
     }
 
@@ -304,6 +315,6 @@ public class PartidaHanoi extends Partida {
         }
         PartidaHanoi otraPartida = (PartidaHanoi) obj;
         return cantidadDiscos == otraPartida.cantidadDiscos
-                && Objects.equals(juego, otraPartida.juego);
+                && Objects.equals(juegoHanoi, otraPartida.juegoHanoi);
     }
 }

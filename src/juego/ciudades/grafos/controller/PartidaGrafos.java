@@ -16,6 +16,9 @@ public class PartidaGrafos extends Partida {
         setEstado(EstadoDePartida.Iniciado);
         ciudadGrafos = new CiudadGrafos(this);
         ciudadGrafos.iniciar();
+         if (this.sonido != null) {
+			 this.sonido.playMusica(juego.configuracion.ConstantesSonido.GRAFOS);
+		 }
     }
 
     @Override
@@ -27,6 +30,11 @@ public class PartidaGrafos extends Partida {
             if (ciudadGrafos.getVentana() != null) {
                 ciudadGrafos.getVentana().dispose();
             }
+        }
+        if (this.sonido != null) {
+        	this.sonido.stopMusica();
+        	this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+        				 
         }
         notificarFinalizacion();
     }
