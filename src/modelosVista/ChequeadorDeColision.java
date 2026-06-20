@@ -15,7 +15,7 @@ public class ChequeadorDeColision {
     // Estado para efectos de proximidad al agua
     private boolean cercaAgua = false;
     private long ultimoSonidoAgua = 0L;
-    private static final long AGUA_COOLDOWN_MS = 3000; // 3 segundos entre reproducciones
+    private static final long AGUA_COOLDOWN_MS = 5000; // 3 segundos entre reproducciones
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
