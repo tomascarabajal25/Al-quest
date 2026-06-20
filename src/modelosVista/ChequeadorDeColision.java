@@ -59,7 +59,8 @@ public class ChequeadorDeColision {
         int entityTopRow = entityTopWorldY / this.gp.getTamanio();
         int entityBottomRow = entityBottomWorldY / gp.getTamanio();
 
-        int tileNum1, tileNum2;
+        int tileNum1;
+   	 	int tileNum2;
         Direccion direction = entidad.getDireccion();
 
         switch (direction) {
@@ -101,6 +102,7 @@ public class ChequeadorDeColision {
                 break;
         }
     }
+    
 
     /**
      * Comprueba si la entidad está cerca de un tile de agua y dispara un efecto sonoro.

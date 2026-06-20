@@ -1,5 +1,6 @@
 package modelosVista;
 
+import juego.configuracion.ConstantesConstrucciones;
 import utils.ValidacionesUtiles;
 
 import java.awt.Graphics2D;
@@ -14,6 +15,7 @@ public class ManejadorDeConstruccion {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
     //CONSTANTES ----------------------------------------------------------------------------------------------
+    // Constantes movidas a Juego configuracion: juegoconfiguracion.ConstantesConstrucciones
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private Vista vistaDelJuego = null;
@@ -34,7 +36,7 @@ public class ManejadorDeConstruccion {
         ValidacionesUtiles.esDistintoDeNull(vista, "vista");
 
         setVistaDelJuego(vista);
-        setConstrucciones(new Construccion[10]);
+        setConstrucciones(new Construccion[ConstantesConstrucciones.NUM_TILES]);
         this.mapaDeConstruccionesNum=new int[vistaDelJuego.getColumnasDelMundo()][vistaDelJuego.getFilasDelMundo()];
 
         cargarImagenesDeConstrucciones();
@@ -93,26 +95,26 @@ public class ManejadorDeConstruccion {
      */
     public void cargarImagenesDeConstrucciones() {
         try {
-            this.construcciones[0] = new Construccion();
-            this.construcciones[0].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/grass.bmp"))));
+            this.construcciones[ConstantesConstrucciones.TILE_GRASS] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_GRASS].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_GRASS))));
 
-            this.construcciones[1] = new Construccion();
-            this.construcciones[1].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/wall.bmp")))) ;
-            this.construcciones[1].setColision(true);
+            this.construcciones[ConstantesConstrucciones.TILE_WALL] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_WALL].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_WALL)))) ;
+            this.construcciones[ConstantesConstrucciones.TILE_WALL].setColision(true);
 
-            this.construcciones[2] = new Construccion();
-            this.construcciones[2].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/water.bmp"))));
-            this.construcciones[2].setColision(true);
+            this.construcciones[ConstantesConstrucciones.TILE_WATER] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_WATER].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_WATER))));
+            this.construcciones[ConstantesConstrucciones.TILE_WATER].setColision(true);
 
-            this.construcciones[3] = new Construccion();
-            this.construcciones[3].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/earth.bmp"))));
+            this.construcciones[ConstantesConstrucciones.TILE_EARTH] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_EARTH].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_EARTH))));
 
-            this.construcciones[4] = new Construccion();
-            this.construcciones[4].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/tree.bmp")))) ;
-            this.construcciones[4].setColision(true);
+            this.construcciones[ConstantesConstrucciones.TILE_TREE] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_TREE].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_TREE)))) ;
+            this.construcciones[ConstantesConstrucciones.TILE_TREE].setColision(true);
 
-            this.construcciones[5] = new Construccion();
-            this.construcciones[5].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/construcciones/sand.bmp"))));
+            this.construcciones[ConstantesConstrucciones.TILE_SAND] = new Construccion();
+            this.construcciones[ConstantesConstrucciones.TILE_SAND].setImagen(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ConstantesConstrucciones.PATH_SAND))));
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -133,25 +135,36 @@ public class ManejadorDeConstruccion {
             assert is != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            int col = 0;
             int row = 0;
 
-            while(col < this.vistaDelJuego.getColumnasDelMundo() && row < this.vistaDelJuego.getFilasDelMundo()) {
+            while (row < this.vistaDelJuego.getFilasDelMundo()) {
                 String line = br.readLine();
                 if (line == null) break;
 
-                while (col < this.vistaDelJuego.getColumnasDelMundo()) {
-                    String[] numbers = line.split(" ");
-                    int num = Integer.parseInt(numbers[col]);
+                // split por cualquier cantidad de espacios en blanco
+                String[] tokens = line.trim().split("\\s+");
 
-                    this.mapaDeConstruccionesNum[col][row] = num;
-                    col++;
+                int maxCols = Math.min(tokens.length, this.vistaDelJuego.getColumnasDelMundo());
+                for (int col = 0; col < maxCols; col++) {
+                    try {
+                        int num = Integer.parseInt(tokens[col]);
+                        // validar rango para evitar IndexOutOfBounds
+                        if (num >= 0 && num < ConstantesConstrucciones.NUM_TILES) {
+                            this.mapaDeConstruccionesNum[col][row] = num;
+                        } else {
+                            // valor inválido en el mapa: usar tile por defecto (grass)
+                            this.mapaDeConstruccionesNum[col][row] = ConstantesConstrucciones.TILE_GRASS;
+                        }
+                    } catch (NumberFormatException e) {
+                        // token no es un número: usar tile por defecto
+                        this.mapaDeConstruccionesNum[col][row] = ConstantesConstrucciones.TILE_GRASS;
+                    }
                 }
 
-                if (col == this.vistaDelJuego.getColumnasDelMundo()) {
-                    col = 0;
-                    row++;
-                }
+                // si la línea tiene menos columnas que el mapa, dejamos las celdas restantes
+                // con el valor por defecto (0 / TILE_GRASS)
+
+                row++;
             }
             br.close();
 
