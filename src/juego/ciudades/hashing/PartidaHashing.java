@@ -119,6 +119,8 @@ public class PartidaHashing extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Asegura que al cerrar la ventana con la X se ejecute finalizar()
+        attachCloseHandler(ventana);
         vista.requestFocusInWindow();
 
         // Arranca el bucle del juego (run -> actualizar -> repaint a 60 fps)

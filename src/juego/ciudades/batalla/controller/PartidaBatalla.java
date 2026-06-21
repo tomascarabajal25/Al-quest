@@ -41,6 +41,17 @@ public class PartidaBatalla extends Partida {
 
 		ui = new BatallaUI(heroe, enemigos);
 
+		// Ensure closing the battle window triggers partida.finalizar() so music and state are cleaned up
+		ui.setOnClose(() -> {
+			try {
+				finalizar();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+		// Si el usuario cierra la ventana con la X, llamar a finalizar() para detener la musica
+		ui.setOnClose(this::finalizar);
+
 		new Thread(() -> {
 			victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
 			SwingUtilities.invokeLater(this::finalizar);

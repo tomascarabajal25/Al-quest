@@ -26,6 +26,7 @@ public class PartidaLaberinto extends Partida {
         if (this.sonido != null) {
             this.sonido.playMusica(juego.configuracion.ConstantesSonido.LABERINTO);
         }
+        
     }
 
     /**

@@ -1,6 +1,8 @@
 package modelos;
 
 import java.util.Objects;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 
@@ -100,6 +102,30 @@ public abstract class Partida {
 	public void setSonido(Sonido sonido) {
 		ValidacionesUtiles.esDistintoDeNull(sonido, "sonido");
 		this.sonido = sonido;
+	}
+
+	/**
+	 * Añade un listener a la ventana para asegurarse de que si el usuario cierra
+	 * la ventana (X) la partida finalice correctamente (detener hilo, parar música,
+	 * notificar al mapa global, etc.).
+	 *
+	 * Se usa desde las clases Partida que crean un JFrame propio.
+	 */
+	protected void attachCloseHandler(javax.swing.JFrame ventana) {
+		if (ventana == null) return;
+		ventana.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					if (estaIniciada()) {
+						finalizar();
+					}
+				} catch (Exception ex) {
+					// No propagamos excepciones en el EDT; imprimimos para depuración.
+					ex.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**

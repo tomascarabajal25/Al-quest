@@ -1,6 +1,8 @@
 package juego.ciudades.complejidad.ui;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import juego.ciudades.complejidad.PartidaComplejidad;
 
@@ -31,6 +33,15 @@ public class VentanaComplejidad extends JFrame {
         
         // CORRECCIÓN: Usar DISPOSE para liberar los recursos de esta ventana sin matar el juego principal
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        // Asegurar que cerrar la ventana invoque finalizar() en la partida asociada
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (partida != null) {
+                    partida.finalizar();
+                }
+            }
+        });
         setLocationRelativeTo(null);
         setVisible(true);
     }

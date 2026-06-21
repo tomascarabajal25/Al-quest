@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -50,6 +52,15 @@ public class VentanaPrincipal extends JFrame{
         mostrarSelectorInicial();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // Asegurar que cerrar la ventana invoque finalizar() en la partida asociada
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (partida != null) {
+                    partida.finalizar();
+                }
+            }
+        });
         pack();
         setLocationRelativeTo(null);
     }
