@@ -20,9 +20,14 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.imageio.ImageIO;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.Timer;
 
 public class BatallaUI {
+
+	// Callback invoked when the window is closed by the user (pressing X)
+	private Runnable onCloseCallback;
 
 	// ── Colours ──────────────────────────────────────────────────────────────
 	private static final Color BG_SKY           = new Color(120, 180, 240);
@@ -144,6 +149,21 @@ public class BatallaUI {
 	private void createAndShowGUI() {
 		frame = new JFrame("Batalla");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// If an onClose callback was provided, attach a listener so the partida can finalize
+		if (onCloseCallback != null) {
+			frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					// stop animation timer immediately
+					if (animTimer != null) animTimer.stop();
+					try {
+						onCloseCallback.run();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			});
+		}
 		frame.setLayout(new BorderLayout());
 
 		canvas = new BattleCanvas();
@@ -272,6 +292,25 @@ public class BatallaUI {
 		if (animTimer != null) animTimer.stop();
 		if (frame != null) {
 			SwingUtilities.invokeLater(() -> frame.dispose());
+		}
+	}
+
+	/**
+	 * Register a callback that will be invoked when the user closes the window
+	 * using the window manager (pressing the X). The callback should call
+	 * partida.finalizar() or equivalent cleanup logic.
+	 */
+	public void setOnClose(Runnable onClose) {
+		this.onCloseCallback = onClose;
+		// If frame already exists, attach listener immediately
+		if (frame != null && onClose != null) {
+			frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					if (animTimer != null) animTimer.stop();
+					try { onClose.run(); } catch (Exception ex) { ex.printStackTrace(); }
+				}
+			});
 		}
 	}
 

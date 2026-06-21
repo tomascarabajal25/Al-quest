@@ -141,6 +141,9 @@ public class PartidaOrdenamientos extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Si el usuario cierra la ventana con la X, llamamos a finalizar() para
+        // detener la música y notificar al mapa global.
+        attachCloseHandler(ventana);
 
         vista.requestFocusInWindow();
         vista.startGameThread();

@@ -4,6 +4,8 @@ import juego.ciudades.grafos.model.*;
 import juego.ciudades.grafos.view.*;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -24,6 +26,15 @@ public class CiudadGrafos {
         this.partidaGrafos = partidaGrafos;
         this.modelo = new GrafoFlujo();
         this.ventana = new VentanaGrafos();
+        // Si el usuario cierra la ventana, asegurarnos de finalizar la partida y detener cualquier recurso
+        this.ventana.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (partidaGrafos != null) {
+                    partidaGrafos.finalizar();
+                }
+            }
+        });
         this.pasoActual = -1;
         this.ciudadCompletada = false;
         this.simulacion = new SimulacionChecker(() -> completarCiudad());

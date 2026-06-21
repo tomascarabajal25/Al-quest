@@ -22,6 +22,7 @@ public final class ConstantesSonido {
     public static final String AGUA = "AGUA";
     public static final String PASO1 = "paso1";
     public static final String PASO2 = "paso2";
+    public static final String VICTORIA = "victoria";
 
     // Rutas por defecto (colocá tus .wav en estas rutas)
     public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/sonidoGeneral.wav";
@@ -38,4 +39,5 @@ public final class ConstantesSonido {
     public static final String RUTA_AGUA = "/assets/sonido/agua.wav";
 	public static final String RUTA_PASO1 = "/assets/sonido/paso1.wav";
 	public static final String RUTA_PASO2 = "/assets/sonido/paso2.wav";
+    public static final String RUTA_VICTORIA = "/assets/sonido/victoria.wav";
 }

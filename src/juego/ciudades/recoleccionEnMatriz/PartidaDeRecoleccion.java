@@ -78,6 +78,8 @@ public class PartidaDeRecoleccion extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Llamar a finalizar() si el usuario cierra la ventana con la X
+        attachCloseHandler(ventana);
 
         MinijuegoRecoleccion minijuego = new MinijuegoRecoleccion(juegoRecoleccion, this, vista, key, ventana);
         vista.establecerMinijuego(minijuego);

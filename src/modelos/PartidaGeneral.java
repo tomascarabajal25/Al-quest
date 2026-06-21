@@ -93,6 +93,7 @@ public class PartidaGeneral extends Partida {
         // sonido de los pasos
         this.sonido.agregarSonido(ConstantesSonido.PASO1, ConstantesSonido.RUTA_PASO1);
         this.sonido.agregarSonido(ConstantesSonido.PASO2, ConstantesSonido.RUTA_PASO2);
+        this.sonido.agregarSonido(ConstantesSonido.VICTORIA, ConstantesSonido.RUTA_VICTORIA);
     }
 
     /**

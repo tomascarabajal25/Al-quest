@@ -93,6 +93,8 @@ public class PartidaBusqueda extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Asegurar que cerrar la ventana (X) finalice la partida correctamente
+        attachCloseHandler(ventana);
 
         vista.startGameThread();
         if (this.sonido != null) {

@@ -137,6 +137,9 @@ public class PartidaHanoi extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Si el jugador cierra la ventana con la X, debemos finalizar la partida
+        // para detener música y limpiar recursos.
+        attachCloseHandler(ventana);
 
         // Asegura que la ventana tome el foco del teclado inmediatamente
         vista.requestFocusInWindow();
