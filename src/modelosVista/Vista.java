@@ -59,7 +59,7 @@ public class Vista extends JPanel implements Runnable{
      * Delega al constructor que acepta Sonido con nulll.
      */
     public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites) {
-        this(rutaMundo, jugador, spawnCol, spawnFil, rutaSprites, new KeyHandler(), null);
+        this(rutaMundo, jugador, spawnCol, spawnFil, rutaSprites, new KeyHandler(), new Sonido());
     }
 
     /**

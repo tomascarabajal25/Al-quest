@@ -23,8 +23,13 @@ public final class ConstantesSonido {
     public static final String PASO1 = "paso1";
     public static final String PASO2 = "paso2";
     public static final String VICTORIA = "victoria";
-
-    // Rutas por defecto (colocá tus .wav en estas rutas)
+    public static final String TIENDA = "TIENDA";
+    public static final String TIENDA2 = "TIENDA2";
+    public static final String COMPRAR1 = "COMPRAR1";
+    public static final String COMPRAR3 = "COMPRAR3";
+    public static final String COMPRAR4 = "COMPRAR4";
+    public static final String COMPRAR2 = "COMPRAR2";
+    
     public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/sonidoGeneral.wav";
     public static final String RUTA_HANOI = "/assets/sonido/hanoi.wav";
     public static final String RUTA_RECOLECCION = "/assets/sonido/recoleccion.wav";
@@ -40,4 +45,11 @@ public final class ConstantesSonido {
 	public static final String RUTA_PASO1 = "/assets/sonido/paso1.wav";
 	public static final String RUTA_PASO2 = "/assets/sonido/paso2.wav";
     public static final String RUTA_VICTORIA = "/assets/sonido/victoria.wav";
+    
+    public static final String RUTA_TIENDA = "/assets/sonido/tienda.wav";
+    public static final String RUTA_TIENDA2 = "/assets/sonido/tienda2.wav";
+    public static final String RUTA_COMPRAR1 = "/assets/sonido/comprar1.wav";
+    public static final String RUTA_COMPRAR2 = "/assets/sonido/comprar2.wav";
+    public static final String RUTA_COMPRAR3 = "/assets/sonido/comprar3.wav";
+    public static final String RUTA_COMPRAR4 = "/assets/sonido/comprar4.wav";
 }

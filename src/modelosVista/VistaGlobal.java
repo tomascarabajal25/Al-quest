@@ -22,6 +22,7 @@ import modelos.Jugador;
 import modelos.NodoCiudad;
 import modelos.PartidaGeneral;
 import modelos.Sonido;
+import juego.configuracion.ConstantesSonido;
 import utils.ValidacionesUtiles;
 
 /**
@@ -331,6 +332,8 @@ public class VistaGlobal extends Vista {
         detenerHilo(); 
         
         SwingUtilities.invokeLater(() -> {
+            // reproducir efecto al abrir la tienda (sonido registrado por PartidaGeneral)
+        	reproducirSonidoTienda();
             TiendaSkins tienda = new TiendaSkins(partidaGeneral, this);
             tienda.setVisible(true); 
             
@@ -352,7 +355,17 @@ public class VistaGlobal extends Vista {
         });
     }
     
-    public void reiniciarCiudades() {
+    private void reproducirSonidoTienda() {
+    	if (this.sonido != null) {
+    	    String sonidoTienda = Math.random() < 0.5
+    	            ? ConstantesSonido.TIENDA
+    	            : ConstantesSonido.TIENDA2;
+
+    	    playEfecto(sonidoTienda);
+    	}
+	}
+
+	public void reiniciarCiudades() {
     	if (partidaGeneral.estaTerminado()) {
     		partidaGeneral.reiniciar();
     	}

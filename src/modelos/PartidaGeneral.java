@@ -94,6 +94,15 @@ public class PartidaGeneral extends Partida {
         this.sonido.agregarSonido(ConstantesSonido.PASO1, ConstantesSonido.RUTA_PASO1);
         this.sonido.agregarSonido(ConstantesSonido.PASO2, ConstantesSonido.RUTA_PASO2);
         this.sonido.agregarSonido(ConstantesSonido.VICTORIA, ConstantesSonido.RUTA_VICTORIA);
+        // Sonido al abrir la Tienda de Skins
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.TIENDA, juego.configuracion.ConstantesSonido.RUTA_TIENDA);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.TIENDA2, juego.configuracion.ConstantesSonido.RUTA_TIENDA2);
+        // Sonidos al comprar una skin
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR1, juego.configuracion.ConstantesSonido.RUTA_COMPRAR1);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR2, juego.configuracion.ConstantesSonido.RUTA_COMPRAR2);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR3, juego.configuracion.ConstantesSonido.RUTA_COMPRAR3);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR4, juego.configuracion.ConstantesSonido.RUTA_COMPRAR4);
+        
     }
 
     /**
@@ -416,9 +425,27 @@ public class PartidaGeneral extends Partida {
         puntajeTotal -=costo;
         skinsDesbloqueadas.add(rutaSkin);
         persistencia.GestorDeInicio.guardarSesion(this);
+        reproducirSonidoCompra();
         return true;
     }
-    public void reiniciar() {
+    private void reproducirSonidoCompra() {
+    	if (this.sonido != null) {
+            String[] sonidosCompra = {
+                ConstantesSonido.COMPRAR1,
+                ConstantesSonido.COMPRAR2,
+                ConstantesSonido.COMPRAR3,
+                ConstantesSonido.COMPRAR4
+            };
+
+            String sonidoCompra = sonidosCompra[
+                (int) (Math.random() * sonidosCompra.length)
+            ];
+
+            this.sonido.playEfecto(sonidoCompra);
+        }
+	}
+
+	public void reiniciar() {
 		mapaMundi.reiniciarTodasLasCiudades();
 		persistencia.GestorDeInicio.guardarSesion(this);
 	}
