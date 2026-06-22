@@ -14,7 +14,18 @@ import utils.ValidacionesUtiles;
 public class JugadorVista extends EntidadVista {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
+    
     //CONSTANTES ----------------------------------------------------------------------------------------------
+    
+    //Meditacion
+    
+    //Ubicacion classpath de la carpeta donde estan los sets de meditacion
+    private static final String CARPETA_MEDITACIONES = "/assets/meditaciones/";
+
+    //Cantidad de frames (total de pngs) que copmletan la vuelta completa de la meditacion
+    private static final int MEDITACION_CANT_FRAMES = 10;
+    //Ver Meditacion.java para entender mas como funcionan las meditaciones, las cambie a un enum
+    
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private Vista vistaDelJuego = null;
@@ -25,6 +36,45 @@ public class JugadorVista extends EntidadVista {
     private final int screenY;
     private int nivelActual;
     private String sonidoPaso= juego.configuracion.ConstantesSonido.PASO1;
+
+    //Estado de la meditacion
+    /**
+     * ruta base de los sprites actualmente cargados.
+     * esta parte se usa para derivar de que personaje se carga el set de meditacion
+     */
+    private String rutaSpritesActual = null;
+
+    /**
+     * mientras el jugador esta meditando es true, de esa manera no se mueve y se ve el aura
+     */
+    private boolean meditando = false;
+
+    /**
+     * configuracion de la meditacion del personaje equipado (puntos, velocidad y tamaño)
+     * sera null si el personaje actual no tiene meditacion asociada.
+     */
+    private Meditacion meditacionActual = null;
+
+    /**
+     * Imagenes del aura de meditacion del personaje equipado (tambien puede ser vacio)
+     */
+    private List<BufferedImage> imagenesMeditacion = new ArrayList<>();
+
+    /**
+     * ruta base del set de meditacion ya cargado en memoria (cacheada, para no releerlo todo el tiempo)
+     */
+    private String rutaMeditacionCargada = null;
+
+    /** 
+     * indice de la imagen del aura que se esta mostrando
+     */
+    private int frameMeditacion = 0;
+
+    /** 
+     * el contador de frames del juego para avanzar con los pngs del aura
+     */
+    private int contadorMeditacion = 0;
+
 
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -60,6 +110,12 @@ public class JugadorVista extends EntidadVista {
      * Actualiza el estado del jugador
      */
     public void actualizar() {
+        //Agrego esto para que el jugador se quede quieto mientras medita y no se mueva
+        if (this.meditando) {
+            actualizarAnimacionMeditacion();
+            return;
+        }
+
         manejarMovimientoYAnimacion();
     }
 
@@ -142,6 +198,11 @@ public class JugadorVista extends EntidadVista {
     public void getImagenesDelJugador(String ruta) {
         ValidacionesUtiles.esDistintoDeNull(ruta, "ruta");
 
+        //Nuevo para meditacion:
+        //se recuerda la skin activa para ubicar su set de meditacion despues
+        this.rutaSpritesActual = ruta;
+        
+
         try {
             setUp1(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_up_1.bmp"))));
             setUp2(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(ruta + "_up_2.bmp"))));
@@ -173,6 +234,171 @@ public class JugadorVista extends EntidadVista {
         getImagenesDelJugador(rutaSprites);
     }
 
+    //Gestion de MEDITACION
+    /** 
+     * Poner al jugador en estado de meditacion
+     * 
+     * resuelve la meditacion del personaje consultando el catalogo en el TDA Meditacion, se
+     * fija en base al nombre base de la skin. Por eso, la parte de meditacion de este archivo,
+     * verla en simultaneo con el otro TDA.
+     * 
+     * De el catalogo con el nombre base, obtiene el resto de parametros
+     * Si el personaje no figura en el catalogo, o figura pero no tiene imagenes, significa
+     * que no sabe meditar ese personaje, devuelve false (y VistaGlobal le muestra al usuario el cartel)
+     * 
+     * POST: si el personaje tiene meditacion, se pone a meditar y se bloquea el movimiento hasta que se llame
+     *       a detenerMeditacion, guarda su config en meditacionActual y devuelve true.
+     *       si no tiene meditacion asociada, no cambia nada y devuelve false.
+     * 
+     * @return true si efectivamente empezo a meditar
+     */
+    public boolean iniciarMeditacion() {
+        String base = baseDeRuta(this.rutaSpritesActual);
+        Meditacion med = Meditacion.porPersonaje(base);
+        
+        if (med == null) {
+            return false; //ya que no tiene meditacion ese personaje
+        }
+
+        String rutaBase = CARPETA_MEDITACIONES + med.getPrefijoImagenes();
+        //para gestion de cache, solo va a releer del disco si cambia el set.
+        if (!rutaBase.equals(this.rutaMeditacionCargada)){
+            cargarImagenesMeditacion(rutaBase);
+        }
+
+        if (this.imagenesMeditacion.isEmpty()) {
+            return false; //esto es por si figura en el catalogo pero faltan las imagenes, igual evitemos que pase eso.
+        }
+
+        this.meditacionActual = med;
+        this.meditando = true;
+        this.frameMeditacion = 0;
+        this.contadorMeditacion = 0;
+        //Para que mire de frente quieto mientras medita, mas elegante
+        setDireccion(Direccion.ABAJO);
+        setSpriteNum(1);
+        return true;
+    }
+
+    /** 
+     * @return puntaje por segundo de la meditacion activa, 0 si no esta meditando o no tiene.
+     * 
+     * Esta parte la usa VistaGlobal para darle el puntaje por segundo meditado y mostrarlo en la consola
+     */
+    public int getPuntosPorSegundoMeditacion(){
+        return (this.meditacionActual !=null) ? this.meditacionActual.getPuntosPorSegundo() : 0;
+    }
+
+    /** 
+     * saca al jugador del estado de meditacion y vuelve a habilitarse para que se mueva
+     * POST: meditando = false
+     * 
+     * el puntaje lo maneja VistaGlobal
+     */
+    public void detenerMeditacion(){
+        this.meditando = false;
+    }
+
+    /** 
+     * @return true si el jugador esta meditando
+     */
+    public boolean isMeditando(){
+        return this.meditando;
+    }
+
+    /** 
+     * Carga en memoria el set de meditacion del personaje
+     * 
+     * funciona asi con los bugs:
+     * si falta una imagen del set, la saltea y sigue con las que estan, no crashea.
+     * Si no existe ninguna imagen del set, la lista queda vacia y el personaje no sabe meditar.
+     * 
+     * PRE: rutaBase no puede ser null (o sea, en la carpeta de meditaciones tiene que estar el aura llamada)
+     * POST: imagenesMeditacion contiene las imagenes encontradas y 
+     *      rutaMeditacionCargada queda seteada en rutaBase (cacheado)
+     * 
+     * @param rutaBase ruta base del set, sin el "_numero.png", tipo solo toma la primer palabra
+     */
+    private void cargarImagenesMeditacion(String rutaBase) {
+        ValidacionesUtiles.esDistintoDeNull(rutaBase, "rutaBase");
+
+        this.imagenesMeditacion =new ArrayList<>();
+        this.rutaMeditacionCargada = rutaBase;
+
+        for (int i = 1; i <= MEDITACION_CANT_FRAMES; i++){
+            String ruta = rutaBase + "_" + i + ".png";
+
+            try{
+                java.io.InputStream is = getClass().getResourceAsStream(ruta);
+                if (is != null){
+                    this.imagenesMeditacion.add(ImageIO.read(is));
+                }
+            } catch (IOException e) {
+                //Si la imagen es ilegible, se saltea y no corta la carga del set
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /** 
+     * Avanza la animacion del aura cada cierta cantidad de frames del juego, pasando al sig png.
+     * Esta en loop, si llega a la ultima, vuelve a la primera
+     */
+    private void actualizarAnimacionMeditacion(){
+        if (this.imagenesMeditacion.isEmpty() || this.meditacionActual == null){
+            return;
+        }
+
+        this.contadorMeditacion++;
+
+        if (this.contadorMeditacion >= this.meditacionActual.getVelocidad()){
+            this.contadorMeditacion = 0;
+            this.frameMeditacion = (this.frameMeditacion + 1) % this.imagenesMeditacion.size();
+        }
+    }
+
+    /** 
+     * devuelve el nombre base de la skin a partir de la ruta de sprites (la carpeta jugador)
+     * si es null la ruta, devuelve null
+     */
+    private String baseDeRuta(String ruta){
+        if (ruta == null){
+            return null;
+        }
+        int corte = ruta.lastIndexOf('/');
+        return (corte >=0) ? ruta.substring(corte+1) : ruta;
+    }
+
+    /** 
+     * dibuja el aura de meditacion sobre el jugador
+     * se llama desde draw() despues de dibujar el sprite, para que el aura quede por arriba
+     * del personaje y ya no quede mas abajo
+     * 
+     * los parametros, salen del catalogo de Meditacion, en el eje X siempre esta centrada en el pj
+     * pero en el eje Y, desde el catalogo se modifican los valores y se va arreglando, es a ojo
+     * 
+     * PRE: g2 != null
+     */
+    private void dibujarAura(Graphics2D g2) {
+        if (this.imagenesMeditacion.isEmpty() || this.meditacionActual == null){
+            return;
+        }
+        BufferedImage aura = this.imagenesMeditacion.get(this.frameMeditacion);
+
+        int ancho = this.meditacionActual.getAncho();
+        int alto = this.meditacionActual.getAlto();
+        int offsetY = this.meditacionActual.getOffsetY();
+
+        //esto es el centrado en el eje X sobre el jugador, como dije antes, el Y desde offsetY
+        int centroX = screenX + vistaDelJuego.getTamanio() /2;
+        int centroY = screenY + vistaDelJuego.getTamanio() /2;
+        int ax = centroX - ancho / 2;
+        int ay = centroY - alto / 2 - offsetY;
+
+        g2.drawImage(aura, ax, ay, ancho, alto, null);
+
+
+    }
 
 
     /**
@@ -222,6 +448,13 @@ public class JugadorVista extends EntidadVista {
                 break;
         }
         g2.drawImage(image, screenX, screenY, vistaDelJuego.getTamanio(), vistaDelJuego.getTamanio(),null);
+
+        //Meditacion:
+        //Si esta meditando, el aura se dibuja por arriba del personaje y no por abajo
+        if (this.meditando) {
+            dibujarAura(g2);
+        }
+
     }
 
     /**

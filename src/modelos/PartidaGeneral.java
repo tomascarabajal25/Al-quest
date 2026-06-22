@@ -449,6 +449,25 @@ public class PartidaGeneral extends Partida {
 		mapaMundi.reiniciarTodasLasCiudades();
 		persistencia.GestorDeInicio.guardarSesion(this);
 	}
+
+
+    /** 
+     * Implementado con las meditaciones, suma puntaje al total acumulado del jugador
+     * 
+     * PRE: cantidad > 0
+     * POST: puntajeTotal incrementa en cantidad (la persistencia la maneja quien la llama)
+     * 
+     * @param cantidad puntos a sumar
+     */
+    public void sumarPuntos(int cantidad){
+        ValidacionesUtiles.validarMayorACero(cantidad,"cantidad");
+        this.puntajeTotal += cantidad;
+    }
+
+
+
+
+
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------
