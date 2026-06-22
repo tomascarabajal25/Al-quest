@@ -25,7 +25,6 @@ import juego.ciudades.ordenamientos.PartidaOrdenamientos;
 import juego.ciudades.recoleccionEnMatriz.PartidaDeRecoleccion;
 import juego.ciudades.batalla.controller.PartidaBatalla;
 import modelosVista.VistaGlobal;
-import juego.ciudades.ordenamientos.EstadoDePartida;
 
 public class PartidaGeneral extends Partida {
     //INTERFACES ----------------------------------------------------------------------------------------------

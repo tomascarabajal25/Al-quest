@@ -4,8 +4,6 @@ import java.util.Objects;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
-
 import utils.ValidacionesUtiles;
 
 public abstract class Partida {

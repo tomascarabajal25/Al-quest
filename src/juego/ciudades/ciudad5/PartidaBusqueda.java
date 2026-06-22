@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juego.ciudades.ciudad5.UI.MinijuegoDesafio;
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.configuracion.ConfiguracionBusqueda;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;

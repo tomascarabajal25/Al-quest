@@ -2,8 +2,9 @@ package juego.ciudades.reinas;
 
 
 import javax.swing.SwingUtilities;
-import juego.ciudades.ordenamientos.EstadoDePartida;
+
 import juego.ciudades.reinas.ui.VentanaPrincipal;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;

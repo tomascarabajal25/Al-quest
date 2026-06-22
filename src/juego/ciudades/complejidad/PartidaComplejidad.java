@@ -2,7 +2,7 @@ package juego.ciudades.complejidad;
 
 import javax.swing.SwingUtilities;
 import juego.ciudades.complejidad.ui.VentanaComplejidad;
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;

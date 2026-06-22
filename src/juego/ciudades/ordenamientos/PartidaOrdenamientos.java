@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
 import juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import juego.configuracion.ConfiguracionDeOrdenamientos;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;

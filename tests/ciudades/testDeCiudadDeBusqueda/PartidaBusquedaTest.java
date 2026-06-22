@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import juego.ciudades.ciudad5.PartidaBusqueda;
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 
 /**

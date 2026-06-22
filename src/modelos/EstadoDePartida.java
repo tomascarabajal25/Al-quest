@@ -1,4 +1,4 @@
-package juego.ciudades.ordenamientos;
+package modelos;
 
 public enum EstadoDePartida {
 	Iniciado,

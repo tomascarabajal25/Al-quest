@@ -1,8 +1,8 @@
 package juego.ciudades.ciudad_3_laberinto.src;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Partida;
 import modelos.Sonido;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 
 public class PartidaLaberinto extends Partida {

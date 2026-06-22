@@ -2,8 +2,8 @@ package juego.ciudades.batalla.controller;
 
 import modelos.Partida;
 import modelos.Sonido;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.view.BatallaUI;
 import estructuras.cola.Cola;

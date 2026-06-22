@@ -7,9 +7,9 @@ import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.torresDeHanoi.UI.MinijuegoHanoi;
 import juego.configuracion.ConfiguracionDeHanoi;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;
