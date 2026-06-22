@@ -131,6 +131,26 @@ public class VistaGlobal extends Vista {
     private boolean teclaTiendaConsumed = false;
     
     private boolean teclaReiniciarConsumed = false;
+
+
+    // Meditacion (con la tecla K)
+    /** 
+     * El puntaje por segundo depende del personaje equipado (tecnicamente, depende de la meditacion).
+     * es decir, podemos configurar que el aura newbie otorgue 1000 puntos, ya que los puntos dependen
+     * del personaje, pero no hagamos eso, configuremoslo para que el aura mas de novato, de menos puntos
+     * 
+     * la meditacion activa, via JugadorVista.getPuntosPorSegundoMeditacion() provee el puntaje de ese personaje
+     * para modificar los parametros, siempre al TDA de Meditacion, ahi esta el enum
+     */
+    
+    //Cada cuantos ms meditando se otorga puntaje, por ahora dejarlo en 1000 aunque estaria bueno randomizarlo luego 
+    private static final long INTERVALO_PUNTO_MS = 1000;
+
+    //cooldown para que una pulsacion de K alterne la meditacion una sola vez
+    private boolean teclaMeditarConsumed = false;
+
+    //Timestamp del ultimo punto otorgado por meditar
+    private long ultimoPuntoMeditacion = 0;
     
     
     
@@ -197,7 +217,7 @@ public class VistaGlobal extends Vista {
             teclaEnterConsumed = false;
         }
 
-        if (ciudadCercanaId != -1 && keyhandler.enterPresionado && !teclaEnterConsumed) {
+        if (ciudadCercanaId != -1 && keyhandler.enterPresionado && !teclaEnterConsumed && !getJugadorVista().isMeditando()) {
             teclaEnterConsumed = true;
             procesarEntradaCiudad(ciudadCercanaId);
         }
@@ -223,7 +243,66 @@ public class VistaGlobal extends Vista {
             teclaReiniciarConsumed = true; // Consumimos el pulso
             evaluarYReiniciarJuego();
         }
+
+        //Para meditacion, la  tecla K alterna entre meditar y no meditar
+        if (!khGlobal.getMeditarPressed()){
+            teclaMeditarConsumed =false;
+        }
+
+        if (khGlobal.getMeditarPressed() && !teclaMeditarConsumed){
+            teclaMeditarConsumed =true;
+            alternarMeditacion();
+        }
+
+        //mientras jugador medita, gana puntaje 1 vez por seg
+        if (getJugadorVista().isMeditando()){
+            otorgarPuntosMeditacion();
+        }
        
+    }
+
+    //Meditacion
+    /**
+     * Alterna el estado de Meditacion del jugador con la K
+     * 
+     * POST: Si ya estaba meditando, deja de meditar, persiste la sesion asi no pierde el puntaje que junto
+     *       Si no estaba meditando, intenta arrancar. Si no tiene meditacion en el catalog o en las imagenes,
+     *       no pasa nada y muestra un mensaje flotante avisando que ese personaje no sabe meditar.
+     */
+    public void alternarMeditacion() {
+        JugadorVista jugador = getJugadorVista();
+
+        if (jugador.isMeditando()){
+            jugador.detenerMeditacion();
+            persistencia.GestorDeInicio.guardarSesion(partidaGeneral);
+        } else if (jugador.iniciarMeditacion()){
+            ultimoPuntoMeditacion = System.currentTimeMillis();
+        } else{
+            mostrarMensaje("Este personaje no sabe meditar. ¡Desbloquealos a todos para conocer sus auras!");
+        }
+
+    }
+
+    /**
+     * otorga puntos mientras el jugador esta meditando
+     * 
+     * PRE: el jugador tiene que estar meditando
+     * POST: cada INTERVALO_PUNTO_MS suma al puntaje total los puntos por segundo de la meditacion activa.
+     *       La cantidad son definidos en los parametros en el TDA Meditacion.
+     *       La idea es que solamente persista cuando corte la meditacion y no en cada suma, asi no escribe
+     *       el JSON una vez por seg.
+     */
+    private void otorgarPuntosMeditacion() {
+        long ahora = System.currentTimeMillis();
+
+        if(ahora - ultimoPuntoMeditacion >= INTERVALO_PUNTO_MS){
+            //como dije antes, el puntaje x seg depende de los parametros de la meditacion del pj
+            int puntos = getJugadorVista().getPuntosPorSegundoMeditacion();
+            if(puntos > 0){
+                partidaGeneral.sumarPuntos(puntos);
+            }
+            ultimoPuntoMeditacion = ahora;
+        }
     }
 
 
@@ -569,11 +648,18 @@ public class VistaGlobal extends Vista {
         g2.setColor(new Color(255, 220, 60));
         g2.drawString("AI-QUEST - Los Compiladores -", px + 12, py + 22);
 
-        g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 13));
-        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() +
-        		"    |    [T] Tienda de Skins    |    [X] Reiniciar Mapa ", px + 12, py + 40);
-        
+        if (getJugadorVista().isMeditando()){
+            //Si esta meditando, informa el estado de la meditacion.
+            g2.setColor(new Color(190, 150, 255));
+            g2.drawString("Puntaje: " + partidaGeneral.getPuntajeTotal() + 
+                            "   |   MEDITANDO  +" + getJugadorVista().getPuntosPorSegundoMeditacion() +
+                             "/seg   • [K] Terminar",px + 12, py + 40);
+        } else {
+            g2.setColor(Color.WHITE);
+            g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() +
+        		            "       |   [T] Tienda  |    [X] Reiniciar   |   [K] Meditar", px + 12, py + 40);
+        }
         
         // Ciudad cercana
         if (ciudadCercanaId != -1) {

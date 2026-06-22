@@ -13,6 +13,7 @@ public class KeyhandlerGlobal extends KeyHandler {
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private boolean tiendaPressed = false;
     private boolean reiniciarPressed = false;
+    private boolean meditarPressed = false;
     
 
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
@@ -56,6 +57,10 @@ public class KeyhandlerGlobal extends KeyHandler {
 		
 		if (code == KeyEvent.VK_T ) 
 			tiendaPressed = true;
+
+        if (code ==KeyEvent.VK_K){
+            meditarPressed = true;
+        }
     }
 
     /**
@@ -78,6 +83,10 @@ public class KeyhandlerGlobal extends KeyHandler {
 		
 		if (code == KeyEvent.VK_T ) 
 			tiendaPressed = false;
+
+        if (code == KeyEvent.VK_K){
+            meditarPressed = false;
+        }
     }
    
     @Override
@@ -85,6 +94,7 @@ public class KeyhandlerGlobal extends KeyHandler {
     	super.reset();
     	this.reiniciarPressed=false;
     	this.tiendaPressed=false;
+        this.meditarPressed = false;
     }
 
     //METODOS GENERALES ---------------------------------------------------------------------------------------
@@ -110,6 +120,18 @@ public class KeyhandlerGlobal extends KeyHandler {
     public boolean getReiniciarPressed() {
         return this.reiniciarPressed;
     }
+
+
+    /** 
+     * Getter del atributo meditarPressed
+     * @return: estado del atributo meditar
+     */
+    public boolean getMeditarPressed(){
+        return this.meditarPressed;
+    }
+
+
+
 
     //SETTERS COMPLEJOS----------------------------------------------------------------------------------------
     //SETTERS SIMPLES -----------------------------------------------------------------------------------------
