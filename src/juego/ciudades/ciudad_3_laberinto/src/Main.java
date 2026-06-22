@@ -17,7 +17,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                PartidaLaberinto partidaLaberinto = new PartidaLaberinto(new Jugador(""));
+                PartidaLaberinto partidaLaberinto = new PartidaLaberinto(new Jugador(""), null);
                 partidaLaberinto.iniciar();
             }
         });
