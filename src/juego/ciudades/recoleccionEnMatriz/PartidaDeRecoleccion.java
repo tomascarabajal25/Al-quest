@@ -5,6 +5,7 @@ import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
 import modelos.Partida;
+import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
@@ -32,7 +33,7 @@ public class PartidaDeRecoleccion extends Partida {
      */
     public PartidaDeRecoleccion(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
-
+        setSonido(sonido);
         setJuego(ConfiguracionDeRecoleccion.FILAS_MAPA, ConfiguracionDeRecoleccion.COLUMNAS_MAPA, ConfiguracionDeRecoleccion.NIVELES_MAPA, ConfiguracionDeRecoleccion.CAPACIDAD_MAXIMA_MOCHILA, getJugador());
 
     }
@@ -69,7 +70,10 @@ public class PartidaDeRecoleccion extends Partida {
     //METODOS GENERALES ---------------------------------------------------------------------------------------
     //METODOS DE COMPORTAMIENTO -------------------------------------------------------------------------------
     @Override
-    public void iniciar() {this.ultimoNivel = juegoRecoleccion.getNivelActual();
+    public void iniciar() {
+        ValidacionesUtiles.validarFalso(estaIniciada(), "La partida ya está iniciada");
+        setEstado(EstadoDePartida.Iniciado);
+        this.ultimoNivel = juegoRecoleccion.getNivelActual();
         KeyHandlerRecoleccion key = new KeyHandlerRecoleccion();
         this.vista = new Vista(obtenerMapaPorNivel(this.juegoRecoleccion.getNivelActual()), getJugador(), 24, 21, getRutaSprites(), key, this.sonido);
 
@@ -108,6 +112,9 @@ public class PartidaDeRecoleccion extends Partida {
 
     @Override
     public void finalizar() {
+        ValidacionesUtiles.validarVerdadero(estaIniciada(), "La partida no está iniciada");
+        setEstado(EstadoDePartida.Creado);
+
         int puntos = 0;
 
         if (juegoRecoleccion != null) {
