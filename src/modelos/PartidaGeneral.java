@@ -134,34 +134,34 @@ public class PartidaGeneral extends Partida {
         Jugador jugador = getJugador();
 
         NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
-                new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
+                new PartidaDeRecoleccion("Partida De Recoleccion", jugador,this.sonido));
 
         NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
-                new PartidaReinas(jugador));
+                new PartidaReinas(jugador,this.sonido));
 
         NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
-                new PartidaLaberinto(jugador));
+                new PartidaLaberinto(jugador,this.sonido));
 
         NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
-                new PartidaOrdenamientos("Ordenamiento", jugador));
+                new PartidaOrdenamientos("Ordenamiento", jugador,this.sonido));
 
         NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
-                new PartidaBusqueda("Búsqueda", jugador));
+                new PartidaBusqueda("Búsqueda", jugador,this.sonido));
 
         NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
-                new PartidaHashing("Hash", jugador));
+                new PartidaHashing("Hash", jugador,this.sonido));
 
         NodoCiudad ciudad7 = crearNodo(7, "Ciudad de Grafos",
-                new PartidaGrafos("Grafos", jugador));
+                new PartidaGrafos("Grafos", jugador,this.sonido));
 
         NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
-                new PartidaHanoi("Torres de Hanoi", jugador));
+                new PartidaHanoi("Torres de Hanoi", jugador,this.sonido));
 
         NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas",
-                new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador));
+                new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador,this.sonido));
 
         NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
-                new PartidaComplejidad(jugador));
+                new PartidaComplejidad(jugador,this.sonido));
 
         mapaMundi.agregarCiudad(ciudad1);
         mapaMundi.agregarCiudad(ciudad2);
@@ -204,7 +204,7 @@ public class PartidaGeneral extends Partida {
 
         NodoCiudad nodo = new NodoCiudad(id, nombre, partida);
         // Inyectar la instancia de sonido compartida en la partida
-        partida.setSonido(this.sonido);
+        //partida.setSonido(this.sonido);
         partida.setOnFinalizadoCallback(() -> alTerminarCiudad(id));
         return nodo;
     }

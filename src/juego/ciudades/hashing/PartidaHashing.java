@@ -12,6 +12,7 @@ import juego.ciudades.hashing.ui.MinijuegoHashing;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -50,9 +51,11 @@ public class PartidaHashing extends Partida {
 
     /**
      * Constructor estandarizado de la Partida Hashing.
+     * @param sonido 
      */
-    public PartidaHashing(String nombre, Jugador jugador) {
+    public PartidaHashing(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 

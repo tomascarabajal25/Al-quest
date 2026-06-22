@@ -12,6 +12,7 @@ import juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import juego.configuracion.ConfiguracionDeOrdenamientos;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -59,9 +60,11 @@ public class PartidaOrdenamientos extends Partida {
      *
      * @param nombreCiudad nombre de la ciudad asociada a esta partida
      * @param jugador      jugador que participa en la partida
+     * @param sonido 
      */
-    public PartidaOrdenamientos(String nombreCiudad, Jugador jugador) {
+    public PartidaOrdenamientos(String nombreCiudad, Jugador jugador, Sonido sonido) {
         super(nombreCiudad, jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 

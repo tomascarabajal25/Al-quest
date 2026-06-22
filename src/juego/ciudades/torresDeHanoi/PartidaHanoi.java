@@ -12,6 +12,7 @@ import juego.ciudades.torresDeHanoi.UI.MinijuegoHanoi;
 import juego.configuracion.ConfiguracionDeHanoi;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -64,9 +65,11 @@ public class PartidaHanoi extends Partida {
      *
      * @param nombre  nombre de la ciudad asociada a esta partida
      * @param jugador jugador que participa en la partida
+     * @param sonido 
      */
-    public PartidaHanoi(String nombre, Jugador jugador) {
+    public PartidaHanoi(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
+        setSonido(sonido);
     }
 
     // METODOS DE COMPORTAMIENTO

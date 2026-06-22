@@ -14,6 +14,7 @@ import juego.configuracion.ConfiguracionBusqueda;
 import modelos.Jugador;
 import modelos.Mapa;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 
 public class PartidaBusqueda extends Partida {
@@ -28,9 +29,11 @@ public class PartidaBusqueda extends Partida {
     /**
      * pre:  nombre y jugador no nulos.
      * post: el TDA se crea listo para ser configurado dinámicamente en iniciar().
+     * @param sonido 
      */
-    public PartidaBusqueda(String nombre, Jugador jugador) {
+    public PartidaBusqueda(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 

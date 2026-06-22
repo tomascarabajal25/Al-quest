@@ -3,12 +3,14 @@ package juego.ciudades.grafos.controller;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 
 public class PartidaGrafos extends Partida {
     private CiudadGrafos ciudadGrafos;
 
-    public PartidaGrafos(String nombre, Jugador jugador) {
+    public PartidaGrafos(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
+        setSonido(sonido);
     }
 
     @Override

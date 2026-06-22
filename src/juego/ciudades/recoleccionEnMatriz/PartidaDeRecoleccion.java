@@ -5,6 +5,7 @@ import juego.ciudades.recoleccionEnMatriz.ui.KeyHandlerRecoleccion;
 import juego.ciudades.recoleccionEnMatriz.ui.MinijuegoRecoleccion;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -24,11 +25,12 @@ public class PartidaDeRecoleccion extends Partida {
     /**
      * Constructor del TDA partidaDeRecoleccion simplificado.
      * El TDA se crea listo para ser configurado dinámicamente en iniciar().
+     * @param sonido 
      *
      * @param nombre: Nombre de la ciudad
      * @param jugador: Jugador de la ciudad
      */
-    public PartidaDeRecoleccion(String nombre, Jugador jugador) {
+    public PartidaDeRecoleccion(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
 
         setJuego(ConfiguracionDeRecoleccion.FILAS_MAPA, ConfiguracionDeRecoleccion.COLUMNAS_MAPA, ConfiguracionDeRecoleccion.NIVELES_MAPA, ConfiguracionDeRecoleccion.CAPACIDAD_MAXIMA_MOCHILA, getJugador());
