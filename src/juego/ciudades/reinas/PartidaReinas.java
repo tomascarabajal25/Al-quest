@@ -5,6 +5,7 @@ import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.reinas.ui.VentanaPrincipal;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 
 public class PartidaReinas extends Partida {
 
@@ -16,9 +17,11 @@ public class PartidaReinas extends Partida {
      * Crea una partida de N-Reinas para el jugador dado.
      *
      * @param jugador jugador que participa en la partida
+     * @param sonido 
      */
-    public PartidaReinas(Jugador jugador) {
+    public PartidaReinas(Jugador jugador, Sonido sonido) {
         super("N-Reinas", jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 

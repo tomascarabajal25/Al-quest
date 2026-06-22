@@ -1,6 +1,7 @@
 package juego.ciudades.batalla.controller;
 
 import modelos.Partida;
+import modelos.Sonido;
 import modelos.Jugador;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.batalla.model.*;
@@ -16,8 +17,9 @@ public class PartidaBatalla extends Partida {
 	private BatallaUI ui;
 	private boolean victoria;
 
-	public PartidaBatalla(String nombre, Jugador jugador) {
+	public PartidaBatalla(String nombre, Jugador jugador, Sonido sonido) {
 		super(nombre, jugador);
+		setSonido(sonido);
 	}
 
 	@Override

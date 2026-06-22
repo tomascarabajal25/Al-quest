@@ -2,6 +2,7 @@ package juego.ciudades.ciudad_3_laberinto.src;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Partida;
+import modelos.Sonido;
 import modelos.Jugador;
 
 public class PartidaLaberinto extends Partida {
@@ -11,9 +12,11 @@ public class PartidaLaberinto extends Partida {
 	/**
      * Crea el constructor de partida
      * Este se ocupara de ejecutar y finalizar la ciudad laberinto dentro del juego
+	 * @param sonido 
      */
-    public PartidaLaberinto(Jugador jugador) {
+    public PartidaLaberinto(Jugador jugador, Sonido sonido) {
         super("Laberinto", jugador);
+        setSonido(sonido);
     }
     
     /**

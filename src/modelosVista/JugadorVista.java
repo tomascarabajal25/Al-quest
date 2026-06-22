@@ -11,6 +11,7 @@ import java.util.List;
 import modelos.Jugador;
 import utils.ValidacionesUtiles;
 
+
 public class JugadorVista extends EntidadVista {
     //INTERFACES ----------------------------------------------------------------------------------------------
     //ENUMERADOS ----------------------------------------------------------------------------------------------
