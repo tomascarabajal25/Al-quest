@@ -5,11 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Vector;
-
 import javax.swing.JPanel;
-
 import modelos.Jugador;
 import modelos.Minijuego;
+import modelos.Sonido;
 import utils.ValidacionesUtiles;
 
 public class Vista extends JPanel implements Runnable{
@@ -44,70 +43,39 @@ public class Vista extends JPanel implements Runnable{
     private ChequeadorDeColision chequeadorDeColision = null;
     private Vector<ObjetoVista> objetos = null;
     public Minijuego miniJuego = null;
+    // sonido (inyectado desde la Partida que crea la vista)
+    protected Sonido sonido;
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
     /**
-     * Constructor del TDA Vista sin keyhandler
-     *
-     * PRE:
-     * -Jugador y rutaSprites no deben ser nulos
-     * -SpawnCol y spawnFil deben ser mayores o iguales a cero
-     *
-     * @param rutaMundo:
-     * @param jugador:
-     * @param spawnCol:
-     * @param spawnFil:
-     * @param rutaSprites:
+     * Constructor del TDA Vista sin keyhandler (compatibilidad).
+     * Delega al constructor que acepta Sonido creando una instancia local.
+     */
+    public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites, Sonido sonido) {
+        this(rutaMundo, jugador, spawnCol, spawnFil, rutaSprites, new KeyHandler(), sonido);
+    }
+    /**
+     * Constructor del TDA Vista sin keyhandler y sin sonido.
+     * Delega al constructor que acepta Sonido con nulll.
      */
     public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites) {
-        ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
-        ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
-        ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
-        ValidacionesUtiles.validarMayorOIgualACero(spawnFil, "spawnFil");
-        ValidacionesUtiles.validarMayorOIgualACero(spawnCol, "spawnCol");
-
-        this.construccionesM = new ManejadorDeConstruccion(this);
-        this.keyhandler = new KeyHandler();
-        this.adminObjt = new AdministradorDeObjetos(this);
-        this.chequeadorDeColision = new ChequeadorDeColision(this);
-        this.objetos = new Vector<ObjetoVista>();
-
-        this.setPreferredSize(new Dimension(anchoDePantalla, largoDePantalla));
-        this.setBackground(Color.black);
-        this.setDoubleBuffered(true);
-        this.addKeyListener(keyhandler);
-        this.setFocusable(true);
-
-        setJugadorVista(jugador, this.keyhandler, spawnCol, spawnFil, rutaSprites);
-        this.construccionesM.loadMap(rutaMundo);
-
-        setUpJuego();
+        this(rutaMundo, jugador, spawnCol, spawnFil, rutaSprites, new KeyHandler(), new Sonido());
     }
 
     /**
-     * Constructor del TDA Vista con keyhandler
-     *
-     * PRE:
-     * -Jugador, key y rutaSprites no deben ser nulos
-     * -SpawnCol y spawnFil deben ser mayores o iguales a cero
-     *
-     * @param rutaMundo:
-     * @param jugador:
-     * @param spawnCol:
-     * @param spawnFil:
-     * @param rutaSprites:
-     * @param key:
+     * Constructor principal que acepta KeyHandler y Sonido inyectados.
      */
-    public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites, KeyHandler key) {
+    public Vista(String rutaMundo, Jugador jugador, int spawnCol, int spawnFil, String rutaSprites, KeyHandler key, Sonido sonido) {
         ValidacionesUtiles.esDistintoDeNull(rutaMundo, "rutaMundo");
         ValidacionesUtiles.esDistintoDeNull(jugador, "jugador");
         ValidacionesUtiles.esDistintoDeNull(rutaSprites, "rutaSprites");
         ValidacionesUtiles.validarMayorOIgualACero(spawnFil, "spawnFil");
         ValidacionesUtiles.validarMayorOIgualACero(spawnCol, "spawnCol");
         ValidacionesUtiles.esDistintoDeNull(key, "key");
-
+        ValidacionesUtiles.esDistintoDeNull(sonido, "sonido");
 
         this.construccionesM = new ManejadorDeConstruccion(this);
+        this.keyhandler = key;
         this.adminObjt = new AdministradorDeObjetos(this);
         this.chequeadorDeColision = new ChequeadorDeColision(this);
         this.objetos = new Vector<ObjetoVista>();
@@ -121,6 +89,9 @@ public class Vista extends JPanel implements Runnable{
         this.setFocusable(true);
         setJugadorVista(jugador, this.keyhandler, spawnCol, spawnFil, rutaSprites);
         this.construccionesM.loadMap(rutaMundo);
+
+        // Asociar la instancia de sonido compartida
+        this.sonido = sonido;
 
         setUpJuego();
     }
@@ -136,6 +107,7 @@ public class Vista extends JPanel implements Runnable{
      */
     public void setUpJuego() {
         this.adminObjt.setObjetos();
+        // La música global la administra PartidaGeneral. Aquí sólo cargamos objetos.
     }
 
     /**
@@ -191,6 +163,11 @@ public class Vista extends JPanel implements Runnable{
             miniJuego.actualizar(jugadorVista);
         }
         jugadorVista.actualizar();
+
+        // Comprobamos proximidad a agua para reproducir efecto si corresponde
+        if (this.chequeadorDeColision != null && this.jugadorVista != null) {
+            this.chequeadorDeColision.chequearProximidadAgua(this.jugadorVista);
+        }
 
     }
 
@@ -275,6 +252,18 @@ public class Vista extends JPanel implements Runnable{
 
         repaint();
     }
+    public void playMusica(String nombre) {
+        if (sonido != null) sonido.playMusica(nombre);
+    }
+
+    public void stopMusica() {
+        if (sonido != null) sonido.stopMusica();
+    }
+
+    public void playEfecto(String nombre) {
+        if (sonido != null) sonido.playEfecto(nombre);
+    }
+	
 
 
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
@@ -405,10 +394,8 @@ public class Vista extends JPanel implements Runnable{
         ValidacionesUtiles.esDistintoDeNull(minijuego, "minijuego");
         this.miniJuego = minijuego;
     }
-
-
-	
-	
+    
+    
 
 
 

@@ -54,17 +54,17 @@ public class TiendaSkins extends JDialog {
     private static final Object[][] CATALOGO = {
         { "boy",      0    },   // personaje original (siempre desbloqueado)
         { "lady",    0 },   // skin 8  (BMP listos) la idea es que sea default, como boy, NO OLVIDARME!!!!!
-        { "captain",  0  },   // skin 1  (BMP listos)
-        { "dinosaur", 0  },   // skin 2  (BMP listos)
-        { "ivan",     0  },   // skin 3  (BMP listos)
-        { "doggy",    0 },   // skin 4  (BMP listos)
-        { "goblin",    0 },   // skin 5  (BMP listos)
-        { "king",    0 },   // skin 6  (BMP listos)
-        { "knight",    80 },   // skin 7  (BMP listos)
-        { "roman",    0 },   // skin 9  (BMP listos)
-        { "soldier",   0 },   // skin 10 (BMP listos)
-        { "goku", 0}, //skin 11 (BMP NO listos, agregar si se encuentran imagenes)
-        { "naruto", 0}, //skin 12 (BMP NO listos, agregar si se encuentran imagenes)
+        { "captain",  10  },   // skin 1  (BMP listos)
+        { "devCarabajal", 0  },   // skin 2  (BMP listos)
+        { "devSoria",     0  },   // skin 3  (BMP listos)
+        { "devMassin",    0 },   // skin 4  (BMP listos)
+        { "goblin",    100 },   // skin 5  (BMP listos)
+        { "devBallerio",    0 },   // skin 6  (BMP listos)
+        { "devHorlent",    0 },   // skin 7  (BMP listos)
+        { "roman",    80 },   // skin 9  (BMP listos)
+        { "devPompone",   0 },   // skin 10 (BMP listos)
+        { "goku", 500}, //skin 11 (BMP NO listos, agregar si se encuentran imagenes)
+        { "naruto", 500}, //skin 12 (BMP NO listos, agregar si se encuentran imagenes)
         { "yoda", 500000}, //skin 13 (BMP NO listos, agregar si se encuentran imagenes)
     };
 

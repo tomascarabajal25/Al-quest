@@ -12,6 +12,7 @@ import juego.ciudades.hashing.ui.MinijuegoHashing;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -33,7 +34,6 @@ public class PartidaHashing extends Partida {
     private static final int FILA_SPAWN = 48;
     private static final int COL_SPAWN  = 1;
     private static final String RUTA_MAPA = "/maps/world_hashing.txt";
-    private static final String RUTA_SPRITES = "/assets/jugador/boy";
 
     // ATRIBUTOS
     private CiudadHashing ciudad;
@@ -51,9 +51,11 @@ public class PartidaHashing extends Partida {
 
     /**
      * Constructor estandarizado de la Partida Hashing.
+     * @param sonido 
      */
-    public PartidaHashing(String nombre, Jugador jugador) {
+    public PartidaHashing(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 
@@ -98,7 +100,7 @@ public class PartidaHashing extends Partida {
         }
         cargarPosicionesSlots(cantidadSlots);
 
-        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, getRutaSprites()));
+        setVista(new Vista(RUTA_MAPA, getJugador(), COL_SPAWN, FILA_SPAWN, getRutaSprites(), this.sonido));
 
         this.ciudad = new CiudadHashing(cantidadSlots);
 
@@ -120,10 +122,15 @@ public class PartidaHashing extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Asegura que al cerrar la ventana con la X se ejecute finalizar()
+        attachCloseHandler(ventana);
         vista.requestFocusInWindow();
 
         // Arranca el bucle del juego (run -> actualizar -> repaint a 60 fps)
         vista.startGameThread();
+         if (this.sonido != null) {
+        	 this.sonido.playMusica(juego.configuracion.ConstantesSonido.HASHING);			
+         }
     }
 
 
@@ -185,7 +192,11 @@ public class PartidaHashing extends Partida {
         ventana.dispose();
         ventana = null;
         }
-        
+
+         if (this.sonido != null) {
+			 this.sonido.stopMusica();
+			 this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		 }
         notificarFinalizacion();
     }
 

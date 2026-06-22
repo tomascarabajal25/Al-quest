@@ -418,6 +418,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
         }
         if (estado == Estado.FINALIZADO) {
             dibujarMensajeVictoria(g2);
+            
         }
     }
 

@@ -17,6 +17,7 @@ import juego.ciudades.ciudad_3_laberinto.src.PartidaLaberinto;
 import juego.ciudades.complejidad.PartidaComplejidad;
 import juego.ciudades.hashing.PartidaHashing;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
+import juego.configuracion.ConstantesSonido;
 import juego.ciudades.grafos.controller.PartidaGrafos;
 import persistencia.DatosGuardado;
 import utils.ValidacionesUtiles;
@@ -35,6 +36,7 @@ public class PartidaGeneral extends Partida {
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private final GrafoCiudades mapaMundi;
+    private final Sonido sonido;
     private NodoCiudad ciudadActual;
     private JFrame ventanaGlobal;
     private VistaGlobal vistaGlobal;
@@ -54,13 +56,67 @@ public class PartidaGeneral extends Partida {
         super("Al-Quest — Mapa Mundial", jugador);
         this.mapaMundi    = new GrafoCiudades();
         this.puntajeTotal = 0;
+        // Instancia y precarga de sonidos compartidos
+        this.sonido = new Sonido();
+        registrarSonidosPorDefecto();
 
         //Manejo de skins, personaje nace con skin base desbloqueada
         this.skinActual = RUTA_SPRITE_JUGADOR;
         this.skinsDesbloqueadas = new ArrayList<>();
         this.skinsDesbloqueadas.add(RUTA_SPRITE_JUGADOR);
 
+        // Modularizar la construcción del grafo
         construirGrafo();
+    }
+
+    // METODOS PRIVADOS AUXILIARES -----
+    /**
+     * Registra en la instancia `sonido` las rutas por defecto usadas en el juego.
+     * Se separa del constructor para mejorar legibilidad y facilitar pruebas.
+     */
+    private void registrarSonidosPorDefecto() {
+        // Registrar pista global (el usuario agregará los .wav más tarde)
+        this.sonido.agregarSonido(ConstantesSonido.GLOBAL_AVENTURA, ConstantesSonido.RUTA_GLOBAL_AVENTURA);
+        // Registrar pistas por ciudad (rutas por defecto, el usuario podrá reemplazarlas)
+        this.sonido.agregarSonido(ConstantesSonido.HANOI, ConstantesSonido.RUTA_HANOI);
+        this.sonido.agregarSonido(ConstantesSonido.RECOLECCION, ConstantesSonido.RUTA_RECOLECCION);
+        this.sonido.agregarSonido(ConstantesSonido.REINAS, ConstantesSonido.RUTA_REINAS);
+        this.sonido.agregarSonido(ConstantesSonido.LABERINTO, ConstantesSonido.RUTA_LABERINTO);
+        this.sonido.agregarSonido(ConstantesSonido.ORDENAMIENTO, ConstantesSonido.RUTA_ORDENAMIENTO);
+        this.sonido.agregarSonido(ConstantesSonido.BUSQUEDA, ConstantesSonido.RUTA_BUSQUEDA);
+        this.sonido.agregarSonido(ConstantesSonido.HASHING, ConstantesSonido.RUTA_HASHING);
+        this.sonido.agregarSonido(ConstantesSonido.GRAFOS, ConstantesSonido.RUTA_GRAFOS);
+        this.sonido.agregarSonido(ConstantesSonido.BATALLA, ConstantesSonido.RUTA_BATALLA);
+        this.sonido.agregarSonido(ConstantesSonido.COMPLEJIDAD, ConstantesSonido.RUTA_COMPLEJIDAD);
+        // Efecto de proximidad a agua
+        this.sonido.agregarSonido(ConstantesSonido.AGUA, ConstantesSonido.RUTA_AGUA);
+        // sonido de los pasos
+        this.sonido.agregarSonido(ConstantesSonido.PASO1, ConstantesSonido.RUTA_PASO1);
+        this.sonido.agregarSonido(ConstantesSonido.PASO2, ConstantesSonido.RUTA_PASO2);
+        this.sonido.agregarSonido(ConstantesSonido.VICTORIA, ConstantesSonido.RUTA_VICTORIA);
+        // Sonido al abrir la Tienda de Skins
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.TIENDA, juego.configuracion.ConstantesSonido.RUTA_TIENDA);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.TIENDA2, juego.configuracion.ConstantesSonido.RUTA_TIENDA2);
+        // Sonidos al comprar una skin
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR1, juego.configuracion.ConstantesSonido.RUTA_COMPRAR1);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR2, juego.configuracion.ConstantesSonido.RUTA_COMPRAR2);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR3, juego.configuracion.ConstantesSonido.RUTA_COMPRAR3);
+        this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR4, juego.configuracion.ConstantesSonido.RUTA_COMPRAR4);
+
+    }
+
+    /**
+     * Crea y configura la ventana principal que contiene la vista global.
+     * Extraído de iniciar() para mantener la responsabilidad única.
+     */
+    private void inicializarVentanaGlobal() {
+        ventanaGlobal = new JFrame("Al-Quest");
+        ventanaGlobal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventanaGlobal.setResizable(false);
+        ventanaGlobal.add(vistaGlobal);
+        ventanaGlobal.pack();
+        ventanaGlobal.setLocationRelativeTo(null);
+        ventanaGlobal.setVisible(true);
     }
     //METODOS ABSTRACTOS --------------------------------------------------------------------------------------
     //METODOS HEREDADOS (CLASE)--------------------------------------------------------------------------------
@@ -77,56 +133,56 @@ public class PartidaGeneral extends Partida {
     private void construirGrafo() {
         Jugador jugador = getJugador();
 
-//        NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
-//                new PartidaDeRecoleccion("Partida De Recoleccion", jugador));
-//
-//        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
-//                new PartidaReinas(jugador));
-//
-//        NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
-//                new PartidaLaberinto(jugador));
-//
-//        NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
-//                new PartidaOrdenamientos("Ordenamiento", jugador));
-//
-//        NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
-//                new PartidaBusqueda("Búsqueda", jugador));
-//
-//        NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
-//                new PartidaHashing("Hash", jugador));
-//
-//        NodoCiudad ciudad7 = crearNodo(7, "Ciudad de Grafos",
-//                new PartidaGrafos("Grafos", jugador));
-//
-//        NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
-//                new PartidaHanoi("Torres de Hanoi", jugador));
+        NodoCiudad ciudad1 = crearNodo(1, "Ciudad de Recoleccion",
+                new PartidaDeRecoleccion("Partida De Recoleccion", jugador,this.sonido));
+
+        NodoCiudad ciudad2 = crearNodo(2, "Ciudad De Reinas",
+                new PartidaReinas(jugador,this.sonido));
+
+        NodoCiudad ciudad3 = crearNodo(3, "Ciudad De Laberinto",
+                new PartidaLaberinto(jugador,this.sonido));
+
+        NodoCiudad ciudad4 = crearNodo(4, "Ciudad de Ordenamiento",
+                new PartidaOrdenamientos("Ordenamiento", jugador,this.sonido));
+
+        NodoCiudad ciudad5 = crearNodo(5, "Ciudad de Búsqueda",
+                new PartidaBusqueda("Búsqueda", jugador,this.sonido));
+
+        NodoCiudad ciudad6 = crearNodo(6, "Ciudad de Hashing",
+                new PartidaHashing("Hash", jugador,this.sonido));
+
+        NodoCiudad ciudad7 = crearNodo(7, "Ciudad de Grafos",
+                new PartidaGrafos("Grafos", jugador,this.sonido));
+
+        NodoCiudad ciudad8 = crearNodo(8, "Torres de Hanoi",
+                new PartidaHanoi("Torres de Hanoi", jugador,this.sonido));
 
         NodoCiudad ciudad9 = crearNodo(9, "Ciudad De Pilas Y Colas",
-                new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador));
-//
-//        NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
-//                new PartidaComplejidad(jugador));
+                new PartidaBatalla("Batalla de Pilas, Colas y Listas", jugador,this.sonido));
 
-//        mapaMundi.agregarCiudad(ciudad1);
-//        mapaMundi.agregarCiudad(ciudad2);
-//        mapaMundi.agregarCiudad(ciudad3);
-//        mapaMundi.agregarCiudad(ciudad4);
-//        mapaMundi.agregarCiudad(ciudad5);
-//        mapaMundi.agregarCiudad(ciudad6);
-//        mapaMundi.agregarCiudad(ciudad7);
-//        mapaMundi.agregarCiudad(ciudad8);
+        NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
+                new PartidaComplejidad(jugador,this.sonido));
+
+        mapaMundi.agregarCiudad(ciudad1);
+        mapaMundi.agregarCiudad(ciudad2);
+        mapaMundi.agregarCiudad(ciudad3);
+        mapaMundi.agregarCiudad(ciudad4);
+        mapaMundi.agregarCiudad(ciudad5);
+        mapaMundi.agregarCiudad(ciudad6);
+        mapaMundi.agregarCiudad(ciudad7);
+        mapaMundi.agregarCiudad(ciudad8);
         mapaMundi.agregarCiudad(ciudad9);
-//        mapaMundi.agregarCiudad(ciudad10);
-//
-//        mapaMundi.conectarCiudades(1, 2);
-//        mapaMundi.conectarCiudades(2, 3);
-//        mapaMundi.conectarCiudades(3, 4);
-//        mapaMundi.conectarCiudades(4, 5);
-//        mapaMundi.conectarCiudades(5, 6);
-//        mapaMundi.conectarCiudades(6, 7);
-//        mapaMundi.conectarCiudades(7, 8);
-//        mapaMundi.conectarCiudades(8, 9);
-//        mapaMundi.conectarCiudades(9, 10);
+        mapaMundi.agregarCiudad(ciudad10);
+
+        mapaMundi.conectarCiudades(1, 2);
+        mapaMundi.conectarCiudades(2, 3);
+        mapaMundi.conectarCiudades(3, 4);
+        mapaMundi.conectarCiudades(4, 5);
+        mapaMundi.conectarCiudades(5, 6);
+        mapaMundi.conectarCiudades(6, 7);
+        mapaMundi.conectarCiudades(7, 8);
+        mapaMundi.conectarCiudades(8, 9);
+        mapaMundi.conectarCiudades(9, 10);
     }
 
     /**
@@ -147,6 +203,8 @@ public class PartidaGeneral extends Partida {
         ValidacionesUtiles.esDistintoDeNull(partida, "partida");
 
         NodoCiudad nodo = new NodoCiudad(id, nombre, partida);
+        // Inyectar la instancia de sonido compartida en la partida
+        //partida.setSonido(this.sonido);
         partida.setOnFinalizadoCallback(() -> alTerminarCiudad(id));
         return nodo;
     }
@@ -162,18 +220,17 @@ public class PartidaGeneral extends Partida {
                 RUTA_MAPA_GLOBAL,
                 getJugador(),
                 skinActual,
-                this
+                this,
+                this.sonido
         );
 
-        ventanaGlobal = new JFrame("Al-Quest");
-        ventanaGlobal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventanaGlobal.setResizable(false);
-        ventanaGlobal.add(vistaGlobal);
-        ventanaGlobal.pack();
-        ventanaGlobal.setLocationRelativeTo(null);
-        ventanaGlobal.setVisible(true);
+        inicializarVentanaGlobal();
 
         vistaGlobal.startGameThread();
+        // Reproducir música global del mapa
+        if (this.sonido != null) {
+            this.sonido.playMusica(ConstantesSonido.GLOBAL_AVENTURA);
+        }
     }
 
     /**
@@ -232,33 +289,44 @@ public class PartidaGeneral extends Partida {
 
         this.puntajeTotal = datos.getPuntajeTotal();
 
-        for (int idCompletada : datos.getIdsCiudadesCompletadas()) {
-            mapaMundi.marcarCiudadCompletada(idCompletada);
-        }
+        guardarCiudadesCompletadas(datos.getIdsCiudadesCompletadas());
 
         NodoCiudad nodoActual = mapaMundi.obtenerCiudad(datos.getIdCiudadActual());
         if (nodoActual != null) {
             this.ciudadActual = nodoActual;
         }
 
-        // Restaura las skins desbloqueadas (si el guardado es de una versión
-        // anterior sin este campo, Gson lo deja en null y se conserva el
-        // estado inicial: solo la skin por defecto desbloqueada).
         if (datos.getSkinsDesbloqueadas() != null) {
-            for (String ruta : datos.getSkinsDesbloqueadas()) {
-                if (!this.skinsDesbloqueadas.contains(ruta)) {
-                    this.skinsDesbloqueadas.add(ruta);
-                }
-            }
+            restaurarSkinsDesbloqueadas(datos.getSkinsDesbloqueadas());
         }
 
-        // Restaura la skin equipada (si existe en el guardado).
-        if (datos.getSkinActual() != null) {
-            this.skinActual = datos.getSkinActual();
+
+        restaurarSkinActual(datos.getSkinActual());
+    }
+
+    private void restaurarSkinActual(String skinActual2) {
+        if (skinActual2 != null) {
+            this.skinActual = skinActual2;
         }
     }
 
-    /**
+    //aplica las ciudades completadas en el mapaMundi a partir de sus ids
+    private void guardarCiudadesCompletadas(Vector<Integer> idsCiudadesCompletadas) {
+    	for (int idCompletada : idsCiudadesCompletadas) {
+            mapaMundi.marcarCiudadCompletada(idCompletada);
+        }
+	}
+
+    // Agrega a la lista de skins desbloqueadas las rutas de las skins que estaban guardadas en el guardado.
+	private void restaurarSkinsDesbloqueadas(Vector<String> rutas) {
+    	for (String ruta : rutas) {
+            if (!this.skinsDesbloqueadas.contains(ruta)) {
+                this.skinsDesbloqueadas.add(ruta);
+            }
+        }
+	}
+
+	/**
      * Activa el minijuego de la ciudad a la que el jugador entra
      *
      * PRE:
@@ -284,6 +352,9 @@ public class PartidaGeneral extends Partida {
 
         vistaGlobal.detenerHilo();
         ventanaGlobal.setVisible(false);
+
+        // Detener la música global antes de entrar a la ciudad para evitar solapamientos.
+        if (this.sonido != null) this.sonido.stopMusica();
 
         nodo.getPartidaAsociada().iniciar();
     }
@@ -354,12 +425,49 @@ public class PartidaGeneral extends Partida {
         puntajeTotal -=costo;
         skinsDesbloqueadas.add(rutaSkin);
         persistencia.GestorDeInicio.guardarSesion(this);
+        reproducirSonidoCompra();
         return true;
     }
-    public void reiniciar() {
+    private void reproducirSonidoCompra() {
+    	if (this.sonido != null) {
+            String[] sonidosCompra = {
+                ConstantesSonido.COMPRAR1,
+                ConstantesSonido.COMPRAR2,
+                ConstantesSonido.COMPRAR3,
+                ConstantesSonido.COMPRAR4
+            };
+
+            String sonidoCompra = sonidosCompra[
+                (int) (Math.random() * sonidosCompra.length)
+            ];
+
+            this.sonido.playEfecto(sonidoCompra);
+        }
+	}
+
+	public void reiniciar() {
 		mapaMundi.reiniciarTodasLasCiudades();
 		persistencia.GestorDeInicio.guardarSesion(this);
 	}
+
+
+    /**
+     * Implementado con las meditaciones, suma puntaje al total acumulado del jugador
+     *
+     * PRE: cantidad > 0
+     * POST: puntajeTotal incrementa en cantidad (la persistencia la maneja quien la llama)
+     *
+     * @param cantidad puntos a sumar
+     */
+    public void sumarPuntos(int cantidad){
+        ValidacionesUtiles.validarMayorACero(cantidad,"cantidad");
+        this.puntajeTotal += cantidad;
+    }
+
+
+
+
+
     //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
     //GETTERS REDEFINIDOS -------------------------------------------------------------------------------------
     //GETTERS INICIALIZADOS -----------------------------------------------------------------------------------

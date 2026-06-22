@@ -1,16 +1,15 @@
 package juego.ciudades.reinas.ui;
 
-import juego.ciudades.reinas.Accion;
-import juego.ciudades.reinas.CiudadReinas;
-import juego.ciudades.reinas.Paso;
-import juego.ciudades.reinas.VictoriaListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
+import juego.ciudades.reinas.Accion;
+import juego.ciudades.reinas.CiudadReinas;
+import juego.ciudades.reinas.Paso;
 
 public class TableroPanel extends JPanel{
-    private VictoriaListener victoriaListener;
+    private Runnable victoriaListener;
     
     public static final int CASILLA = 80;  //pixeles por casilla
     public static final int BORDE = 16;
@@ -44,7 +43,7 @@ public class TableroPanel extends JPanel{
      * @param tamanio dimensión del tablero (N x N)
      * @param victoriaListener callback que se ejecuta cuando el jugador gana
      */
-    public TableroPanel(CiudadReinas ciudad, int tamanio, VictoriaListener victoriaListener) {
+    public TableroPanel(CiudadReinas ciudad, int tamanio, Runnable victoriaListener) {
         this.ciudad = ciudad;
         this.recursos = new RecursosGraficos();
         this.tamanio = tamanio;
@@ -170,7 +169,7 @@ public class TableroPanel extends JPanel{
             JOptionPane.showMessageDialog(this, "Ganaste!!!", "Victoria", JOptionPane.INFORMATION_MESSAGE);
 
             if (victoriaListener != null) {
-                victoriaListener.onVictoria();
+                victoriaListener.run();
             }
 
         } else {

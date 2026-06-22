@@ -5,6 +5,7 @@ import juego.ciudades.complejidad.ui.VentanaComplejidad;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 
 public class PartidaComplejidad extends Partida {
 
@@ -13,10 +14,12 @@ public class PartidaComplejidad extends Partida {
 
     /**
      * @param jugador jugador que participa en la partida
+     * @param sonido 
      */
-    public PartidaComplejidad(Jugador jugador) {
+    public PartidaComplejidad(Jugador jugador, Sonido sonido) {
         super("Complejidad Algorítmica", jugador);
         this.ciudad = new CiudadComplejidad();
+        setSonido(sonido);
     }
 
     @Override
@@ -25,6 +28,9 @@ public class PartidaComplejidad extends Partida {
         SwingUtilities.invokeLater(() -> {
             this.ventana = new VentanaComplejidad(this); 
         });
+         if (this.sonido != null) {
+			this.sonido.playMusica(juego.configuracion.ConstantesSonido.COMPLEJIDAD);
+		}
     }
 
     @Override
@@ -35,7 +41,11 @@ public class PartidaComplejidad extends Partida {
             this.ventana.dispose();
             this.ventana = null;
         }
-
+        if (this.sonido != null) {
+			this.sonido.stopMusica();
+			this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		}
+        
         notificarFinalizacion(); 
     }
 

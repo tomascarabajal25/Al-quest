@@ -1,6 +1,8 @@
 package modelos;
 
 import java.util.Objects;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 
@@ -14,6 +16,8 @@ public abstract class Partida {
 	private EstadoDePartida estado;
 	// NUEVO ATRIBUTO PARA EL CALLBACK------------------------------------------------
 	private Runnable onFinalizadoCallback;
+	// Sonido inyectable (compartido entre Partidas)
+	protected Sonido sonido;
 	/**
 	 * nuevo atributo para manejo de skins, por defecto boy
 	 */
@@ -89,6 +93,46 @@ public abstract class Partida {
 	 */
 	public void setOnFinalizadoCallback(Runnable callback) {
 		this.onFinalizadoCallback = callback;
+	}
+
+	/**
+	 * Inyecta la instancia de Sonido a esta partida (puede ser compartida).
+	 * PRE: sonido no debe ser nulo.
+	 */
+	public void setSonido(Sonido sonido) {
+		ValidacionesUtiles.esDistintoDeNull(sonido, "sonido");
+		this.sonido = sonido;
+	}
+
+	/**
+	 * Añade un listener a la ventana para asegurarse de que si el usuario cierra
+	 * la ventana (X) la partida finalice correctamente (detener hilo, parar música,
+	 * notificar al mapa global, etc.).
+	 *
+	 * Se usa desde las clases Partida que crean un JFrame propio.
+	 */
+	protected void attachCloseHandler(javax.swing.JFrame ventana) {
+		if (ventana == null) return;
+		ventana.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					if (estaIniciada()) {
+						finalizar();
+					}
+				} catch (Exception ex) {
+					// No propagamos excepciones en el EDT; imprimimos para depuración.
+					ex.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Devuelve la instancia de Sonido asociada a esta partida (puede ser null).
+	 */
+	public Sonido getSonido() {
+		return this.sonido;
 	}
 
 	/**

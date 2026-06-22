@@ -12,6 +12,7 @@ import juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import juego.configuracion.ConfiguracionDeOrdenamientos;
 import modelos.Jugador;
 import modelos.Partida;
+import modelos.Sonido;
 import modelosVista.Vista;
 import utils.ValidacionesUtiles;
 
@@ -59,9 +60,11 @@ public class PartidaOrdenamientos extends Partida {
      *
      * @param nombreCiudad nombre de la ciudad asociada a esta partida
      * @param jugador      jugador que participa en la partida
+     * @param sonido 
      */
-    public PartidaOrdenamientos(String nombreCiudad, Jugador jugador) {
+    public PartidaOrdenamientos(String nombreCiudad, Jugador jugador, Sonido sonido) {
         super(nombreCiudad, jugador);
+        setSonido(sonido);
         setEstado(EstadoDePartida.Creado);
     }
 
@@ -119,7 +122,8 @@ public class PartidaOrdenamientos extends Partida {
             getJugador(),
             ConfiguracionDeOrdenamientos.COL_INICIO,
             ConfiguracionDeOrdenamientos.FILA_BASE,
-            getRutaSprites()
+            getRutaSprites(),
+            this.sonido
         );
 
         this.minijuego = FabricaMinijuegoOrdenamiento.crear(
@@ -140,9 +144,15 @@ public class PartidaOrdenamientos extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Si el usuario cierra la ventana con la X, llamamos a finalizar() para
+        // detener la música y notificar al mapa global.
+        attachCloseHandler(ventana);
 
         vista.requestFocusInWindow();
         vista.startGameThread();
+         if (this.sonido != null) {
+        	 this.sonido.playMusica(juego.configuracion.ConstantesSonido.ORDENAMIENTO);
+         }
     }
 
     /**
@@ -169,6 +179,10 @@ public class PartidaOrdenamientos extends Partida {
             ventana = null;
         }
 
+         if (this.sonido != null) {
+		 	this.sonido.stopMusica();
+		 	this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+		 }
         notificarFinalizacion();
     }
 

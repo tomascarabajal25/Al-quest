@@ -7,6 +7,7 @@ import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ import modelos.GrafoCiudades;
 import modelos.Jugador;
 import modelos.NodoCiudad;
 import modelos.PartidaGeneral;
+import modelos.Sonido;
+import juego.configuracion.ConstantesSonido;
 import utils.ValidacionesUtiles;
 
 /**
@@ -128,6 +131,26 @@ public class VistaGlobal extends Vista {
     private boolean teclaTiendaConsumed = false;
     
     private boolean teclaReiniciarConsumed = false;
+
+
+    // Meditacion (con la tecla K)
+    /** 
+     * El puntaje por segundo depende del personaje equipado (tecnicamente, depende de la meditacion).
+     * es decir, podemos configurar que el aura newbie otorgue 1000 puntos, ya que los puntos dependen
+     * del personaje, pero no hagamos eso, configuremoslo para que el aura mas de novato, de menos puntos
+     * 
+     * la meditacion activa, via JugadorVista.getPuntosPorSegundoMeditacion() provee el puntaje de ese personaje
+     * para modificar los parametros, siempre al TDA de Meditacion, ahi esta el enum
+     */
+    
+    //Cada cuantos ms meditando se otorga puntaje, por ahora dejarlo en 1000 aunque estaria bueno randomizarlo luego 
+    private static final long INTERVALO_PUNTO_MS = 1000;
+
+    //cooldown para que una pulsacion de K alterne la meditacion una sola vez
+    private boolean teclaMeditarConsumed = false;
+
+    //Timestamp del ultimo punto otorgado por meditar
+    private long ultimoPuntoMeditacion = 0;
     
     
     
@@ -153,10 +176,11 @@ public class VistaGlobal extends Vista {
     public VistaGlobal(String rutaMapa,
                        Jugador jugador,
                        String rutaSprites,
-                       PartidaGeneral partidaGeneral) {
+                       PartidaGeneral partidaGeneral,
+                       Sonido sonido) {
 
         // Delega la inicialización base (tiles, jugadorVista, keyhandler, etc.)
-        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites,new KeyhandlerGlobal());
+        super(rutaMapa, jugador, SPAWN_COL, SPAWN_FILA, rutaSprites, new KeyhandlerGlobal(), sonido);
         ValidacionesUtiles.esDistintoDeNull(partidaGeneral, "la partida no puede ser nula");
         this.partidaGeneral = partidaGeneral;
         System.out.println(partidaGeneral.getMapaMundi().getNodos().size());
@@ -193,7 +217,7 @@ public class VistaGlobal extends Vista {
             teclaEnterConsumed = false;
         }
 
-        if (ciudadCercanaId != -1 && keyhandler.enterPresionado && !teclaEnterConsumed) {
+        if (ciudadCercanaId != -1 && keyhandler.enterPresionado && !teclaEnterConsumed && !getJugadorVista().isMeditando()) {
             teclaEnterConsumed = true;
             procesarEntradaCiudad(ciudadCercanaId);
         }
@@ -219,7 +243,66 @@ public class VistaGlobal extends Vista {
             teclaReiniciarConsumed = true; // Consumimos el pulso
             evaluarYReiniciarJuego();
         }
+
+        //Para meditacion, la  tecla K alterna entre meditar y no meditar
+        if (!khGlobal.getMeditarPressed()){
+            teclaMeditarConsumed =false;
+        }
+
+        if (khGlobal.getMeditarPressed() && !teclaMeditarConsumed){
+            teclaMeditarConsumed =true;
+            alternarMeditacion();
+        }
+
+        //mientras jugador medita, gana puntaje 1 vez por seg
+        if (getJugadorVista().isMeditando()){
+            otorgarPuntosMeditacion();
+        }
        
+    }
+
+    //Meditacion
+    /**
+     * Alterna el estado de Meditacion del jugador con la K
+     * 
+     * POST: Si ya estaba meditando, deja de meditar, persiste la sesion asi no pierde el puntaje que junto
+     *       Si no estaba meditando, intenta arrancar. Si no tiene meditacion en el catalog o en las imagenes,
+     *       no pasa nada y muestra un mensaje flotante avisando que ese personaje no sabe meditar.
+     */
+    public void alternarMeditacion() {
+        JugadorVista jugador = getJugadorVista();
+
+        if (jugador.isMeditando()){
+            jugador.detenerMeditacion();
+            persistencia.GestorDeInicio.guardarSesion(partidaGeneral);
+        } else if (jugador.iniciarMeditacion()){
+            ultimoPuntoMeditacion = System.currentTimeMillis();
+        } else{
+            mostrarMensaje("Este personaje no sabe meditar. ¡Desbloquealos a todos para conocer sus auras!");
+        }
+
+    }
+
+    /**
+     * otorga puntos mientras el jugador esta meditando
+     * 
+     * PRE: el jugador tiene que estar meditando
+     * POST: cada INTERVALO_PUNTO_MS suma al puntaje total los puntos por segundo de la meditacion activa.
+     *       La cantidad son definidos en los parametros en el TDA Meditacion.
+     *       La idea es que solamente persista cuando corte la meditacion y no en cada suma, asi no escribe
+     *       el JSON una vez por seg.
+     */
+    private void otorgarPuntosMeditacion() {
+        long ahora = System.currentTimeMillis();
+
+        if(ahora - ultimoPuntoMeditacion >= INTERVALO_PUNTO_MS){
+            //como dije antes, el puntaje x seg depende de los parametros de la meditacion del pj
+            int puntos = getJugadorVista().getPuntosPorSegundoMeditacion();
+            if(puntos > 0){
+                partidaGeneral.sumarPuntos(puntos);
+            }
+            ultimoPuntoMeditacion = ahora;
+        }
     }
 
 
@@ -304,7 +387,10 @@ public class VistaGlobal extends Vista {
                         getClass().getResourceAsStream("/assets/ciudades/ciudad_" + id + ".bmp")
                     )
                 );
-                iconosCiudad.put(id, img);
+                // FILTRO: Si tu imagen guardada tiene fondo blanco, usa Color.WHITE. Si tiene fondo negro, usa Color.BLACK.
+                BufferedImage imgFiltrada = filtrarColorTransparente(img, Color.BLACK);
+                
+                iconosCiudad.put(id, imgFiltrada);
             } catch (Exception e) {
                 System.out.println("No se encontró ícono para ciudad " + id);
             }
@@ -325,6 +411,8 @@ public class VistaGlobal extends Vista {
         detenerHilo(); 
         
         SwingUtilities.invokeLater(() -> {
+            // reproducir efecto al abrir la tienda (sonido registrado por PartidaGeneral)
+        	reproducirSonidoTienda();
             TiendaSkins tienda = new TiendaSkins(partidaGeneral, this);
             tienda.setVisible(true); 
             
@@ -346,7 +434,17 @@ public class VistaGlobal extends Vista {
         });
     }
     
-    public void reiniciarCiudades() {
+    private void reproducirSonidoTienda() {
+    	if (this.sonido != null) {
+    	    String sonidoTienda = Math.random() < 0.5
+    	            ? ConstantesSonido.TIENDA
+    	            : ConstantesSonido.TIENDA2;
+
+    	    playEfecto(sonidoTienda);
+    	}
+	}
+
+	public void reiniciarCiudades() {
     	if (partidaGeneral.estaTerminado()) {
     		partidaGeneral.reiniciar();
     	}
@@ -550,11 +648,18 @@ public class VistaGlobal extends Vista {
         g2.setColor(new Color(255, 220, 60));
         g2.drawString("AI-QUEST - Los Compiladores -", px + 12, py + 22);
 
-        g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 13));
-        g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() +
-        		"    |    [T] Tienda de Skins    |    [X] Reiniciar Mapa ", px + 12, py + 40);
-        
+        if (getJugadorVista().isMeditando()){
+            //Si esta meditando, informa el estado de la meditacion.
+            g2.setColor(new Color(190, 150, 255));
+            g2.drawString("Puntaje: " + partidaGeneral.getPuntajeTotal() + 
+                            "   |   MEDITANDO  +" + getJugadorVista().getPuntosPorSegundoMeditacion() +
+                             "/seg   • [K] Terminar",px + 12, py + 40);
+        } else {
+            g2.setColor(Color.WHITE);
+            g2.drawString("Puntaje total: " + partidaGeneral.getPuntajeTotal() +
+        		            "       |   [T] Tienda  |    [X] Reiniciar   |   [K] Meditar", px + 12, py + 40);
+        }
         
         // Ciudad cercana
         if (ciudadCercanaId != -1) {
@@ -618,6 +723,32 @@ public class VistaGlobal extends Vista {
         g2.setColor(Color.WHITE);
         g2.drawString(mensajeFlotante, msgX, msgY);
         g2.setComposite(orig);
+    }
+    /**
+     * Toma una BufferedImage y transforma un color específico (por ejemplo, Blanco o Negro) en transparente.
+     */
+    private BufferedImage filtrarColorTransparente(BufferedImage entrada, final Color colorClave) {
+        java.awt.image.RGBImageFilter filtro = new java.awt.image.RGBImageFilter() {
+            public final int targetRGB = colorClave.getRGB() | 0xFF000000;
+
+            @Override
+            public final int filterRGB(int x, int y, int rgb) {
+                if ((rgb | 0xFF000000) == targetRGB) {
+                    return 0x00FFFFFF & rgb; // Hace el píxel 100% transparente
+                }
+                return rgb;
+            }
+        };
+
+        java.awt.image.ImageProducer ip = new java.awt.image.FilteredImageSource(entrada.getSource(), filtro);
+        Image imgAux = java.awt.Toolkit.getDefaultToolkit().createImage(ip);
+
+        BufferedImage salida = new BufferedImage(entrada.getWidth(), entrada.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = salida.createGraphics();
+        g2.drawImage(imgAux, 0, 0, null);
+        g2.dispose();
+
+        return salida;
     }
 
     // ── Getters de soporte ────────────────────────────────────────────────────

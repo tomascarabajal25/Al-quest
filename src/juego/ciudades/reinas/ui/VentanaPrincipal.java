@@ -1,11 +1,11 @@
 package juego.ciudades.reinas.ui;
 
-import juego.ciudades.reinas.PartidaReinas;
-import juego.ciudades.reinas.VictoriaListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+import juego.ciudades.reinas.PartidaReinas;
 
 /**
  * Ventana principal del juego N-Reinas.
@@ -33,13 +34,13 @@ public class VentanaPrincipal extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private JPanel contenedor;
     private TableroPanel tableroPanel;
-    private VictoriaListener victoriaListener;
+    private Runnable victoriaListener;
     private PartidaReinas partida;
 
     /**
      * Constructor actualizado: Recibe la PartidaReinas y el callback de victoria.
      */
-    public VentanaPrincipal(PartidaReinas partida, VictoriaListener victoriaListener) {
+    public VentanaPrincipal(PartidaReinas partida, Runnable victoriaListener) {
         super("N-Reinas");
         this.partida = partida;
         this.victoriaListener = victoriaListener;
@@ -50,6 +51,15 @@ public class VentanaPrincipal extends JFrame{
         mostrarSelectorInicial();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // Asegurar que cerrar la ventana invoque finalizar() en la partida asociada
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (partida != null) {
+                    partida.finalizar();
+                }
+            }
+        });
         pack();
         setLocationRelativeTo(null);
     }

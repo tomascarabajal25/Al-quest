@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Controlador del laberinto.
@@ -86,6 +88,15 @@ public class ControladorLaberinto {
             gestorImagenes =  new GestorImagenes(RUTA_IMAGENES, gestorSprites);
             panelLaberinto = new PanelLaberinto(laberinto, gestorSprites, backtracking);
             ventana = new VentanaLaberinto(panelLaberinto);
+            // Al cerrar la ventana del laberinto, asegurarse de finalizar la partida para detener música/estado
+            ventana.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    if (partida != null) {
+                        partida.finalizar();
+                    }
+                }
+            });
             return true;
         } catch (IOException e) {
             JOptionPane.showMessageDialog(

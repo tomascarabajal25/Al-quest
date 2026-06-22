@@ -5,12 +5,11 @@ import java.util.List;
 import javax.swing.*;
 import juego.ciudades.complejidad.CiudadComplejidad;
 import juego.ciudades.complejidad.PasoTeoremaMaestro;
-import juego.ciudades.reinas.VictoriaListener;
 
 public class PanelComplejidad extends JPanel {
 
     private final CiudadComplejidad ciudad;
-    private final VictoriaListener victoriaListener;
+    private final Runnable victoriaListener;
 
     private List<PasoTeoremaMaestro> pasos;
     private int pasoActual = 0;
@@ -36,7 +35,7 @@ public class PanelComplejidad extends JPanel {
      * @param ciudad referencia a la lógica del juego
      * @param victoriaListener callback que se ejecuta cuando el jugador acierta
      */
-    public PanelComplejidad(CiudadComplejidad ciudad, VictoriaListener victoriaListener) {
+    public PanelComplejidad(CiudadComplejidad ciudad, Runnable victoriaListener) {
         this.ciudad = ciudad;
         this.victoriaListener = victoriaListener;
 
@@ -224,7 +223,7 @@ public class PanelComplejidad extends JPanel {
                     );
 
                     if (victoriaListener != null) {
-                    	victoriaListener.onVictoria();
+                    	victoriaListener.run();
                     	
                     }
 

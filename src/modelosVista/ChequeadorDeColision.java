@@ -12,6 +12,10 @@ public class ChequeadorDeColision {
     //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
     //ATRIBUTOS -----------------------------------------------------------------------------------------------
     private Vista gp = null;
+    // Estado para efectos de proximidad al agua
+    private boolean cercaAgua = false;
+    private long ultimoSonidoAgua = 0L;
+    private static final long AGUA_COOLDOWN_MS = 5000; // 3 segundos entre reproducciones
     //ATRIBUTOS TRANSITORIOS ----------------------------------------------------------------------------------
     //CONSTRUCTORES -------------------------------------------------------------------------------------------
 
@@ -55,7 +59,8 @@ public class ChequeadorDeColision {
         int entityTopRow = entityTopWorldY / this.gp.getTamanio();
         int entityBottomRow = entityBottomWorldY / gp.getTamanio();
 
-        int tileNum1, tileNum2;
+        int tileNum1;
+   	 	int tileNum2;
         Direccion direction = entidad.getDireccion();
 
         switch (direction) {
@@ -95,6 +100,54 @@ public class ChequeadorDeColision {
                     entidad.setColisionOn(true);;
                 }
                 break;
+        }
+    }
+    
+
+    /**
+     * Comprueba si la entidad está cerca de un tile de agua y dispara un efecto sonoro.
+     * Reproduce el sonido una vez al entrar en proximidad y respeta un cooldown para no spamear.
+     *
+     * PRE: entidad no debe ser nulo
+     */
+    public void chequearProximidadAgua(EntidadVista entidad) {
+        ValidacionesUtiles.esDistintoDeNull(entidad, "entidad");
+
+        int worldX = entidad.getWorldX();
+        int worldY = entidad.getWorldY();
+
+        int tileCol = worldX / this.gp.getTamanio();
+        int tileRow = worldY / this.gp.getTamanio();
+
+        boolean encontrada = false;
+
+        // comprobamos un radio de 1 tile alrededor de la entidad
+        for (int c = tileCol - 1; c <= tileCol + 1 && !encontrada; c++) {
+            for (int r = tileRow - 1; r <= tileRow + 1; r++) {
+                if (c < 0 || r < 0 || c >= this.gp.getColumnasDelMundo() || r >= this.gp.getFilasDelMundo()) continue;
+                int tileNum = this.gp.construccionesM.mapaDeConstruccionesNum[c][r];
+                // En este proyecto el tile de agua se cargó como índice 2 en ManejadorDeConstruccion
+                if (tileNum == 2) {
+                    encontrada = true;
+                    break;
+                }
+            }
+        }
+
+        long ahora = System.currentTimeMillis();
+
+        if (encontrada) {
+            if (!cercaAgua || (ahora - ultimoSonidoAgua) > AGUA_COOLDOWN_MS) {
+                try {
+                    this.gp.playEfecto(juego.configuracion.ConstantesSonido.AGUA);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ultimoSonidoAgua = ahora;
+            }
+            cercaAgua = true;
+        } else {
+            cercaAgua = false;
         }
     }
 

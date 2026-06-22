@@ -1,6 +1,7 @@
 package juego.ciudades.batalla.controller;
 
 import modelos.Partida;
+import modelos.Sonido;
 import modelos.Jugador;
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.batalla.model.*;
@@ -16,8 +17,9 @@ public class PartidaBatalla extends Partida {
 	private BatallaUI ui;
 	private boolean victoria;
 
-	public PartidaBatalla(String nombre, Jugador jugador) {
+	public PartidaBatalla(String nombre, Jugador jugador, Sonido sonido) {
 		super(nombre, jugador);
+		setSonido(sonido);
 	}
 
 	@Override
@@ -41,10 +43,24 @@ public class PartidaBatalla extends Partida {
 
 		ui = new BatallaUI(heroe, enemigos);
 
+		// Ensure closing the battle window triggers partida.finalizar() so music and state are cleaned up
+		ui.setOnClose(() -> {
+			try {
+				finalizar();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+		// Si el usuario cierra la ventana con la X, llamar a finalizar() para detener la musica
+		ui.setOnClose(this::finalizar);
+
 		new Thread(() -> {
 			victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
 			SwingUtilities.invokeLater(this::finalizar);
 		}, "batalla-game-loop").start();
+		if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.BATALLA);
+        }
 	}
 
 	@Override
@@ -54,6 +70,10 @@ public class PartidaBatalla extends Partida {
 			ui.cerrar();
 		}
 		setEstado(EstadoDePartida.Creado);
+		if (this.sonido != null) {
+            this.sonido.stopMusica();
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+        }
 		notificarFinalizacion();
 	}
 

@@ -2,6 +2,7 @@ package juego.ciudades.ciudad_3_laberinto.src;
 
 import juego.ciudades.ordenamientos.EstadoDePartida;
 import modelos.Partida;
+import modelos.Sonido;
 import modelos.Jugador;
 
 public class PartidaLaberinto extends Partida {
@@ -11,9 +12,11 @@ public class PartidaLaberinto extends Partida {
 	/**
      * Crea el constructor de partida
      * Este se ocupara de ejecutar y finalizar la ciudad laberinto dentro del juego
+	 * @param sonido 
      */
-    public PartidaLaberinto(Jugador jugador) {
+    public PartidaLaberinto(Jugador jugador, Sonido sonido) {
         super("Laberinto", jugador);
+        setSonido(sonido);
     }
     
     /**
@@ -23,6 +26,10 @@ public class PartidaLaberinto extends Partida {
     public void iniciar() {
         setEstado(EstadoDePartida.Iniciado);
         this.controlador =new ControladorLaberinto(this);
+        if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.LABERINTO);
+        }
+        
     }
 
     /**
@@ -35,6 +42,10 @@ public class PartidaLaberinto extends Partida {
         if (this.controlador != null) {
             this.controlador.cerrarVentana();
             this.controlador = null; 
+        }
+        if (this.sonido != null) {
+            this.sonido.stopMusica();
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
         }
         notificarFinalizacion();
     }
