@@ -37,6 +37,7 @@ public class PartidaReinas extends Partida {
         // Instanciamos la ventana pasándole ESTA partida (this) y el listener de victoria
         this.ventana = new VentanaPrincipal(this, () -> {
             System.out.println("¡Ciudad completada!"); //print temporal
+            setPuntaje(300*tamanio);
             finalizar();
         });
 
@@ -63,7 +64,6 @@ public class PartidaReinas extends Partida {
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
-        setPuntaje(300*tamanio);
 
         if (this.ventana != null) {
             this.ventana.dispose();
