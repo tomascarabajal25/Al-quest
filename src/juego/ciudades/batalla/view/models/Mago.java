@@ -1,8 +1,8 @@
 package juego.ciudades.batalla.view.models;
 
-public class Vikingo extends Enemy {
-	public Vikingo() {
-		super("VIKINGO", 140, 65, 30, 40, "/juego/ciudades/batalla/view/sprites/vikingo.png");
+public class Mago extends Enemy {
+	public Mago() {
+		super("MAGO", 140, 65, 30, 40, "/juego/ciudades/batalla/view/sprites/vikingo.png");
 	}
 
 	@Override
