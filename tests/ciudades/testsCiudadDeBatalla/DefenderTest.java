@@ -11,13 +11,11 @@ public class DefenderTest {
 
 	private Heroe heroe;
 	private Enemigo enemigo;
-	private HabilidadEspecial habilidadNinguna;
 
 	@BeforeEach
 	public void setUp() {
-		habilidadNinguna = (personaje, objetivo) -> {};
-		heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
-		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		heroe = new Heroe("Heroe", 100, 20, 10);
+		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5);
 	}
 
 	@Test

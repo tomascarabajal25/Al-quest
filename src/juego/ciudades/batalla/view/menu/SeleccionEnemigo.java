@@ -7,6 +7,7 @@ import juego.ciudades.batalla.model.Accion;
 import juego.ciudades.batalla.model.Combatiente;
 import juego.ciudades.batalla.model.Enemigo;
 import juego.ciudades.batalla.model.acciones.Atacar;
+import juego.ciudades.batalla.view.BatallaLayout;
 
 public class SeleccionEnemigo implements EstadoMenu {
     private static final Color MENU_BG          = new Color( 30,  30,  50, 235);
@@ -58,11 +59,11 @@ public class SeleccionEnemigo implements EstadoMenu {
         enemyIndices.clear();
         enemyRects.clear();
 
-        int heroStatusX = 290 + (128 - 280) / 2;
-        int mx = heroStatusX + 280 + 10;
+        int heroStatusX = BatallaLayout.HERO_X + (BatallaLayout.HERO_SIZE - BatallaLayout.HERO_STATUS_W) / 2;
+        int mx = heroStatusX + BatallaLayout.HERO_STATUS_W + 10;
         int mw = w - mx - 16;
-        int my = 282;
-        int mh = 68;
+        int my = BatallaLayout.HUD_Y;
+        int mh = BatallaLayout.HUD_H;
 
         Composite orig = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.88f));

@@ -1,8 +1,8 @@
 package juego.ciudades.batalla.view.models;
 
 public class Mago extends Enemy {
-	public Mago() {
-		super("MAGO", 140, 65, 30, 40, "/juego/ciudades/batalla/view/sprites/vikingo.png");
+	public Mago(int dificultad) {
+		super("MAGO", 140, 65, 30, 40, "/juego/ciudades/batalla/view/sprites/mago" + dificultad + ".png");
 	}
 
 	@Override

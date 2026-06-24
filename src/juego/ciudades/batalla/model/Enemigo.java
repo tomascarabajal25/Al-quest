@@ -10,10 +10,9 @@ public class Enemigo extends Combatiente {
 			TipoEnemigo tipo,
 			int vida,
 			int fuerza,
-			int armadura,
-			HabilidadEspecial habilidad
+			int armadura
 	) {
-		super(nombre, vida, fuerza, armadura, habilidad);
+		super(nombre, vida, fuerza, armadura);
 		this.tipo = tipo;
 	}
 

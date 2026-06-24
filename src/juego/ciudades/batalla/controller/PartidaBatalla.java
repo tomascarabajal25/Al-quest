@@ -28,12 +28,12 @@ public class PartidaBatalla extends Partida {
 
 		final int dificultad = pedirDificultad();
 		if (dificultad < 1) {
+			setPuntaje(0);
 			finalizar();
 			return;
 		}
 
-		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
-		Heroe heroe = Heroe.desdeJugador(getJugador(), 10, 40, 5, ninguna);
+		Heroe heroe = Heroe.desdeJugador(getJugador(), 10, 40, 5);
 		final List<Enemigo> enemigos = ManagerBatalla.generarEnemigos(dificultad);
 		Cola<Combatiente> turnos = new Cola<>();
 		turnos.add(heroe);
@@ -41,22 +41,19 @@ public class PartidaBatalla extends Partida {
 			turnos.addAll(enemigos);
 		}
 
-		ui = new BatallaUI(heroe, enemigos);
-
-		// Ensure closing the battle window triggers partida.finalizar() so music and state are cleaned up
-		ui.setOnClose(() -> {
-			try {
-				finalizar();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		});
-		// Si el usuario cierra la ventana con la X, llamar a finalizar() para detener la musica
+		ui = new BatallaUI(heroe, enemigos, getRutaSprites(), dificultad);
 		ui.setOnClose(this::finalizar);
 
 		new Thread(() -> {
-			victoria = new Batalla(ui, turnos, enemigos, dificultad).empezar();
-			SwingUtilities.invokeLater(this::finalizar);
+			ResultadoBatalla resultado = new Batalla(ui, turnos, enemigos, dificultad).empezar();
+			SwingUtilities.invokeLater(() -> {
+				if (ui == null) return;
+				ui.mostrarResultado(resultado, () -> {
+					victoria = resultado.esVictoria();
+					setPuntaje(resultado.getPuntaje());
+					finalizar();
+				});
+			});
 		}, "batalla-game-loop").start();
 		if (this.sonido != null) {
             this.sonido.playMusica(juego.configuracion.ConstantesSonido.BATALLA);
@@ -65,9 +62,9 @@ public class PartidaBatalla extends Partida {
 
 	@Override
 	public void finalizar() {
-		setPuntaje(victoria ? 100 : 0);
 		if (ui != null) {
 			ui.cerrar();
+			ui = null;
 		}
 		setEstado(EstadoDePartida.Creado);
 		if (this.sonido != null) {

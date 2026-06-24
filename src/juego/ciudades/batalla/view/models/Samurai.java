@@ -1,8 +1,8 @@
 package juego.ciudades.batalla.view.models;
 
 public class Samurai extends Enemy {
-	public Samurai() {
-		super("SAMURAI", 110, 55, 45, 60, "/juego/ciudades/batalla/view/sprites/samurai.png");
+	public Samurai(int dificultad) {
+		super("SAMURAI", 110, 55, 45, 60, "/juego/ciudades/batalla/view/sprites/samurai" + dificultad + ".png");
 	}
 
 	@Override

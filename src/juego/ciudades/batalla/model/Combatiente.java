@@ -11,7 +11,6 @@ public abstract class Combatiente {
 	private int vida;
 	private int fuerza;
 	private int armadura;
-	private final HabilidadEspecial habilidad;
 	private final Map<EstadoCombatiente, EstadoActivo> estados;
 
 //CONSTRUCTORES -------------------------------------------------------------------------------------------
@@ -19,14 +18,12 @@ public abstract class Combatiente {
 			String nombre,
 			int vida,
 			int fuerza,
-			int armadura,
-			HabilidadEspecial habilidad
+			int armadura
 	) {
 		this.nombre = nombre;
 		setVida(vida);
 		setFuerza(fuerza);
 		setArmadura(armadura);
-		this.habilidad = habilidad;
 		this.estados = new HashMap<>();
 	}
 
@@ -40,6 +37,7 @@ public abstract class Combatiente {
 	public String getNombre() { return nombre; }
 
 	public Map<EstadoCombatiente, EstadoActivo> getEstados() { return estados; }
+
 
 	//SETTERS SIMPLES -----------------------------------------------------------------------------------------
 	public void setVida(int vida) {
@@ -63,9 +61,6 @@ public abstract class Combatiente {
 	}
 
 //METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
-	public void usarHabilidadEspecial(Combatiente enemigo) {
-		this.habilidad.activar(this, enemigo);
-	}
 //METODOS DE CLASE ----------------------------------------------------------------------------------------
 
 //METODOS GENERALES ---------------------------------------------------------------------------------------

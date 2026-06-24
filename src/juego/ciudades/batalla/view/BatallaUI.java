@@ -3,6 +3,7 @@ package juego.ciudades.batalla.view;
 import juego.ciudades.batalla.model.Accion;
 import juego.ciudades.batalla.model.Combatiente;
 import juego.ciudades.batalla.model.Enemigo;
+import juego.ciudades.batalla.model.ResultadoBatalla;
 import juego.ciudades.batalla.view.animacion.Animacion;
 import juego.ciudades.batalla.view.animacion.AnimacionManager;
 import juego.ciudades.batalla.view.menu.EstadoMenu;
@@ -15,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,25 +46,28 @@ public class BatallaUI {
 	private static final Color MENU_DISABLED  = new Color(100, 100, 120);
 	private static final Color SELECTED_BORDER= new Color(255, 220,  40);
 
+	private Runnable onCloseCallback;
+
 	private static final Font FONT_HUD      = new Font("Monospaced", Font.BOLD, 13);
 	private static final Font FONT_HP_NUM   = new Font("Monospaced", Font.BOLD, 14);
 	private static final Font FONT_DIALOG   = new Font("Monospaced", Font.PLAIN, 15);
 	private static final Font FONT_MENU     = new Font("Monospaced", Font.BOLD, 16);
 	private static final Font FONT_MENU_SM  = new Font("Monospaced", Font.BOLD, 12);
+	private static final Font FONT_TITLE    = new Font("Monospaced", Font.BOLD, 28);
 
-	private static final int HERO_X        = 290;
-	private static final int HERO_Y        = 155;
-	private static final int HERO_SIZE     = 128;
-	private static final int HERO_STATUS_W = 280;
-	private static final int ENEMY_Y       = 55;
-	private static final int ENEMY_SIZE    = 109;
-	private static final int ENEMY_GAP     = 18;
+	private static final int HERO_X        = BatallaLayout.HERO_X;
+	private static final int HERO_Y        = BatallaLayout.HERO_Y;
+	private static final int HERO_SIZE     = BatallaLayout.HERO_SIZE;
+	private static final int HERO_STATUS_W = BatallaLayout.HERO_STATUS_W;
+	private static final int ENEMY_Y       = BatallaLayout.ENEMY_Y;
+	private static final int ENEMY_SIZE    = BatallaLayout.ENEMY_SIZE;
+	private static final int ENEMY_GAP     = BatallaLayout.ENEMY_GAP;
 	private static final int STATUS_BOX_Y  = 17;
 	private static final int STATUS_BOX_W  = 96;
 	private static final int STATUS_BOX_H  = 34;
-	private static final int HUD_Y         = 282;
-	private static final int HUD_H         = 68;
-	private static final int DIALOG_Y      = 354;
+	private static final int HUD_Y         = BatallaLayout.HUD_Y;
+	private static final int HUD_H         = BatallaLayout.HUD_H;
+	private static final int DIALOG_Y      = BatallaLayout.DIALOG_Y;
 
 	private final Combatiente heroe;
 	private final List<Enemigo> enemigos;
@@ -70,6 +76,7 @@ public class BatallaUI {
 	private final int[] vidaInicialEnemigos;
 	private final int vidaInicialHeroe;
 	private volatile int enemigoActivoIdx;
+	private final String rutaSprites;
 
 	private JFrame frame;
 	private BattleCanvas canvas;
@@ -83,19 +90,22 @@ public class BatallaUI {
 	private final BlockingQueue<Accion> colaAcciones = new LinkedBlockingQueue<>();
 	private EstadoMenu estadoMenu;
 	private volatile String indicadorAccion;
+	private volatile ResultadoBatalla resultado;
+	private volatile Runnable onResultadoCerrado;
 
-	public BatallaUI(Combatiente heroe, List<Enemigo> enemigos) {
+	public BatallaUI(Combatiente heroe, List<Enemigo> enemigos, String rutaSprites, int dificultad) {
 		this.heroe = heroe;
 		this.enemigos = enemigos;
 		this.vidaInicialHeroe = heroe.getVida();
 		this.vidaInicialEnemigos = new int[enemigos != null ? enemigos.size() : 0];
 		this.viewEnemies = new ArrayList<>();
 		this.enemigoActivoIdx = (enemigos != null && !enemigos.isEmpty()) ? 0 : 0;
+		this.rutaSprites = rutaSprites;
 
 		if (enemigos != null) {
 			for (int i = 0; i < enemigos.size(); i++) {
 				vidaInicialEnemigos[i] = enemigos.get(i).getVida();
-				viewEnemies.add(EnemyFactory.fromEnemigo(enemigos.get(i)));
+				viewEnemies.add(EnemyFactory.fromEnemigo(enemigos.get(i), dificultad));
 			}
 		}
 
@@ -113,10 +123,23 @@ public class BatallaUI {
 	private void createAndShowGUI() {
 		frame = new JFrame("Batalla");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		if (onCloseCallback != null) {
+			frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					if (animTimer != null) animTimer.stop();
+					try {
+						onCloseCallback.run();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			});
+		}
 		frame.setLayout(new BorderLayout());
 
 		canvas = new BattleCanvas();
-		canvas.setPreferredSize(new Dimension(736, 414));
+		canvas.setPreferredSize(new Dimension(BatallaLayout.CANVAS_W, BatallaLayout.CANVAS_H));
 		canvas.setFocusable(true);
 		frame.add(canvas, BorderLayout.CENTER);
 
@@ -138,6 +161,17 @@ public class BatallaUI {
 	}
 
 	private void handleClick(int mx, int my) {
+		if (resultado != null) {
+			ResultadoBatalla resultadoActual = resultado;
+			Runnable callback = onResultadoCerrado;
+			resultado = null;
+			onResultadoCerrado = null;
+			if (resultadoActual != null && callback != null) {
+				callback.run();
+			}
+			return;
+		}
+
 		if (estadoMenu == null) return;
 		Accion accion = estadoMenu.onClick(mx, my);
 		if (accion != null) {
@@ -211,6 +245,39 @@ public class BatallaUI {
 		}
 	}
 
+	/**
+	 * Muestra el overlay final de victoria/derrota y ejecuta un callback al primer click.
+	 *
+	 * @param resultadoBatalla resultado final de la batalla
+	 * @param onCerrado callback a ejecutar al cerrar el overlay
+	 */
+	public void mostrarResultado(ResultadoBatalla resultadoBatalla, Runnable onCerrado) {
+		this.resultado = resultadoBatalla;
+		this.onResultadoCerrado = onCerrado;
+		setEstadoMenu(null);
+		if (canvas != null) {
+			canvas.repaint();
+		}
+	}
+
+	/**
+	 * Register a callback that will be invoked when the user closes the window
+	 * using the window manager (pressing the X). The callback should call
+	 * partida.finalizar() or equivalent cleanup logic.
+	 */
+	public void setOnClose(Runnable onClose) {
+		this.onCloseCallback = onClose;
+		if (frame != null && onClose != null) {
+			frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					if (animTimer != null) animTimer.stop();
+					try { onClose.run(); } catch (Exception ex) { ex.printStackTrace(); }
+				}
+			});
+		}
+	}
+
 	private void tick() {
 		double heroTarget = heroe.getVida();
 		displayedHeroHp += (heroTarget - displayedHeroHp) * 0.15;
@@ -264,12 +331,13 @@ public class BatallaUI {
 	}
 
 	private void loadHeroSprite() {
+		String path = (rutaSprites != null ? rutaSprites : "/assets/jugador/boy") + "_up_1.bmp";
 		try {
-			var stream = getClass().getResourceAsStream("/assets/jugador/boy_up_1.bmp");
+			var stream = getClass().getResourceAsStream(path);
 			if (stream != null) {
 				heroSprite = ImageIO.read(stream);
 			} else {
-				System.err.println("Could not load hero sprite at /assets/jugador/boy_up_1.bmp");
+				System.err.println("Could not load hero sprite at " + path);
 			}
 		} catch (IOException e) {
 			System.err.println("Could not load hero sprite: " + e.getMessage());
@@ -318,6 +386,9 @@ public class BatallaUI {
 			if (estadoMenu != null) {
 				estadoMenu.dibujar(g2d, w, h);
 			}
+			if (resultado != null) {
+				drawResultadoOverlay(g2d, w, h);
+			}
 		}
 
 		private void drawBattleBackground(Graphics2D g2d, int w, int h) {
@@ -344,7 +415,7 @@ public class BatallaUI {
 
 			int totalCount = viewEnemies.size();
 			int totalW = totalCount * ENEMY_SIZE + (totalCount - 1) * ENEMY_GAP;
-			int startX = (w - totalW) / 2;
+			int startX = (w - totalW) / 2 + BatallaLayout.ENEMY_OFFSET_X;
 
 			int drawn = 0;
 			for (int i = 0; i < viewEnemies.size(); i++) {
@@ -392,7 +463,7 @@ public class BatallaUI {
 
 			int totalCount = enemigos.size();
 			int totalW = totalCount * ENEMY_SIZE + (totalCount - 1) * ENEMY_GAP;
-			int startX = (w - totalW) / 2;
+			int startX = (w - totalW) / 2 + BatallaLayout.ENEMY_OFFSET_X;
 
 			FontMetrics fmName = g2d.getFontMetrics(FONT_MENU_SM);
 			FontMetrics fmHp = g2d.getFontMetrics(FONT_MENU_SM);
@@ -571,6 +642,53 @@ public class BatallaUI {
 				g2d.setFont(FONT_MENU_SM);
 				g2d.setColor(new Color(255, 255, 255, 120));
 				g2d.drawString("▶", dx + dw - 22, dy + dh - 10);
+			}
+		}
+
+		private void drawResultadoOverlay(Graphics2D g2d, int w, int h) {
+			ResultadoBatalla r = resultado;
+			if (r == null) return;
+
+			Composite orig = g2d.getComposite();
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.70f));
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(0, 0, w, h);
+			g2d.setComposite(orig);
+
+			int panelW = 390;
+			int panelH = 220;
+			int px = (w - panelW) / 2;
+			int py = (h - panelH) / 2;
+
+			g2d.setColor(PANEL_BG);
+			g2d.fillRoundRect(px, py, panelW, panelH, 12, 12);
+			g2d.setColor(PANEL_BORDER);
+			g2d.setStroke(new BasicStroke(3));
+			g2d.drawRoundRect(px, py, panelW, panelH, 12, 12);
+			g2d.setStroke(new BasicStroke(1));
+
+			String titulo = r.esVictoria() ? "¡VICTORIA!" : "DERROTA";
+			Color colorTitulo = r.esVictoria() ? new Color(255, 215, 0) : new Color(220, 20, 60);
+			g2d.setFont(FONT_TITLE);
+			g2d.setColor(colorTitulo);
+			FontMetrics fmTitle = g2d.getFontMetrics();
+			int tx = px + (panelW - fmTitle.stringWidth(titulo)) / 2;
+			g2d.drawString(titulo, tx, py + 52);
+
+			g2d.setFont(FONT_DIALOG);
+			g2d.setColor(PANEL_TEXT);
+			String estadistica1 = "Enemigos derrotados: " + r.getEnemigosEliminados() + "/" + r.getEnemigosTotales();
+			String estadistica2 = "Puntaje obtenido: " + r.getPuntaje();
+			FontMetrics fmStats = g2d.getFontMetrics();
+			g2d.drawString(estadistica1, px + (panelW - fmStats.stringWidth(estadistica1)) / 2, py + 102);
+			g2d.drawString(estadistica2, px + (panelW - fmStats.stringWidth(estadistica2)) / 2, py + 132);
+
+			boolean mostrarHint = ((System.currentTimeMillis() / 400) % 2) == 0;
+			if (mostrarHint) {
+				String hint = "Click para volver al mapa";
+				g2d.setFont(FONT_MENU_SM);
+				FontMetrics fmHint = g2d.getFontMetrics();
+				g2d.drawString(hint, px + (panelW - fmHint.stringWidth(hint)) / 2, py + panelH - 24);
 			}
 		}
 

@@ -12,13 +12,11 @@ public class AtacarTest {
 
 	private Heroe heroe;
 	private Enemigo enemigo;
-	private HabilidadEspecial habilidadNinguna;
 
 	@BeforeEach
 	public void setUp() {
-		habilidadNinguna = (personaje, objetivo) -> {};
-		heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
-		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		heroe = new Heroe("Heroe", 100, 20, 10);
+		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5);
 	}
 
 	@Test
@@ -31,7 +29,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarDanioMinimoEsUno() {
-		Enemigo tanque = new Enemigo("TANQUE", TipoEnemigo.CABALLERO, 200, 10, 100, habilidadNinguna);
+		Enemigo tanque = new Enemigo("TANQUE", TipoEnemigo.CABALLERO, 200, 10, 100);
 		Atacar atacar = new Atacar(heroe, tanque);
 		atacar.ejecutar();
 		assertEquals(199, tanque.getVida());
@@ -39,7 +37,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarConFuerzaMenorQueArmadura() {
-		Enemigo fortachon = new Enemigo("FUERTE", TipoEnemigo.CABALLERO, 200, 5, 50, habilidadNinguna);
+		Enemigo fortachon = new Enemigo("FUERTE", TipoEnemigo.CABALLERO, 200, 5, 50);
 		Atacar atacar = new Atacar(heroe, fortachon);
 		atacar.ejecutar();
 		assertEquals(199, fortachon.getVida());
@@ -47,7 +45,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarNoReduceVidaBajoCero() {
-		Enemigo debil = new Enemigo("DEBIL", TipoEnemigo.DUENDE, 10, 5, 2, habilidadNinguna);
+		Enemigo debil = new Enemigo("DEBIL", TipoEnemigo.DUENDE, 10, 5, 2);
 		Atacar atacar = new Atacar(heroe, debil);
 		atacar.ejecutar();
 		assertEquals(0, debil.getVida());
@@ -56,7 +54,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarConArmaduraCero() {
-		Enemigo sinArmadura = new Enemigo("SINARM", TipoEnemigo.DUENDE, 80, 10, 0, habilidadNinguna);
+		Enemigo sinArmadura = new Enemigo("SINARM", TipoEnemigo.DUENDE, 80, 10, 0);
 		Atacar atacar = new Atacar(heroe, sinArmadura);
 		atacar.ejecutar();
 		assertEquals(60, sinArmadura.getVida());
@@ -64,7 +62,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarMataAlObjetivo() {
-		Enemigo debil = new Enemigo("DEBIL", TipoEnemigo.DUENDE, 10, 5, 2, habilidadNinguna);
+		Enemigo debil = new Enemigo("DEBIL", TipoEnemigo.DUENDE, 10, 5, 2);
 		int danio = heroe.getFuerza() - debil.getArmadura();
 		assertTrue(danio >= 10, "El danio debe ser suficiente para matar");
 		Atacar atacar = new Atacar(heroe, debil);
@@ -122,8 +120,8 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarConMismaFuerzaYArmadura() {
-		Heroe h = new Heroe("H", 100, 10, 10, habilidadNinguna);
-		Enemigo e = new Enemigo("E", TipoEnemigo.NINJA, 80, 10, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 10, 10);
+		Enemigo e = new Enemigo("E", TipoEnemigo.NINJA, 80, 10, 10);
 		Atacar atacar = new Atacar(h, e);
 		atacar.ejecutar();
 		assertEquals(79, e.getVida());
@@ -141,7 +139,7 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarContraDefensorConArmaduraCero() {
-		Enemigo sinArmadura = new Enemigo("SINARM", TipoEnemigo.DUENDE, 80, 10, 0, habilidadNinguna);
+		Enemigo sinArmadura = new Enemigo("SINARM", TipoEnemigo.DUENDE, 80, 10, 0);
 		sinArmadura.setEstado(new Defendiendo(sinArmadura));
 		Atacar atacar = new Atacar(heroe, sinArmadura);
 		atacar.ejecutar();
@@ -152,8 +150,8 @@ public class AtacarTest {
 
 	@Test
 	public void testAtacarContraDefensorNoBajaDanioBajoCero() {
-		Heroe debil = new Heroe("DEBIL", 100, 5, 0, habilidadNinguna);
-		Enemigo tanque = new Enemigo("TANQUE", TipoEnemigo.CABALLERO, 200, 10, 100, habilidadNinguna);
+		Heroe debil = new Heroe("DEBIL", 100, 5, 0);
+		Enemigo tanque = new Enemigo("TANQUE", TipoEnemigo.CABALLERO, 200, 10, 100);
 		tanque.setEstado(new Defendiendo(tanque));
 		Atacar atacar = new Atacar(debil, tanque);
 		atacar.ejecutar();

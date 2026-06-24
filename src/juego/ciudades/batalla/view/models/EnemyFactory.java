@@ -4,17 +4,17 @@ import juego.ciudades.batalla.model.Enemigo;
 
 public class EnemyFactory {
 
-	public static Enemy fromEnemigo(Enemigo e) {
+	public static Enemy fromEnemigo(Enemigo e, int dificultad) {
 		Enemy view;
 		switch (e.getTipo()) {
-			case NINJA:     view = new Ninja();     break;
-			case SAMURAI:   view = new Samurai();   break;
-			case VIKINGO:  view = new Vikingo();   break;
-			case CABALLERO: view = new Caballero(); break;
-			case BUFON:     view = new Bufon();     break;
-			case DUENDE:    view = new Duende();    break;
-			case ROBOT:     view = new Robot();      break;
-			default:        view = new Ninja();     break;
+			case NINJA:     view = new Ninja(dificultad);     break;
+			case SAMURAI:   view = new Samurai(dificultad);   break;
+			case MAGO:  view = new Mago(dificultad);   break;
+			case CABALLERO: view = new Caballero(dificultad); break;
+			case BUFON:     view = new Bufon(dificultad);     break;
+			case DUENDE:    view = new Duende(dificultad);    break;
+			case ROBOT:     view = new Robot(dificultad);      break;
+			default:        view = new Ninja(dificultad);     break;
 		}
 		view.setHp(e.getVida());
 		view.setMaxHp(e.getVida());

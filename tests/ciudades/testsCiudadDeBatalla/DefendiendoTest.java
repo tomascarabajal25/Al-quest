@@ -7,25 +7,23 @@ import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class DefendiendoTest {
 
-	private HabilidadEspecial habilidadNinguna = (p, o) -> {};
-
 	@Test
 	public void testConstructorAsignaTipoCorrecto() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertEquals(EstadoCombatiente.DEFENDIENDO, d.getEstado());
 	}
 
 	@Test
 	public void testConstructorAsignaTurnosRestantesUno() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertEquals(1, d.getTurnosRestantes());
 	}
 
 	@Test
 	public void testAplicarNoModificaVida() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		int vidaAntes = h.getVida();
 		Defendiendo d = new Defendiendo(h);
 		d.aplicar();
@@ -34,7 +32,7 @@ public class DefendiendoTest {
 
 	@Test
 	public void testAplicarNoModificaTurnosRestantes() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		int turnosAntes = d.getTurnosRestantes();
 		d.aplicar();
@@ -43,7 +41,7 @@ public class DefendiendoTest {
 
 	@Test
 	public void testOrigenYDestinoSonElMismo() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertEquals(h, d.getOrigen());
 		assertEquals(h, d.getDestino());
@@ -51,14 +49,14 @@ public class DefendiendoTest {
 
 	@Test
 	public void testTerminadoEsFalseInicialmente() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertFalse(d.terminado());
 	}
 
 	@Test
 	public void testEsEstadoActivo() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertTrue(d instanceof EstadoActivo);
 	}

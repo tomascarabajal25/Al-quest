@@ -11,7 +11,7 @@ public class PruebaCiudad5 {
         Jugador jugador = new Jugador("Tester");
 
         // ── Lanzar partida ────────────────────────────────────────────────
-        PartidaBusqueda partida = new PartidaBusqueda("Nivel de Prueba", jugador);
+        PartidaBusqueda partida = new PartidaBusqueda("Nivel de Prueba", jugador, null);
         partida.iniciar();
 
         System.out.println("--- PRUEBA FINALIZADA ---");

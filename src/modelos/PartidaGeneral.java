@@ -163,26 +163,26 @@ public class PartidaGeneral extends Partida {
         NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
                 new PartidaComplejidad(jugador,this.sonido));
 
-        mapaMundi.agregarCiudad(ciudad1);
-        mapaMundi.agregarCiudad(ciudad2);
-        mapaMundi.agregarCiudad(ciudad3);
-        mapaMundi.agregarCiudad(ciudad4);
-        mapaMundi.agregarCiudad(ciudad5);
-        mapaMundi.agregarCiudad(ciudad6);
-        mapaMundi.agregarCiudad(ciudad7);
-        mapaMundi.agregarCiudad(ciudad8);
-        mapaMundi.agregarCiudad(ciudad9);
-        mapaMundi.agregarCiudad(ciudad10);
-
-        mapaMundi.conectarCiudades(1, 2);
-        mapaMundi.conectarCiudades(2, 3);
-        mapaMundi.conectarCiudades(3, 4);
-        mapaMundi.conectarCiudades(4, 5);
-        mapaMundi.conectarCiudades(5, 6);
-        mapaMundi.conectarCiudades(6, 7);
-        mapaMundi.conectarCiudades(7, 8);
-        mapaMundi.conectarCiudades(8, 9);
-        mapaMundi.conectarCiudades(9, 10);
+//        mapaMundi.agregarCiudad(ciudad1);
+//        mapaMundi.agregarCiudad(ciudad2);
+//        mapaMundi.agregarCiudad(ciudad3);
+//        mapaMundi.agregarCiudad(ciudad4);
+//        mapaMundi.agregarCiudad(ciudad5);
+//        mapaMundi.agregarCiudad(ciudad6);
+//        mapaMundi.agregarCiudad(ciudad7);
+//        mapaMundi.agregarCiudad(ciudad8);
+          mapaMundi.agregarCiudad(ciudad9);
+//        mapaMundi.agregarCiudad(ciudad10);
+//
+//        mapaMundi.conectarCiudades(1, 2);
+//        mapaMundi.conectarCiudades(2, 3);
+//        mapaMundi.conectarCiudades(3, 4);
+//        mapaMundi.conectarCiudades(4, 5);
+//        mapaMundi.conectarCiudades(5, 6);
+//        mapaMundi.conectarCiudades(6, 7);
+//        mapaMundi.conectarCiudades(7, 8);
+//        mapaMundi.conectarCiudades(8, 9);
+//        mapaMundi.conectarCiudades(9, 10);
     }
 
     /**

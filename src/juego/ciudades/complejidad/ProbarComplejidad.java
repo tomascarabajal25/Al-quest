@@ -6,7 +6,7 @@ import modelos.Jugador;
 
 public class ProbarComplejidad {
     public static void main(String[] args) {
-        PartidaComplejidad partida = new PartidaComplejidad(new Jugador(""));
+        PartidaComplejidad partida = new PartidaComplejidad(new Jugador(""), null);
         partida.iniciar();
     }
 }

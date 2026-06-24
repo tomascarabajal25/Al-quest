@@ -25,7 +25,10 @@ public class Batalla {
 
 	private static final long TURN_END_DELAY_MS = 600;
 
-	public boolean empezar() {
+	public ResultadoBatalla empezar() {
+		int totalEnemigos = enemigos.size();
+
+		// heroe siempre arrancara primero, asi que lo guardamos mirando al primero en la cola
 		Combatiente heroe = turnos.peek();
 
 		while (
@@ -33,66 +36,25 @@ public class Batalla {
 				heroe.estaVivo() &&
 				!enemigos.isEmpty()
 		) {
-			Combatiente actual = turnos.remove();
+			Combatiente actual = turnos.remove(); // desencolamos
 
 			if (!actual.estaVivo()) {
 				enemigos.remove(actual);
 				continue;
 			}
 
-			List<ManagerBatalla.EstadoAplicado> estadoDescs = ManagerBatalla.aplicarEstados(actual);
-			for (ManagerBatalla.EstadoAplicado ea : estadoDescs) {
-				ui.actualizarEstado(ea.getDescripcion(), actual);
-				Animacion glow = new GlowAnimacion(ea.getColor());
-				ui.registrarAnimacion(glow);
-				while (!glow.terminada()) {
-					try { Thread.sleep(16); } catch (InterruptedException e) { break; }
-				}
-			}
+			// aplicamos estados + ui al pj actual (veneno, sangrado, etc.)
+			List<ManagerBatalla.EstadoAplicado> estadoDescripciones = ManagerBatalla.aplicarEstados(actual);
+			ManagerBatalla.registrarAnimaciones(estadoDescripciones, ui, actual);
 
-			Pila<Accion> acciones = new Pila<>();
-
+			Pila<Accion> acciones;
 			if (actual instanceof Heroe) {
-				try {
-					for (int i = 0; i < dificultad; i++) {
-						ui.mostrarIndicadorAccion(i + 1);
-						ui.mostrarMenuPrincipal();
-						Accion accion = ui.solicitarAccion();
-						ui.setEstadoMenu(null);
-						if (accion == null) break; // PASAR
-						acciones.push(accion);
-					}
-					ui.setEstadoMenu(null);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-					break;
-				}
+				acciones = ManagerBatalla.elegirAccionesHeroe(dificultad, ui);
 			} else {
-				acciones = ManagerBatalla.elegirAccionEnemigo((Enemigo) actual, heroe);
+				acciones = ManagerBatalla.elegirAccionesEnemigo((Enemigo) actual, heroe);
 				ui.setEstadoMenu(null);
 			}
-
-			if (!acciones.isEmpty()) {
-				for (Accion a : acciones) {
-					a.ejecutar();
-
-					ActionUi actionUi = a.getUi();
-					String msg = actionUi.getMensaje();
-					ui.actualizarEstado(msg, actual);
-
-					try { Thread.sleep(16); } catch (InterruptedException e) { break; }
-
-					Animacion anim = actionUi.crearAnimacion(a.getCombatiente(), a.getObjetivo());
-					ui.registrarAnimacion(anim);
-					while (!anim.terminada()) {
-						try { Thread.sleep(16); } catch (InterruptedException e) { break; }
-					}
-
-					enemigos.removeIf(e -> !e.estaVivo());
-				}
-			} else {
-				ui.actualizarEstado(null, actual);
-			}
+			ManagerBatalla.ejecutarAcciones(acciones, ui, enemigos, actual);
 
 			enemigos.removeIf(e -> !e.estaVivo());
 
@@ -105,8 +67,25 @@ public class Batalla {
 				}
 			}
 
+			// volvemos a encolar al pj que ejecuto su turno
 			turnos.offer(actual);
 		}
-		return heroe != null && heroe.estaVivo();
+		boolean victoria = heroe != null && heroe.estaVivo();
+		int eliminados = totalEnemigos - enemigos.size();
+		int puntaje = victoria ? puntajePorDificultad(dificultad) : 0;
+		return new ResultadoBatalla(victoria, eliminados, totalEnemigos, puntaje);
+	}
+
+	private static int puntajePorDificultad(int dificultad) {
+		switch (dificultad) {
+			case 1:
+				return 1000;
+			case 2:
+				return 5000;
+			case 3:
+				return 15000;
+			default:
+				return 0;
+		}
 	}
 }

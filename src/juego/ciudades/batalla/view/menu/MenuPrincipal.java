@@ -6,6 +6,7 @@ import juego.ciudades.batalla.model.Accion;
 import juego.ciudades.batalla.model.Combatiente;
 import juego.ciudades.batalla.model.Enemigo;
 import juego.ciudades.batalla.model.acciones.Defender;
+import juego.ciudades.batalla.view.BatallaLayout;
 
 public class MenuPrincipal implements EstadoMenu {
     private static final Color MENU_BG        = new Color( 30,  30,  50, 235);
@@ -14,11 +15,11 @@ public class MenuPrincipal implements EstadoMenu {
     private static final Font  FONT_MENU      = new Font("Monospaced", Font.BOLD, 16);
     private static final Font  FONT_MENU_SM   = new Font("Monospaced", Font.BOLD, 12);
 
-    private static final int HUD_Y = 282;
-    private static final int HUD_H = 68;
-    private static final int HERO_X = 290;
-    private static final int HERO_SIZE = 128;
-    private static final int HERO_STATUS_W = 280;
+    private static final int HUD_Y = BatallaLayout.HUD_Y;
+    private static final int HUD_H = BatallaLayout.HUD_H;
+    private static final int HERO_X = BatallaLayout.HERO_X;
+    private static final int HERO_SIZE = BatallaLayout.HERO_SIZE;
+    private static final int HERO_STATUS_W = BatallaLayout.HERO_STATUS_W;
 
     private final Combatiente heroe;
     private final List<Enemigo> enemigos;

@@ -7,11 +7,9 @@ import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class EstadoActivoTest {
 
-	private HabilidadEspecial habilidadNinguna = (p, o) -> {};
-
 	@Test
 	public void testConstructorInicializaCampos() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertEquals(EstadoCombatiente.DEFENDIENDO, d.getEstado());
 		assertEquals(h, d.getOrigen());
@@ -21,7 +19,7 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testAplicarPorDefectoNoCambiaTurnos() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		int turnosAntes = d.getTurnosRestantes();
 		d.aplicar();
@@ -30,14 +28,14 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testTerminadoEsFalseCuandoTurnosPositivo() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		assertFalse(d.terminado());
 	}
 
 	@Test
 	public void testApilarSumaTurnosRestantes() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d1 = new Defendiendo(h);
 		Defendiendo d2 = new Defendiendo(h);
 		d1.apilar(d2);
@@ -46,7 +44,7 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testApilarNoModificaOrigenNiDestino() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d1 = new Defendiendo(h);
 		Defendiendo d2 = new Defendiendo(h);
 		d1.apilar(d2);
@@ -56,7 +54,7 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testAplicarPorDefectoNoCambiaVida() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		int vidaAntes = h.getVida();
 		Defendiendo d = new Defendiendo(h);
 		d.aplicar();
@@ -65,7 +63,7 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testTerminadoEsTrueCuandoTurnosCero() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d = new Defendiendo(h);
 		// Manually expire the state by calling apilar with a state that triggers removal
 		// Alternative: call aplicar enough times to decrement turnos, but Defendiendo.aplicar is no-op
@@ -80,7 +78,7 @@ public class EstadoActivoTest {
 
 	@Test
 	public void testApilarTresVecesSumaCorrectamente() {
-		Heroe h = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe h = new Heroe("H", 100, 20, 10);
 		Defendiendo d1 = new Defendiendo(h);
 		d1.apilar(new Defendiendo(h));
 		d1.apilar(new Defendiendo(h));

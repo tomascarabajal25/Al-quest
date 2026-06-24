@@ -1,20 +1,81 @@
 package juego.ciudades.batalla.controller;
 
-import estructuras.cola.Cola;
 import estructuras.listas.ListaSimplementeEnlazada;
 import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.model.acciones.Atacar;
+import juego.ciudades.batalla.model.acciones.Defender;
+import juego.ciudades.batalla.model.acciones.HabilidadAccion;
+import juego.ciudades.batalla.model.estados.Defendiendo;
+import juego.ciudades.batalla.model.estados.Envenenado;
+import juego.ciudades.batalla.view.BatallaUI;
+import juego.ciudades.batalla.view.accion.ActionUi;
+import juego.ciudades.batalla.view.animacion.Animacion;
+import juego.ciudades.batalla.view.animacion.GlowAnimacion;
 
 import java.awt.Color;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class ManagerBatalla {
 
-	public static void ejecutarAcciones(Pila<Accion> pilaAcciones) {
-		while (!pilaAcciones.isEmpty()) {
-			Accion accion = pilaAcciones.pop();
-			accion.ejecutar();
+	private static final Map<TipoEnemigo, BiFunction<Enemigo, Combatiente, Accion>> HABILIDADES;
+
+	static {
+		HABILIDADES = new HashMap<>();
+		HABILIDADES.put(TipoEnemigo.NINJA, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Cortar",
+			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 6))));
+		HABILIDADES.put(TipoEnemigo.SAMURAI, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Golpe Fuerte",
+			(actor, objetivo) -> {
+				int danio = Math.max(1, (int) (actor.getFuerza() * 1.5) - objetivo.getArmadura());
+				objetivo.setVida(Math.max(0, objetivo.getVida() - danio));
+			}));
+		HABILIDADES.put(TipoEnemigo.MAGO, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Veneno",
+			(actor, objetivo) -> objetivo.setEstado(new Envenenado(objetivo))));
+		HABILIDADES.put(TipoEnemigo.CABALLERO, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Golpe Escudo",
+			(actor, objetivo) -> {
+				int danio = Math.max(1, (int) (actor.getFuerza() * 0.5) - objetivo.getArmadura());
+				objetivo.setVida(Math.max(0, objetivo.getVida() - danio));
+				actor.setEstado(new Defendiendo(actor));
+			}));
+		HABILIDADES.put(TipoEnemigo.BUFON, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Travesura",
+			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - (3 + new Random().nextInt(8))))));
+		HABILIDADES.put(TipoEnemigo.DUENDE, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Robo de Vida",
+			(actor, objetivo) -> {
+				objetivo.setVida(Math.max(0, objetivo.getVida() - 5));
+				actor.setVida(actor.getVida() + 5);
+			}));
+		HABILIDADES.put(TipoEnemigo.ROBOT, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Rayo Láser",
+			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 7))));
+	}
+
+	public static void ejecutarAcciones(Pila<Accion> acciones, BatallaUI ui, List<Enemigo> enemigos, Combatiente actual) {
+		if (acciones.isEmpty()) {
+			ui.actualizarEstado(null, actual);
+		}
+
+		for (Accion a : acciones) {
+			a.ejecutar();
+			ActionUi actionUi = a.getUi();
+			String msg = actionUi.getMensaje();
+			ui.actualizarEstado(msg, actual);
+
+			try {
+				Thread.sleep(16);
+			} catch (InterruptedException e) {
+				break;
+			}
+
+			Animacion animacion = actionUi.crearAnimacion(a.getCombatiente(), a.getObjetivo());
+			ui.registrarAnimacion(animacion);
+			while (!animacion.terminada()) {
+				try {
+					Thread.sleep(16);
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
+			enemigos.removeIf(e -> !e.estaVivo());
 		}
 	}
 
@@ -46,16 +107,6 @@ public class ManagerBatalla {
 				return null;
 		}
 
-		HabilidadEspecial ninguna = (personaje, objetivo) -> {};
-		HabilidadEspecial danioBonus = (personaje, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 5));
-		HabilidadEspecial veneno = (personaje, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 3));
-		HabilidadEspecial roboDeVida = (personaje, objetivo) -> {
-			int danio = 4;
-			objetivo.setVida(Math.max(0, objetivo.getVida() - danio));
-			personaje.setVida(personaje.getVida() + danio);
-		};
-		HabilidadEspecial[] habilidades = {danioBonus, veneno, roboDeVida};
-
 		List<TipoEnemigo> tiposDisponibles = new ArrayList<>();
 		Collections.addAll(tiposDisponibles, TipoEnemigo.values());
 		Collections.shuffle(tiposDisponibles, rand);
@@ -68,50 +119,80 @@ public class ManagerBatalla {
 			int fuerza = rand.nextInt(rango[3] - rango[2] + 1) + rango[2];
 			int armadura = rand.nextInt(rango[5] - rango[4] + 1) + rango[4];
 
-			HabilidadEspecial habilidad = conHabilidad
-					? habilidades[rand.nextInt(habilidades.length)]
-					: ninguna;
 
-			lista.add(new Enemigo(nombre, tipo, vida, fuerza, armadura, habilidad));
+			lista.add(new Enemigo(nombre, tipo, vida, fuerza, armadura));
 		}
 
 		return lista;
 	}
 
-	static public boolean todosVivos(List<Enemigo> enemigos) {
-		if (enemigos == null) { return false; }
-		return enemigos.stream().anyMatch(c -> !c.estaVivo());
+//	static public boolean todosVivos(List<Enemigo> enemigos) {
+//		if (enemigos == null) { return false; }
+//		return enemigos.stream().anyMatch(c -> !c.estaVivo());
+//	}
+
+	public static Pila<Accion> elegirAccionesHeroe(int dificultad, BatallaUI ui) {
+		Pila<Accion> acciones = new Pila<>();
+		try {
+			for (int i = 0; i < dificultad; i++) {
+				ui.mostrarIndicadorAccion(i + 1);
+				ui.mostrarMenuPrincipal();
+				Accion accion = ui.solicitarAccion();
+				ui.setEstadoMenu(null);
+				if (accion == null) break; // PASAR
+				acciones.push(accion);
+			}
+			ui.setEstadoMenu(null);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		return acciones;
 	}
 
-	public static Pila<Accion> elegirAccionEnemigo(Enemigo enemigo, Combatiente heroe) {
+	public static Pila<Accion> elegirAccionesEnemigo(Enemigo enemigo, Combatiente heroe) {
 		Pila<Accion> acciones = new Pila<>();
-		acciones.push(new Atacar(enemigo, heroe));
+		Random rand = new Random();
+		int roll = rand.nextInt(100);
+
+		Accion accion;
+		if (roll < 60) {
+			accion = new Atacar(enemigo, heroe);
+		} else if (roll < 90) {
+			accion = new Defender(enemigo, enemigo);
+		} else {
+			accion = HABILIDADES.get(enemigo.getTipo()).apply(enemigo, heroe);
+		}
+
+		acciones.push(accion);
 		return acciones;
 	}
 
 	public static List<EstadoAplicado> aplicarEstados(Combatiente combatiente) {
 		Map<EstadoCombatiente, EstadoActivo> estados = combatiente.getEstados();
-		List<EstadoAplicado> resultados = new ArrayList<>();
+		List<EstadoAplicado> aplicados = new ArrayList<>();
 		if (estados.isEmpty()) {
-			return resultados;
+			return aplicados;
 		}
 
 		List<EstadoCombatiente> terminados = new ArrayList<>();
-		estados.values().forEach(e -> {
-			e.aplicar();
-			e.usado();
-			String desc = e.getUi().getDescripcion(e);
-			if (desc != null && !desc.isEmpty()) {
-				resultados.add(new EstadoAplicado(desc, e.getUi().getBadgeColor()));
+		
+		for (EstadoActivo activo : estados.values()) {
+			if (activo.terminado()) {
+				terminados.add(activo.getEstado());
+				continue;
 			}
-			if (e.terminado()) {
-				terminados.add(e.getEstado());
+			activo.aplicar();
+			activo.usado();
+			String descripcion = activo.getUi().getDescripcion(activo);
+			if (descripcion != null && !descripcion.isEmpty()) {
+				aplicados.add(new EstadoAplicado(descripcion, activo.getUi().getBadgeColor()));
 			}
-		});
+		};
+		
 		for (EstadoCombatiente estado : terminados) {
 			estados.remove(estado);
 		}
-		return resultados;
+		return aplicados;
 	}
 
 	public static class EstadoAplicado {
@@ -125,5 +206,16 @@ public class ManagerBatalla {
 
 		public String getDescripcion() { return descripcion; }
 		public Color getColor() { return color; }
+	}
+
+	public static void registrarAnimaciones(List<ManagerBatalla.EstadoAplicado> estadoDescripciones, BatallaUI ui, Combatiente actual) {
+		for (ManagerBatalla.EstadoAplicado estadoAplicado : estadoDescripciones) {
+			ui.actualizarEstado(estadoAplicado.getDescripcion(), actual);
+			Animacion glow = new GlowAnimacion(estadoAplicado.getColor());
+			ui.registrarAnimacion(glow);
+			while (!glow.terminada()) {
+				try { Thread.sleep(16); } catch (InterruptedException e) { break; }
+			}
+		}
 	}
 }

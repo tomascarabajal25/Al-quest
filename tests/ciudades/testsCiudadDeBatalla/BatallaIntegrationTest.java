@@ -16,19 +16,17 @@ import org.junit.jupiter.api.Test;
 
 public class BatallaIntegrationTest {
 
-	private HabilidadEspecial habilidadNinguna = (personaje, objetivo) -> {};
-
 	@Test
 	public void testHeroeDesdeJugadorPreservesName() {
 		Jugador jugador = new Jugador("Aventurero");
-		Heroe heroe = Heroe.desdeJugador(jugador, 100, 20, 10, habilidadNinguna);
+		Heroe heroe = Heroe.desdeJugador(jugador, 100, 20, 10);
 		assertEquals("Aventurero", heroe.getNombre());
 	}
 
 	@Test
 	public void testHeroeDesdeJugadorPreservesStats() {
 		Jugador jugador = new Jugador("TestHero");
-		Heroe heroe = Heroe.desdeJugador(jugador, 150, 30, 15, habilidadNinguna);
+		Heroe heroe = Heroe.desdeJugador(jugador, 150, 30, 15);
 		assertEquals(150, heroe.getVida());
 		assertEquals(30, heroe.getFuerza());
 		assertEquals(15, heroe.getArmadura());
@@ -37,14 +35,14 @@ public class BatallaIntegrationTest {
 	@Test
 	public void testHeroeDesdeJugadorIsCombatiente() {
 		Jugador jugador = new Jugador("X");
-		Heroe heroe = Heroe.desdeJugador(jugador, 100, 10, 5, habilidadNinguna);
+		Heroe heroe = Heroe.desdeJugador(jugador, 100, 10, 5);
 		assertTrue(heroe instanceof Combatiente);
 	}
 
 	@Test
 	public void testActionMessageFormatAtacar() {
-		Heroe heroe = new Heroe("H", 100, 20, 10, habilidadNinguna);
-		Enemigo enemigo = new Enemigo("Ninja", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 100, 20, 10);
+		Enemigo enemigo = new Enemigo("Ninja", TipoEnemigo.NINJA, 80, 15, 5);
 
 		String msg = heroe.getNombre() + " atacó a " + enemigo.getNombre() + "!";
 		assertTrue(msg.contains("atacó a"), "Attack message should contain 'atacó a'");
@@ -54,22 +52,22 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testActionMessageFormatDefender() {
-		Heroe heroe = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 100, 20, 10);
 		String msg = heroe.getNombre() + " usó defensa!";
 		assertTrue(msg.contains("usó"), "Defend message should contain 'usó'");
 	}
 
 	@Test
 	public void testEnemyRemovalAfterFaint() {
-		Enemigo e1 = new Enemigo("E1", TipoEnemigo.NINJA, 10, 5, 0, habilidadNinguna);
-		Enemigo e2 = new Enemigo("E2", TipoEnemigo.SAMURAI, 80, 15, 5, habilidadNinguna);
+		Enemigo e1 = new Enemigo("E1", TipoEnemigo.NINJA, 10, 5, 0);
+		Enemigo e2 = new Enemigo("E2", TipoEnemigo.SAMURAI, 80, 15, 5);
 
 		List<Enemigo> enemigos = new ArrayList<>();
 		enemigos.add(e1);
 		enemigos.add(e2);
 
 		Atacar attack = new Atacar(
-				new Heroe("H", 100, 50, 10, habilidadNinguna), e1);
+				new Heroe("H", 100, 50, 10), e1);
 		attack.ejecutar();
 
 		assertFalse(e1.estaVivo(), "E1 should be dead");
@@ -82,8 +80,8 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testColaTurnosBasicOperation() {
-		Heroe heroe = new Heroe("H", 100, 20, 10, habilidadNinguna);
-		Enemigo e1 = new Enemigo("E1", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 100, 20, 10);
+		Enemigo e1 = new Enemigo("E1", TipoEnemigo.NINJA, 80, 15, 5);
 
 		Cola<Combatiente> turnos = new Cola<>();
 		turnos.offer(heroe);
@@ -96,8 +94,8 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testHeroeReceivesDamageAndSurvives() {
-		Heroe heroe = Heroe.desdeJugador(new Jugador("Hero"), 100, 40, 10, habilidadNinguna);
-		Enemigo e = new Enemigo("E", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		Heroe heroe = Heroe.desdeJugador(new Jugador("Hero"), 100, 40, 10);
+		Enemigo e = new Enemigo("E", TipoEnemigo.NINJA, 80, 15, 5);
 
 		Atacar attack = new Atacar(e, heroe);
 		attack.ejecutar();
@@ -122,8 +120,8 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testBatallaEmpezarHeroeWinsWhenEnemiesKill() {
-		Heroe heroe = new Heroe("H", 200, 50, 20, habilidadNinguna);
-		Enemigo enemigo = new Enemigo("E", TipoEnemigo.NINJA, 20, 5, 0, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 200, 50, 20);
+		Enemigo enemigo = new Enemigo("E", TipoEnemigo.NINJA, 20, 5, 0);
 
 		Cola<Combatiente> turnos = new Cola<>();
 		turnos.offer(heroe);
@@ -135,7 +133,7 @@ public class BatallaIntegrationTest {
 		Pila<Accion> heroActions = new Pila<>();
 		heroActions.push(new Atacar(heroe, enemigo));
 
-		Pila<Accion> enemyActions = ManagerBatalla.elegirAccionEnemigo(enemigo, heroe);
+		Pila<Accion> enemyActions = ManagerBatalla.elegirAccionesEnemigo(enemigo, heroe);
 
 		assertNotNull(heroActions);
 		assertFalse(heroActions.isEmpty());
@@ -144,9 +142,9 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testAtacarKillSequenceRemovesFromList() {
-		Heroe heroe = new Heroe("H", 200, 50, 10, habilidadNinguna);
-		Enemigo e1 = new Enemigo("E1", TipoEnemigo.DUENDE, 10, 5, 0, habilidadNinguna);
-		Enemigo e2 = new Enemigo("E2", TipoEnemigo.NINJA, 100, 15, 5, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 200, 50, 10);
+		Enemigo e1 = new Enemigo("E1", TipoEnemigo.DUENDE, 10, 5, 0);
+		Enemigo e2 = new Enemigo("E2", TipoEnemigo.NINJA, 100, 15, 5);
 
 		List<Enemigo> enemigos = new ArrayList<>();
 		enemigos.add(e1);
@@ -162,8 +160,8 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testMultipleActionsInOneTurn() {
-		Heroe heroe = new Heroe("H", 100, 20, 10, habilidadNinguna);
-		Enemigo enemigo = new Enemigo("E", TipoEnemigo.NINJA, 200, 15, 5, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 100, 20, 10);
+		Enemigo enemigo = new Enemigo("E", TipoEnemigo.NINJA, 200, 15, 5);
 
 		Pila<Accion> acciones = new Pila<>();
 		acciones.push(new Atacar(heroe, enemigo));
@@ -177,8 +175,8 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testActionLogMessageFormat() {
-		Heroe heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
-		Enemigo enemigo = new Enemigo("Ninja", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		Heroe heroe = new Heroe("Heroe", 100, 20, 10);
+		Enemigo enemigo = new Enemigo("Ninja", TipoEnemigo.NINJA, 80, 15, 5);
 
 		Accion atacar = new Atacar(heroe, enemigo);
 
@@ -196,7 +194,7 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testDefendActionLogFormat() {
-		Heroe heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
+		Heroe heroe = new Heroe("Heroe", 100, 20, 10);
 
 		Accion defender = new Defender(heroe, heroe);
 
@@ -220,7 +218,7 @@ public class BatallaIntegrationTest {
 
 	@Test
 	public void testShakeTargetDetection() {
-		Heroe heroe = new Heroe("H", 100, 20, 10, habilidadNinguna);
+		Heroe heroe = new Heroe("H", 100, 20, 10);
 		String atkMsg = heroe.getNombre() + " atacó a E!";
 		boolean isHeroAttacking = atkMsg.startsWith(heroe.getNombre());
 		assertTrue(isHeroAttacking, "Hero attacking should shake enemy");
