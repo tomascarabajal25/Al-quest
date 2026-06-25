@@ -26,26 +26,30 @@ public class Batalla {
 	private static final long TURN_END_DELAY_MS = 600;
 
 	public ResultadoBatalla empezar() {
-		int totalEnemigos = enemigos.size();
-
 		// heroe siempre arrancara primero, asi que lo guardamos mirando al primero en la cola
 		Combatiente heroe = turnos.peek();
 
 		while (
 				heroe != null &&
 				heroe.estaVivo() &&
-				!enemigos.isEmpty()
+				enemigos.stream().anyMatch(enemigo -> enemigo.estaVivo())
 		) {
 			Combatiente actual = turnos.remove(); // desencolamos
 
 			if (!actual.estaVivo()) {
-				enemigos.remove(actual);
+				// queda eliminado de la cola de turnos
 				continue;
 			}
 
 			// aplicamos estados + ui al pj actual (veneno, sangrado, etc.)
 			List<ManagerBatalla.EstadoAplicado> estadoDescripciones = ManagerBatalla.aplicarEstados(actual);
 			ManagerBatalla.registrarAnimaciones(estadoDescripciones, ui, actual);
+
+			// volvemos a chequear pues puede matarlo un estado
+			if (!actual.estaVivo()) {
+				// queda eliminado de la cola de turnos
+				continue;
+			}
 
 			Pila<Accion> acciones;
 			if (actual instanceof Heroe) {
@@ -55,8 +59,6 @@ public class Batalla {
 				ui.setEstadoMenu(null);
 			}
 			ManagerBatalla.ejecutarAcciones(acciones, ui, enemigos, actual);
-
-			enemigos.removeIf(e -> !e.estaVivo());
 
 			if (!enemigos.isEmpty() && heroe.estaVivo()) {
 				try {
@@ -70,10 +72,14 @@ public class Batalla {
 			// volvemos a encolar al pj que ejecuto su turno
 			turnos.offer(actual);
 		}
+
+		int eliminados = 0;
+		for (Enemigo enemigo :  enemigos) {
+			if (!enemigo.estaVivo()) {eliminados++;}
+		}
 		boolean victoria = heroe != null && heroe.estaVivo();
-		int eliminados = totalEnemigos - enemigos.size();
 		int puntaje = victoria ? puntajePorDificultad(dificultad) : 0;
-		return new ResultadoBatalla(victoria, eliminados, totalEnemigos, puntaje);
+		return new ResultadoBatalla(victoria, eliminados, enemigos.size(), puntaje);
 	}
 
 	private static int puntajePorDificultad(int dificultad) {

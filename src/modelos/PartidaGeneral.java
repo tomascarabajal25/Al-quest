@@ -263,6 +263,13 @@ public class PartidaGeneral extends Partida {
                 ? ciudadActual.getId()
                 : GrafoCiudades.ID_CIUDAD_INICIAL;
 
+        NodoCiudad nodoBatalla = mapaMundi.obtenerCiudad(9);
+        Vector<Integer> difsBatalla = new Vector<>();
+        if (nodoBatalla != null && nodoBatalla.getPartidaAsociada() instanceof PartidaBatalla) {
+            PartidaBatalla pb = (PartidaBatalla) nodoBatalla.getPartidaAsociada();
+            difsBatalla.addAll(pb.getDificultadesGanadas());
+        }
+
         return new DatosGuardado(
                 getJugador().getNombre(),
                 puntajeTotal,
@@ -270,7 +277,8 @@ public class PartidaGeneral extends Partida {
                 mapaMundi.obtenerIdsCompletadas(),
                 mapaMundi.obtenerIdsAccesibles(),
                 skinActual,
-                new Vector<>(skinsDesbloqueadas));
+                new Vector<>(skinsDesbloqueadas),
+                difsBatalla);
     }
 
     /**
@@ -300,6 +308,13 @@ public class PartidaGeneral extends Partida {
             restaurarSkinsDesbloqueadas(datos.getSkinsDesbloqueadas());
         }
 
+        if (datos.getDificultadesBatallaGanadas() != null) {
+            NodoCiudad nodoBatalla = mapaMundi.obtenerCiudad(9);
+            if (nodoBatalla != null && nodoBatalla.getPartidaAsociada() instanceof PartidaBatalla) {
+                PartidaBatalla pb = (PartidaBatalla) nodoBatalla.getPartidaAsociada();
+                pb.restaurarDificultades(datos.getDificultadesBatallaGanadas());
+            }
+        }
 
         restaurarSkinActual(datos.getSkinActual());
     }
@@ -349,6 +364,10 @@ public class PartidaGeneral extends Partida {
         ciudadActual = nodo;
 
         nodo.getPartidaAsociada().setRutaSprites(skinActual);
+        Partida partida = nodo.getPartidaAsociada();
+        if (partida instanceof PartidaBatalla) {
+            ((PartidaBatalla) partida).setPuntajeTotal(puntajeTotal);
+        }
 
         vistaGlobal.detenerHilo();
         ventanaGlobal.setVisible(false);

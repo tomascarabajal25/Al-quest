@@ -41,6 +41,8 @@ public abstract class EstadoActivo {
 
 	public void defendido() {}
 
+	public void remover() {}
+
 	public void usado() {
 		this.turnosRestantes--;
 	}

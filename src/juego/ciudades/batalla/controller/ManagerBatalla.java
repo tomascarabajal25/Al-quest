@@ -3,11 +3,8 @@ package juego.ciudades.batalla.controller;
 import estructuras.listas.ListaSimplementeEnlazada;
 import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
-import juego.ciudades.batalla.model.acciones.Atacar;
-import juego.ciudades.batalla.model.acciones.Defender;
-import juego.ciudades.batalla.model.acciones.HabilidadAccion;
-import juego.ciudades.batalla.model.estados.Defendiendo;
-import juego.ciudades.batalla.model.estados.Envenenado;
+import juego.ciudades.batalla.model.acciones.*;
+import juego.ciudades.batalla.model.estados.*;
 import juego.ciudades.batalla.view.BatallaUI;
 import juego.ciudades.batalla.view.accion.ActionUi;
 import juego.ciudades.batalla.view.animacion.Animacion;
@@ -15,39 +12,8 @@ import juego.ciudades.batalla.view.animacion.GlowAnimacion;
 
 import java.awt.Color;
 import java.util.*;
-import java.util.function.BiFunction;
 
 public class ManagerBatalla {
-
-	private static final Map<TipoEnemigo, BiFunction<Enemigo, Combatiente, Accion>> HABILIDADES;
-
-	static {
-		HABILIDADES = new HashMap<>();
-		HABILIDADES.put(TipoEnemigo.NINJA, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Cortar",
-			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 6))));
-		HABILIDADES.put(TipoEnemigo.SAMURAI, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Golpe Fuerte",
-			(actor, objetivo) -> {
-				int danio = Math.max(1, (int) (actor.getFuerza() * 1.5) - objetivo.getArmadura());
-				objetivo.setVida(Math.max(0, objetivo.getVida() - danio));
-			}));
-		HABILIDADES.put(TipoEnemigo.MAGO, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Veneno",
-			(actor, objetivo) -> objetivo.setEstado(new Envenenado(objetivo))));
-		HABILIDADES.put(TipoEnemigo.CABALLERO, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Golpe Escudo",
-			(actor, objetivo) -> {
-				int danio = Math.max(1, (int) (actor.getFuerza() * 0.5) - objetivo.getArmadura());
-				objetivo.setVida(Math.max(0, objetivo.getVida() - danio));
-				actor.setEstado(new Defendiendo(actor));
-			}));
-		HABILIDADES.put(TipoEnemigo.BUFON, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Travesura",
-			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - (3 + new Random().nextInt(8))))));
-		HABILIDADES.put(TipoEnemigo.DUENDE, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Robo de Vida",
-			(actor, objetivo) -> {
-				objetivo.setVida(Math.max(0, objetivo.getVida() - 5));
-				actor.setVida(actor.getVida() + 5);
-			}));
-		HABILIDADES.put(TipoEnemigo.ROBOT, (enemigo, heroe) -> new HabilidadAccion(enemigo, heroe, "Rayo Láser",
-			(actor, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 7))));
-	}
 
 	public static void ejecutarAcciones(Pila<Accion> acciones, BatallaUI ui, List<Enemigo> enemigos, Combatiente actual) {
 		if (acciones.isEmpty()) {
@@ -75,7 +41,6 @@ public class ManagerBatalla {
 					break;
 				}
 			}
-			enemigos.removeIf(e -> !e.estaVivo());
 		}
 	}
 
@@ -160,11 +125,24 @@ public class ManagerBatalla {
 		} else if (roll < 90) {
 			accion = new Defender(enemigo, enemigo);
 		} else {
-			accion = HABILIDADES.get(enemigo.getTipo()).apply(enemigo, heroe);
+			accion = crearHabilidad(enemigo.getTipo(), enemigo, heroe);
 		}
 
 		acciones.push(accion);
 		return acciones;
+	}
+
+	private static Accion crearHabilidad(TipoEnemigo tipo, Enemigo enemigo, Combatiente heroe) {
+		switch (tipo) {
+			case NINJA:     return new GolpeVenenoso(enemigo, heroe);
+			case MAGO:      return new CortePreciso(enemigo, heroe);
+			case VIKINGO:   return new FuriaNordica(enemigo);
+			case CABALLERO: return new EscudoSagrado(enemigo);
+			case BUFON:     return new TrucoSucio(enemigo, heroe);
+			case DUENDE:    return new RoboDeVida(enemigo, heroe);
+			case ROBOT:     return new Sobrecarga(enemigo, heroe);
+			default:        return new Atacar(enemigo, heroe);
+		}
 	}
 
 	public static List<EstadoAplicado> aplicarEstados(Combatiente combatiente) {
@@ -174,11 +152,11 @@ public class ManagerBatalla {
 			return aplicados;
 		}
 
-		List<EstadoCombatiente> terminados = new ArrayList<>();
+		List<EstadoActivo> terminados = new ArrayList<>();
 		
 		for (EstadoActivo activo : estados.values()) {
 			if (activo.terminado()) {
-				terminados.add(activo.getEstado());
+				terminados.add(activo);
 				continue;
 			}
 			activo.aplicar();
@@ -189,8 +167,9 @@ public class ManagerBatalla {
 			}
 		};
 		
-		for (EstadoCombatiente estado : terminados) {
-			estados.remove(estado);
+		for (EstadoActivo activo : terminados) {
+			activo.remover();
+			estados.remove(activo.getEstado());
 		}
 		return aplicados;
 	}

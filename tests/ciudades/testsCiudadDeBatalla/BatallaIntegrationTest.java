@@ -60,7 +60,7 @@ public class BatallaIntegrationTest {
 	@Test
 	public void testEnemyRemovalAfterFaint() {
 		Enemigo e1 = new Enemigo("E1", TipoEnemigo.NINJA, 10, 5, 0);
-		Enemigo e2 = new Enemigo("E2", TipoEnemigo.SAMURAI, 80, 15, 5);
+		Enemigo e2 = new Enemigo("E2", TipoEnemigo.VIKINGO, 80, 15, 5);
 
 		List<Enemigo> enemigos = new ArrayList<>();
 		enemigos.add(e1);
@@ -162,12 +162,14 @@ public class BatallaIntegrationTest {
 	public void testMultipleActionsInOneTurn() {
 		Heroe heroe = new Heroe("H", 100, 20, 10);
 		Enemigo enemigo = new Enemigo("E", TipoEnemigo.NINJA, 200, 15, 5);
+		List<Enemigo> enemigos = new ArrayList<>();
+		enemigos.add(enemigo);
 
 		Pila<Accion> acciones = new Pila<>();
 		acciones.push(new Atacar(heroe, enemigo));
 		acciones.push(new Defender(heroe, heroe));
 
-		ManagerBatalla.ejecutarAcciones(acciones);
+		ManagerBatalla.ejecutarAcciones(acciones, null, enemigos, heroe);
 
 		assertTrue(enemigo.getVida() < 200, "Enemy should have taken damage");
 		assertTrue(acciones.isEmpty(), "Actions stack should be empty after execution");

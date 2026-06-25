@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.imageio.ImageIO;
@@ -92,6 +93,7 @@ public class BatallaUI {
 	private volatile String indicadorAccion;
 	private volatile ResultadoBatalla resultado;
 	private volatile Runnable onResultadoCerrado;
+	private Set<Integer> dificultadesGanadas;
 
 	public BatallaUI(Combatiente heroe, List<Enemigo> enemigos, String rutaSprites, int dificultad) {
 		this.heroe = heroe;
@@ -166,6 +168,7 @@ public class BatallaUI {
 			Runnable callback = onResultadoCerrado;
 			resultado = null;
 			onResultadoCerrado = null;
+			dificultadesGanadas = null;
 			if (resultadoActual != null && callback != null) {
 				callback.run();
 			}
@@ -251,8 +254,9 @@ public class BatallaUI {
 	 * @param resultadoBatalla resultado final de la batalla
 	 * @param onCerrado callback a ejecutar al cerrar el overlay
 	 */
-	public void mostrarResultado(ResultadoBatalla resultadoBatalla, Runnable onCerrado) {
+	public void mostrarResultado(ResultadoBatalla resultadoBatalla, Set<Integer> dificultadesGanadas, Runnable onCerrado) {
 		this.resultado = resultadoBatalla;
+		this.dificultadesGanadas = dificultadesGanadas;
 		this.onResultadoCerrado = onCerrado;
 		setEstadoMenu(null);
 		if (canvas != null) {
@@ -656,7 +660,7 @@ public class BatallaUI {
 			g2d.setComposite(orig);
 
 			int panelW = 390;
-			int panelH = 220;
+			int panelH = 260;
 			int px = (w - panelW) / 2;
 			int py = (h - panelH) / 2;
 
@@ -682,6 +686,18 @@ public class BatallaUI {
 			FontMetrics fmStats = g2d.getFontMetrics();
 			g2d.drawString(estadistica1, px + (panelW - fmStats.stringWidth(estadistica1)) / 2, py + 102);
 			g2d.drawString(estadistica2, px + (panelW - fmStats.stringWidth(estadistica2)) / 2, py + 132);
+
+			g2d.setFont(FONT_DIALOG);
+			g2d.setColor(PANEL_TEXT);
+			StringBuilder sb = new StringBuilder("Progreso: ");
+			for (int d = 1; d <= 3; d++) {
+				sb.append(dificultadesGanadas != null && dificultadesGanadas.contains(d) ? "★" : "☆");
+				if (d < 3) sb.append(" ");
+			}
+			sb.append("   (").append(dificultadesGanadas != null ? dificultadesGanadas.size() : 0).append("/3)");
+			String progreso = sb.toString();
+			FontMetrics fmProg = g2d.getFontMetrics();
+			g2d.drawString(progreso, px + (panelW - fmProg.stringWidth(progreso)) / 2, py + 162);
 
 			boolean mostrarHint = ((System.currentTimeMillis() / 400) % 2) == 0;
 			if (mostrarHint) {

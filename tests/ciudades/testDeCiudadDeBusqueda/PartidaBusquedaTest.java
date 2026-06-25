@@ -40,7 +40,7 @@ public class PartidaBusquedaTest {
         // Arrange (Configurado en setUp)
 
         // Act
-        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba);
+        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba, null);
 
         // Assert
         assertNotNull(partida, "La instancia de la partida no debe ser nula.");
@@ -57,7 +57,7 @@ public class PartidaBusquedaTest {
         // Arrange (Configurado en setUp)
 
         // Act
-        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba);
+        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba, null);
 
         // Assert
         assertEquals(EstadoDePartida.Creado, partida.getEstado(), "Toda partida recién instanciada debe iniciar en estado Creado.");
@@ -71,7 +71,7 @@ public class PartidaBusquedaTest {
         // Arrange (Configurado en setUp)
 
         // Act
-        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba);
+        PartidaBusqueda partida = new PartidaBusqueda(nombrePartidaPrueba, jugadorPrueba, null);
 
         // Assert
         assertEquals(0, partida.getPuntaje(), "El puntaje inicial de la partida debe ser 0.");

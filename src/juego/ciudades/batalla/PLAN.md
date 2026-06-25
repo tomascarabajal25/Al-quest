@@ -234,7 +234,7 @@ public class HabilidadFactory {
 		switch (tipo) {
 			case NINJA:
 				return new GolpeVenenoso();
-			case SAMURAI:
+			case VIKINGO:
 				return new CortePreciso();
 			case MAGO:
 				return new FuriaNordica();

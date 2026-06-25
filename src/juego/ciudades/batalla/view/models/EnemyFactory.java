@@ -7,9 +7,8 @@ public class EnemyFactory {
 	public static Enemy fromEnemigo(Enemigo e, int dificultad) {
 		Enemy view;
 		switch (e.getTipo()) {
-			case NINJA:     view = new Ninja(dificultad);     break;
-			case SAMURAI:   view = new Samurai(dificultad);   break;
-			case MAGO:  view = new Mago(dificultad);   break;
+			case VIKINGO:   view = new Vikingo(dificultad);   break;
+			case MAGO:      view = new Mago(dificultad);   break;
 			case CABALLERO: view = new Caballero(dificultad); break;
 			case BUFON:     view = new Bufon(dificultad);     break;
 			case DUENDE:    view = new Duende(dificultad);    break;

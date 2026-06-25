@@ -14,8 +14,8 @@ public class EnemigoTest {
 
 	@Test
 	public void testConstructorTipoSamurai() {
-		Enemigo e = new Enemigo("SAMURAI", TipoEnemigo.SAMURAI, 110, 55, 45);
-		assertEquals(TipoEnemigo.SAMURAI, e.getTipo());
+		Enemigo e = new Enemigo("VIKINGO", TipoEnemigo.VIKINGO, 110, 55, 45);
+		assertEquals(TipoEnemigo.VIKINGO, e.getTipo());
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class EnemigoTest {
 		TipoEnemigo[] tipos = TipoEnemigo.values();
 		assertEquals(7, tipos.length);
 		assertEquals(TipoEnemigo.NINJA, tipos[0]);
-		assertEquals(TipoEnemigo.SAMURAI, tipos[1]);
+		assertEquals(TipoEnemigo.VIKINGO, tipos[1]);
 		assertEquals(TipoEnemigo.MAGO, tipos[2]);
 		assertEquals(TipoEnemigo.CABALLERO, tipos[3]);
 		assertEquals(TipoEnemigo.BUFON, tipos[4]);

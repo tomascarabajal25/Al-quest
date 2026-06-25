@@ -11,6 +11,10 @@ public class Defendiendo extends EstadoActivo {
 		super(EstadoCombatiente.DEFENDIENDO, combatiente, combatiente, 1);
 	}
 
+	public Defendiendo(Combatiente combatiente, int turnos) {
+		super(EstadoCombatiente.DEFENDIENDO, combatiente, combatiente, turnos);
+	}
+
 	@Override
 	public StateUi getUi() {
 		return new DefendiendoUi();
