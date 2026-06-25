@@ -1,7 +1,9 @@
-package modelos;
+package juego.ciudades.ciudadGeneral;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import modelos.Partida;
 
 /**
  * TDA NodoCiudad — vértice del grafo de ciudades del mundo Al-Quest.

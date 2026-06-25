@@ -1,4 +1,4 @@
-package modelos;
+package juego.ciudades.ciudadGeneral;
 
 import java.util.Collections;
 import java.util.Vector;

@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
-import modelos.PartidaGeneral;
+import juego.ciudades.ciudadGeneral.PartidaGeneral;
 
 /**
  * IMPORTANTE: A LA ULTIMA FECHA DE ACTUALIZACION, TIENE 10 SKINS +1 DEFAULT (11)

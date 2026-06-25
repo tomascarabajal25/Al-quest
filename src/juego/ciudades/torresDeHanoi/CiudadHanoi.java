@@ -1,6 +1,7 @@
 package juego.ciudades.torresDeHanoi;
 
 import java.util.Objects;
+import java.util.Vector;
 
 import juego.configuracion.ConfiguracionDeHanoi;
 import utils.ValidacionesUtiles;
@@ -18,6 +19,14 @@ import utils.ValidacionesUtiles;
  *   (mayor en el fondo, menor en el tope).
  */
 public class CiudadHanoi {
+
+    // CONSTANTES
+
+    // No hay constantes locales; se usan las de ConfiguracionDeHanoi
+
+    // ATRIBUTOS DE CLASE
+
+    // No hay atributos de clase
 
     // ATRIBUTOS
 
@@ -46,7 +55,9 @@ public class CiudadHanoi {
         iniciar();
     }
 
-    // METODOS DE COMPORTAMIENTO
+    // METODOS DE CLASE
+
+    // No hay métodos de clase
 
     /**
      * Inicializa el estado del juego.
@@ -172,73 +183,115 @@ public class CiudadHanoi {
      *         movimientos posible (2^objetivo - 1)
      */
     public boolean esPerfecto() {
-        return haGanado() && movimientos == (int) getMinMovimientos();
+        return haGanado() && movimientos == (int) getMinimosMovimientos();
     }
 
     // GETTERS
 
     /**
-     * Devuelve los tamaños de los discos de una torre en un arreglo de enteros.
+     * Devuelve los tamaños de los discos de una torre en un vector de enteros.
      *
-     * El arreglo tiene longitud fija = objetivo (máximo discos posibles).
-     * Posición 0 = tope de la pila (disco más pequeño presente).
-     * Posiciones vacías = 0.
+     * El vector contiene los discos presentes, comenzando desde el tope de la pila
+     * (disco más pequeño presente) hasta el fondo (disco más grande).
      *
      * Pre:
      * - torre != null
      *
      * Post:
-     * - Devuelve un int[objetivo]; las posiciones con disco contienen su
-     *   tamaño (mayor a 0), las posiciones vacías contienen 0.
+     * - Devuelve un Vector<Integer> con los tamaños de los discos.
+     * - La posición 0 corresponde al tope de la pila.
+     * - La posición (tamaño - 1) corresponde al fondo de la pila.
      *
      * @param torre torre cuyos discos se quieren consultar
-     * @return arreglo con los tamaños de los discos, desde el tope al fondo
+     * @return vector con los tamaños de los discos en orden de tope a fondo
      */
-    public int[] getDiscosDeTorre(Pila<Integer> torre) {
+    public Vector<Integer> getDiscosDelTorre(Pila<Integer> torre) {
         ValidacionesUtiles.esDistintoDeNull(torre, "torre no puede ser null");
 
-        int[] discos = new int[objetivo]; // 0 significa "slot vacío"
+        Vector<Integer> discos = new Vector<>();
 
         // Recorremos desde la cabeza (tope) hacia el fondo
-        // y llenamos el arreglo desde el índice 0.
-        // discos[0] = tope de pila (disco más pequeño presente)
-        // discos[contNodo-1] = fondo de pila (disco más grande presente)
+        // y agregamos cada disco al vector.
         Nodo<Integer> actual = torre.getCabeza();
-        int indice = 0;
-        while (actual != null && indice < discos.length) {
-            discos[indice] = actual.getDato();
+        while (actual != null) {
+            discos.add(actual.getDato());
             actual = actual.getAbajo();
-            indice++;
         }
+
         return discos;
     }
 
-    /** @return cantidad mínima de movimientos para resolver el puzzle (2^objetivo - 1) */
-    public double getMinMovimientos() {
+    /**
+     * Post: no modifica el estado del juego; solo lo consulta.
+     *
+     * @return cantidad mínima de movimientos para resolver el puzzle (2^objetivo - 1)
+     */
+    public double getMinimosMovimientos() {
         return Math.pow(2, objetivo) - 1;
     }
 
-    /** @return cantidad de movimientos realizados hasta el momento */
+    /** 
+     * Post: no modifica el estado del juego; solo lo consulta.
+     *
+     * @return cantidad de movimientos realizados hasta el momento
+     */
     public int getMovimientos() {
         return movimientos;
     }
 
-    /** @return cantidad de discos configurada para esta partida */
+    /** 
+     * Post: no modifica el estado del juego; solo lo consulta.
+     *
+     * @return cantidad de discos configurada para esta partida
+     */
     public int getObjetivo() {
         return objetivo;
     }
 
-    /** @return torre A */
+    /** 
+     * Devuelve una referencia a la torre A.
+     *
+     * Pre:
+     * - La torre ha sido inicializada mediante iniciar() o reiniciar().
+     *
+     * Post:
+     * - Devuelve la referencia a torreA.
+     * - No devuelve copia defensiva (la pila es controlada internamente).
+     *
+     * @return torre A del puzzle
+     */
     public Pila<Integer> getTorreA() {
         return torreA;
     }
 
-    /** @return torre B */
+    /** 
+     * Devuelve una referencia a la torre B.
+     *
+     * Pre:
+     * - La torre ha sido inicializada mediante iniciar() o reiniciar().
+     *
+     * Post:
+     * - Devuelve la referencia a torreB.
+     * - No devuelve copia defensiva (la pila es controlada internamente).
+     *
+     * @return torre B del puzzle
+     */
     public Pila<Integer> getTorreB() {
         return torreB;
     }
 
-    /** @return torre C */
+    /** 
+     * Devuelve una referencia a la torre C.
+     *
+     * Pre:
+     * - La torre ha sido inicializada mediante iniciar() o reiniciar().
+     *
+     * Post:
+     * - Devuelve la referencia a torreC.
+     * - No devuelve copia defensiva (la pila es controlada internamente).
+     *
+     * @return torre C del puzzle
+     */
     public Pila<Integer> getTorreC() {
         return torreC;
     }
@@ -246,7 +299,13 @@ public class CiudadHanoi {
     // SETTERS
 
     /**
-     * Post: actualiza la cantidad de movimientos realizados.
+     * Actualiza la cantidad de movimientos realizados.
+     *
+     * Pre:
+     * - nuevaCantidadDeMovimientos >= 0
+     *
+     * Post:
+     * - Actualiza el contador de movimientos al valor proporcionado.
      *
      * @param nuevaCantidadDeMovimientos nueva cantidad de movimientos
      */
@@ -255,11 +314,14 @@ public class CiudadHanoi {
     }
 
     /**
+     * Actualiza la cantidad de discos objetivo del puzzle.
+     *
      * Pre:
      * - ConfiguracionDeHanoi.DISCOS_MINIMOS <= nuevoObjetivo <= ConfiguracionDeHanoi.DISCOS_MAXIMOS
      *
      * Post:
-     * - actualiza la cantidad de discos objetivo del puzzle.
+     * - Actualiza la cantidad de discos objetivo.
+     * - Valida el rango mediante ValidacionesUtiles.
      *
      * @param nuevoObjetivo nueva cantidad de discos
      */
@@ -276,7 +338,51 @@ public class CiudadHanoi {
 
     @Override
     public String toString() {
-        return "CiudadHanoi [movimientos=" + movimientos + ", objetivo=" + objetivo + "]";
+        StringBuilder representacion = new StringBuilder();
+        representacion.append("CiudadHanoi{");
+        representacion.append("objetivo=").append(objetivo);
+        representacion.append(", movimientos=").append(movimientos);
+        representacion.append(", minimosMovimientos=").append(String.format("%.0f", getMinimosMovimientos()));
+        representacion.append(", torreA=[");
+        representacion.append(construirRepresentacionTorre(torreA));
+        representacion.append("], torreB=[");
+        representacion.append(construirRepresentacionTorre(torreB));
+        representacion.append("], torreC=[");
+        representacion.append(construirRepresentacionTorre(torreC));
+        representacion.append("], ganador=").append(haGanado());
+        representacion.append(", perfecto=").append(esPerfecto());
+        representacion.append("}");
+        return representacion.toString();
+    }
+
+    /**
+     * Construye una representación visual de los discos de una torre.
+     *
+     * Pre:
+     * - torre != null
+     *
+     * Post:
+     * - Devuelve un String con los tamaños de los discos separados por comas,
+     *   del tope (izquierda) al fondo (derecha).
+     *
+     * @param torre torre a representar
+     * @return string con los discos de la torre
+     */
+    private String construirRepresentacionTorre(Pila<Integer> torre) {
+        StringBuilder representacion = new StringBuilder();
+        Nodo<Integer> actual = torre.getCabeza();
+        boolean primero = true;
+
+        while (actual != null) {
+            if (!primero) {
+                representacion.append(", ");
+            }
+            representacion.append(actual.getDato());
+            actual = actual.getAbajo();
+            primero = false;
+        }
+
+        return representacion.toString();
     }
 
     @Override

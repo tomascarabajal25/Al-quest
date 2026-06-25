@@ -31,7 +31,7 @@ public class TestGestorDeInicio {
     @Test
     public void guardarSesionEsPublicoYEstatico() throws Exception {
         var m = GestorDeInicio.class.getMethod(
-            "guardarSesion", modelos.PartidaGeneral.class);
+            "guardarSesion", juego.ciudades.ciudadGeneral.PartidaGeneral.class);
         assertTrue(Modifier.isPublic(m.getModifiers()));
         assertTrue(Modifier.isStatic(m.getModifiers()));
     }
@@ -64,13 +64,13 @@ public class TestGestorDeInicio {
     @Test
     public void iniciarSesionRetornaPartidaGeneral() throws Exception {
         var m = GestorDeInicio.class.getMethod("iniciarSesion");
-        assertEquals(modelos.PartidaGeneral.class, m.getReturnType());
+        assertEquals(juego.ciudades.ciudadGeneral.PartidaGeneral.class, m.getReturnType());
     }
 
     @Test
     public void guardarSesionRetornaBoolean() throws Exception {
         var m = GestorDeInicio.class.getMethod(
-            "guardarSesion", modelos.PartidaGeneral.class);
+            "guardarSesion", juego.ciudades.ciudadGeneral.PartidaGeneral.class);
         assertEquals(boolean.class, m.getReturnType());
     }
 

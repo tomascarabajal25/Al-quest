@@ -2,8 +2,9 @@ package persistencia;
 
 import javax.swing.JOptionPane;
 
+
 import modelos.Jugador;
-import modelos.PartidaGeneral;
+import juego.ciudades.ciudadGeneral.PartidaGeneral;
 import utils.ValidacionesUtiles;
 
 /**

@@ -129,7 +129,7 @@ public class MinijuegoDesafio implements Minijuego {
                     puertaLista.setEstado(EstadoPuerta.NORMAL);
                     puertaArbol.setEstado(EstadoPuerta.NORMAL);
 
-                    if (rondaActual >= ConfiguracionBusqueda.RONDAS_PARA_GANAR) {
+                    if (aciertos >= ConfiguracionBusqueda.RONDAS_PARA_GANAR) {
                         estado = EstadoMinijuego.GANADO;
                     } else {
                         teleportarJugadorAEntrada(jugador);

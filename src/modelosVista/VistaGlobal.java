@@ -17,11 +17,11 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
-import modelos.GrafoCiudades;
 import modelos.Jugador;
-import modelos.NodoCiudad;
-import modelos.PartidaGeneral;
 import modelos.Sonido;
+import juego.ciudades.ciudadGeneral.GrafoCiudades;
+import juego.ciudades.ciudadGeneral.NodoCiudad;
+import juego.ciudades.ciudadGeneral.PartidaGeneral;
 import juego.configuracion.ConstantesSonido;
 import utils.ValidacionesUtiles;
 

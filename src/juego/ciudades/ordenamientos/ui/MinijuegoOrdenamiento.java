@@ -157,7 +157,7 @@ public class MinijuegoOrdenamiento implements Minijuego {
         if (transcurrido >= ConfiguracionDeOrdenamientos.DURACION_VICTORIA_MS
                 && onVictoria != null) {
             onVictoria.run();
-            onVictoria = null; // evita dispararlo más de una vez
+            onVictoria = null; 
         }
     }
 

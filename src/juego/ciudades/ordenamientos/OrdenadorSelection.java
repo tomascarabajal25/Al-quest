@@ -10,6 +10,9 @@ public class OrdenadorSelection<T extends Comparable<T>> extends Ordenador<T> {
 	public OrdenadorSelection(String nombre) {
 		super(nombre);
 	}
+	
+	
+	
 	//METODOS DE COMPORTAMIENTO------------------------------------------------------
 	/**
 	 * Pre:

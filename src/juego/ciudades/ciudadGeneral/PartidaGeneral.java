@@ -1,4 +1,4 @@
-package modelos;
+package juego.ciudades.ciudadGeneral;
 
 
 import java.util.ArrayList;
@@ -18,6 +18,10 @@ import juego.ciudades.complejidad.PartidaComplejidad;
 import juego.ciudades.hashing.PartidaHashing;
 import juego.ciudades.torresDeHanoi.PartidaHanoi;
 import juego.configuracion.ConstantesSonido;
+import modelos.EstadoDePartida;
+import modelos.Jugador;
+import modelos.Partida;
+import modelos.Sonido;
 import juego.ciudades.grafos.controller.PartidaGrafos;
 import persistencia.DatosGuardado;
 import utils.ValidacionesUtiles;

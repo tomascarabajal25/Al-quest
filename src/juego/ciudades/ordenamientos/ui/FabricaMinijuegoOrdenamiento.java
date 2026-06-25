@@ -7,6 +7,7 @@ import juego.ciudades.ordenamientos.Caja;
 import juego.ciudades.ordenamientos.Ordenador;
 import juego.configuracion.ConfiguracionDeOrdenamientos;
 import modelosVista.Vista;
+import utils.ValidacionesUtiles;
 
 /**
  * Fábrica que construye el MinijuegoOrdenamiento:
@@ -40,13 +41,10 @@ public class FabricaMinijuegoOrdenamiento {
     public static MinijuegoOrdenamiento crear(Vista vista,
                                                List<Caja> cajas,
                                                Ordenador<Caja> ordenador) {
-        if (vista == null)
-            throw new IllegalArgumentException("Vista no puede ser nula");
-        if (cajas == null || cajas.size() < 2)
-            throw new IllegalArgumentException("Se necesitan al menos 2 cajas");
-        if (ordenador == null)
-            throw new IllegalArgumentException("Ordenador no puede ser nulo");
-
+    	ValidacionesUtiles.esDistintoDeNull(vista, "Vista no puede ser nula");
+        ValidacionesUtiles.esDistintoDeNull(cajas, "Cajas no puede ser nula");
+        ValidacionesUtiles.validarRangoNumerico(cajas.size(), 2, 10, "Se necesitan al menos 2 cajas, y menos de 10");
+        ValidacionesUtiles.esDistintoDeNull(ordenador, "ordenador no puede ser nulo");
         List<CajaVista> cajasVista = new ArrayList<>();
         int tamaño = vista.getTamanio();
 
