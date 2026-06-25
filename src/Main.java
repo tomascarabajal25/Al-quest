@@ -1,4 +1,4 @@
-import modelos.PartidaGeneral;
+import juego.ciudades.ciudadGeneral.PartidaGeneral;
 import persistencia.GestorDeInicio;
 
 public class Main {

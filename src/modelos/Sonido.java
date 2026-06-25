@@ -3,6 +3,7 @@ package modelos;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -61,6 +62,7 @@ public class Sonido {
             }
 
             AudioInputStream ais = AudioSystem.getAudioInputStream(recurso);
+            ais = convertirA16Bit(ais);
             clipMusica = AudioSystem.getClip();
             clipMusica.open(ais);
             clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
@@ -95,6 +97,7 @@ public class Sonido {
             }
 
             AudioInputStream ais = AudioSystem.getAudioInputStream(recurso);
+            ais = convertirA16Bit(ais);
             clipEfecto = AudioSystem.getClip();
             clipEfecto.open(ais);
             clipEfecto.setFramePosition(0);
@@ -116,6 +119,32 @@ public class Sonido {
 
 	
     
+    /**
+     * Convierte un AudioInputStream a PCM 16-bit si su formato original no es
+     * soportado directamente por javax.sound (ej: PCM 32-bit, 24-bit, MP3, etc.).
+     * Si ya es PCM 16-bit, lo devuelve sin cambios.
+     *
+     * Pre:  ais no es nulo.
+     * Post: el stream devuelto siempre tiene sampleSize de 16 bits.
+     */
+    private AudioInputStream convertirA16Bit(AudioInputStream ais) {
+        AudioFormat formatoOriginal = ais.getFormat();
+        if (formatoOriginal.getSampleSizeInBits() != 16
+                || formatoOriginal.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
+            AudioFormat formatoDestino = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    formatoOriginal.getSampleRate(),
+                    16,
+                    formatoOriginal.getChannels(),
+                    formatoOriginal.getChannels() * 2,
+                    formatoOriginal.getSampleRate(),
+                    false // little-endian
+            );
+            ais = AudioSystem.getAudioInputStream(formatoDestino, ais);
+        }
+        return ais;
+    }
+
     //Getters -----------------------------------------------------------------------------------------------
     public Clip getClipMusica() {
 		return clipMusica;

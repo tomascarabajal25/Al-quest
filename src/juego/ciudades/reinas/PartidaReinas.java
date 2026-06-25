@@ -1,8 +1,10 @@
 package juego.ciudades.reinas;
 
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import javax.swing.SwingUtilities;
+
 import juego.ciudades.reinas.ui.VentanaPrincipal;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;
@@ -35,19 +37,21 @@ public class PartidaReinas extends Partida {
 
         // Instanciamos la ventana pasándole ESTA partida (this) y el listener de victoria
         this.ventana = new VentanaPrincipal(this, () -> {
-            System.out.println("¡Ciudad completada!"); // Print temporal que tenías
+            System.out.println("¡Ciudad completada!"); //print temporal
+            setPuntaje(300*tamanio);
             finalizar();
         });
 
         this.ventana.setVisible(true);
-        if(sonido != null) {
-			sonido.playMusica(juego.configuracion.ConstantesSonido.REINAS);
-		}
+        
+        SwingUtilities.invokeLater(() -> {
+        if (this.sonido != null) {
+            this.sonido.playMusica(juego.configuracion.ConstantesSonido.REINAS);
+        }
+        });
     }
 
     /**
-     * 
-     *
      * @param tamanioElegido el tamaño (NxN) seleccionado en la UI
      */
     public void configurarModelo(int tamanioElegido) {
@@ -61,16 +65,15 @@ public class PartidaReinas extends Partida {
     @Override
     public void finalizar() {
         setEstado(EstadoDePartida.Creado);
-        setPuntaje(300*tamanio);
 
         if (this.ventana != null) {
             this.ventana.dispose();
             this.ventana = null;
         }
         
-        if(sonido != null) {
-        	sonido.stopMusica();
-        	sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
+        if(this.sonido != null) {
+        	this.sonido.stopMusica();
+        	this.sonido.playMusica(juego.configuracion.ConstantesSonido.GLOBAL_AVENTURA);
         }
 
         notificarFinalizacion();

@@ -1,6 +1,6 @@
 package juego.ciudades.grafos.controller;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;

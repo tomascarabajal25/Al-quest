@@ -28,7 +28,7 @@ public class PanelComplejidad extends JPanel {
     private boolean juegoTerminado = false;
 
     private static final String[] COMPLEJIDADES = {
-        "O(1)", "O(n)", "O(n log n)", "O(n^2)", "O(n^2 log n)", "O(n^3)"
+        "O(n^1)", "O(n log n)", "O(n^2)", "O(n^2 log n)", "O(n^3)"
     };
 
     /**

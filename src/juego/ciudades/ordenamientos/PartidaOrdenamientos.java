@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import juego.ciudades.ordenamientos.ui.FabricaMinijuegoOrdenamiento;
 import juego.ciudades.ordenamientos.ui.MinijuegoOrdenamiento;
 import juego.configuracion.ConfiguracionDeOrdenamientos;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;
@@ -29,19 +30,10 @@ public class PartidaOrdenamientos extends Partida {
 
     // ATRIBUTOS
 
-    /** Cajas en su orden inicial configurado por el usuario. */
     private List<Caja> cajasIniciales;
-
-    /** Algoritmo seleccionado interactivamente por el usuario. */
     private Ordenador<Caja> ordenador;
-
-    /** Referencia a la Vista del juego donde se va a montar el minijuego. */
     private Vista vista;
-
-    /** Ventana gráfica de la ciudad. */
     private JFrame ventana;
-
-    /** El minijuego activo (se crea en iniciar()). */
     private MinijuegoOrdenamiento minijuego;
 
     // CONSTRUCTORES
@@ -144,8 +136,6 @@ public class PartidaOrdenamientos extends Partida {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
-        // Si el usuario cierra la ventana con la X, llamamos a finalizar() para
-        // detener la música y notificar al mapa global.
         attachCloseHandler(ventana);
 
         vista.requestFocusInWindow();

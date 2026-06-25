@@ -2,8 +2,9 @@ package modelos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import org.junit.jupiter.api.Test;
+
+import modelos.EstadoDePartida;
 
 public class TestPartidaGeneral {
 

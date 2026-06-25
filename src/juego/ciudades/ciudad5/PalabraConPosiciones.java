@@ -7,10 +7,11 @@ import java.util.Objects;
 import utils.ValidacionesUtiles;
 
 public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
-	    
+	//atributos--------------------------------------------------
 	private String palabra;
 	private List<Posicion> posiciones;
 	
+	//constructores--------------------------------------------------
 	/**
 	 * pre:
 	 * @param palabra no nula
@@ -24,7 +25,7 @@ public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
 		setPosiciones(new ArrayList<Posicion>());
 		agregarPosicion(fila, columna);
 	}
-	
+	// Metodos generales--------------------------------------------------
 	@Override
 	public int compareTo(PalabraConPosiciones otra) {
 		return this.palabra.compareTo(otra.palabra);
@@ -51,7 +52,7 @@ public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
 	public String toString() {
 		return "PalabraConPosiciones [palabra=" + palabra + ", posiciones=" + posiciones + "]";
 	}
-
+	//metodos--------------------------------------------------
 	/**
 	 * Pre:
 	 * @param fila mayor o igual a 0
@@ -62,7 +63,7 @@ public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
 	public void agregarPosicion(int fila, int columna){
 		posiciones.add(new Posicion(fila, columna));
 	}
-	
+	//getters--------------------------------------------------
 	// devuelve las posiciones de la palabra
 	public List<Posicion> getPosiciones() {
 		return new ArrayList<Posicion>(posiciones);
@@ -71,7 +72,9 @@ public class PalabraConPosiciones implements Comparable<PalabraConPosiciones> {
 	public String getPalabra() {
 		return palabra;
 	}
-
+	
+	
+	//setters--------------------------------------------------
 	/**
 	 * pre:
 	 * @param posiciones2 distinto de null

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
+import modelos.EstadoDePartida;
 
 public class TestPartida {
 

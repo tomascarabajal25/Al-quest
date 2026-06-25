@@ -15,11 +15,15 @@ import modelos.Minijuego;
 import modelosVista.JugadorVista;
 
 /**
- * Integra el puzzle de Torres de Hanoi en la Vista del juego.
+ * Controlador visual del puzzle de Torres de Hanoi en la Vista del juego.
+ *
+ * Integra el motor lógico (CiudadHanoi) con la presentación gráfica (draw) y
+ * procesa la entrada del jugador (procesarTecla). Gestiona el ciclo de vida
+ * del minijuego mediante máquina de estados (INACTIVO → ACTIVO → GANADO).
  *
  * El modelo (CiudadHanoi) trabaja con Pila<Integer>; cada entero es el tamaño
- * del disco. EstadoHanoi expone int[] para que la vista pueda dibujar sin
- * conocer la estructura interna de la pila.
+ * del disco. EstadoHanoi expone los datos en un formato que la vista puede
+ * dibujar sin acceder directamente a la estructura interna de la pila.
  *
  * Responsabilidad de la vista sobre el tamaño del disco:
  *   anchoDisco = (tamano / maxDiscos) * maxAnchoDisco + margenMinimo
@@ -31,6 +35,12 @@ import modelosVista.JugadorVista;
  *   GANADO    → se muestra el mensaje de victoria durante
  *               ConfiguracionDeHanoi.DURACION_VICTORIA_MS y luego se
  *               ejecuta onFinalizadoCallback
+ *
+ * INVARIANTES:
+ * - partida != null
+ * - zonaWorldX, zonaWorldY, zonaAncho, zonaAlto >= 0
+ * - estado pertenece al enum Estado {INACTIVO, ACTIVO, GANADO}
+ * - tiempoInicioVictoria == -1 hasta detectar la victoria
  */
 public class MinijuegoHanoi implements Minijuego {
 
@@ -39,10 +49,23 @@ public class MinijuegoHanoi implements Minijuego {
     /** Código de la tecla ESCAPE recibido en procesarTecla(). */
     private static final char TECLA_ESCAPE = 27;
 
+    // ATRIBUTOS DE CLASE
+
+    // No hay atributos de clase
+
     // ATRIBUTOS
 
-    private enum Estado { INACTIVO, ACTIVO, GANADO }
+    /** Enumeración de los estados posibles del minijuego. */
+    private enum Estado {
+        /** Minijuego inactivo; el jugador aún no ha entrado a la zona. */
+        INACTIVO,
+        /** Minijuego activo; el jugador está resolviendo el puzzle. */
+        ACTIVO,
+        /** Jugador ha ganado; se muestra pantalla de victoria. */
+        GANADO
+    }
 
+    /** Estado actual del minijuego. */
     private Estado estado = Estado.INACTIVO;
 
     /** Partida a la que pertenece este minijuego (motor lógico + puntaje). */
@@ -51,15 +74,25 @@ public class MinijuegoHanoi implements Minijuego {
     /** Callback ejecutado cuando termina la pantalla de victoria. */
     private Runnable onFinalizadoCallback;
 
+    /** Posición X de la zona de activación en coordenadas del mundo. */
     private final int zonaWorldX;
+
+    /** Posición Y de la zona de activación en coordenadas del mundo. */
     private final int zonaWorldY;
+
+    /** Ancho de la zona de activación en píxeles. */
     private final int zonaAncho;
+
+    /** Alto de la zona de activación en píxeles. */
     private final int zonaAlto;
 
     /** Torre elegida como origen del próximo movimiento ("A", "B", "C" o null). */
     private String torreOrigen = null;
 
+    /** Mensaje de feedback temporal a mostrar en pantalla. */
     private String mensajeFeedback = "";
+
+    /** Momento (en ms) cuando se registró el último feedback. */
     private long tiempoFeedback = 0;
 
     /** Momento en que se detectó la victoria. -1 indica que todavía no ocurrió. */
@@ -68,18 +101,22 @@ public class MinijuegoHanoi implements Minijuego {
     // CONSTRUCTORES
 
     /**
+     * Construye un nuevo controlador visual para el puzzle de Torres de Hanoi.
+     *
      * Pre:
      * - jugador != null
      * - tamaño > 0
-     * - partida != null
+     * - partida != null con motor lógico inicializado
      *
      * Post:
      * - Calcula la posición y el tamaño de la zona de activación en
-     *   coordenadas del mundo, a partir de ConfiguracionDeHanoi.
+     *   coordenadas del mundo a partir de ConfiguracionDeHanoi.
+     * - el minijuego comienza en estado INACTIVO.
+     * - No hay callback registrado (onFinalizadoCallback == null).
      *
      * @param jugador jugador actual (se mantiene por consistencia con la
-     *                firma esperada por PartidaHanoi)
-     * @param tamaño  tamaño de celda en píxeles (Vista.getTamanio())
+     *               firma esperada por PartidaHanoi)
+     * @param tamaño tamaño de celda en píxeles (Vista.getTamanio())
      * @param partida partida de Hanoi asociada a este minijuego
      */
     public MinijuegoHanoi(Jugador jugador, int tamaño, PartidaHanoi partida) {
@@ -90,12 +127,28 @@ public class MinijuegoHanoi implements Minijuego {
         this.zonaAlto   = ConfiguracionDeHanoi.ZONA_ACTIVACION_ALTO * tamaño;
     }
 
+    // METODOS DE CLASE
+
+    // No hay métodos de clase
+
+    // METODOS GENERALES
+
+    // Los métodos generales (toString, etc.) están al final de la clase
+
     // METODOS DE COMPORTAMIENTO
 
     /**
-     * Post: actualiza la lógica del minijuego según el estado actual
-     *       (detección de zona, detección de victoria, vencimiento del
-     *       feedback y temporización del cierre).
+     * Actualiza la lógica del minijuego según el estado actual.
+     *
+     * Responsabilidades según estado:
+     * - INACTIVO: detecta si el jugador entró a la zona de activación.
+     * - ACTIVO: detecta si ganó, hace expirar el feedback.
+     * - GANADO: temporiza el vencimiento de la pantalla de victoria.
+     *
+     * Post:
+     * - Puede cambiar de estado dependiendo de eventos detectados.
+     * - Puede expirar el mensaje de feedback.
+     * - Puede ejecutar el callback de finalización (una sola vez).
      *
      * @param jugador jugador cuya posición se usa para las detecciones de colisión
      */
@@ -109,7 +162,12 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: si el jugador entra a la zona de activación, pasa a estado ACTIVO.
+     * Actualiza lógica en estado INACTIVO.
+     *
+     * Post:
+     * - Si el jugador entra a la zona de activación, cambia a estado ACTIVO.
+     *
+     * @param jugador jugador cuya posición se evalúa
      */
     private void actualizarInactivo(JugadorVista jugador) {
         if (jugadorEnZona(jugador)) {
@@ -118,8 +176,12 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: si el juego está ganado, pasa a estado GANADO. Además, vence el
-     *       mensaje de feedback si ya transcurrió DURACION_FEEDBACK_MS.
+     * Actualiza lógica en estado ACTIVO.
+     *
+     * Post:
+     * - Si el motor lógico reporta victoria, cambia a estado GANADO.
+     * - Si el feedback ha vencido (transcurrió más que ConfiguracionDeHanoi.DURACION_FEEDBACK_MS),
+     *   lo borra.
      */
     private void actualizarActivo() {
         if (partida.getJuego().haGanado()) {
@@ -135,9 +197,12 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: la primera vez que se entra a este estado, registra el momento
-     *       de la victoria. Luego de DURACION_VICTORIA_MS, ejecuta el
-     *       callback de finalización una sola vez, sin bloquear el hilo.
+     * Actualiza lógica en estado GANADO.
+     *
+     * Post:
+     * - La primera vez que se entra a este estado, registra el momento de la victoria.
+     * - Transcurrido ConfiguracionDeHanoi.DURACION_VICTORIA_MS desde la victoria,
+     *   ejecuta el callback de finalización una sola vez (si existe).
      */
     private void actualizarGanado() {
         if (tiempoInicioVictoria == -1) {
@@ -154,11 +219,15 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: dibuja la zona de activación si el minijuego está inactivo, o el
-     *       overlay completo del puzzle (torres, HUD y mensajes) en caso contrario.
+     * Dibuja el estado visual del minijuego.
      *
-     * @param g2      contexto gráfico sobre el que dibujar
-     * @param jugador jugador cuya posición se usa para posicionar la zona
+     * Post:
+     * - Si estado == INACTIVO: dibuja la zona de activación como un rectángulo indicador.
+     * - Si estado == ACTIVO o GANADO: dibuja el overlay completo del puzzle
+     *   (torres, contadores, instrucciones, mensajes).
+     *
+     * @param g2 contexto gráfico sobre el que dibujar
+     * @param jugador jugador cuya posición se usa para transformar coordenadas de mundo a pantalla
      */
     @Override
     public void draw(Graphics2D g2, JugadorVista jugador) {
@@ -172,15 +241,17 @@ public class MinijuegoHanoi implements Minijuego {
     // ── Input ─────────────────────────────────────────────────────────────────
 
     /**
+     * Procesa una entrada de teclado del jugador.
+     *
      * Pre:
-     * - el minijuego debe estar en estado ACTIVO para procesar la tecla
-     *   (si no lo está, la tecla se ignora).
+     * - El minijuego debe estar en estado ACTIVO para procesar la mayoría de las teclas
+     *   (si no lo está, se ignora la mayoría de eventos, excepto cambios de estado).
      *
      * Post:
-     * - 'R' reinicia el puzzle con ConfiguracionDeHanoi.DISCOS_REINICIO discos.
-     * - ESC vuelve el minijuego a estado INACTIVO.
-     * - '1'/'2'/'3' seleccionan torre origen/destino y mueven discos según
-     *   corresponda.
+     * - 'R' o 'r': reinicia el puzzle con ConfiguracionDeHanoi.DISCOS_REINICIO discos.
+     * - ESC: vuelve el minijuego a estado INACTIVO.
+     * - '1'/'2'/'3': selecciona torre origen o intenta mover disco a torre destino.
+     * - Otras teclas: se ignoran.
      *
      * @param tecla carácter de la tecla presionada
      */
@@ -208,14 +279,19 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: si la tecla corresponde a una torre ('1', '2' o '3'):
-     *       - si no había torre origen, la registra como origen.
-     *       - si la torre elegida es la misma que el origen, cancela la selección.
-     *       - en caso contrario, intenta mover un disco de origen a la torre
-     *         elegida y muestra el feedback correspondiente.
-     *       Si la tecla no corresponde a ninguna torre, no hace nada.
+     * Procesa la selección de una torre (1, 2 o 3).
      *
-     * @param teclaMayuscula tecla ya normalizada a mayúscula
+     * Pre:
+     * - teclaMayuscula debe ser '1', '2', '3' o algún otro carácter válido.
+     *
+     * Post:
+     * - Si teclaMayuscula no corresponde a una torre válida, no hace nada.
+     * - Si torreOrigen == null: registra la torre elegida como origen.
+     * - Si torreElegida == torreOrigen: cancela la selección (setea torreOrigen = null).
+     * - Si torreElegida != torreOrigen: intenta mover disco de origen a destino,
+     *   muestra feedback correspondiente y reinicia (torreOrigen = null).
+     *
+     * @param teclaMayuscula tecla ya normalizada a mayúscula ('1', '2' o '3')
      */
     private void procesarSeleccionDeTorre(char teclaMayuscula) {
         String torreElegida = switch (teclaMayuscula) {
@@ -250,6 +326,15 @@ public class MinijuegoHanoi implements Minijuego {
 
     // ── Dibujo ───────────────────────────────────────────────────────────────
 
+    /**
+     * Dibuja la zona de activación como un rectángulo indicador.
+     *
+     * Post:
+     * - Dibuja un rectángulo semitransparente que marca dónde el jugador puede entrar.
+     *
+     * @param g2 contexto gráfico
+     * @param jugador jugador para transformar coordenadas
+     */
     private void dibujarZonaIndicadora(Graphics2D g2, JugadorVista jugador) {
         int sx = zonaWorldX - jugador.getWorldX() + jugador.getScreenX();
         int sy = zonaWorldY - jugador.getWorldY() + jugador.getScreenY();
@@ -259,6 +344,19 @@ public class MinijuegoHanoi implements Minijuego {
         g2.drawRect(sx, sy, zonaAncho, zonaAlto);
     }
 
+    /**
+     * Dibuja el overlay completo del puzzle.
+     *
+     * Post:
+     * - Dibuja panel de fondo del puzzle.
+     * - Dibuja cabecera con título y contadores de movimientos.
+     * - Dibuja las tres torres (A, B, C) con sus discos.
+     * - Dibuja instrucciones de teclado.
+     * - Si hay feedback activo, lo dibuja.
+     * - Si estado == GANADO, dibuja el mensaje de victoria.
+     *
+     * @param g2 contexto gráfico
+     */
     private void dibujarOverlay(Graphics2D g2) {
         int px = 60, py = 30, pw = 648, ph = 340;
         g2.setColor(new Color(10, 10, 20, 210));
@@ -280,7 +378,7 @@ public class MinijuegoHanoi implements Minijuego {
             px + 200, py + 24);
 
         // Torres
-        int maxDiscos = partida.getJuego().getObjetivo(); // para escalar el ancho
+        int maxDiscos = partida.getJuego().getObjetivo();
         int[] centros  = { px + 120, px + 324, px + 528 };
         String[] nombres = { "A  [1]", "B  [2]", "C  [3]" };
         int[][] datos  = { estadoActual.getTorreA(), estadoActual.getTorreB(), estadoActual.getTorreC() };
@@ -311,16 +409,21 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: dibuja el panel de victoria sobre el overlay del puzzle, con el
-     *       mensaje correspondiente según si la resolución fue perfecta.
+     * Dibuja el panel de victoria sobre el overlay del puzzle.
+     *
+     * Post:
+     * - Dibuja un rectángulo oscuro centrado con el mensaje de victoria.
+     * - Si la resolución fue perfecta, muestra: "¡Perfecto! N movimientos exactos"
+     * - Si la resolución no fue perfecta, muestra: "¡Ganaste! N movimientos"
+     *
+     * @param g2 contexto gráfico
+     * @param px posición X de la esquina izquierda del overlay
+     * @param py posición Y de la esquina superior del overlay
+     * @param pw ancho del overlay
+     * @param ph alto del overlay
+     * @param estadoActual estado actual del puzzle
      */
-    private void dibujarMensajeVictoria(
-            Graphics2D g2,
-            int px,
-            int py,
-            int pw,
-            int ph,
-            EstadoHanoi estadoActual) {
+    private void dibujarMensajeVictoria(Graphics2D g2, int px, int py, int pw, int ph, EstadoHanoi estadoActual) {
 
         g2.setColor(new Color(0, 0, 0, 180));
         g2.fillRoundRect(px + 100, py + 100, pw - 200, 100, 16, 16);
@@ -335,28 +438,36 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Dibuja una torre.
+     * Dibuja una torre con sus discos.
      *
-     * @param discos     int[] donde cada valor > 0 es el tamaño del disco;
-     *                   0 = slot vacío. Índice 0 = tope (más pequeño presente),
-     *                   últimos índices = fondo (más grande).
-     * @param maxDiscos  objetivo de la partida; sirve para escalar el ancho
-     *                   proporcional del disco: ancho = (tamaño/maxDiscos)*MAX_ANCHO.
+     * Pre:
+     * - discos != null; cada valor > 0 es el tamaño del disco, 0 = slot vacío.
+     * - maxDiscos > 0; sirve para escalar el ancho proporcional del disco.
      *
-     * Orden de dibujo: se itera de mayor a menor índice para que el disco
-     * más grande (fondo de pila) quede en el slot más bajo, pegado a la base.
+     * Post:
+     * - Dibuja el palo vertical, la base, el nombre de la torre y todos sus discos.
+     * - Los discos se dibujan de mayor a menor (fondo al tope) para composición correcta.
+     * - Si 'seleccionada' == true, cambia colores para indicar que es la torre origen.
+     *
+     * @param g2 contexto gráfico
+     * @param centroX coordenada X del centro de la torre
+     * @param baseY coordenada Y de la base de la torre
+     * @param nombre nombre/etiqueta de la torre (p.ej. "A  [1]")
+     * @param discos arreglo donde discos[0] = tope, discos[n] = fondo
+     * @param maxDiscos cantidad máxima de discos (para escalar)
+     * @param seleccionada verdadero si esta torre es la torre origen elegida
      */
     private void dibujarTorre(Graphics2D g2, int centroX, int baseY,
                                String nombre, int[] discos,
                                int maxDiscos, boolean seleccionada) {
 
-        final int ALTO_TORRE      = 200;
-        final int ANCHO_PALO      = 6;
-        final int ALTO_BASE       = 10;
-        final int ANCHO_BASE      = 140;
-        final int ALTO_DISCO      = 16;
+        final int ALTO_TORRE = 200;
+        final int ANCHO_PALO = 6;
+        final int ALTO_BASE = 10;
+        final int ANCHO_BASE = 140;
+        final int ALTO_DISCO = 16;
         final int MAX_ANCHO_DISCO = 120;
-        final int MARGEN_DISCO    = 20; // ancho mínimo para discos pequeños
+        final int MARGEN_DISCO = 20;
 
         // Palo
         g2.setColor(seleccionada ? new Color(255, 220, 80) : new Color(160, 140, 100));
@@ -387,11 +498,10 @@ public class MinijuegoHanoi implements Minijuego {
         for (int i = ultimoIndiceConDisco; i >= 0; i--) {
             int tamano = discos[i];
             if (tamano == 0) {
-                continue; // slot vacío (no debería ocurrir en este rango)
+                continue;
             }
 
-            // Ancho proporcional al tamaño: disco 1 es MARGEN_DISCO px, disco maxDiscos
-            // es MAX_ANCHO_DISCO + MARGEN_DISCO px.
+            // Ancho proporcional al tamaño
             int anchoDisco = (int) ((tamano / (double) maxDiscos) * MAX_ANCHO_DISCO)
                              + MARGEN_DISCO;
 
@@ -417,11 +527,14 @@ public class MinijuegoHanoi implements Minijuego {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     /**
-     * Post: no modifica el estado; solo consulta si el área sólida del
-     *       jugador intersecta la zona de activación del desafío.
+     * Detecta si el jugador está dentro de la zona de activación del puzzle.
+     *
+     * Post:
+     * - No modifica el estado; solo consulta si el área sólida del jugador
+     *   intersecta la zona de activación del desafío.
      *
      * @param jugador jugador cuya posición se evalúa
-     * @return true si el jugador está dentro de la zona de activación
+     * @return verdadero si el jugador está dentro de la zona de activación
      */
     private boolean jugadorEnZona(JugadorVista jugador) {
         Rectangle zona  = new Rectangle(zonaWorldX, zonaWorldY, zonaAncho, zonaAlto);
@@ -435,12 +548,18 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: delega en CiudadHanoi.mover() el movimiento entre las torres
-     *       indicadas por sus nombres ("A", "B" o "C").
+     * Realiza un movimiento entre dos torres.
      *
-     * @param origen  nombre de la torre origen
-     * @param destino nombre de la torre destino
-     * @return true si el movimiento se realizó, false si era inválido
+     * Pre:
+     * - origen y destino tienen valores "A", "B" o "C".
+     *
+     * Post:
+     * - Delega en CiudadHanoi.mover() el movimiento entre las torres indicadas.
+     * - Devuelve el resultado del movimiento (válido o inválido).
+     *
+     * @param origen nombre de la torre origen ("A", "B" o "C")
+     * @param destino nombre de la torre destino ("A", "B" o "C")
+     * @return verdadero si el movimiento se realizó, falso si era inválido
      */
     private boolean mover(String origen, String destino) {
         CiudadHanoi juego = partida.getJuego();
@@ -460,45 +579,87 @@ public class MinijuegoHanoi implements Minijuego {
     }
 
     /**
-     * Post: construye una instantánea inmutable (EstadoHanoi) del estado
-     *       actual del motor lógico, lista para ser dibujada.
+     * Construye una instantánea inmutable del estado actual del motor lógico.
+     *
+     * Post:
+     * - Crea un EstadoHanoi que captura los datos del puzzle en este momento.
+     * - La instantánea está lista para ser dibujada sin acceder más al motor.
      *
      * @return instantánea del estado actual del puzzle
      */
     private EstadoHanoi getEstado() {
         CiudadHanoi juego = partida.getJuego();
         return new EstadoHanoi(
-            juego.getDiscosDeTorre(juego.getTorreA()),
-            juego.getDiscosDeTorre(juego.getTorreB()),
-            juego.getDiscosDeTorre(juego.getTorreC()),
+            convertirVectorAArray(juego.getDiscosDelTorre(juego.getTorreA())),
+            convertirVectorAArray(juego.getDiscosDelTorre(juego.getTorreB())),
+            convertirVectorAArray(juego.getDiscosDelTorre(juego.getTorreC())),
             juego.getMovimientos(),
-            juego.getMinMovimientos()
+            juego.getMinimosMovimientos()
         );
     }
 
     /**
-     * Post: actualiza mensajeFeedback y reinicia su temporizador de vencimiento.
+     * Convierte un Vector<Integer> a un arreglo int[].
+     *
+     * Pre:
+     * - vector != null
+     *
+     * Post:
+     * - Devuelve un arreglo int[] con todos los elementos del vector.
+     * - Los elementos vacíos (slots) se rellenan con 0.
+     *
+     * @param vector vector de discos
+     * @return arreglo int[] equivalente
+     */
+    private int[] convertirVectorAArray(java.util.Vector<Integer> vector) {
+        int tamanoMaximo = partida.getJuego().getObjetivo();
+        int[] resultado = new int[tamanoMaximo];
+        for (int i = 0; i < vector.size(); i++) {
+            resultado[i] = vector.get(i);
+        }
+        return resultado;
+    }
+
+    /**
+     * Actualiza el mensaje de feedback y reinicia su temporizador de vencimiento.
+     *
+     * Post:
+     * - Establece mensajeFeedback al valor proporcionado.
+     * - Reinicia el contador tiempoFeedback al tiempo actual.
+     * - El feedback expirará luego de ConfiguracionDeHanoi.DURACION_FEEDBACK_MS ms.
      *
      * @param mensaje texto a mostrar como feedback
      */
     private void setFeedback(String mensaje) {
-        mensajeFeedback = mensaje;
-        tiempoFeedback  = System.currentTimeMillis();
+        this.mensajeFeedback = mensaje;
+        this.tiempoFeedback  = System.currentTimeMillis();
     }
 
     // GETTERS
 
-    /** @return true si el minijuego está en estado ACTIVO */
+    /**
+     * Post: no modifica el estado; solo consulta.
+     *
+     * @return verdadero si el minijuego está en estado ACTIVO
+     */
     public boolean isActivo() {
         return estado == Estado.ACTIVO;
     }
 
-    /** @return true si el minijuego está en estado GANADO */
+    /**
+     * Post: no modifica el estado; solo consulta.
+     *
+     * @return verdadero si el minijuego está en estado GANADO
+     */
     public boolean isGanado() {
         return estado == Estado.GANADO;
     }
 
-    /** @return la partida de Hanoi asociada a este minijuego */
+    /**
+     * Post: no modifica el estado; solo consulta.
+     *
+     * @return la partida de Hanoi asociada a este minijuego
+     */
     public PartidaHanoi getPartida() {
         return partida;
     }
@@ -506,15 +667,31 @@ public class MinijuegoHanoi implements Minijuego {
     // SETTERS
 
     /**
+     * Registra el callback a ejecutar cuando finalice la pantalla de victoria.
+     *
      * Pre:
      * - callback != null
      *
      * Post:
-     * - registra la acción a ejecutar cuando finalice la pantalla de victoria.
+     * - Memoriza la acción a ejecutar cuando se cumple la duración de victoria.
+     * - El callback se invoca una única vez, luego se borra (para evitar múltiples ejecuciones).
      *
-     * @param callback acción a ejecutar al finalizar
+     * @param callback acción (Runnable) a ejecutar al finalizar
      */
     public void setOnFinalizadoCallback(Runnable callback) {
         this.onFinalizadoCallback = callback;
+    }
+
+    // METODOS GENERALES
+
+    @Override
+    public String toString() {
+        return "MinijuegoHanoi{" +
+                "estado=" + estado +
+                ", partida=" + partida.getNombre() +
+                ", torreOrigen=" + torreOrigen +
+                ", activo=" + isActivo() +
+                ", ganado=" + isGanado() +
+                "}";
     }
 }

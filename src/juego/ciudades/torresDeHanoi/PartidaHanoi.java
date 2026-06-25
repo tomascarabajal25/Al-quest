@@ -7,9 +7,9 @@ import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import juego.ciudades.ordenamientos.EstadoDePartida;
 import juego.ciudades.torresDeHanoi.UI.MinijuegoHanoi;
 import juego.configuracion.ConfiguracionDeHanoi;
+import modelos.EstadoDePartida;
 import modelos.Jugador;
 import modelos.Partida;
 import modelos.Sonido;
@@ -19,21 +19,33 @@ import utils.ValidacionesUtiles;
 /**
  * Partida de Torres de Hanoi integrada en la Vista del juego.
  *
+ * Coordinadora del ciclo de vida de una sesión de juego de Torres de Hanoi.
+ * Gestiona la interacción con el jugador, la creación del motor lógico (CiudadHanoi),
+ * la interfaz gráfica y el cálculo del puntaje final.
+ *
  * Responsabilidades:
- *  - Gestionar el ciclo de vida: Creado → Iniciado → Creado (finalizado).
- *  - Pedirle al jugador la dificultad (cantidad de discos) al iniciar.
- *  - Crear y mostrar la ventana con Vista.
- *  - Contener y exponer el motor lógico CiudadHanoi.
- *  - Calcular y guardar el puntaje al terminar.
+ * - Gestionar el ciclo de vida: Creado → Iniciado → Creado (finalizado).
+ * - Solicitar la dificultad (cantidad de discos) al iniciar.
+ * - Crear y mostrar la ventana con Vista.
+ * - Contener y exponer el motor lógico CiudadHanoi.
+ * - Calcular y guardar el puntaje al terminar.
  *
  * INVARIANTES:
- *  - ConfiguracionDeHanoi.DISCOS_MINIMOS <= cantidadDiscos <= ConfiguracionDeHanoi.DISCOS_MAXIMOS
- *  - juego != null después de un iniciar() exitoso
+ * - ConfiguracionDeHanoi.DISCOS_MINIMOS <= cantidadDiscos <= ConfiguracionDeHanoi.DISCOS_MAXIMOS
+ * - juegoHanoi != null después de un iniciar() exitoso
  *
  * Ciclo de vida:
- *   new PartidaHanoi(nombre, jugador) → iniciar() → [juego corre] → finalizar()
+ *   new PartidaHanoi(nombre, jugador, sonido) → iniciar() → [juego corre] → finalizar()
  */
 public class PartidaHanoi extends Partida {
+
+    // CONSTANTES
+
+    // No hay constantes locales; se usan las de ConfiguracionDeHanoi
+
+    // ATRIBUTOS DE CLASE
+
+    // No hay atributos de clase
 
     // ATRIBUTOS
 
@@ -55,34 +67,57 @@ public class PartidaHanoi extends Partida {
     // CONSTRUCTORES
 
     /**
+     * Construye una nueva partida de Torres de Hanoi.
+     *
      * Pre:
      * - nombre != null
      * - jugador != null
+     * - sonido puede ser null
      *
      * Post:
-     * - La partida queda creada en estado Creado. La cantidad de discos se
-     *   define recién en iniciar(), de forma interactiva.
+     * - La partida queda creada en estado Creado.
+     * - juegoHanoi es null (se crea al llamar iniciar()).
+     * - cantidadDiscos es 0 (se define al jugador elegir dificultad).
+     * - vista y ventana son null (se crean en iniciar() si el jugador no cancela).
      *
-     * @param nombre  nombre de la ciudad asociada a esta partida
+     * @param nombre nombre de la ciudad asociada a esta partida
      * @param jugador jugador que participa en la partida
-     * @param sonido 
+     * @param sonido sistema de sonido; puede ser null
      */
     public PartidaHanoi(String nombre, Jugador jugador, Sonido sonido) {
         super(nombre, jugador);
         setSonido(sonido);
     }
 
+    // METODOS DE CLASE
+
+    // No hay métodos de clase
+
+    // METODOS GENERALES
+
+    // Los métodos generales están al final de la clase
+
     // METODOS DE COMPORTAMIENTO
 
     /**
+     * Inicia la partida de Torres de Hanoi.
+     *
      * Pre:
-     * - La partida no debe estar ya iniciada.
+     * - La partida debe estar en estado Creado (no debe estar ya iniciada).
      *
      * Post:
-     * - Se le pide al jugador la cantidad de discos mediante un diálogo.
-     * - Si el jugador cancela, la partida se finaliza sin crear ventana.
-     * - Si elige una dificultad, se crea el motor lógico, la Vista, el
-     *   minijuego y la ventana, y arranca el hilo de renderizado a 60 FPS.
+     * - Cambia el estado a Iniciado.
+     * - Solicita al jugador elegir la dificultad (cantidad de discos).
+     * - Si el jugador cancela:
+     *   * La partida permanece en estado Creado.
+     *   * juegoHanoi, vista y ventana quedan null.
+     * - Si el jugador elige una dificultad:
+     *   * Crea el motor lógico CiudadHanoi con la cantidad elegida.
+     *   * Crea la Vista del mundo.
+     *   * Crea el controlador MinijuegoHanoi.
+     *   * Monta la interfaz gráfica en una ventana JFrame.
+     *   * Inicia el hilo de renderizado a 60 FPS.
+     *   * Reproduce la música de la ciudad.
      */
     @Override
     public void iniciar() {
@@ -102,7 +137,7 @@ public class PartidaHanoi extends Partida {
         // 2. Creación del motor lógico con la cantidad de discos elegida
         this.juegoHanoi = new CiudadHanoi(cantidadDiscos);
 
-        // 3. Creación de la infraestructura de vista (Mundo 3 de Hanoi)
+        // 3. Creación de la infraestructura de vista (Mundo de Hanoi)
         this.vista = new Vista(
                 ConfiguracionDeHanoi.RUTA_MAPA,
                 getJugador(),
@@ -156,15 +191,18 @@ public class PartidaHanoi extends Partida {
     }
 
     /**
+     * Finaliza la partida de Torres de Hanoi.
+     *
      * Pre:
-     * - estado == Iniciado
+     * - La partida debe estar en estado Iniciado.
      *
      * Post:
+     * - Cambia el estado a Creado.
      * - Calcula y guarda el puntaje final.
-     * - Detiene el hilo de renderizado y cierra la ventana, si llegaron a
-     *   crearse (puede no haber Vista/ventana si el jugador canceló la
-     *   selección de dificultad).
-     * - Notifica al mapa global para abrir los caminos correspondientes.
+     * - Si la Vista fue creada, detiene su hilo de renderizado.
+     * - Si la ventana fue creada, cierra y libera recursos.
+     * - Detiene la música de la partida y reproduce la música global.
+     * - Notifica al sistema que la partida ha finalizado.
      */
     @Override
     public void finalizar() {
@@ -193,7 +231,13 @@ public class PartidaHanoi extends Partida {
     }
 
     /**
-     * Permite que clases externas (p.ej. MinijuegoHanoi) registren el puntaje.
+     * Permite que clases externas (p.ej. MinijuegoHanoi) actualicen el puntaje.
+     *
+     * Pre:
+     * - puntos >= 0
+     *
+     * Post:
+     * - Actualiza el puntaje de la partida al valor indicado.
      *
      * @param puntos puntaje a registrar para esta partida
      */
@@ -202,17 +246,18 @@ public class PartidaHanoi extends Partida {
     }
 
     /**
-     * Pide al jugador la cantidad de discos (dificultad) mediante un diálogo.
+     * Solicita al jugador elegir la dificultad mediante un diálogo interactivo.
      *
      * Post:
-     * - Devuelve un valor entre ConfiguracionDeHanoi.DISCOS_MINIMOS y
-     *   ConfiguracionDeHanoi.DISCOS_MAXIMOS si el jugador eligió una opción.
-     * - Devuelve null si el jugador cerró el diálogo sin elegir.
+     * - Si el jugador selecciona una opción válida, devuelve la cantidad de discos.
+     * - Si el jugador cierra el diálogo sin seleccionar, devuelve null.
+     * - Las opciones van desde ConfiguracionDeHanoi.DISCOS_MINIMOS hasta
+     *   ConfiguracionDeHanoi.DISCOS_MAXIMOS.
      *
-     * @return cantidad de discos elegida, o null si se canceló
+     * @return cantidad de discos elegida, o null si se canceló la selección
      */
     private Integer pedirCantidadDeDiscos() {
-        Integer[] opcionesDiscos = generarOpcionesDeDiscos();
+        Integer[] opciones = generarOpcionesDeDiscos();
 
         return (Integer) JOptionPane.showInputDialog(
                 null,
@@ -220,17 +265,19 @@ public class PartidaHanoi extends Partida {
                 ConfiguracionDeHanoi.TITULO_DIALOGO_CONFIGURACION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                opcionesDiscos,
-                opcionesDiscos[0]);
+                opciones,
+                opciones[0]);
     }
 
     /**
-     * Genera las opciones de dificultad disponibles, una por cada cantidad
-     * de discos entre DISCOS_MINIMOS y DISCOS_MAXIMOS (inclusive).
+     * Genera el arreglo de opciones de dificultad disponibles.
      *
      * Post:
-     * - Devuelve un arreglo de longitud (DISCOS_MAXIMOS - DISCOS_MINIMOS + 1)
-     *   con las cantidades de discos seleccionables, en orden creciente.
+     * - Devuelve un arreglo de Integer con valores desde
+     *   ConfiguracionDeHanoi.DISCOS_MINIMOS hasta ConfiguracionDeHanoi.DISCOS_MAXIMOS
+     *   (inclusive), en orden creciente.
+     * - La longitud del arreglo es
+     *   (DISCOS_MAXIMOS - DISCOS_MINIMOS + 1).
      *
      * @return arreglo con las cantidades de discos seleccionables
      */
@@ -250,12 +297,14 @@ public class PartidaHanoi extends Partida {
      * Calcula el puntaje obtenido en esta partida.
      *
      * Post:
-     * - Devuelve 0 si todavía no se jugó o no se ganó.
-     * - Si se ganó, devuelve PUNTAJE_BASE_PERFECTO o PUNTAJE_BASE_IMPERFECTO
-     *   (según si se logró el mínimo de movimientos) multiplicado por la
-     *   cantidad de discos de la partida.
+     * - Devuelve 0 si juegoHanoi es null o el jugador no ganó.
+     * - Si se ganó:
+     *   * Calcula PUNTAJE_BASE_PERFECTO si se logró con mínimo de movimientos.
+     *   * Calcula PUNTAJE_BASE_IMPERFECTO en caso contrario.
+     *   * Multiplica el puntaje base por la cantidad de discos.
+     * - El puntaje varía según dificultad y perfección de la jugada.
      *
-     * @return puntaje final de la partida
+     * @return puntaje final de la partida (0 si no se ganó)
      */
     public int calcularPuntaje() {
         if (this.juegoHanoi == null || !this.juegoHanoi.haGanado()) {
@@ -278,23 +327,43 @@ public class PartidaHanoi extends Partida {
      * Post:
      * - Devuelve null si iniciar() todavía no se ejecutó o si el jugador
      *   canceló la selección de dificultad.
+     * - Tras un iniciar() exitoso, devuelve una instancia válida de CiudadHanoi.
      *
-     * @return motor lógico de Torres de Hanoi
+     * @return motor lógico de Torres de Hanoi, o null
      */
     public CiudadHanoi getJuego() {
         return juegoHanoi;
     }
 
-    /** @return cantidad de discos elegida para esta partida */
+    /**
+     * Post: no modifica el estado de la partida; solo lo consulta.
+     *
+     * @return cantidad de discos elegida para esta partida (0 si no se ha iniciado)
+     */
     public int getCantidadDeDiscos() {
         return cantidadDiscos;
     }
+
+    // SETTERS
+
+    // Los setters son manejados por la clase padre Partida
 
     // METODOS GENERALES
 
     @Override
     public String toString() {
-        return "PartidaHanoi [cantidadDiscos=" + cantidadDiscos + ", juego=" + juegoHanoi + "]";
+        StringBuilder representacion = new StringBuilder();
+        representacion.append("PartidaHanoi{");
+        representacion.append("nombre=").append(getNombre());
+        representacion.append(", estado=").append(getEstado());
+        representacion.append(", cantidadDiscos=").append(cantidadDiscos);
+        representacion.append(", puntaje=").append(getPuntaje());
+        if (juegoHanoi != null) {
+            representacion.append(", movimientos=").append(juegoHanoi.getMovimientos());
+            representacion.append(", ganador=").append(juegoHanoi.haGanado());
+        }
+        representacion.append("}");
+        return representacion.toString();
     }
 
     @Override

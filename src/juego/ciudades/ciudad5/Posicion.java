@@ -5,9 +5,11 @@ import java.util.Objects;
 import utils.ValidacionesUtiles;
 
 public class Posicion {
+	//atributos----------------------------------------------------------------------
 	private int linea;
 	private int indice;
 	
+	//constructor------------------------------------------------------------------------
 	/*
 	 * Pre:
 	 * linea y columna enteros mayor o igual a 0
@@ -18,7 +20,7 @@ public class Posicion {
 		setLinea(linea);
 		setColumna(columna);
 	}
-
+	// metodos generales----------------------------------------------------------------------
 	@Override
 	public int hashCode() {
 		return Objects.hash(indice, linea);
@@ -42,7 +44,7 @@ public class Posicion {
 	public String toString() {
 		return "Posicion [linea=" + linea + ", columna=" + indice + "]";
 	}
-	
+	//getters-------------------------------------------------------------------------
 	//devuelve la linea de la posicion
 	public int getLinea() {
 		return linea;
@@ -52,6 +54,8 @@ public class Posicion {
 	public int getIndice() {
 		return indice;
 	}
+	
+	//setters-------------------------------------------------------------------------
 	/*
 	 * Pre: 
 	 * el numero debe ser mayor o igual a 0
