@@ -16,7 +16,7 @@ public class PasoTeoremaMaestro {
         return descripcion;
     }
 
-    @Override
+    @Override   //redundante
     public String toString() {
         return descripcion;
     }

@@ -64,8 +64,12 @@ public class SolverTeoremaMaestro {
     private double obtenerExponente(String fn) {
         fn = fn.trim();
 
-        if (fn.equals("1")) return 0;
-        if (fn.equals("n")) return 1;
+        if (fn.equals("1")) {
+            return 0;
+        }
+        if (fn.equals("n")) {
+            return 1;
+        }
         if (fn.startsWith("n^")) {
             return Double.parseDouble(fn.substring(2));
         }
@@ -101,10 +105,13 @@ public class SolverTeoremaMaestro {
 
             return "O(n^" + String.format("%.0f", logBA) + " log n)";
 
-        } else {                                 // Caso 3
-            if (expFn == 0) return "O(1)";
-            if (expFn == 1) return "O(n)";
-            if (expFn == 2) return "O(n^2)";
+        } else {   // Caso 3
+            if (expFn == 1) {
+                return "O(n)";
+            }
+            if (expFn == 2) {
+                return "O(n^2)";
+            }
             return "O(n^" + String.format("%.0f", expFn) + ")";
         }
     }

@@ -36,7 +36,9 @@ public class EcuacionRecurrencia {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EcuacionRecurrencia ec = (EcuacionRecurrencia) o;
         return a == ec.a && b == ec.b && Objects.equals(fn, ec.fn);
     }
