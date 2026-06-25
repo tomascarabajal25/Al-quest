@@ -5,8 +5,8 @@ import java.util.Random;
 public class Bufon extends Enemy {
 	private Random random = new Random();
 
-	public Bufon() {
-		super("BUFON", 95, 40, 35, 75, "/juego/ciudades/batalla/view/sprites/bufon.png");
+	public Bufon(int dificultad) {
+		super("BUFON", 95, 40, 35, 75, "/juego/ciudades/batalla/view/sprites/bufon" + dificultad + ".png");
 	}
 
 	@Override

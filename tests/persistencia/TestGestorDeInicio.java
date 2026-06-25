@@ -164,9 +164,14 @@ public class TestGestorDeInicio {
     @Test
     public void flujoConDatosGuardadosNoNuloAplicaDatos() {
         DatosGuardado datos = new DatosGuardado(
-            "jugador", 100, 2,
-            new java.util.Vector<>(), new java.util.Vector<>(),
-            "/skin", new java.util.Vector<>()
+            "jugador",
+            100,
+            2,
+            new java.util.Vector<>(),
+            new java.util.Vector<>(),
+            "/skin",
+            new java.util.Vector<>(),
+            new java.util.Vector<>()
         );
         assertTrue(datos != null);
     }

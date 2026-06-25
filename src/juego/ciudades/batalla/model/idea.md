@@ -24,5 +24,5 @@ Tendra 3 dificultades:
 ## Ideas
 - BattleManager recibe personaje, pila de enemigos y UiManager -> primero lo hacemos por consola para debug y despues hacemos con bitmap y swing
 - crear un sleep personalizado para dar tiempo a la ui a renderizar
-- Para las acciones del personaje usaremos un map y estrategias (strategy pattern). Entonces el battle manager recibira el map de acciones, y la ui devuelve un string o algo asi que el la key de la accion -> el value sera la estrategia que se encarga de la logica de la accion
+- Para las acciones del personaje usaremos un map y estrategias (strategy pattern). Entonces el battle manager recibira el map de acciones, y la ui devuelve un string o algo asi que es la key de la accion -> el value sera la estrategia que se encarga de la logica de la accion
 - Enemigos y sus acciones son generados de manera random

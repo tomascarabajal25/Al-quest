@@ -3,8 +3,8 @@ package juego.ciudades.batalla.view.models;
 public class Robot extends Enemy {
 	private boolean isCharged = false;
 
-	public Robot() {
-		super("ROBOT", 120, 50, 60, 35, "/juego/ciudades/batalla/view/sprites/robot.png");
+	public Robot(int dificultad) {
+		super("ROBOT", 120, 50, 60, 35, "/juego/ciudades/batalla/view/sprites/robot" + dificultad + ".png");
 	}
 
 	@Override

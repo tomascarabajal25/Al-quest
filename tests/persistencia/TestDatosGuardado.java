@@ -17,6 +17,7 @@ public class TestDatosGuardado {
             new Vector<>(),
             new Vector<>(),
             "/skins/default",
+            new Vector<>(),
             new Vector<>()
         );
     }
@@ -26,7 +27,8 @@ public class TestDatosGuardado {
         var c = DatosGuardado.class.getConstructor(
             String.class, int.class, int.class,
             Vector.class, Vector.class,
-            String.class, Vector.class
+            String.class, Vector.class,
+            Vector.class
         );
         assertTrue(Modifier.isPublic(c.getModifiers()));
     }
@@ -54,7 +56,8 @@ public class TestDatosGuardado {
         Vector<Integer> completadas = new Vector<>();
         completadas.add(1);
         DatosGuardado d = new DatosGuardado(
-            "test", 0, 1, completadas, new Vector<>(), "/skin", new Vector<>()
+            "test", 0, 1, completadas, new Vector<>(), "/skin", new Vector<>(),
+            new Vector<>()
         );
         assertEquals(completadas, d.getIdsCiudadesCompletadas());
     }
@@ -64,7 +67,8 @@ public class TestDatosGuardado {
         Vector<Integer> desbloqueadas = new Vector<>();
         desbloqueadas.add(2);
         DatosGuardado d = new DatosGuardado(
-            "test", 0, 1, new Vector<>(), desbloqueadas, "/skin", new Vector<>()
+            "test", 0, 1, new Vector<>(), desbloqueadas, "/skin", new Vector<>(),
+            new Vector<>()
         );
         assertEquals(desbloqueadas, d.getIdsCiudadesDesbloqueadas());
     }
@@ -81,7 +85,8 @@ public class TestDatosGuardado {
         skins.add("/skins/default");
         skins.add("/skins/blue");
         DatosGuardado d = new DatosGuardado(
-            "test", 0, 1, new Vector<>(), new Vector<>(), "/skins/default", skins
+            "test", 0, 1, new Vector<>(), new Vector<>(), "/skins/default", skins,
+            new Vector<>()
         );
         assertEquals(skins, d.getSkinsDesbloqueadas());
     }
@@ -90,7 +95,8 @@ public class TestDatosGuardado {
     public void constructorAlmacenaVectorPorReferencia() {
         Vector<Integer> completadas = new Vector<>();
         DatosGuardado d = new DatosGuardado(
-            "test", 0, 1, completadas, new Vector<>(), "/skin", new Vector<>()
+            "test", 0, 1, completadas, new Vector<>(), "/skin", new Vector<>(),
+            new Vector<>()
         );
         completadas.add(99);
         assertTrue(d.getIdsCiudadesCompletadas().contains(99));
@@ -99,7 +105,8 @@ public class TestDatosGuardado {
     @Test
     public void puntajeCeroEsValido() {
         DatosGuardado d = new DatosGuardado(
-            "test", 0, 1, new Vector<>(), new Vector<>(), "/skin", new Vector<>()
+            "test", 0, 1, new Vector<>(), new Vector<>(), "/skin", new Vector<>(),
+            new Vector<>()
         );
         assertEquals(0, d.getPuntajeTotal());
     }
@@ -107,7 +114,8 @@ public class TestDatosGuardado {
     @Test
     public void puntajePositivoEsValido() {
         DatosGuardado d = new DatosGuardado(
-            "test", 9999, 1, new Vector<>(), new Vector<>(), "/skin", new Vector<>()
+            "test", 9999, 1, new Vector<>(), new Vector<>(), "/skin", new Vector<>(),
+            new Vector<>()
         );
         assertEquals(9999, d.getPuntajeTotal());
     }
@@ -129,7 +137,8 @@ public class TestDatosGuardado {
     public void equalsConNombreDistintoRetornaFalse() {
         DatosGuardado d1 = datosEjemplo();
         DatosGuardado d2 = new DatosGuardado(
-            "Otro", 500, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>()
+            "Otro", 500, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>(),
+            new Vector<>()
         );
         assertNotEquals(d1, d2);
     }
@@ -138,7 +147,8 @@ public class TestDatosGuardado {
     public void equalsConPuntajeDistintoRetornaFalse() {
         DatosGuardado d1 = datosEjemplo();
         DatosGuardado d2 = new DatosGuardado(
-            "Jugador1", 999, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>()
+            "Jugador1", 999, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>(),
+            new Vector<>()
         );
         assertNotEquals(d1, d2);
     }
@@ -147,7 +157,8 @@ public class TestDatosGuardado {
     public void equalsConIdCiudadDistintoRetornaFalse() {
         DatosGuardado d1 = datosEjemplo();
         DatosGuardado d2 = new DatosGuardado(
-            "Jugador1", 500, 7, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>()
+            "Jugador1", 500, 7, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>(),
+            new Vector<>()
         );
         assertNotEquals(d1, d2);
     }
@@ -156,7 +167,8 @@ public class TestDatosGuardado {
     public void equalsConSkinDistintaRetornaFalse() {
         DatosGuardado d1 = datosEjemplo();
         DatosGuardado d2 = new DatosGuardado(
-            "Jugador1", 500, 3, new Vector<>(), new Vector<>(), "/skins/blue", new Vector<>()
+            "Jugador1", 500, 3, new Vector<>(), new Vector<>(), "/skins/blue", new Vector<>(),
+            new Vector<>()
         );
         assertNotEquals(d1, d2);
     }
@@ -176,7 +188,8 @@ public class TestDatosGuardado {
         Vector<Integer> unas = new Vector<>();
         unas.add(1);
         DatosGuardado d1 = new DatosGuardado(
-            "Jugador1", 500, 3, unas, new Vector<>(), "/skins/default", new Vector<>()
+            "Jugador1", 500, 3, unas, new Vector<>(), "/skins/default", new Vector<>(),
+            new Vector<>()
         );
         DatosGuardado d2 = datosEjemplo();
         assertNotEquals(d1, d2);
@@ -193,7 +206,8 @@ public class TestDatosGuardado {
     public void hashCodeDistintoParaObjetosDiferentes() {
         DatosGuardado d1 = datosEjemplo();
         DatosGuardado d2 = new DatosGuardado(
-            "Otro", 500, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>()
+            "Otro", 500, 3, new Vector<>(), new Vector<>(), "/skins/default", new Vector<>(),
+            new Vector<>()
         );
         assertNotEquals(d1.hashCode(), d2.hashCode());
     }

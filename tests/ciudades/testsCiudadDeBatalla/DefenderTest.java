@@ -5,18 +5,17 @@ import org.junit.jupiter.api.Test;
 
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.model.acciones.Defender;
+import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class DefenderTest {
 
 	private Heroe heroe;
 	private Enemigo enemigo;
-	private HabilidadEspecial habilidadNinguna;
 
 	@BeforeEach
 	public void setUp() {
-		habilidadNinguna = (personaje, objetivo) -> {};
-		heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
-		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		heroe = new Heroe("Heroe", 100, 20, 10);
+		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5);
 	}
 
 	@Test
@@ -75,5 +74,42 @@ public class DefenderTest {
 		Defender defender = new Defender(enemigo, enemigo);
 		defender.ejecutar();
 		assertEquals(vidaAntes, enemigo.getVida());
+	}
+
+	@Test
+	public void testDefenderAplicaEstadoDefendiendo() {
+		Defender defender = new Defender(heroe, heroe);
+		defender.ejecutar();
+		assertTrue(heroe.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+		assertTrue(heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO) instanceof Defendiendo);
+	}
+
+	@Test
+	public void testDefenderApilaConDefensaExistente() {
+		heroe.setEstado(new Defendiendo(heroe));
+		int turnosAntes = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		Defender defender = new Defender(heroe, heroe);
+		defender.ejecutar();
+		int turnosDespues = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		assertEquals(turnosAntes + 1, turnosDespues);
+	}
+
+	@Test
+	public void testDefenderEnemigoAplicaEstado() {
+		Defender defender = new Defender(enemigo, enemigo);
+		defender.ejecutar();
+		assertTrue(enemigo.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+	}
+
+	@Test
+	public void testDefenderGetEstadoEsDefendiendo() {
+		Defendiendo def = new Defendiendo(heroe);
+		assertEquals(EstadoCombatiente.DEFENDIENDO, def.getEstado());
+	}
+
+	@Test
+	public void testDefenderTurnosRestantesEsUno() {
+		Defendiendo def = new Defendiendo(heroe);
+		assertEquals(1, def.getTurnosRestantes());
 	}
 }

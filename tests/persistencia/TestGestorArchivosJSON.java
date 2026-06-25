@@ -21,6 +21,7 @@ public class TestGestorArchivosJSON {
             new Vector<>(),
             new Vector<>(),
             "/skins/default",
+            new Vector<>(),
             new Vector<>()
         );
     }
@@ -243,9 +244,15 @@ public class TestGestorArchivosJSON {
     public void datosConDistintoPuntajeNoSonIgualesTrasReconstruccion() {
         DatosGuardado original = datosEjemplo();
         DatosGuardado otro = new DatosGuardado(
-            "TestJugador", 999, 2,
-            new Vector<>(), new Vector<>(),
-            "/skins/default", new Vector<>()
+            "TestJugador",
+            999,
+            2,
+            new Vector<>(),
+            new Vector<>(),
+            "/skins/default",
+            new Vector<>(),
+            new Vector<>()
+
         );
         assertNotEquals(original, otro);
     }
