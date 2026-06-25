@@ -1,26 +1,30 @@
 package juego.ciudades.batalla.model;
 
+import estructuras.cola.Cola;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class Combatiente {
 //ATRIBUTOS DE CLASE --------------------------------------------------------------------------------------
 	private final String nombre;
 	private int vida;
 	private int fuerza;
 	private int armadura;
-	private final HabilidadEspecial habilidad;
+	private final Map<EstadoCombatiente, EstadoActivo> estados;
 
 //CONSTRUCTORES -------------------------------------------------------------------------------------------
 	public Combatiente(
 			String nombre,
 			int vida,
 			int fuerza,
-			int armadura,
-			HabilidadEspecial habilidad
+			int armadura
 	) {
 		this.nombre = nombre;
 		setVida(vida);
 		setFuerza(fuerza);
 		setArmadura(armadura);
-		this.habilidad = habilidad;
+		this.estados = new HashMap<>();
 	}
 
 //GETTERS SIMPLES -----------------------------------------------------------------------------------------
@@ -31,6 +35,9 @@ public abstract class Combatiente {
 	public int getArmadura() { return armadura; }
 
 	public String getNombre() { return nombre; }
+
+	public Map<EstadoCombatiente, EstadoActivo> getEstados() { return estados; }
+
 
 	//SETTERS SIMPLES -----------------------------------------------------------------------------------------
 	public void setVida(int vida) {
@@ -45,10 +52,15 @@ public abstract class Combatiente {
 		this.armadura = armadura;
 	}
 
-//METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
-	public void usarHabilidadEspecial(Combatiente enemigo) {
-		this.habilidad.activar(this, enemigo);
+	public void setEstado(EstadoActivo estado) {
+		if (!this.estados.containsKey(estado.getEstado())) {
+			this.estados.put(estado.getEstado(), estado);
+			return;
+		}
+		this.estados.get(estado.getEstado()).apilar(estado);
 	}
+
+//METODOS HEREDADOS (INTERFACE)----------------------------------------------------------------------------
 //METODOS DE CLASE ----------------------------------------------------------------------------------------
 
 //METODOS GENERALES ---------------------------------------------------------------------------------------
@@ -66,5 +78,15 @@ public abstract class Combatiente {
 //METODOS DE CONSULTA DE ESTADO ---------------------------------------------------------------------------
 	public boolean estaVivo() {
 		return this.vida > 0;
+	}
+
+	public boolean estaDefendiendo() {
+		return
+				estados.containsKey(EstadoCombatiente.DEFENDIENDO) &&
+				!estados.get(EstadoCombatiente.DEFENDIENDO).terminado();
+	}
+
+	public void defendido() {
+		estados.get(EstadoCombatiente.DEFENDIENDO).defendido();
 	}
 }

@@ -4,6 +4,9 @@ import estructuras.cola.Cola;
 import estructuras.pilas.Pila;
 import juego.ciudades.batalla.model.*;
 import juego.ciudades.batalla.view.*;
+import juego.ciudades.batalla.view.accion.ActionUi;
+import juego.ciudades.batalla.view.animacion.Animacion;
+import juego.ciudades.batalla.view.animacion.GlowAnimacion;
 
 import java.util.List;
 
@@ -20,67 +23,42 @@ public class Batalla {
 		this.dificultad = dificultad;
 	}
 
-	private static final long ACTION_DELAY_MS = 900;
 	private static final long TURN_END_DELAY_MS = 600;
 
-	public boolean empezar() {
+	public ResultadoBatalla empezar() {
+		// heroe siempre arrancara primero, asi que lo guardamos mirando al primero en la cola
 		Combatiente heroe = turnos.peek();
 
 		while (
 				heroe != null &&
 				heroe.estaVivo() &&
-				!enemigos.isEmpty()
+				enemigos.stream().anyMatch(enemigo -> enemigo.estaVivo())
 		) {
-			Combatiente actual = turnos.remove();
+			Combatiente actual = turnos.remove(); // desencolamos
 
 			if (!actual.estaVivo()) {
-				enemigos.remove(actual);
+				// queda eliminado de la cola de turnos
+				continue;
+			}
+
+			// aplicamos estados + ui al pj actual (veneno, sangrado, etc.)
+			List<ManagerBatalla.EstadoAplicado> estadoDescripciones = ManagerBatalla.aplicarEstados(actual);
+			ManagerBatalla.registrarAnimaciones(estadoDescripciones, ui, actual);
+
+			// volvemos a chequear pues puede matarlo un estado
+			if (!actual.estaVivo()) {
+				// queda eliminado de la cola de turnos
 				continue;
 			}
 
 			Pila<Accion> acciones;
-			try {
-				acciones = (actual instanceof Heroe)
-						? ui.solicitarAcciones(dificultad)
-						: ManagerBatalla.elegirAccionEnemigo((Enemigo) actual, heroe);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				break;
-			}
-
-			if (acciones != null && !acciones.isEmpty()) {
-				List<Accion> lista = new java.util.ArrayList<>();
-				while (!acciones.isEmpty()) {
-					lista.add(acciones.pop());
-				}
-
-				for (int i = 0; i < lista.size(); i++) {
-					Accion a = lista.get(i);
-					a.ejecutar();
-
-					String msg;
-					if (a instanceof juego.ciudades.batalla.model.acciones.Atacar) {
-						msg = a.getCombatiente().getNombre() + " atacó a " + a.getObjetivo().getNombre() + "!";
-					} else {
-						msg = a.getCombatiente().getNombre() + " usó " + a.getTipo().name().toLowerCase() + "!";
-					}
-
-					ui.actualizarEstado(msg, actual);
-
-					enemigos.removeIf(e -> !e.estaVivo());
-
-					try {
-						Thread.sleep(ACTION_DELAY_MS);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						break;
-					}
-				}
+			if (actual instanceof Heroe) {
+				acciones = ManagerBatalla.elegirAccionesHeroe(dificultad, ui);
 			} else {
-				ui.actualizarEstado(null, actual);
+				acciones = ManagerBatalla.elegirAccionesEnemigo((Enemigo) actual, heroe);
+				ui.setEstadoMenu(null);
 			}
-
-			enemigos.removeIf(e -> !e.estaVivo());
+			ManagerBatalla.ejecutarAcciones(acciones, ui, enemigos, actual);
 
 			if (!enemigos.isEmpty() && heroe.estaVivo()) {
 				try {
@@ -91,8 +69,29 @@ public class Batalla {
 				}
 			}
 
+			// volvemos a encolar al pj que ejecuto su turno
 			turnos.offer(actual);
 		}
-		return heroe != null && heroe.estaVivo();
+
+		int eliminados = 0;
+		for (Enemigo enemigo :  enemigos) {
+			if (!enemigo.estaVivo()) {eliminados++;}
+		}
+		boolean victoria = heroe != null && heroe.estaVivo();
+		int puntaje = victoria ? puntajePorDificultad(dificultad) : 0;
+		return new ResultadoBatalla(victoria, eliminados, enemigos.size(), puntaje);
+	}
+
+	private static int puntajePorDificultad(int dificultad) {
+		switch (dificultad) {
+			case 1:
+				return 1000;
+			case 2:
+				return 5000;
+			case 3:
+				return 15000;
+			default:
+				return 0;
+		}
 	}
 }

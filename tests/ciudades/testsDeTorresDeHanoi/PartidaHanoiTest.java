@@ -16,7 +16,7 @@ public class PartidaHanoiTest {
     public void calcularPuntaje_conResolucionPerfecta_debeOtorgarPuntajeMaximoMultiplicado() throws Exception {
         // Arrange
         Jugador jugador = new Jugador("Tester");
-        PartidaHanoi partida = new PartidaHanoi("Hanoi", jugador);
+        PartidaHanoi partida = new PartidaHanoi("Hanoi", jugador, null);
         
         int cantidadDiscos = 3;
         int movimientosOptimos = 7; // El óptimo para 3 discos
@@ -36,7 +36,7 @@ public class PartidaHanoiTest {
     public void calcularPuntaje_conMovimientosDeMas_debeOtorgarPuntajeImperfecto() throws Exception {
         // Arrange
         Jugador jugador = new Jugador("Tester");
-        PartidaHanoi partida = new PartidaHanoi("Hanoi", jugador);
+        PartidaHanoi partida = new PartidaHanoi("Hanoi", jugador, null);
         
         int cantidadDiscos = 3;
         int movimientosRealizados = 15; // El jugador cometió errores

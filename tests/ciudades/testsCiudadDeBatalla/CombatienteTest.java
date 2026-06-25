@@ -4,18 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import juego.ciudades.batalla.model.*;
+import juego.ciudades.batalla.model.estados.Defendiendo;
 
 public class CombatienteTest {
 
 	private Heroe heroe;
 	private Enemigo enemigo;
-	private HabilidadEspecial habilidadNinguna;
 
 	@BeforeEach
 	public void setUp() {
-		habilidadNinguna = (personaje, objetivo) -> {};
-		heroe = new Heroe("Heroe", 100, 20, 10, habilidadNinguna);
-		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5, habilidadNinguna);
+		heroe = new Heroe("Heroe", 100, 20, 10);
+		enemigo = new Enemigo("NINJA", TipoEnemigo.NINJA, 80, 15, 5);
 	}
 
 	@Test
@@ -82,21 +81,6 @@ public class CombatienteTest {
 	}
 
 	@Test
-	public void testUsarHabilidadEspecialDanioBonus() {
-		HabilidadEspecial danioBonus = (personaje, objetivo) -> objetivo.setVida(Math.max(0, objetivo.getVida() - 5));
-		Heroe h = new Heroe("H", 100, 10, 5, danioBonus);
-		h.usarHabilidadEspecial(enemigo);
-		assertEquals(75, enemigo.getVida());
-	}
-
-	@Test
-	public void testUsarHabilidadEspecialNinguna() {
-		heroe.usarHabilidadEspecial(enemigo);
-		assertEquals(80, enemigo.getVida());
-		assertEquals(100, heroe.getVida());
-	}
-
-	@Test
 	public void testToStringContieneNombre() {
 		String str = heroe.toString();
 		assertTrue(str.contains("Heroe"));
@@ -118,5 +102,39 @@ public class CombatienteTest {
 	@Test
 	public void testHeroeEsCombatiente() {
 		assertTrue(heroe instanceof Combatiente);
+	}
+
+	@Test
+	public void testSetEstadoAgregaNuevoEstado() {
+		heroe.setEstado(new Defendiendo(heroe));
+		assertTrue(heroe.getEstados().containsKey(EstadoCombatiente.DEFENDIENDO));
+	}
+
+	@Test
+	public void testSetEstadoApilaExistente() {
+		heroe.setEstado(new Defendiendo(heroe));
+		int turnosAntes = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		heroe.setEstado(new Defendiendo(heroe));
+		int turnosDespues = heroe.getEstados().get(EstadoCombatiente.DEFENDIENDO).getTurnosRestantes();
+		assertEquals(turnosAntes + 1, turnosDespues);
+		assertEquals(1, heroe.getEstados().size());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsTrue() {
+		heroe.setEstado(new Defendiendo(heroe));
+		assertTrue(heroe.estaDefendiendo());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsFalse() {
+		assertFalse(heroe.estaDefendiendo());
+	}
+
+	@Test
+	public void testEstaDefendiendoEsFalseDespuesDeConsumo() {
+		heroe.setEstado(new Defendiendo(heroe));
+		heroe.getEstados().remove(EstadoCombatiente.DEFENDIENDO);
+		assertFalse(heroe.estaDefendiendo());
 	}
 }

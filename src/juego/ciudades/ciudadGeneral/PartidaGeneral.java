@@ -105,7 +105,7 @@ public class PartidaGeneral extends Partida {
         this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR2, juego.configuracion.ConstantesSonido.RUTA_COMPRAR2);
         this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR3, juego.configuracion.ConstantesSonido.RUTA_COMPRAR3);
         this.sonido.agregarSonido(juego.configuracion.ConstantesSonido.COMPRAR4, juego.configuracion.ConstantesSonido.RUTA_COMPRAR4);
-        
+
     }
 
     /**
@@ -166,26 +166,26 @@ public class PartidaGeneral extends Partida {
         NodoCiudad ciudad10 = crearNodo(10, "Ciudad De Complejidad",
                 new PartidaComplejidad(jugador,this.sonido));
 
-        mapaMundi.agregarCiudad(ciudad1);
-        mapaMundi.agregarCiudad(ciudad2);
-        mapaMundi.agregarCiudad(ciudad3);
-        mapaMundi.agregarCiudad(ciudad4);
-        mapaMundi.agregarCiudad(ciudad5);
-        mapaMundi.agregarCiudad(ciudad6);
-        mapaMundi.agregarCiudad(ciudad7);
-        mapaMundi.agregarCiudad(ciudad8);
-        mapaMundi.agregarCiudad(ciudad9);
-        mapaMundi.agregarCiudad(ciudad10);
-
-        mapaMundi.conectarCiudades(1, 2);
-        mapaMundi.conectarCiudades(2, 3);
-        mapaMundi.conectarCiudades(3, 4);
-        mapaMundi.conectarCiudades(4, 5);
-        mapaMundi.conectarCiudades(5, 6);
-        mapaMundi.conectarCiudades(6, 7);
-        mapaMundi.conectarCiudades(7, 8);
-        mapaMundi.conectarCiudades(8, 9);
-        mapaMundi.conectarCiudades(9, 10);
+//        mapaMundi.agregarCiudad(ciudad1);
+//        mapaMundi.agregarCiudad(ciudad2);
+//        mapaMundi.agregarCiudad(ciudad3);
+//        mapaMundi.agregarCiudad(ciudad4);
+//        mapaMundi.agregarCiudad(ciudad5);
+//        mapaMundi.agregarCiudad(ciudad6);
+//        mapaMundi.agregarCiudad(ciudad7);
+//        mapaMundi.agregarCiudad(ciudad8);
+          mapaMundi.agregarCiudad(ciudad9);
+//        mapaMundi.agregarCiudad(ciudad10);
+//
+//        mapaMundi.conectarCiudades(1, 2);
+//        mapaMundi.conectarCiudades(2, 3);
+//        mapaMundi.conectarCiudades(3, 4);
+//        mapaMundi.conectarCiudades(4, 5);
+//        mapaMundi.conectarCiudades(5, 6);
+//        mapaMundi.conectarCiudades(6, 7);
+//        mapaMundi.conectarCiudades(7, 8);
+//        mapaMundi.conectarCiudades(8, 9);
+//        mapaMundi.conectarCiudades(9, 10);
     }
 
     /**
@@ -266,6 +266,13 @@ public class PartidaGeneral extends Partida {
                 ? ciudadActual.getId()
                 : GrafoCiudades.ID_CIUDAD_INICIAL;
 
+        NodoCiudad nodoBatalla = mapaMundi.obtenerCiudad(9);
+        Vector<Integer> difsBatalla = new Vector<>();
+        if (nodoBatalla != null && nodoBatalla.getPartidaAsociada() instanceof PartidaBatalla) {
+            PartidaBatalla pb = (PartidaBatalla) nodoBatalla.getPartidaAsociada();
+            difsBatalla.addAll(pb.getDificultadesGanadas());
+        }
+
         return new DatosGuardado(
                 getJugador().getNombre(),
                 puntajeTotal,
@@ -273,7 +280,8 @@ public class PartidaGeneral extends Partida {
                 mapaMundi.obtenerIdsCompletadas(),
                 mapaMundi.obtenerIdsAccesibles(),
                 skinActual,
-                new Vector<>(skinsDesbloqueadas));
+                new Vector<>(skinsDesbloqueadas),
+                difsBatalla);
     }
 
     /**
@@ -303,23 +311,30 @@ public class PartidaGeneral extends Partida {
             restaurarSkinsDesbloqueadas(datos.getSkinsDesbloqueadas());
         }
 
-        
+        if (datos.getDificultadesBatallaGanadas() != null) {
+            NodoCiudad nodoBatalla = mapaMundi.obtenerCiudad(9);
+            if (nodoBatalla != null && nodoBatalla.getPartidaAsociada() instanceof PartidaBatalla) {
+                PartidaBatalla pb = (PartidaBatalla) nodoBatalla.getPartidaAsociada();
+                pb.restaurarDificultades(datos.getDificultadesBatallaGanadas());
+            }
+        }
+
         restaurarSkinActual(datos.getSkinActual());
     }
-    
+
     private void restaurarSkinActual(String skinActual2) {
         if (skinActual2 != null) {
             this.skinActual = skinActual2;
         }
     }
-    
+
     //aplica las ciudades completadas en el mapaMundi a partir de sus ids
     private void guardarCiudadesCompletadas(Vector<Integer> idsCiudadesCompletadas) {
     	for (int idCompletada : idsCiudadesCompletadas) {
             mapaMundi.marcarCiudadCompletada(idCompletada);
         }
 	}
-    
+
     // Agrega a la lista de skins desbloqueadas las rutas de las skins que estaban guardadas en el guardado.
 	private void restaurarSkinsDesbloqueadas(Vector<String> rutas) {
     	for (String ruta : rutas) {
@@ -352,6 +367,10 @@ public class PartidaGeneral extends Partida {
         ciudadActual = nodo;
 
         nodo.getPartidaAsociada().setRutaSprites(skinActual);
+        Partida partida = nodo.getPartidaAsociada();
+        if (partida instanceof PartidaBatalla) {
+            ((PartidaBatalla) partida).setPuntajeTotal(puntajeTotal);
+        }
 
         vistaGlobal.detenerHilo();
         ventanaGlobal.setVisible(false);
@@ -454,12 +473,12 @@ public class PartidaGeneral extends Partida {
 	}
 
 
-    /** 
+    /**
      * Implementado con las meditaciones, suma puntaje al total acumulado del jugador
-     * 
+     *
      * PRE: cantidad > 0
      * POST: puntajeTotal incrementa en cantidad (la persistencia la maneja quien la llama)
-     * 
+     *
      * @param cantidad puntos a sumar
      */
     public void sumarPuntos(int cantidad){

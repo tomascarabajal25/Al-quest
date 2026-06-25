@@ -57,6 +57,9 @@ public class DatosGuardado {
     /** Rutas base de todas las skins que el jugador ya desbloqueó/compró. */
     private Vector<String> skinsDesbloqueadas;
 
+    /** Dificultades (1, 2, 3) ganadas en la ciudad de batalla. Puede ser null en guardados viejos. */
+    private Vector<Integer> dificultadesBatallaGanadas;
+
     // ── Constructor ───────────────────────────────────────────────────────────
 
     /**
@@ -80,7 +83,8 @@ public class DatosGuardado {
             Vector<Integer> idsCiudadesCompletadas,
             Vector<Integer> idsCiudadesDesbloqueadas,
             String skinActual,
-            Vector<String> skinsDesbloqueadas) {
+            Vector<String> skinsDesbloqueadas,
+            Vector<Integer> dificultadesBatallaGanadas) {
 
         this.nombreJugador             = nombreJugador;
         this.puntajeTotal               = puntajeTotal;
@@ -89,6 +93,7 @@ public class DatosGuardado {
         this.idsCiudadesDesbloqueadas   = idsCiudadesDesbloqueadas;
         this.skinActual                 = skinActual;
         this.skinsDesbloqueadas         = skinsDesbloqueadas;
+        this.dificultadesBatallaGanadas = dificultadesBatallaGanadas;
     }
 
     // ── Getters ───────────────────────────────────────────────────────────────
@@ -128,6 +133,11 @@ public class DatosGuardado {
         return skinsDesbloqueadas;
     }
 
+    /** @return dificultades ganadas en la ciudad de batalla (puede ser null). */
+    public Vector<Integer> getDificultadesBatallaGanadas() {
+        return dificultadesBatallaGanadas;
+    }
+
     // ── Object overrides ──────────────────────────────────────────────────────
 
     @Override
@@ -145,7 +155,8 @@ public class DatosGuardado {
                 && Objects.equals(idsCiudadesCompletadas, otro.idsCiudadesCompletadas)
                 && Objects.equals(idsCiudadesDesbloqueadas, otro.idsCiudadesDesbloqueadas)
                 && Objects.equals(skinActual, otro.skinActual)
-                && Objects.equals(skinsDesbloqueadas, otro.skinsDesbloqueadas);
+                && Objects.equals(skinsDesbloqueadas, otro.skinsDesbloqueadas)
+                && Objects.equals(dificultadesBatallaGanadas, otro.dificultadesBatallaGanadas);
     }
 
     @Override
@@ -157,7 +168,8 @@ public class DatosGuardado {
                 idsCiudadesCompletadas,
                 idsCiudadesDesbloqueadas,
                 skinActual,
-                skinsDesbloqueadas);
+                skinsDesbloqueadas,
+                dificultadesBatallaGanadas);
     }
 
     @Override
@@ -170,6 +182,7 @@ public class DatosGuardado {
                 + ", idsCiudadesDesbloqueadas=" + idsCiudadesDesbloqueadas
                 + ", skinActual='" + skinActual + '\''
                 + ", skinsDesbloqueadas=" + skinsDesbloqueadas
+                + ", dificultadesBatallaGanadas=" + dificultadesBatallaGanadas
                 + '}';
     }
 }

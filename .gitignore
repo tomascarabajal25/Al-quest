@@ -31,8 +31,6 @@ Thumbs.db
 out/
 build/
 
-# Dependencias locales
-lib/
 # Partidas guardadas de los jugadores
 saves/
 *.json

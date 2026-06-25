@@ -2,8 +2,8 @@ package juego.ciudades.batalla.model;
 
 public enum TipoEnemigo {
 	NINJA,
-	SAMURAI,
 	VIKINGO,
+	MAGO,
 	CABALLERO,
 	BUFON,
 	DUENDE,
