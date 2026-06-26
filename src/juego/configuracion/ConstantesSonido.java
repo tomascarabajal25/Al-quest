@@ -30,16 +30,16 @@ public final class ConstantesSonido {
     public static final String COMPRAR4 = "COMPRAR4";
     public static final String COMPRAR2 = "COMPRAR2";
     
-    public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/sonidoGeneral.wav";
+    public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/MapaGeneral.wav";
     public static final String RUTA_HANOI = "/assets/sonido/hanoi.wav";
     public static final String RUTA_RECOLECCION = "/assets/sonido/recoleccion.wav";
-    public static final String RUTA_REINAS = "/assets/sonido/reinas.wav";
+    public static final String RUTA_REINAS = "/assets/sonido/Track02.wav";
     public static final String RUTA_LABERINTO = "/assets/sonido/laberinto.wav";
     public static final String RUTA_ORDENAMIENTO = "/assets/sonido/ordenamiento.wav";
     public static final String RUTA_BUSQUEDA = "/assets/sonido/busqueda.wav";
     public static final String RUTA_HASHING = "/assets/sonido/hashing.wav";
     public static final String RUTA_GRAFOS = "/assets/sonido/grafos.wav";
-    public static final String RUTA_BATALLA = "/assets/sonido/batalla.wav";
+    public static final String RUTA_BATALLA = "/assets/sonido/Track01.wav";
     public static final String RUTA_COMPLEJIDAD = "/assets/sonido/complejidad.wav";
     public static final String RUTA_AGUA = "/assets/sonido/agua.wav";
 	public static final String RUTA_PASO1 = "/assets/sonido/paso1.wav";

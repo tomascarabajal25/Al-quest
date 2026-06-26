@@ -65,6 +65,7 @@ public class Sonido {
             ais = convertirA16Bit(ais);
             clipMusica = AudioSystem.getClip();
             clipMusica.open(ais);
+            ControladorVolumen.aplicarVolumen(clipMusica);
             clipMusica.loop(Clip.LOOP_CONTINUOUSLY);
             clipMusica.start();
         } catch (Exception e) {
@@ -100,6 +101,7 @@ public class Sonido {
             ais = convertirA16Bit(ais);
             clipEfecto = AudioSystem.getClip();
             clipEfecto.open(ais);
+            ControladorVolumen.aplicarVolumen(clipEfecto);
             clipEfecto.setFramePosition(0);
             clipEfecto.start();
         } catch (Exception e) {
