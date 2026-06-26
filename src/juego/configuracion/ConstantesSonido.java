@@ -30,7 +30,7 @@ public final class ConstantesSonido {
     public static final String COMPRAR4 = "COMPRAR4";
     public static final String COMPRAR2 = "COMPRAR2";
     
-    public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/MapaGeneral.wav";
+    public static final String RUTA_GLOBAL_AVENTURA = "/assets/sonido/MapaPrincipal.wav";
     public static final String RUTA_HANOI = "/assets/sonido/hanoi.wav";
     public static final String RUTA_RECOLECCION = "/assets/sonido/recoleccion.wav";
     public static final String RUTA_REINAS = "/assets/sonido/Track02.wav";
