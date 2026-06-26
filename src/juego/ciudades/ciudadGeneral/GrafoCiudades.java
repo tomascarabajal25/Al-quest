@@ -138,7 +138,7 @@ public class GrafoCiudades {
             }
         }
 
-	    return false;
+	    return true;
     }
 
     /**

@@ -1,5 +1,8 @@
 package modelos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
@@ -16,7 +19,22 @@ public class ControladorVolumen {
      * Volumen general del juego, en escala lineal de 0.0 (silencio) a 1.0 (máximo).
      * TODO: reemplazar por un valor configurable cuando exista la pantalla de opciones.
      */
-    private static final float VOLUMEN_GENERAL = 0.5f;
+    private static final float VOLUMEN_GENERAL = 0.4f;
+
+    /**
+     * Volúmenes específicos por nombre lógico de pista.
+     * Si una pista no aparece acá, se usa VOLUMEN_GENERAL.
+     * TODO: reemplazar por valores configurables cuando exista la pantalla de opciones.
+     */
+    private static final Map<String, Float> VOLUMENES_POR_PISTA = new HashMap<>();
+    static {
+        VOLUMENES_POR_PISTA.put("RECOLECCION", 0.1f);
+        VOLUMENES_POR_PISTA.put("COMPLEJIDAD", 0.3f);
+        VOLUMENES_POR_PISTA.put("BATALLA", 0.5f);
+        VOLUMENES_POR_PISTA.put("VICTORIA", 0.4f);
+        // Agregar más entradas según se necesite. Las pistas no listadas
+        // usan VOLUMEN_GENERAL automáticamente.
+    }
 
     private ControladorVolumen() {
         // clase de utilidad, no instanciable
